@@ -1,0 +1,651 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0002A09217D1B1E000EA4AFF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0002A09117D1B1E000EA4AFF /* Cocoa.framework */; };
+		0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0002A09A17D1B1E000EA4AFF /* InfoPlist.strings */; };
+		0002A09E17D1B1E000EA4AFF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A09D17D1B1E000EA4AFF /* main.m */; };
+		0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 0002A0A017D1B1E000EA4AFF /* Credits.rtf */; };
+		0002A0A517D1B1E000EA4AFF /* SMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */; };
+		0002A0A817D1B1E000EA4AFF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0002A0A617D1B1E000EA4AFF /* MainMenu.xib */; };
+		0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0B417D1BB0100EA4AFF /* SMAppController.m */; };
+		0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */; };
+		00172FEB198B39BA00DB975E /* SMMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FE9198B39BA00DB975E /* SMMessageViewController.m */; };
+		00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */; };
+		00172FF5198D5C6100DB975E /* SMMessageThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */; };
+		001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */ = {isa = PBXBuildFile; fileRef = 001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */; };
+		0040B0F9196A5331004E55CC /* SMFolderCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0040B0F8196A5331004E55CC /* SMFolderCellView.m */; };
+		004F7FEA1866A973004DEC3C /* search-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 004F7FE91866A973004DEC3C /* search-icon.png */; };
+		005B086017D4EFF500341051 /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; };
+		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
+		005B086417D4F07700341051 /* MailCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		006A5DCA17F2F041004D6D78 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DC917F2F041004D6D78 /* WebKit.framework */; };
+		006A5DD517F5EC50004D6D78 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */; };
+		006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */; };
+		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
+		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
+		009742721957C78E00620145 /* SMMailbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 009742711957C78E00620145 /* SMMailbox.m */; };
+		00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */; };
+		00A25BBC17E3540000D0FCB1 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 00A25BBB17E3540000D0FCB1 /* TODO */; };
+		00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */; };
+		00C75609195921AA006ED86B /* SMFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C75608195921AA006ED86B /* SMFolder.m */; };
+		00DC84961967A70E00577667 /* SMMailboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00DC84951967A70E00577667 /* SMMailboxController.m */; };
+		00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */; };
+		00E9107F17D2F6F50028C679 /* SMMessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */; };
+		00E9108217D30FD90028C679 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 00E9108117D30FD90028C679 /* README.rtf */; };
+		00EB7E87199C70FA00CA2B1B /* SMMessageThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 00EB7E86199C70FA00CA2B1B /* SMMessageThread.m */; };
+		00ED318017F88DA700B04F5B /* SMMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 00ED317917F88DA700B04F5B /* SMMessage.m */; };
+		00ED318117F88DA700B04F5B /* SMAttachmentStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 00ED317B17F88DA700B04F5B /* SMAttachmentStorage.m */; };
+		00ED318317F88DA700B04F5B /* SMMessageStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 00ED317F17F88DA700B04F5B /* SMMessageStorage.m */; };
+		00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 00ED318517F88E3000B04F5B /* SMSimplicityContainer.m */; };
+		00F96C0D19343D8000CA5836 /* SMMessageDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F96C0C19343D8000CA5836 /* SMMessageDetailsView.m */; };
+		00FC3C7E19AADF68002DAF9C /* SMMessageThreadCellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00FC3C7D19AADF68002DAF9C /* SMMessageThreadCellViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		005B085417D4EF3E00341051 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C64EA537169E772200778456;
+			remoteInfo = "static mailcore2 osx";
+		};
+		005B085617D4EF3E00341051 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C6BA2C191705F4E6003F0E9E;
+			remoteInfo = "static mailcore2 ios";
+		};
+		005B085817D4EF3E00341051 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C64EA78C169F259200778456;
+			remoteInfo = tests;
+		};
+		005B085A17D4EF3E00341051 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C6A81B911706840C00882C15;
+			remoteInfo = "test-ios";
+		};
+		005B085C17D4EF3E00341051 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C6BD288D170BD71100A91AC1;
+			remoteInfo = "mailcore osx";
+		};
+		005B085E17D4EFD800341051 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C6BD288C170BD71100A91AC1;
+			remoteInfo = "mailcore osx";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		005B086317D4F05B00341051 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				005B086417D4F07700341051 /* MailCore.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0002A08E17D1B1E000EA4AFF /* Simplicity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Simplicity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0002A09117D1B1E000EA4AFF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		0002A09417D1B1E000EA4AFF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		0002A09517D1B1E000EA4AFF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		0002A09617D1B1E000EA4AFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0002A09917D1B1E000EA4AFF /* Simplicity-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Simplicity-Info.plist"; sourceTree = "<group>"; };
+		0002A09B17D1B1E000EA4AFF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0002A09D17D1B1E000EA4AFF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0002A09F17D1B1E000EA4AFF /* Simplicity-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Simplicity-Prefix.pch"; sourceTree = "<group>"; };
+		0002A0A117D1B1E000EA4AFF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMAppDelegate.h; sourceTree = "<group>"; };
+		0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMAppDelegate.m; sourceTree = "<group>"; };
+		0002A0A717D1B1E000EA4AFF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		0002A0B317D1BB0100EA4AFF /* SMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAppController.h; sourceTree = "<group>"; };
+		0002A0B417D1BB0100EA4AFF /* SMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAppController.m; sourceTree = "<group>"; };
+		0002A0B617D224C600EA4AFF /* SMMessageListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListCellView.h; sourceTree = "<group>"; };
+		0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListCellView.m; sourceTree = "<group>"; };
+		00172FE8198B39BA00DB975E /* SMMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageViewController.h; sourceTree = "<group>"; };
+		00172FE9198B39BA00DB975E /* SMMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageViewController.m; sourceTree = "<group>"; };
+		00172FED198B3BB700DB975E /* SMMessageBodyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageBodyViewController.h; sourceTree = "<group>"; };
+		00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageBodyViewController.m; sourceTree = "<group>"; };
+		00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadViewController.h; sourceTree = "<group>"; };
+		00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadViewController.m; sourceTree = "<group>"; };
+		001A41CC199EFB5300AA3AE6 /* SMMessageComparators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageComparators.h; sourceTree = "<group>"; };
+		001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageComparators.m; sourceTree = "<group>"; };
+		0040B0F7196A5331004E55CC /* SMFolderCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFolderCellView.h; sourceTree = "<group>"; };
+		0040B0F8196A5331004E55CC /* SMFolderCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFolderCellView.m; sourceTree = "<group>"; };
+		004F7FE91866A973004DEC3C /* search-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-icon.png"; path = "Simplicity/search-icon.png"; sourceTree = "<group>"; };
+		005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mailcore2.xcodeproj; path = "../mailcore2/build-mac/mailcore2.xcodeproj"; sourceTree = "<group>"; };
+		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		006A5DC917F2F041004D6D78 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
+		006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
+		006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Simplicity.sqlite; sourceTree = "<group>"; };
+		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
+		0097426C195686F900620145 /* SMMailboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxViewController.h; sourceTree = "<group>"; };
+		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
+		009742701957C78E00620145 /* SMMailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailbox.h; sourceTree = "<group>"; };
+		009742711957C78E00620145 /* SMMailbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailbox.m; sourceTree = "<group>"; };
+		00A25BB517DF7ECD00D0FCB1 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = ../../../../../../../usr/lib/libxml2.dylib; sourceTree = "<group>"; };
+		00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListController.h; sourceTree = "<group>"; };
+		00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListController.m; sourceTree = "<group>"; };
+		00A25BBB17E3540000D0FCB1 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageDetailsViewController.h; sourceTree = "<group>"; };
+		00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageDetailsViewController.m; sourceTree = "<group>"; };
+		00C75607195921AA006ED86B /* SMFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFolder.h; sourceTree = "<group>"; };
+		00C75608195921AA006ED86B /* SMFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFolder.m; sourceTree = "<group>"; };
+		00DC84941967A70E00577667 /* SMMailboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxController.h; sourceTree = "<group>"; };
+		00DC84951967A70E00577667 /* SMMailboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxController.m; sourceTree = "<group>"; };
+		00E9107B17D2F6F50028C679 /* SMMessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListViewController.h; sourceTree = "<group>"; };
+		00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListViewController.m; sourceTree = "<group>"; };
+		00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMessageListViewController.xib; sourceTree = "<group>"; };
+		00E9108117D30FD90028C679 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
+		00EB7E85199C70FA00CA2B1B /* SMMessageThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThread.h; sourceTree = "<group>"; };
+		00EB7E86199C70FA00CA2B1B /* SMMessageThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThread.m; sourceTree = "<group>"; };
+		00ED317817F88DA700B04F5B /* SMMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessage.h; sourceTree = "<group>"; };
+		00ED317917F88DA700B04F5B /* SMMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessage.m; sourceTree = "<group>"; };
+		00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentStorage.h; sourceTree = "<group>"; };
+		00ED317B17F88DA700B04F5B /* SMAttachmentStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentStorage.m; sourceTree = "<group>"; };
+		00ED317E17F88DA700B04F5B /* SMMessageStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageStorage.h; sourceTree = "<group>"; };
+		00ED317F17F88DA700B04F5B /* SMMessageStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageStorage.m; sourceTree = "<group>"; };
+		00ED318417F88E3000B04F5B /* SMSimplicityContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSimplicityContainer.h; sourceTree = "<group>"; };
+		00ED318517F88E3000B04F5B /* SMSimplicityContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSimplicityContainer.m; sourceTree = "<group>"; };
+		00F96C0B19343D8000CA5836 /* SMMessageDetailsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageDetailsView.h; sourceTree = "<group>"; };
+		00F96C0C19343D8000CA5836 /* SMMessageDetailsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageDetailsView.m; sourceTree = "<group>"; };
+		00FC3C7619AADD67002DAF9C /* SMMessageThreadCellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadCellViewController.h; sourceTree = "<group>"; };
+		00FC3C7D19AADF68002DAF9C /* SMMessageThreadCellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadCellViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0002A08B17D1B1E000EA4AFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				006A5DD517F5EC50004D6D78 /* libsqlite3.dylib in Frameworks */,
+				006A5DCA17F2F041004D6D78 /* WebKit.framework in Frameworks */,
+				005B086217D4F00200341051 /* Security.framework in Frameworks */,
+				005B086017D4EFF500341051 /* MailCore.framework in Frameworks */,
+				0002A09217D1B1E000EA4AFF /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0002A08517D1B1E000EA4AFF = {
+			isa = PBXGroup;
+			children = (
+				006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */,
+				006A5DC917F2F041004D6D78 /* WebKit.framework */,
+				00A25BB517DF7ECD00D0FCB1 /* libxml2.dylib */,
+				00E9108017D30FB90028C679 /* Resources */,
+				0002A09717D1B1E000EA4AFF /* Simplicity */,
+				0002A09017D1B1E000EA4AFF /* Frameworks */,
+				0002A08F17D1B1E000EA4AFF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0002A08F17D1B1E000EA4AFF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0002A08E17D1B1E000EA4AFF /* Simplicity.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0002A09017D1B1E000EA4AFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */,
+				005B086117D4F00200341051 /* Security.framework */,
+				0002A09117D1B1E000EA4AFF /* Cocoa.framework */,
+				0002A09317D1B1E000EA4AFF /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0002A09317D1B1E000EA4AFF /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0002A09417D1B1E000EA4AFF /* AppKit.framework */,
+				0002A09517D1B1E000EA4AFF /* CoreData.framework */,
+				0002A09617D1B1E000EA4AFF /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		0002A09717D1B1E000EA4AFF /* Simplicity */ = {
+			isa = PBXGroup;
+			children = (
+				00621CF619230D4200BF1C01 /* Forms */,
+				00A25BBB17E3540000D0FCB1 /* TODO */,
+				005B086C17D4F5D000341051 /* Control */,
+				005B086517D4F3BD00341051 /* Model */,
+				005B086D17D4F62600341051 /* View */,
+				0002A09817D1B1E000EA4AFF /* Supporting Files */,
+			);
+			path = Simplicity;
+			sourceTree = "<group>";
+		};
+		0002A09817D1B1E000EA4AFF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0002A09917D1B1E000EA4AFF /* Simplicity-Info.plist */,
+				0002A09A17D1B1E000EA4AFF /* InfoPlist.strings */,
+				0002A09D17D1B1E000EA4AFF /* main.m */,
+				0002A09F17D1B1E000EA4AFF /* Simplicity-Prefix.pch */,
+				0002A0A017D1B1E000EA4AFF /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		005B084D17D4EF3D00341051 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				005B085517D4EF3E00341051 /* libMailCore.a */,
+				005B085717D4EF3E00341051 /* libMailCore-ios.a */,
+				005B085917D4EF3E00341051 /* tests */,
+				005B085B17D4EF3E00341051 /* test-ios.app */,
+				005B085D17D4EF3E00341051 /* MailCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		005B086517D4F3BD00341051 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				00EB7E85199C70FA00CA2B1B /* SMMessageThread.h */,
+				00EB7E86199C70FA00CA2B1B /* SMMessageThread.m */,
+				00ED318417F88E3000B04F5B /* SMSimplicityContainer.h */,
+				00ED318517F88E3000B04F5B /* SMSimplicityContainer.m */,
+				009742701957C78E00620145 /* SMMailbox.h */,
+				009742711957C78E00620145 /* SMMailbox.m */,
+				00C75607195921AA006ED86B /* SMFolder.h */,
+				00C75608195921AA006ED86B /* SMFolder.m */,
+				00ED317817F88DA700B04F5B /* SMMessage.h */,
+				00ED317917F88DA700B04F5B /* SMMessage.m */,
+				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
+				00ED317B17F88DA700B04F5B /* SMAttachmentStorage.m */,
+				00ED317E17F88DA700B04F5B /* SMMessageStorage.h */,
+				00ED317F17F88DA700B04F5B /* SMMessageStorage.m */,
+				001A41CC199EFB5300AA3AE6 /* SMMessageComparators.h */,
+				001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */,
+				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
+				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		005B086C17D4F5D000341051 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				00FC3C7619AADD67002DAF9C /* SMMessageThreadCellViewController.h */,
+				00FC3C7D19AADF68002DAF9C /* SMMessageThreadCellViewController.m */,
+				00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */,
+				00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */,
+				00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */,
+				00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */,
+				00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */,
+				00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */,
+				00E9107B17D2F6F50028C679 /* SMMessageListViewController.h */,
+				00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */,
+				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
+				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
+				00DC84941967A70E00577667 /* SMMailboxController.h */,
+				00DC84951967A70E00577667 /* SMMailboxController.m */,
+				00172FE8198B39BA00DB975E /* SMMessageViewController.h */,
+				00172FE9198B39BA00DB975E /* SMMessageViewController.m */,
+				00172FED198B3BB700DB975E /* SMMessageBodyViewController.h */,
+				00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */,
+				0097426C195686F900620145 /* SMMailboxViewController.h */,
+				0097426D195686F900620145 /* SMMailboxViewController.m */,
+			);
+			name = Control;
+			sourceTree = "<group>";
+		};
+		005B086D17D4F62600341051 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0040B0F7196A5331004E55CC /* SMFolderCellView.h */,
+				0040B0F8196A5331004E55CC /* SMFolderCellView.m */,
+				00F96C0B19343D8000CA5836 /* SMMessageDetailsView.h */,
+				00F96C0C19343D8000CA5836 /* SMMessageDetailsView.m */,
+				0002A0B617D224C600EA4AFF /* SMMessageListCellView.h */,
+				0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		00621CF619230D4200BF1C01 /* Forms */ = {
+			isa = PBXGroup;
+			children = (
+				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
+				0002A0A617D1B1E000EA4AFF /* MainMenu.xib */,
+				00974266195684DD00620145 /* SMMailboxViewController.xib */,
+			);
+			name = Forms;
+			sourceTree = "<group>";
+		};
+		00E9108017D30FB90028C679 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				004F7FE91866A973004DEC3C /* search-icon.png */,
+				006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */,
+				00E9108117D30FD90028C679 /* README.rtf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0002A08D17D1B1E000EA4AFF /* Simplicity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0002A0AB17D1B1E000EA4AFF /* Build configuration list for PBXNativeTarget "Simplicity" */;
+			buildPhases = (
+				0002A08A17D1B1E000EA4AFF /* Sources */,
+				0002A08B17D1B1E000EA4AFF /* Frameworks */,
+				0002A08C17D1B1E000EA4AFF /* Resources */,
+				005B086317D4F05B00341051 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				005B085F17D4EFD800341051 /* PBXTargetDependency */,
+			);
+			name = Simplicity;
+			productName = Simplicity;
+			productReference = 0002A08E17D1B1E000EA4AFF /* Simplicity.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0002A08617D1B1E000EA4AFF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = SM;
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = "Evgeny Baskakov";
+			};
+			buildConfigurationList = 0002A08917D1B1E000EA4AFF /* Build configuration list for PBXProject "Simplicity" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0002A08517D1B1E000EA4AFF;
+			productRefGroup = 0002A08F17D1B1E000EA4AFF /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 005B084D17D4EF3D00341051 /* Products */;
+					ProjectRef = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				0002A08D17D1B1E000EA4AFF /* Simplicity */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		005B085517D4EF3E00341051 /* libMailCore.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMailCore.a;
+			remoteRef = 005B085417D4EF3E00341051 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		005B085717D4EF3E00341051 /* libMailCore-ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libMailCore-ios.a";
+			remoteRef = 005B085617D4EF3E00341051 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		005B085917D4EF3E00341051 /* tests */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = tests;
+			remoteRef = 005B085817D4EF3E00341051 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		005B085B17D4EF3E00341051 /* test-ios.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "test-ios.app";
+			remoteRef = 005B085A17D4EF3E00341051 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		005B085D17D4EF3E00341051 /* MailCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MailCore.framework;
+			remoteRef = 005B085C17D4EF3E00341051 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0002A08C17D1B1E000EA4AFF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */,
+				00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */,
+				0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */,
+				0002A0A817D1B1E000EA4AFF /* MainMenu.xib in Resources */,
+				004F7FEA1866A973004DEC3C /* search-icon.png in Resources */,
+				00E9107F17D2F6F50028C679 /* SMMessageListViewController.xib in Resources */,
+				00E9108217D30FD90028C679 /* README.rtf in Resources */,
+				00A25BBC17E3540000D0FCB1 /* TODO in Resources */,
+				006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0002A08A17D1B1E000EA4AFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00DC84961967A70E00577667 /* SMMailboxController.m in Sources */,
+				00EB7E87199C70FA00CA2B1B /* SMMessageThread.m in Sources */,
+				00FC3C7E19AADF68002DAF9C /* SMMessageThreadCellViewController.m in Sources */,
+				0002A09E17D1B1E000EA4AFF /* main.m in Sources */,
+				001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */,
+				0040B0F9196A5331004E55CC /* SMFolderCellView.m in Sources */,
+				00C75609195921AA006ED86B /* SMFolder.m in Sources */,
+				0097426E195686F900620145 /* SMMailboxViewController.m in Sources */,
+				0002A0A517D1B1E000EA4AFF /* SMAppDelegate.m in Sources */,
+				00172FEB198B39BA00DB975E /* SMMessageViewController.m in Sources */,
+				0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */,
+				00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */,
+				0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */,
+				00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */,
+				00F96C0D19343D8000CA5836 /* SMMessageDetailsView.m in Sources */,
+				00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */,
+				00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */,
+				00172FF5198D5C6100DB975E /* SMMessageThreadViewController.m in Sources */,
+				00ED318017F88DA700B04F5B /* SMMessage.m in Sources */,
+				00ED318117F88DA700B04F5B /* SMAttachmentStorage.m in Sources */,
+				00ED318317F88DA700B04F5B /* SMMessageStorage.m in Sources */,
+				009742721957C78E00620145 /* SMMailbox.m in Sources */,
+				00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		005B085F17D4EFD800341051 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mailcore osx";
+			targetProxy = 005B085E17D4EFD800341051 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0002A09A17D1B1E000EA4AFF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0002A09B17D1B1E000EA4AFF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		0002A0A017D1B1E000EA4AFF /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0002A0A117D1B1E000EA4AFF /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		0002A0A617D1B1E000EA4AFF /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0002A0A717D1B1E000EA4AFF /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0002A0A917D1B1E000EA4AFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0002A0AA17D1B1E000EA4AFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0002A0AC17D1B1E000EA4AFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				Deprecated_warnings = "-Wno-deprecated-declarations";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Simplicity/Simplicity-Prefix.pch";
+				"HEADER_SEARCH_PATHS[arch=*]" = "$(SDKROOT)/usr/include/libxml2";
+				INFOPLIST_FILE = "Simplicity/Simplicity-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		0002A0AD17D1B1E000EA4AFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				Deprecated_warnings = "-Wno-deprecated-declarations";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Simplicity/Simplicity-Prefix.pch";
+				"HEADER_SEARCH_PATHS[arch=*]" = "$(SDKROOT)/usr/include/libxml2";
+				INFOPLIST_FILE = "Simplicity/Simplicity-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0002A08917D1B1E000EA4AFF /* Build configuration list for PBXProject "Simplicity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0002A0A917D1B1E000EA4AFF /* Debug */,
+				0002A0AA17D1B1E000EA4AFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0002A0AB17D1B1E000EA4AFF /* Build configuration list for PBXNativeTarget "Simplicity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0002A0AC17D1B1E000EA4AFF /* Debug */,
+				0002A0AD17D1B1E000EA4AFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0002A08617D1B1E000EA4AFF /* Project object */;
+}

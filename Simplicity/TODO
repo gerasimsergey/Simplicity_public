@@ -1,0 +1,26 @@
+CONNECTION
+
+Fix this:
+
+2014-04-15 23:49:02.371 Simplicity[72210:303] __50-[SMSimplicityContainer getIMAPServerCapabilities]_block_invoke: error getting IMAP capabilities: Error Domain=MCOErrorDomain Code=1 "A stable connection to the server could not be established." UserInfo=0x618000266980 {NSLocalizedDescription=A stable connection to the server could not be established.}
+
+
+MESSAGE LIST
+
+- Downloaded attachments rendering in the open message view;
+- HTML rendering in background (MCOIMAPMessageRenderingOperation);
+- Session renew;
+- Resolve possible UID conflicts;
+- Fix current message switch on list renewal;
+
+===================================================================
+
+- Message body preview;
+- Message flags (unseen, star, etc);
+- Server capabilities use (IDLE, etc);
+- App finalization;
+- DB compression (tokyo cabinet? MEDIUMBLOB won't be needed);
+- DB error checks w/o crashes;
+- Message list refresh on demand;
+- Load older messages on demand;
+- Message deletion propagation to the server;
