@@ -14,12 +14,12 @@
 @implementation SMMessageDetailsViewController {
 	SMMessage *_currentMessage;
 
-	NSTextField *_fromLabel;
-	NSTextField *_fromAddressLabel;
+	NSTextField *_subject;
+	NSTextField *_fromAddress;
 	NSTextField *_toLabel;
-	NSMutableArray *_toAddressLabels;
+	NSMutableArray *_toAddresses;
 	NSTextField *_ccLabel;
-	NSMutableArray *_ccAddressLabels;
+	NSMutableArray *_ccAddresses;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -35,11 +35,7 @@
 }
 
 		
-#define H_MARGIN 5
-#define H_GAP 2
-#define V_GAP 2
-
-- (NSTextField*)createLabel:(NSString*)text {
+- (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
 	NSTextField *label = [[NSTextField alloc] init];
 	
 	[label setStringValue:text];
@@ -48,9 +44,11 @@
 	[label setDrawsBackground:NO];
 	[label setEditable:NO];
 	[label setSelectable:NO];
-//	[label setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
 	[label setFrameSize:[label fittingSize]];
 	[label setTranslatesAutoresizingMaskIntoConstraints:NO];
+	
+	const NSUInteger fontSize = 12;
+	[label setFont:(bold? [NSFont boldSystemFontOfSize:fontSize] : [NSFont systemFontOfSize:fontSize])];
 
 	return label;
 }
@@ -64,15 +62,44 @@
 	[self adjustDetailsLayout];
 }
 
+#define V_MARGIN 10
+#define H_MARGIN 5
+#define FROM_W 5
+#define H_GAP 5
+#define V_GAP 5
+
 - (void)createSubviews {
 	NSView *view = [self view];
+
+	if(_fromAddress == nil)
+	{
+		_fromAddress = [self createLabel:[_currentMessage from] bold:YES];
+		_fromAddress.textColor = [NSColor blueColor];
+		
+		[view addSubview:_fromAddress];
+		
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+		
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+	}
+
+	if(_subject == nil)
+	{
+		_subject = [self createLabel:[_currentMessage subject] bold:NO];
+		_subject.textColor = [NSColor blackColor];
+		
+		[view addSubview:_subject];
+		
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W]];
+		
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+	}
+	
+	// TODO: use NSTokenField fo the rest!
+
+/*
 	[view setSubviews:[NSArray array]];
 
-	if(!_fromLabel)
-		_fromLabel = [self createLabel:@"From:"];
-	
-	[view addSubview:_fromLabel];
-	
 	if(!_toLabel)
 		_toLabel = [self createLabel:@"To:"];
 	
@@ -83,19 +110,19 @@
 	
 	[view addSubview:_ccLabel];
 
-	_fromAddressLabel = [self createLabel:[_currentMessage from]];
+	_fromAddress = [self createLabel:[_currentMessage from]];
 	
-	[view addSubview:_fromAddressLabel];
+	[view addSubview:_fromAddress];
 	
-	if(_toAddressLabels)
-		[_toAddressLabels removeAllObjects];
+	if(_toAddresses)
+		[_toAddresses removeAllObjects];
 	else
-		_toAddressLabels = [NSMutableArray new];
+		_toAddresses = [NSMutableArray new];
 	
-	if(_ccAddressLabels)
-		[_ccAddressLabels removeAllObjects];
+	if(_ccAddresses)
+		[_ccAddresses removeAllObjects];
 	else
-		_ccAddressLabels = [NSMutableArray new];
+		_ccAddresses = [NSMutableArray new];
 		
 	MCOMessageHeader *header = [_currentMessage header];
 	
@@ -110,7 +137,7 @@
 		
 		NSTextField *label = [self createLabel:[SMMessage parseAddress:to]];
 		
-		[_toAddressLabels addObject:label];
+		[_toAddresses addObject:label];
 		
 		[view addSubview:label];
 	}
@@ -120,55 +147,48 @@
 		
 		NSTextField *label = [self createLabel:[SMMessage parseAddress:cc]];
 
-		[_ccAddressLabels addObject:label];
+		[_ccAddresses addObject:label];
 
 		[view addSubview:label];
 	}
+*/
 }
 
 - (void)adjustDetailsLayout {
-	if(_fromLabel == nil) {
-		return;
-	}
-	
-	NSAssert(_fromAddressLabel, @"bad _fromAddressLabel");
-	NSAssert(_toLabel, @"bad _toLabel");
-	NSAssert(_ccLabel, @"bad _ccLabel");
+/*
+	NSAssert(_fromAddress, @"bad _fromAddressLabel");
+//	NSAssert(_toLabel, @"bad _toLabel");
+//	NSAssert(_ccLabel, @"bad _ccLabel");
 	
 	NSView *view = [self view];
 
-	NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(_fromLabel, _fromAddressLabel, _toLabel, _ccLabel);
-	
 //	[view removeConstraints:[view constraints]];
 
-	[view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-5-[_fromLabel]" options:0 metrics:nil views:viewsDictionary]];
-	
-	[view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-5-[_fromLabel]" options:0 metrics:nil views:viewsDictionary]];
 
-	[view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-5-[_toLabel]" options:0 metrics:nil views:viewsDictionary]];
-	
-	[view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-5-[_ccLabel]" options:0 metrics:nil views:viewsDictionary]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_fromAddressLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_fromAddressLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 	
-	if([_toAddressLabels count] > 0) {
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:[_toAddressLabels lastObject] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
+	if([_toAddresses count] > 0) {
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:[_toAddresses lastObject] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
 	
-		[self arrangeLabels:_toAddressLabels anchor:_toLabel];
+		[self arrangeLabels:_toAddresses anchor:_toLabel];
 	}
 	
-	if([_ccAddressLabels count] > 0) {
-		[self arrangeLabels:_ccAddressLabels anchor:_ccLabel];
+	if([_ccAddresses count] > 0) {
+		[self arrangeLabels:_ccAddresses anchor:_ccLabel];
 	}
+*/
 	
-	[view setNeedsUpdateConstraints:YES];
+//	[view setNeedsUpdateConstraints:YES];
 }
 
 - (void)arrangeLabels:(NSArray*)labels anchor:(NSView*)anchor {
+/*
 	NSView *view = [self view];
 	NSView *rightmost = anchor;
 	
@@ -194,7 +214,8 @@
 			minWidth = H_MARGIN * 2 + [anchor bounds].size.width + H_GAP + labelWidth;
 			rightmost = label;
 		}
-	}
+}
+ */
 
 }
 

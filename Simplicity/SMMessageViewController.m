@@ -94,8 +94,4 @@
 	[_messageDetailsViewController setMessageDetails:message];
 }
 
-- (void)adjustDetailsLayout {
-	[_messageDetailsViewController adjustDetailsLayout];
-}
-
 @end

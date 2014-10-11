@@ -9,7 +9,7 @@
 #import "SMMessageViewController.h"
 #import "SMMessageThreadCellViewController.h"
 
-static const NSUInteger HEADER_HEIGHT = 50;
+static const NSUInteger HEADER_HEIGHT = 36;
 
 @implementation SMMessageThreadCellViewController {
 	NSLayoutConstraint *_heightConstraint;

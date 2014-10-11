@@ -13,6 +13,5 @@
 @interface SMMessageDetailsViewController : NSViewController
 
 - (void)setMessageDetails:(SMMessage*)message;
-- (void)adjustDetailsLayout;
 
 @end
