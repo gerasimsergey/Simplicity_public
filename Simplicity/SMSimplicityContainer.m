@@ -16,6 +16,8 @@
 #import "SMMailboxController.h"
 #import "SMMessageComparators.h"
 
+#import "SMMailLogin.h"
+
 @interface SMSimplicityContainer()
 
 - (void)getIMAPServerCapabilities;

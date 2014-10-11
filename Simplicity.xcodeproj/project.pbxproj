@@ -139,6 +139,7 @@
 		006A5DC917F2F041004D6D78 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
 		006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
 		006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Simplicity.sqlite; sourceTree = "<group>"; };
+		0077C99219E8E58C00118CA5 /* SMMailLogin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMMailLogin.h; sourceTree = "<group>"; };
 		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
 		0097426C195686F900620145 /* SMMailboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxViewController.h; sourceTree = "<group>"; };
 		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
@@ -286,6 +287,7 @@
 				00ED317B17F88DA700B04F5B /* SMAttachmentStorage.m */,
 				00ED317E17F88DA700B04F5B /* SMMessageStorage.h */,
 				00ED317F17F88DA700B04F5B /* SMMessageStorage.m */,
+				0077C99219E8E58C00118CA5 /* SMMailLogin.h */,
 				001A41CC199EFB5300AA3AE6 /* SMMessageComparators.h */,
 				001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */,
 				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
