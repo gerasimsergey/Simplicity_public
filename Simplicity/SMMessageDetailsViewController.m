@@ -8,6 +8,7 @@
 
 #import <MailCore/MailCore.h>
 
+#import "SMTokenField.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessage.h"
 
@@ -18,7 +19,6 @@
 	NSTextField *_fromAddress;
 	NSTokenField *_toAdresses;
 ///	NSTextField *_toAdresses;
-	
 	
 	NSTextField *_toLabel;
 	NSTextField *_ccLabel;
@@ -82,7 +82,7 @@
 		
 		[view addSubview:_fromAddress];
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
 	}
@@ -100,11 +100,22 @@
 	}
 
 	{
-		_toAdresses = [[NSTokenField alloc] initWithFrame:view.bounds];
+		_toLabel = [self createLabel:@"To:" bold:NO];
+		_toLabel.textColor = [NSColor blackColor];
+		
+		[view addSubview:_toLabel];
+		
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
+		
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+		
+	}
+	
+	{
+		_toAdresses = [[SMTokenField alloc] initWithFrame:view.bounds];
 		_toAdresses.delegate = self; // TODO: reference loop here?
 		_toAdresses.tokenStyle = NSPlainTextTokenStyle;
 		[_toAdresses setBordered:YES];
-		[_toAdresses setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 		_toAdresses.translatesAutoresizingMaskIntoConstraints = NO;
 
 		// get the array of tokens
@@ -119,10 +130,11 @@
 		// force the insertion point after the added token
 		NSText *fieldEditor = [_toAdresses currentEditor];
 		[fieldEditor setSelectedRange:NSMakeRange([[fieldEditor string] length], 0)];
+		[fieldEditor setVerticallyResizable:YES];
 
 		[view addSubview:_toAdresses];
 
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
 
