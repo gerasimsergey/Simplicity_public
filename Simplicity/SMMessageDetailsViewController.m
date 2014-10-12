@@ -10,6 +10,7 @@
 
 #import "SMTokenField.h"
 #import "SMMessageDetailsViewController.h"
+#import "SMMessageDetailsView.h"
 #import "SMMessage.h"
 
 @implementation SMMessageDetailsViewController {
@@ -29,8 +30,9 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(100, 100, 100, 300)];
+		SMMessageDetailsView *view = [[SMMessageDetailsView alloc] init];
 		view.translatesAutoresizingMaskIntoConstraints = NO;
+		[view setViewController:self];
 		[self setView:view];
 	}
 	
@@ -112,7 +114,7 @@
 	}
 	
 	{
-		_toAdresses = [[SMTokenField alloc] initWithFrame:view.bounds];
+		_toAdresses = [[SMTokenField alloc] init];
 		_toAdresses.delegate = self; // TODO: reference loop here?
 		_toAdresses.tokenStyle = NSPlainTextTokenStyle;
 		[_toAdresses setBordered:YES];
@@ -269,6 +271,15 @@
 }
  */
 
+}
+
+- (NSSize)intrinsicContentViewSize {
+	NSSize sz = NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAdresses intrinsicContentSize].height + V_GAP);
+	return sz;
+}
+
+- (void)invalidateIntrinsicContentViewSize {
+	[[self view] setNeedsUpdateConstraints:YES];
 }
 
 #pragma mark - NSTokenFieldDelegate

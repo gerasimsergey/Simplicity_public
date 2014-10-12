@@ -13,5 +13,7 @@
 @interface SMMessageDetailsViewController : NSViewController<NSTokenFieldDelegate>
 
 - (void)setMessageDetails:(SMMessage*)message;
+- (NSSize)intrinsicContentViewSize;
+- (void)invalidateIntrinsicContentViewSize;
 
 @end

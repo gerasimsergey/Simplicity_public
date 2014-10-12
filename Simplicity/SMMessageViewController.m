@@ -37,7 +37,12 @@
 
 		[view addSubview:messageDetailsView];
 
-		[self addConstraint:messageDetailsView constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:DETAILS_H] priority:NSLayoutPriorityDefaultLow];
+		[messageDetailsView setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
+		
+		NSSize detailsSize = [messageDetailsView intrinsicContentSize];
+		NSLog(@"detailsSize %f x %f", detailsSize.width, detailsSize.height);
+		
+//		[self addConstraint:messageDetailsView constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:DETAILS_H] priority:NSLayoutPriorityDefaultLow];
 
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
 		
