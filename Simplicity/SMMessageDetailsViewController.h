@@ -10,7 +10,7 @@
 
 @class SMMessage;
 
-@interface SMMessageDetailsViewController : NSViewController
+@interface SMMessageDetailsViewController : NSViewController<NSTokenFieldDelegate>
 
 - (void)setMessageDetails:(SMMessage*)message;
 

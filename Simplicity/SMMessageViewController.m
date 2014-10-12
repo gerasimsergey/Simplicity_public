@@ -21,6 +21,8 @@
 	NSProgressIndicator *_progressIndicator;
 }
 
+#define DETAILS_H 120
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
@@ -35,7 +37,7 @@
 
 		[view addSubview:messageDetailsView];
 
-		[self addConstraint:messageDetailsView constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:60] priority:NSLayoutPriorityDefaultLow];
+		[self addConstraint:messageDetailsView constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:DETAILS_H] priority:NSLayoutPriorityDefaultLow];
 
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
 		
