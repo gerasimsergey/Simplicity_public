@@ -135,10 +135,10 @@
 		[view addSubview:_toAdresses];
 
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-		
+
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
 
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
+		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
 
 //		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
 

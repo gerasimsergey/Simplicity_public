@@ -10,33 +10,35 @@
 
 @implementation SMTokenField
 
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    // Drawing code here.
-}
-
+// See these topics for explanation:
+//
+// http://stackoverflow.com/questions/10463680/how-to-let-nstextfield-grow-with-the-text-in-auto-layout
+// http://stackoverflow.com/questions/24618703/automatically-wrap-nstextfield-using-auto-layout
+// http://stackoverflow.com/questions/3212279/nstableview-row-height-based-on-nsstrings
 
 -(NSSize)intrinsicContentSize
 {
-	if ( ![self.cell wraps] ) {
+	if(![self.cell wraps])
 		return [super intrinsicContentSize];
-	}
 
 	NSRect frame = [self frame];
 	
 	frame.size.height = CGFLOAT_MAX;
 	
-	CGFloat height = [self.cell cellSizeForBounds:frame].height;
-	CGFloat width = -1;
+	NSSize sizeToFit = [self.cell cellSizeForBounds:frame];
 
-	return NSMakeSize(width, height);
+	return NSMakeSize(-1, sizeToFit.height);
 }
 
-// you need to invalidate the layout on text change, else it wouldn't grow by changing the text
 - (void)textDidChange:(NSNotification *)notification
 {
 	[super textDidChange:notification];
+	[self invalidateIntrinsicContentSize];
+}
+
+- (void)viewDidEndLiveResize
+{
+	[super viewDidEndLiveResize];
 	[self invalidateIntrinsicContentSize];
 }
 

@@ -21,7 +21,7 @@
 	NSProgressIndicator *_progressIndicator;
 }
 
-#define DETAILS_H 120
+#define DETAILS_H 200
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
