@@ -32,6 +32,7 @@
 		view.translatesAutoresizingMaskIntoConstraints = NO;
 		[view setViewController:self];
 		[self setView:view];
+		[self createSubviews];
 	}
 	
 	return self;
@@ -44,11 +45,10 @@
 	[label setStringValue:text];
 	[label setBordered:YES];
 	[label setBezeled:NO];
-//	[label setDrawsBackground:NO];
+	[label setDrawsBackground:NO];
 	[label setEditable:NO];
 	[label setSelectable:NO];
 	[label setFrameSize:[label fittingSize]];
-//	[label setAutoresizingMask:NSViewWidthSizable];
 	[label setTranslatesAutoresizingMaskIntoConstraints:NO];
 	
 	const NSUInteger fontSize = 12;
@@ -61,9 +61,23 @@
 	NSAssert(message != nil, @"nil message");
 	
 	_currentMessage = message;
+
+	[_fromAddress setStringValue:[_currentMessage from]];
+	[_subject setStringValue:[_currentMessage subject]];
 	
-	[self createSubviews];
-	[self adjustDetailsLayout];
+	NSArray *array = [_toAdresses objectValue];
+	NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
+	
+	for(MCOAddress *to in [message.header to])
+		[newArray addObject:[SMMessage parseAddress:to]];
+
+	[_toAdresses setObjectValue:newArray];
+	
+	// force the insertion point after the added token
+	NSText *fieldEditor = [_toAdresses currentEditor];
+	[fieldEditor setSelectedRange:NSMakeRange([[fieldEditor string] length], 0)];
+	
+	[[self view] invalidateIntrinsicContentSize];
 }
 
 #define V_MARGIN 10
@@ -75,78 +89,55 @@
 - (void)createSubviews {
 	NSView *view = [self view];
 
-	if(_fromAddress == nil)
-	{
-		_fromAddress = [self createLabel:[_currentMessage from] bold:YES];
-		_fromAddress.textColor = [NSColor blueColor];
-		
-		[view addSubview:_fromAddress];
-		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN] priority:NSLayoutPriorityRequired];
-		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
-	}
+	// init from address label
+	
+	_fromAddress = [self createLabel:@"" bold:YES];
+	_fromAddress.textColor = [NSColor blueColor];
+	
+	[view addSubview:_fromAddress];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN] priority:NSLayoutPriorityRequired];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
-	if(_subject == nil)
-	{
-		_subject = [self createLabel:[_currentMessage subject] bold:NO];
-		_subject.textColor = [NSColor blackColor];
-		
-		[view addSubview:_subject];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W]];
-		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
-	}
+	// init subject
+	
+	_subject = [self createLabel:@"" bold:NO];
+	_subject.textColor = [NSColor blackColor];
+	
+	[view addSubview:_subject];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W]];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
-	{
-		_toLabel = [self createLabel:@"To:" bold:NO];
-		_toLabel.textColor = [NSColor blackColor];
-		
-		[view addSubview:_toLabel];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
-		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityDefaultLow];
-		
-	}
+	// init to label
 
-	{
-		_toAdresses = [[SMTokenField alloc] init];
-		_toAdresses.delegate = self; // TODO: reference loop here?
-		_toAdresses.tokenStyle = NSPlainTextTokenStyle;
-		[_toAdresses setBordered:YES];
-		_toAdresses.translatesAutoresizingMaskIntoConstraints = NO;
+	_toLabel = [self createLabel:@"To:" bold:NO];
+	_toLabel.textColor = [NSColor blackColor];
+	
+	[view addSubview:_toLabel];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityDefaultLow];
 
-		NSArray *array = [_toAdresses objectValue];
-		NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
+	// init 'to' address list
 
-//		for(MCOAddress *to in [header to]) {
-//			[newArray addObject:SMMessage parseAddress:to];
-//		}
-		
-		[newArray addObject:@"Fred"];
-		[_toAdresses setObjectValue:newArray]; // commit the edit change
-		
-		// force the insertion point after the added token
-		NSText *fieldEditor = [_toAdresses currentEditor];
-		[fieldEditor setSelectedRange:NSMakeRange([[fieldEditor string] length], 0)];
-		[fieldEditor setVerticallyResizable:YES];
+	_toAdresses = [[SMTokenField alloc] init];
+	_toAdresses.delegate = self; // TODO: reference loop here?
+	_toAdresses.tokenStyle = NSPlainTextTokenStyle;
+	_toAdresses.translatesAutoresizingMaskIntoConstraints = NO;
+	[_toAdresses setBordered:NO];
+	[_toAdresses setDrawsBackground:NO];
 
-		[view addSubview:_toAdresses];
+	[view addSubview:_toAdresses];
 
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
 
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
-	}
-}
-
-- (void)adjustDetailsLayout {
-}
-
-- (void)arrangeLabels:(NSArray*)labels anchor:(NSView*)anchor {
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
