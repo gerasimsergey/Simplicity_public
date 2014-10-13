@@ -18,10 +18,8 @@
 
 	NSTextField *_subject;
 	NSTextField *_fromAddress;
-	NSTokenField *_toAdresses;
-///	NSTextField *_toAdresses;
-	
 	NSTextField *_toLabel;
+	NSTokenField *_toAdresses;
 	NSTextField *_ccLabel;
 	NSMutableArray *_ccAddresses;
 }
@@ -84,9 +82,9 @@
 		
 		[view addSubview:_fromAddress];
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN] priority:NSLayoutPriorityRequired];
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 	}
 
 	if(_subject == nil)
@@ -98,7 +96,7 @@
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W]];
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 	}
 
 	{
@@ -109,10 +107,10 @@
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityDefaultLow];
 		
 	}
-	
+
 	{
 		_toAdresses = [[SMTokenField alloc] init];
 		_toAdresses.delegate = self; // TODO: reference loop here?
@@ -120,13 +118,14 @@
 		[_toAdresses setBordered:YES];
 		_toAdresses.translatesAutoresizingMaskIntoConstraints = NO;
 
-		// get the array of tokens
 		NSArray *array = [_toAdresses objectValue];
-		
-		// copy the array so we can modify and add a new one
 		NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
+
+//		for(MCOAddress *to in [header to]) {
+//			[newArray addObject:SMMessage parseAddress:to];
+//		}
 		
-		[newArray addObject:@"Bla"];
+		[newArray addObject:@"Fred"];
 		[_toAdresses setObjectValue:newArray]; // commit the edit change
 		
 		// force the insertion point after the added token
@@ -138,139 +137,21 @@
 
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
 
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
-
-//		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
-
-//		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-50]];
-		
-//		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
 	}
-
-	// TODO: use NSTokenField fo the rest!
-
-/*
-	[view setSubviews:[NSArray array]];
-
-	if(!_toLabel)
-		_toLabel = [self createLabel:@"To:"];
-	
-	[view addSubview:_toLabel];
-	
-	if(!_ccLabel)
-		_ccLabel = [self createLabel:@"CC:"];
-	
-	[view addSubview:_ccLabel];
-
-	_fromAddress = [self createLabel:[_currentMessage from]];
-	
-	[view addSubview:_fromAddress];
-	
-	if(_toAddresses)
-		[_toAddresses removeAllObjects];
-	else
-		_toAddresses = [NSMutableArray new];
-	
-	if(_ccAddresses)
-		[_ccAddresses removeAllObjects];
-	else
-		_ccAddresses = [NSMutableArray new];
-		
-	MCOMessageHeader *header = [_currentMessage header];
-	
-	if(!header)
-	{
-		NSLog(@"%s: Message header is empty", __FUNCTION__);
-		return;
-	}
-	
-	for(MCOAddress *to in [header to]) {
-		NSLog(@"to: %@", [SMMessage parseAddress:to]);
-		
-		NSTextField *label = [self createLabel:[SMMessage parseAddress:to]];
-		
-		[_toAddresses addObject:label];
-		
-		[view addSubview:label];
-	}
-
-	for(MCOAddress *cc in [header cc]) {
-		NSLog(@"cc: %@", [SMMessage parseAddress:cc]);
-		
-		NSTextField *label = [self createLabel:[SMMessage parseAddress:cc]];
-
-		[_ccAddresses addObject:label];
-
-		[view addSubview:label];
-	}
-*/
 }
 
 - (void)adjustDetailsLayout {
-/*
-	NSAssert(_fromAddress, @"bad _fromAddressLabel");
-//	NSAssert(_toLabel, @"bad _toLabel");
-//	NSAssert(_ccLabel, @"bad _ccLabel");
-	
-	NSView *view = [self view];
-
-//	[view removeConstraints:[view constraints]];
-
-
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
-
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
-
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
-
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-	
-	if([_toAddresses count] > 0) {
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:[_toAddresses lastObject] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
-	
-		[self arrangeLabels:_toAddresses anchor:_toLabel];
-	}
-	
-	if([_ccAddresses count] > 0) {
-		[self arrangeLabels:_ccAddresses anchor:_ccLabel];
-	}
-*/
-	
-//	[view setNeedsUpdateConstraints:YES];
 }
 
 - (void)arrangeLabels:(NSArray*)labels anchor:(NSView*)anchor {
-/*
-	NSView *view = [self view];
-	NSView *rightmost = anchor;
-	
-	CGFloat minWidth = H_MARGIN * 2 + [anchor bounds].size.width;
-	Boolean firstInRow = YES;
-	
-	for(NSTextField *label in labels) {
-		CGFloat labelWidth = [label bounds].size.width;
-		
-		if(firstInRow || minWidth + H_GAP + labelWidth <= [view bounds].size.width) {
-			[view addConstraint:[NSLayoutConstraint constraintWithItem:rightmost attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
-			
-			[view addConstraint:[NSLayoutConstraint constraintWithItem:rightmost attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-			
-			minWidth += (firstInRow? 0 : H_GAP) + labelWidth;
-			rightmost = label;
-			firstInRow = NO;
-		} else {
-			[view addConstraint:[NSLayoutConstraint constraintWithItem:anchor attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
-			
-			[view addConstraint:[NSLayoutConstraint constraintWithItem:rightmost attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-			
-			minWidth = H_MARGIN * 2 + [anchor bounds].size.width + H_GAP + labelWidth;
-			rightmost = label;
-		}
 }
- */
 
+- (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
+	constraint.priority = priority;
+	[view addConstraint:constraint];
 }
 
 - (NSSize)intrinsicContentViewSize {
@@ -395,8 +276,8 @@
 // ---------------------------------------------------------------------------
 - (NSString *)tokenField:(NSTokenField *)tokenField displayStringForRepresentedObject:(id)representedObject
 {
-	NSLog(@"%s", __func__);
-	return @"Fred";
+//	NSLog(@"%s", __func__);
+	return representedObject;
 }
 
 @end

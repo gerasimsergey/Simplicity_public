@@ -21,8 +21,6 @@
 	NSProgressIndicator *_progressIndicator;
 }
 
-#define DETAILS_H 200
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
@@ -37,18 +35,15 @@
 
 		[view addSubview:messageDetailsView];
 
-		[messageDetailsView setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
-		
-		NSSize detailsSize = [messageDetailsView intrinsicContentSize];
-		NSLog(@"detailsSize %f x %f", detailsSize.width, detailsSize.height);
-		
-//		[self addConstraint:messageDetailsView constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:DETAILS_H] priority:NSLayoutPriorityDefaultLow];
+//		[messageDetailsView setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
+
+//		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:DETAILS_H] priority:NSLayoutPriorityRequired];
 
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
 		
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
 
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 		
 		_messageBodyViewController = [[SMMessageBodyViewController alloc] init];
 
