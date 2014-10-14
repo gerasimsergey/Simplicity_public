@@ -65,7 +65,7 @@
 - (NSView *)outlineView:(NSOutlineView *)outlineView viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item NS_AVAILABLE_MAC(10_7) {
 	SMFolder *folder = (item != nil? (SMFolder *)item : [self rootFolder]);
 
-	NSLog(@"%s: folder '%@'", __func__, folder? [folder shortName] : @"<nil>");
+//	NSLog(@"%s: folder '%@'", __func__, folder? [folder shortName] : @"<nil>");
 
 	SMFolderCellView *result = [outlineView makeViewWithIdentifier:@"FolderCellView" owner:self];
 	

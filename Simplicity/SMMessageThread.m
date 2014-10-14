@@ -88,7 +88,7 @@
 	if(message != nil) {
 		NSAssert(message.uid == uid, @"bad message found");
 		
-		NSLog(@"%s: set message data for uid %u", __FUNCTION__, uid);
+//		NSLog(@"%s: set message data for uid %u", __FUNCTION__, uid);
 		
 		[ message setData:data ];
 	} else {
@@ -110,7 +110,7 @@
 		
 		NSAssert(message.uid == uid, @"bad message found");
 		
-		NSLog(@"%s: set message data for uid %u", __FUNCTION__, uid);
+//		NSLog(@"%s: set message data for uid %u", __FUNCTION__, uid);
 		
 		hasData = [ message hasData ];
 	} else {
@@ -130,7 +130,7 @@
 	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication ] delegate];
 	SMMessageComparators *comparators = [[[appDelegate model] messageStorage] comparators];
 
-	NSLog(@"%s: looking for imap message with uid %u", __FUNCTION__, [imapMessage uid]);
+//	NSLog(@"%s: looking for imap message with uid %u", __FUNCTION__, [imapMessage uid]);
 	
 	NSUInteger messageIndex = [_messageCollection.messages indexOfObject:imapMessage inSortedRange:NSMakeRange(0, [_messageCollection count]) options:NSBinarySearchingInsertionIndex usingComparator:[comparators messagesComparatorByImapMessage]];
 	
@@ -160,7 +160,7 @@
 }
 
 - (void)endUpdate {
-	NSLog(@"%s: threadId %llu, folder '%@'", __FUNCTION__, _threadId, _folder);
+//	NSLog(@"%s: threadId %llu, folder '%@'", __FUNCTION__, _threadId, _folder);
 	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	

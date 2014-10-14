@@ -28,7 +28,7 @@
 	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
 	NSInteger messageThreadsCount = [[ [ appDelegate model ] messageStorage ] messageThreadsCount ];
 
-	NSLog(@"%s: self %@, tableView %@, its datasource %@, view %@, messagesTableView %@, message threads count %ld", __FUNCTION__, self, tableView, [tableView dataSource], [self view], _messageListTableView, messageThreadsCount);
+//	NSLog(@"%s: self %@, tableView %@, its datasource %@, view %@, messagesTableView %@, message threads count %ld", __FUNCTION__, self, tableView, [tableView dataSource], [self view], _messageListTableView, messageThreadsCount);
 	
 	return messageThreadsCount;
 }
@@ -36,7 +36,7 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
-	NSLog(@"%s, selected row %lu, app delegate %@", __FUNCTION__, selectedRow, [[ NSApplication sharedApplication ] delegate]);
+//	NSLog(@"%s, selected row %lu, app delegate %@", __FUNCTION__, selectedRow, [[ NSApplication sharedApplication ] delegate]);
 
 	if(selectedRow >= 0) {
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
@@ -49,7 +49,7 @@
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-	NSLog(@"%s: tableView %@, datasource %@, delegate call: %@, row %ld", __FUNCTION__, tableView, [tableView dataSource], [tableColumn identifier], row);
+//	NSLog(@"%s: tableView %@, datasource %@, delegate call: %@, row %ld", __FUNCTION__, tableView, [tableView dataSource], [tableColumn identifier], row);
 	
 	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
 	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row ];
@@ -64,7 +64,7 @@
 	
 	SMMessageListCellView *view = [ tableView makeViewWithIdentifier:@"MessageCell" owner:self ];
 
-	NSLog(@"%s: from '%@', subject '%@'", __FUNCTION__, [message from], [message subject]);
+//	NSLog(@"%s: from '%@', subject '%@'", __FUNCTION__, [message from], [message subject]);
 	
 	[ view.fromTextField setStringValue:[message from] ];
 	[ view.subjectTextField setStringValue:[message subject] ];

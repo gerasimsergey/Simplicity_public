@@ -63,7 +63,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 			NSData *pathData = [path dataUsingEncoding:NSUTF8StringEncoding];
 			NSString *pathUtf8 = (__bridge NSString *)CFStringCreateWithBytes(NULL, [pathData bytes], [pathData length], kCFStringEncodingUTF7_IMAP, YES);
 			
-			NSLog(@"Folder '%@', delimiter '%c', flags %ld", pathUtf8, folder.delimiter, folder.flags);
+//			NSLog(@"Folder '%@', delimiter '%c', flags %ld", pathUtf8, folder.delimiter, folder.flags);
 			
 			[self addFolderToMailbox:pathUtf8 delimiter:folder.delimiter];
 		}
@@ -72,7 +72,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		NSAssert(nil, @"No folders in mailbox");
 	}
 
-	NSLog(@"number of folders %lu", (unsigned long)_foldersCount);
+//	NSLog(@"number of folders %lu", (unsigned long)_foldersCount);
 }
 
 - (SMFolder*)root {

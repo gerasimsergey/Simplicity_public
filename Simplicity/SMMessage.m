@@ -165,7 +165,7 @@
 	MCOMessageHeader *header = [_imapMessage header];
 	NSAssert(header, @"no header");
 	
-	NSLog(@"from: %@, sent date %@, received date %@", [header from], [header date], [header receivedDate]);
+//	NSLog(@"from: %@, sent date %@, received date %@", [header from], [header date], [header receivedDate]);
 
 	return [header date];
 }

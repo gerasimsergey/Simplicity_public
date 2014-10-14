@@ -174,15 +174,15 @@
 	BOOL end = YES;
 	
 	if([folder totalMessagesCount] == [folder messageHeadersFetched]) {
-		NSLog(@"%s: all %llu message headers fetched", __FUNCTION__, [folder totalMessagesCount]);
+//		NSLog(@"%s: all %llu message headers fetched", __FUNCTION__, [folder totalMessagesCount]);
 	} else if([folder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
-		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [folder messageHeadersFetched]);
+//		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [folder messageHeadersFetched]);
 	} else {
 		end = NO;
 	}
 	
 	if(end) {
-		NSLog(@"%s: fetching message headers finished", __FUNCTION__);
+//		NSLog(@"%s: fetching message headers finished", __FUNCTION__);
 		
 		[[_model messageStorage] endUpdate];
 		
@@ -198,7 +198,7 @@
 	const uint64_t numberOfMessagesToFetch = MIN(restOfMessages, MESSAGE_HEADERS_TO_FETCH_AT_ONCE) - 1;
 	const uint64_t fetchMessagesFromIndex = restOfMessages - numberOfMessagesToFetch;
 
-	NSLog(@"%s: fetching messages [%llu ... %llu] for folder '%@'", __FUNCTION__, fetchMessagesFromIndex, fetchMessagesFromIndex + numberOfMessagesToFetch, [folder name]);
+//	NSLog(@"%s: fetching messages [%llu ... %llu] for folder '%@'", __FUNCTION__, fetchMessagesFromIndex, fetchMessagesFromIndex + numberOfMessagesToFetch, [folder name]);
 
 	MCOIndexSet *regionToFetch = [MCOIndexSet indexSetWithRange:MCORangeMake(fetchMessagesFromIndex, numberOfMessagesToFetch)];
 	
@@ -248,7 +248,7 @@
 }
 
 - (void)updateMessageList:(NSArray*)imapMessages {
-	NSLog(@"%s: new messages count %lu", __FUNCTION__, (unsigned long)[imapMessages count]);
+//	NSLog(@"%s: new messages count %lu", __FUNCTION__, (unsigned long)[imapMessages count]);
 
 	MCOIMAPSession *session = [_model session];
 
@@ -267,7 +267,7 @@
 }
 
 - (void)fetchMessageBodies:(Folder*)folder {
-	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, [folder name]);
+//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, [folder name]);
 	
 	NSAssert(_currentFolder == folder, @"current/active folders mismatch");
 
@@ -278,13 +278,13 @@
 			fetchCount++;
 	}
 
-	NSLog(@"%s: fetching %lu message bodies for folder '%@'", __FUNCTION__, fetchCount, [folder name]);
+//	NSLog(@"%s: fetching %lu message bodies for folder '%@'", __FUNCTION__, fetchCount, [folder name]);
 
 	[folder.fetchedImapMessages removeAllObjects];
 }
 
 - (BOOL)fetchMessageBody:(uint32_t)uid threadId:(uint64_t)threadId urgent:(BOOL)urgent {
-	NSLog(@"%s: uid %u, threadId %llu, urgent %s", __FUNCTION__, uid, threadId, urgent? "YES" : "NO");
+//	NSLog(@"%s: uid %u, threadId %llu, urgent %s", __FUNCTION__, uid, threadId, urgent? "YES" : "NO");
 
 	if([[_model messageStorage] messageHasData:uid threadId:threadId])
 		return NO;
@@ -307,7 +307,7 @@
 		
 		NSAssert(data != nil, @"data != nil");
 		
-		NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
+//		NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
 		
 		NSAssert(_model, @"model is disposed");
 		

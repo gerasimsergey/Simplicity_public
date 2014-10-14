@@ -118,19 +118,19 @@
 }
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource {
-	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
+//	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
 }
 
 - (void)webView:(WebView *)sender resource:(id)identifier didReceiveResponse:(NSURLResponse *)response fromDataSource:(WebDataSource *)dataSource {
-	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
+//	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
 }
 
 - (void)webView:(WebView *)sender resource:(id)identifier didReceiveContentLength:(NSUInteger)length fromDataSource:(WebDataSource *)dataSource {
-	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
+//	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
 }
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource {
-	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
+//	NSLog(@"%s: identifier %@", __FUNCTION__, identifier);
 }
 
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id <WebPolicyDecisionListener>)listener {
