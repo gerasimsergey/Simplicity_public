@@ -75,26 +75,26 @@
 }
 
 - (id)webView:(WebView *)sender identifierForInitialRequest:(NSURLRequest *)request fromDataSource:(WebDataSource *)dataSource {
-	NSLog(@"%s: request %@, identifier %llu", __FUNCTION__, request, _nextIdentifier);
+//	NSLog(@"%s: request %@, identifier %llu", __FUNCTION__, request, _nextIdentifier);
 	return [NSNumber numberWithUnsignedLongLong:_nextIdentifier++];
 }
 
 - (NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
 	
-	NSLog(@"%s: request %@, identifier %@", __FUNCTION__, request, identifier);
+//	NSLog(@"%s: request %@, identifier %@", __FUNCTION__, request, identifier);
 	
 	NSURL *url = [request URL];
 	NSString *absoluteUrl = [url absoluteString];
 	
-	NSLog(@"%s: url absoluteString: %@", __FUNCTION__, absoluteUrl);
+//	NSLog(@"%s: url absoluteString: %@", __FUNCTION__, absoluteUrl);
 	
 	////
-	NSScrollView *scrollView = [[[[_view mainFrame] frameView] documentView] enclosingScrollView];
-	NSRect scrollViewBounds = [[scrollView contentView] bounds];
-	NSPoint savedScrollPosition = scrollViewBounds.origin;
-	NSSize savedScrollSize = scrollViewBounds.size;
-	NSLog(@"Current scroll position: %f, %f\n", savedScrollPosition.x, savedScrollPosition.y);
-	NSLog(@"Current scroll size: %f, %f\n", savedScrollSize.width, savedScrollSize.height);
+//	NSScrollView *scrollView = [[[[_view mainFrame] frameView] documentView] enclosingScrollView];
+//	NSRect scrollViewBounds = [[scrollView contentView] bounds];
+//	NSPoint savedScrollPosition = scrollViewBounds.origin;
+//	NSSize savedScrollSize = scrollViewBounds.size;
+//	NSLog(@"Current scroll position: %f, %f\n", savedScrollPosition.x, savedScrollPosition.y);
+//	NSLog(@"Current scroll size: %f, %f\n", savedScrollSize.width, savedScrollSize.height);
 	////
 	
 	if([absoluteUrl hasPrefix:@"cid:"]) {
@@ -110,7 +110,7 @@
 			return request;
 		}
 		
-		NSLog(@"%s: loading attachment file '%@' for contentId %@", __FUNCTION__, attachmentLocation, contentId);
+//		NSLog(@"%s: loading attachment file '%@' for contentId %@", __FUNCTION__, attachmentLocation, contentId);
 		return [NSURLRequest requestWithURL:attachmentLocation];
 	}
 	

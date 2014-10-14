@@ -165,7 +165,7 @@
 // ---------------------------------------------------------------------------
 - (NSTokenStyle)tokenField:(NSTokenField *)tokenField styleForRepresentedObject:(id)representedObject
 {
-	NSLog(@"%s", __func__);
+//	NSLog(@"%s", __func__);
 	return NSRoundedTokenStyle;
 }
 
@@ -176,7 +176,7 @@
 // ---------------------------------------------------------------------------
 - (BOOL)tokenField:(NSTokenField *)tokenField hasMenuForRepresentedObject:(id)representedObject
 {
-	NSLog(@"%s", __func__);
+//	NSLog(@"%s", __func__);
 	return NO;
 }
 
