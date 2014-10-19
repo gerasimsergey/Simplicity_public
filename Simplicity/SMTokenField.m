@@ -35,7 +35,7 @@ static BOOL floats_equal(CGFloat a, CGFloat b) {
 
 	// TODO: all this looks like a big ugly hack - must be fixed
 	if(!floats_equal(_height, sizeToFit.height)) {
-		_height = sizeToFit.height/2;
+		_height = sizeToFit.height;
 
 		// TODO: not sure if this is an appropriate place to do the intrinsic size invalidation
 		[self invalidateIntrinsicContentSize];
