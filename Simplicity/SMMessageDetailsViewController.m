@@ -103,7 +103,7 @@
 
 	// init date label
 	
-	_date = [self createLabel:@"" bold:YES];
+	_date = [self createLabel:@"" bold:NO];
 	_date.textColor = [NSColor grayColor];
 	
 	[view addSubview:_date];
