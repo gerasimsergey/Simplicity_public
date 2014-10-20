@@ -12,7 +12,6 @@
 
 @interface SMMessageThreadCellViewController : NSViewController
 
-@property NSUInteger height;
 @property NSView *messageView;
 @property NSButton *headerButton;
 

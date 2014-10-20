@@ -64,21 +64,11 @@
 	[_threadCellControllers removeAllObjects];
 	
 	_contentView = [[NSView alloc] initWithFrame:[_messageThreadView frame]];
-	
-	[_contentView setAutoresizesSubviews:NO];
+	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	NSArray *messages = [_currentMessageThread messagesSortedByDate];
-	if(messages.count > 1)
-		[_contentView setAutoresizingMask:NSViewWidthSizable];
-	else
-		[_contentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-	
-	CGFloat viewHeight = 0;
 	for(NSInteger i = 0; i < messages.count; i++) {
 		SMMessage *message = messages[i];
-		
-		//NSLog(@"%s: from '%@', subject '%@'", __FUNCTION__, [message from], [message subject]);
-		
 		SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] init];
 		
 		if(messages.count > 1)
@@ -110,22 +100,11 @@
 		NSView *subview = [messageThreadCellViewController view];
 		
 		[_contentView addSubview:subview];
-		
-		if(i > 0) {
-			const CGFloat spacing = 1;
-			
-			viewHeight += spacing;
-		}
-		
-		viewHeight += messageThreadCellViewController.height;
 	}
 	
-	[self setViewConstraints];
-	
-	if([_contentView frame].size.height < viewHeight)
-		[_contentView setFrameSize:NSMakeSize([_contentView frame].size.width, viewHeight)];
-	
 	[_messageThreadView setDocumentView:_contentView];
+
+	[self setViewConstraints];
 }
 
 - (void)setCellConstraints:(NSView*)cell height:(CGFloat)height {
@@ -139,7 +118,7 @@
 - (void)setViewConstraints {
 	NSArray *subviews = [_contentView subviews];
 	NSView *prevSubView = nil;
-	
+
 	if(subviews.count == 1)
 	{
 		NSView *subview = subviews[0];
@@ -156,13 +135,13 @@
 	{
 		for(NSInteger i = 0; i < subviews.count; i++) {
 			NSView *subview = subviews[i];
-			
+
 			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-			
+
 			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-			
+
 			NSLayoutConstraint *topConstraint;
-			
+
 			if(i == 0) {
 				topConstraint = [NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
 			} else {
@@ -179,6 +158,12 @@
 		
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevSubView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
 	}
+
+	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:[_contentView superview] attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+	
+	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:[_contentView superview] attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	
+	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:[_contentView superview] attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 }
 
 - (void)buttonPressed:(id)sender {

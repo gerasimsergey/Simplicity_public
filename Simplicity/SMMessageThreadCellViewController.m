@@ -25,13 +25,13 @@ static const NSUInteger HEADER_HEIGHT = 36;
 
 		// init main view
 		
-		NSBox *view = [[NSBox alloc] initWithFrame:NSMakeRect(100, 100, 100, 300)];
+		NSBox *view = [[NSBox alloc] init];
 		view.translatesAutoresizingMaskIntoConstraints = NO;
 		[view setTitlePosition:NSNoTitle];
 
 		// init header button
 
-		_headerButton = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+		_headerButton = [[NSButton alloc] init];
 		_headerButton.translatesAutoresizingMaskIntoConstraints = NO;
 		_headerButton.bezelStyle = NSShadowlessSquareBezelStyle;
 		_headerButton.target = self;
@@ -69,8 +69,6 @@ static const NSUInteger HEADER_HEIGHT = 36;
 
 		// finally, commit the main view
 		
-		_height = 300;
-		
 		[self setView:view];
 	}
 	
@@ -79,11 +77,13 @@ static const NSUInteger HEADER_HEIGHT = 36;
 
 - (void)enableCollapse {
 	NSView *view = [self view];
-
+	
+	NSLog(@"%s: view frame %f x %f", __func__, view.frame.size.width, view.frame.size.height);
+/*
 	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:_height];
 	
 	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
-	
+*/
 	[_headerButton setEnabled:YES];
 }
 
@@ -93,6 +93,7 @@ static const NSUInteger HEADER_HEIGHT = 36;
 }
 
 - (void)buttonClicked:(id)sender {
+#if 0
 	NSView *view = [self view];
 	NSView *box = [view superview];
 	NSView *contentView = [box superview];
@@ -141,6 +142,7 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:_height];
 	
 	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
+#endif
 }
 
 @end
