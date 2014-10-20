@@ -156,7 +156,14 @@
 			prevSubView = subview;
 		}
 		
-		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevSubView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+		NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevSubView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+
+		// use low priority here for now because we want to leave blank space
+		// between the message cell at the bottom and the thread view itself
+		// otherwise it will cause the thread view to shrink height
+		[bottomConstraint setPriority:NSLayoutPriorityDefaultLow];
+
+		[_contentView addConstraint:bottomConstraint];
 	}
 
 	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:[_contentView superview] attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];

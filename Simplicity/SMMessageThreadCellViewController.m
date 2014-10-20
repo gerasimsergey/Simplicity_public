@@ -59,13 +59,13 @@ static const NSUInteger HEADER_HEIGHT = 36;
 
 		[view addSubview:_messageView];
 
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
-		 
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
-
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 		
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		 
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
 
 		// finally, commit the main view
 		
@@ -76,14 +76,6 @@ static const NSUInteger HEADER_HEIGHT = 36;
 }
 
 - (void)enableCollapse {
-	NSView *view = [self view];
-	
-	NSLog(@"%s: view frame %f x %f", __func__, view.frame.size.width, view.frame.size.height);
-/*
-	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:_height];
-	
-	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
-*/
 	[_headerButton setEnabled:YES];
 }
 
@@ -93,56 +85,27 @@ static const NSUInteger HEADER_HEIGHT = 36;
 }
 
 - (void)buttonClicked:(id)sender {
-#if 0
 	NSView *view = [self view];
-	NSView *box = [view superview];
-	NSView *contentView = [box superview];
 	
-	CGFloat heightDelta = (!_collapsed? [_messageView frame].size.height : _messageViewHeight) - HEADER_HEIGHT;
-	
-	NSAssert(heightDelta > 0, @"too small message view height");
-
 	if(!_collapsed)
 	{
-		_messageViewHeight = [_messageView frame].size.height;
+		NSAssert(_heightConstraint == nil, @"height constraint already exists");
 		
-		NSRect ff;
+		_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT];
 		
-		ff = [box frame];
-		ff.size.height -= heightDelta;
-		[box setFrame:ff];
-		
-		ff = [contentView frame];
-		ff.size.height -= heightDelta;
-		[contentView setFrame:ff];
-		
-		NSAssert(_height > heightDelta, @"bad message view height");
+		[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
 
-		_height -= heightDelta;
 		_collapsed = YES;
 	}
 	else
 	{
-		NSRect ff;
+		[view removeConstraint:_heightConstraint];
 		
-		ff = [box frame];
-		ff.size.height += heightDelta;
-		[box setFrame:ff];
-		
-		ff = [contentView frame];
-		ff.size.height += heightDelta;
-		[contentView setFrame:ff];
-		
-		_height += heightDelta;
+		_heightConstraint = nil;
+
 		_collapsed = NO;
 	}
 
-	[view removeConstraint:_heightConstraint];
-
-	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:_height];
-	
-	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
-#endif
 }
 
 @end

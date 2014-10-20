@@ -140,6 +140,7 @@
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
 	
 	// trigger instrinsic size invalidation
+	// TODO: remove this ridiculous hack
 	[_toAdresses setFrame:NSMakeRect(0,0,100,0)];
 }
 
