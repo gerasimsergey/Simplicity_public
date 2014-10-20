@@ -18,8 +18,9 @@
 
 	NSTextField *_subject;
 	NSTextField *_fromAddress;
+	NSTextField *_date;
 	NSTextField *_toLabel;
-	NSTokenField *_toAdresses;
+	NSTokenField *_toAddresses;
 	NSTextField *_ccLabel;
 	NSMutableArray *_ccAddresses;
 }
@@ -37,7 +38,6 @@
 	
 	return self;
 }
-
 		
 - (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
 	NSTextField *label = [[NSTextField alloc] init];
@@ -64,17 +64,18 @@
 
 	[_fromAddress setStringValue:[_currentMessage from]];
 	[_subject setStringValue:[_currentMessage subject]];
+	[_date setStringValue:[_currentMessage localizedDate]];
 	
-	NSArray *array = [_toAdresses objectValue];
+	NSArray *array = [_toAddresses objectValue];
 	NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
 	
 	for(MCOAddress *to in [message.header to])
 		[newArray addObject:[SMMessage parseAddress:to]];
 
-	[_toAdresses setObjectValue:newArray];
+	[_toAddresses setObjectValue:newArray];
 	
 	// force the insertion point after the added token
-	NSText *fieldEditor = [_toAdresses currentEditor];
+	NSText *fieldEditor = [_toAddresses currentEditor];
 	[fieldEditor setSelectedRange:NSMakeRange([[fieldEditor string] length], 0)];
 	
 	[[self view] invalidateIntrinsicContentSize];
@@ -100,15 +101,32 @@
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
+	// init date label
+	
+	_date = [self createLabel:@"" bold:YES];
+	_date.textColor = [NSColor grayColor];
+	
+	[view addSubview:_date];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+
 	// init subject
 	
 	_subject = [self createLabel:@"" bold:NO];
 	_subject.textColor = [NSColor blackColor];
+
+	// TODO: setup a proper half-word endings here
+
+	[_subject setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
 	
 	[view addSubview:_subject];
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W]];
-	
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
 	// init to label
@@ -124,24 +142,24 @@
 
 	// init 'to' address list
 
-	_toAdresses = [[SMTokenField alloc] init];
-	_toAdresses.delegate = self; // TODO: reference loop here?
-	_toAdresses.tokenStyle = NSPlainTextTokenStyle;
-	_toAdresses.translatesAutoresizingMaskIntoConstraints = NO;
-	[_toAdresses setBordered:NO];
-	[_toAdresses setDrawsBackground:NO];
+	_toAddresses = [[SMTokenField alloc] init];
+	_toAddresses.delegate = self; // TODO: reference loop here?
+	_toAddresses.tokenStyle = NSPlainTextTokenStyle;
+	_toAddresses.translatesAutoresizingMaskIntoConstraints = NO;
+	[_toAddresses setBordered:NO];
+	[_toAddresses setDrawsBackground:NO];
 
-	[view addSubview:_toAdresses];
+	[view addSubview:_toAddresses];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAdresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
 	
 	// trigger instrinsic size invalidation
 	// TODO: remove this ridiculous hack
-	[_toAdresses setFrame:NSMakeRect(0,0,100,0)];
+	[_toAddresses setFrame:NSMakeRect(0,0,100,0)];
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
@@ -150,7 +168,7 @@
 }
 
 - (NSSize)intrinsicContentViewSize {
-	NSSize sz = NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAdresses intrinsicContentSize].height + V_GAP);
+	NSSize sz = NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAddresses intrinsicContentSize].height + V_GAP);
 	return sz;
 }
 

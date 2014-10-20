@@ -68,18 +68,9 @@
 	
 	[ view.fromTextField setStringValue:[message from] ];
 	[ view.subjectTextField setStringValue:[message subject] ];
+
+	[view.dateTextField setStringValue:[message localizedDate]];
 	
-	NSDate *messageDate = [message date];
-	NSDateComponents *messageDateComponents = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[message date]];
-
-	NSDateComponents *today = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
-
-	if([today day] == [messageDateComponents day] && [today month] == [messageDateComponents month] && [today year] == [messageDateComponents year] && [today era] == [messageDateComponents era]) {
-		[ view.dateTextField setStringValue:[NSDateFormatter localizedStringFromDate:messageDate dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle]];
-	} else {
-		[ view.dateTextField setStringValue:[NSDateFormatter localizedStringFromDate:messageDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle]];
-	}
-
 	return view;
 }
 

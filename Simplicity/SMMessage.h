@@ -37,4 +37,6 @@
 
 - (MCOIMAPMessage*)getImapMessage;
 
+- (NSString*)localizedDate;
+
 @end
