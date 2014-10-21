@@ -150,9 +150,12 @@
 
 	NSString *subject = [header subject];
 	if(subject) {
-		NSString *trimmedSubject = [SMMessage trimTextField:subject];
-		if([trimmedSubject length] > 0)
+		// note: two-pass replacement replacement loop here
+		NSString *trimmedSubject = [[[SMMessage trimTextField:subject] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+
+		if([trimmedSubject length] > 0) {
 			return trimmedSubject;
+		}
 	}
 	
 	return @"<no subject>";

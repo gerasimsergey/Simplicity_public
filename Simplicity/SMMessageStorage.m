@@ -209,8 +209,13 @@
 	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:_currentFolder];
 	
 	NSAssert(collection, @"no thread collection for current folder");
-	NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
 	
+	if(index >= [collection.messageThreadsByDate count]) {
+		NSLog(@"%s: message index %lu >= message thread message count %lu", __func__, index, [collection.messageThreadsByDate count]);
+	}
+	
+	NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
+
 	return [collection.messageThreadsByDate objectAtIndex:index];
 }
 
