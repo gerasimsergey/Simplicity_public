@@ -16,15 +16,12 @@
 
 @interface SMAppController : NSObject
 
-@property (weak, nonatomic) IBOutlet NSView *mailboxView;
-@property (weak, nonatomic) IBOutlet NSView *messageListView;
-@property (weak, nonatomic) IBOutlet NSView *messageThreadView;
+@property (weak, nonatomic) IBOutlet NSView *view;
 
 @property SMMailboxViewController *mailboxViewController;
 @property SMMessageListViewController *messageListViewController;
 @property SMMessageThreadViewController *messageThreadViewController;
 
-- (void)setMessageListViewController:(SMMessageListViewController*)messageListViewController;
 - (void)updateMessageListView;
 - (void)updateMailboxFolderListView;
 

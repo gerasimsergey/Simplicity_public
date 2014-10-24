@@ -26,11 +26,11 @@
 	NSView *_contentView;
 }
 
-- (id)initWithFrame:(NSRect)frame {
-	self = [super init];
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
-	if (self) {
-		_messageThreadView = [[NSScrollView alloc] initWithFrame:frame];
+	if(self) {
+		_messageThreadView = [[NSScrollView alloc] init];
 		
 		[_messageThreadView setBorderType:NSNoBorder];
 		[_messageThreadView setHasVerticalScroller:YES];

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1070" defaultVersion="1070" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
@@ -19,7 +19,7 @@
             <subviews>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="0.0" y="0.0" width="215" height="472"/>
-                    <clipView key="contentView" id="HA8-Z9-Dlo">
+                    <clipView key="contentView" drawsBackground="NO" id="HA8-Z9-Dlo">
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -107,10 +107,10 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <nil key="backgroundColor"/>
                     </clipView>
                     <constraints>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="215" id="6xP-Fg-SBt"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="215" id="6xP-Fg-SBt"/>
                     </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="5">
                         <rect key="frame" x="-100" y="-100" width="223" height="15"/>

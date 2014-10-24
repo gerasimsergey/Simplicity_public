@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1070" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
@@ -651,53 +650,11 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="810" height="410"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="800" height="400"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="810" height="410"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <splitView horizontalHuggingPriority="1" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fvq-MD-DdC">
-                        <rect key="frame" x="0.0" y="0.0" width="810" height="410"/>
-                        <subviews>
-                            <splitView fixedFrame="YES" dividerStyle="thin" vertical="YES" id="gI5-RO-eRA">
-                                <rect key="frame" x="0.0" y="0.0" width="262" height="410"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <subviews>
-                                    <customView id="K5G-fA-yNm">
-                                        <rect key="frame" x="0.0" y="0.0" width="114" height="410"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="114" id="aYL-10-fEG"/>
-                                        </constraints>
-                                    </customView>
-                                    <customView fixedFrame="YES" id="536">
-                                        <rect key="frame" x="115" y="0.0" width="147" height="410"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    </customView>
-                                </subviews>
-                                <holdingPriorities>
-                                    <real value="250"/>
-                                    <real value="250"/>
-                                </holdingPriorities>
-                            </splitView>
-                            <customView fixedFrame="YES" id="om8-nf-PzR">
-                                <rect key="frame" x="263" y="0.0" width="547" height="410"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </customView>
-                        </subviews>
-                        <holdingPriorities>
-                            <real value="250"/>
-                            <real value="386"/>
-                        </holdingPriorities>
-                    </splitView>
-                </subviews>
-                <constraints>
-                    <constraint firstAttribute="trailing" secondItem="fvq-MD-DdC" secondAttribute="trailing" id="Bol-Rs-y15"/>
-                    <constraint firstItem="fvq-MD-DdC" firstAttribute="top" secondItem="372" secondAttribute="top" id="Eyf-Q8-Wsx"/>
-                    <constraint firstItem="fvq-MD-DdC" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="Hbk-9f-HaM"/>
-                    <constraint firstAttribute="bottom" secondItem="fvq-MD-DdC" secondAttribute="bottom" id="IwC-L8-s7Y"/>
-                </constraints>
             </view>
             <toolbar key="toolbar" implicitIdentifier="ED6517C5-1C8B-4899-9F7F-FA2B80694CE9" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="small" id="brI-OO-hr2">
                 <allowedToolbarItems>
@@ -712,6 +669,7 @@
                     <toolbarItem reference="M6Q-T4-DkB"/>
                 </defaultToolbarItems>
             </toolbar>
+            <point key="canvasLocation" x="250" y="362"/>
         </window>
         <customObject id="494" customClass="SMAppDelegate">
             <connections>
@@ -721,9 +679,7 @@
         <customObject id="420" customClass="NSFontManager"/>
         <customObject id="544" customClass="SMAppController">
             <connections>
-                <outlet property="mailboxView" destination="K5G-fA-yNm" id="gQT-Ye-meo"/>
-                <outlet property="messageListView" destination="536" id="602"/>
-                <outlet property="messageThreadView" destination="om8-nf-PzR" id="Y56-gZ-2z4"/>
+                <outlet property="view" destination="372" id="OSt-G0-4ik"/>
             </connections>
         </customObject>
     </objects>

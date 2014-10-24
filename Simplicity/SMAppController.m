@@ -36,10 +36,6 @@
 	NSView *mailboxView = [ _mailboxViewController view ];
 
 	NSAssert(mailboxView, @"mailboxView");
-	NSAssert(_mailboxView, @"_mailboxView");
-
-	[ _mailboxView addSubview:mailboxView ];
-	[ mailboxView setFrame:[ _mailboxView bounds ] ];
 	
 	//
 
@@ -48,39 +44,46 @@
 	NSAssert(_messageListViewController, @"_messageListViewController");
 		
 	NSView *messageListView = [ _messageListViewController view ];
-	
+
 	NSAssert(messageListView, @"messageListView");
-	NSAssert(_messageListView, @"_messageListView");
 	
-	[ _messageListView addSubview:messageListView ];
-	[ messageListView setFrame:[ _messageListView bounds ] ];
+	//	[messageListView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
 	
 	//
 	
-	_messageThreadViewController = [ [ SMMessageThreadViewController alloc ] initWithFrame:[_messageThreadView bounds] ];
+	_messageThreadViewController = [ [ SMMessageThreadViewController alloc ] initWithNibName:nil bundle:nil ];
 	
 	NSAssert(_messageThreadViewController, @"_messageThreadViewController");
 	
 	NSView *messageThreadView = [ _messageThreadViewController messageThreadView ];
 	
 	NSAssert(messageThreadView, @"messageThreadView");
-	NSAssert(_messageThreadView, @"_messageThreadView");
+
+	[messageThreadView setContentCompressionResistancePriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+
+	//
 	
-	[ _messageThreadView addSubview:messageThreadView ];
-	[ messageThreadView setFrame:[ _messageThreadView bounds ] ];
-}
+	NSSplitView *splitView = [[NSSplitView alloc] init];
+	splitView.translatesAutoresizingMaskIntoConstraints = NO;
 
-- (void)setMessageListViewController:(SMMessageListViewController*)messageListViewController {
-	_messageListViewController = messageListViewController;
+	[splitView setVertical:YES];
+	[splitView setDividerStyle:NSSplitViewDividerStyleThin];
+	
+	[splitView addSubview:mailboxView];
+	[splitView addSubview:messageListView];
+	[splitView addSubview:messageThreadView];
+	
+	[splitView adjustSubviews];
+	
+	[_view addSubview:splitView];
+	
+	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
+	
+	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0]];
+	
+	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 
-	NSLog(@"SMAppController: _messageListViewController %@, _messageListViewController.view %@", _messageListViewController, [ _messageListViewController view ]);
-
-	[ _messageListView addSubview:[ _messageListViewController view ] ];
-	[ [ _messageListViewController view ] setFrame:[ _messageListView bounds ] ];
-}
-
-- (SMMessageListViewController*)messageListViewController {
-	return _messageListViewController;
+	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
 }
 
 - (void)updateMessageListView {

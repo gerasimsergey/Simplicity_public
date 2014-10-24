@@ -14,7 +14,6 @@
 
 @property NSScrollView *messageThreadView;
 
-- (id)initWithFrame:(NSRect)frame;
 - (void)setMessageThread:(SMMessageThread*)messageThread;
 - (SMMessageThread*)currentMessageThread;
 

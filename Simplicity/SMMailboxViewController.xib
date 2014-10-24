@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment defaultVersion="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SMMailboxViewController">
@@ -12,26 +12,24 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="245" height="396"/>
+            <rect key="frame" x="0.0" y="0.0" width="153" height="396"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="gDp-pD-1WG">
-                    <rect key="frame" x="0.0" y="0.0" width="242" height="396"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="gDp-pD-1WG">
+                    <rect key="frame" x="0.0" y="0.0" width="150" height="396"/>
                     <clipView key="contentView" id="2Im-sc-EYw">
                         <rect key="frame" x="1" y="17" width="240" height="378"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" headerView="qJQ-6v-WPU" viewBased="YES" indentationPerLevel="16" outlineTableColumn="Z07-e3-PoH" id="9N3-Mz-MyC">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="378"/>
+                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" viewBased="YES" indentationPerLevel="16" outlineTableColumn="Z07-e3-PoH" id="9N3-Mz-MyC">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="237" minWidth="16" maxWidth="1000" id="Z07-e3-PoH">
+                                    <tableColumn width="145" minWidth="16" maxWidth="1000" id="Z07-e3-PoH">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -45,12 +43,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="FolderCellView" id="q8j-Aa-kEy" customClass="SMFolderCellView">
-                                                <rect key="frame" x="1" y="1" width="237" height="17"/>
+                                                <rect key="frame" x="1" y="1" width="145" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="BKT-xZ-fBQ">
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BKT-xZ-fBQ">
                                                         <rect key="frame" x="0.0" y="0.0" width="237" height="17"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="B2g-a1-nU7">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -73,20 +70,23 @@
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="150" id="o4v-Yd-VPX"/>
+                    </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="6oa-jV-d3q">
-                        <rect key="frame" x="1" y="1" width="0.0" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="tkm-l0-8lr">
-                        <rect key="frame" x="-15" y="17" width="16" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <tableHeaderView key="headerView" id="qJQ-6v-WPU">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="17"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </tableHeaderView>
                 </scrollView>
             </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="gDp-pD-1WG" secondAttribute="trailing" constant="3" id="94O-cV-KQg"/>
+                <constraint firstItem="gDp-pD-1WG" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="ILh-fX-6Fd"/>
+                <constraint firstAttribute="bottom" secondItem="gDp-pD-1WG" secondAttribute="bottom" id="bcn-yI-H97"/>
+                <constraint firstItem="gDp-pD-1WG" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="elq-VM-eL0"/>
+            </constraints>
         </customView>
         <customObject id="VW2-07-57D" userLabel="View Controller" customClass="SMMailboxViewController"/>
     </objects>
