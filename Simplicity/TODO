@@ -1,12 +1,22 @@
-CONNECTION
+BUGS
 
-Fix this:
+- Fix this:
 
 2014-04-15 23:49:02.371 Simplicity[72210:303] __50-[SMSimplicityContainer getIMAPServerCapabilities]_block_invoke: error getting IMAP capabilities: Error Domain=MCOErrorDomain Code=1 "A stable connection to the server could not be established." UserInfo=0x618000266980 {NSLocalizedDescription=A stable connection to the server could not be established.}
 
+- Fix this:
+
+NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
+
+- Fix 'to' address list initial layout.
+
+MESSAGE THREAD
+
+- message thread rebuilding when new messages arrive / vanish
 
 MESSAGE LIST
 
+- Must be programmatically created, with no NIB;
 - Downloaded attachments rendering in the open message view;
 - HTML rendering in background (MCOIMAPMessageRenderingOperation);
 - Session renew;
@@ -24,3 +34,11 @@ MESSAGE LIST
 - Message list refresh on demand;
 - Load older messages on demand;
 - Message deletion propagation to the server;
+- Save/restore view layout on app exit/startup;
+
+NEW FEATURES
+
+- Search (very basic for now);
+
+...
+
