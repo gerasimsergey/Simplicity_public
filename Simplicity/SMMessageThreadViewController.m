@@ -88,7 +88,7 @@
 		if(htmlMessageBodyText) {
 			[message fetchInlineAttachments];
 			
-			[messageViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
+			[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
 		} else {
 			NSLog(@"%s: no message body!", __FUNCTION__);
 			
@@ -214,7 +214,7 @@
 			SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 			SMMessageListController *messageListController = [[appDelegate model] messageListController];
 			
-			[[_threadCellControllers[i] messageViewController] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
+			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
 			
 			[[_threadCellControllers[i] messageViewController] setMessageDetails:message];
 			

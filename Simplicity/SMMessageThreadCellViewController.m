@@ -7,11 +7,13 @@
 //
 
 #import "SMMessageViewController.h"
+#import "SMMessageBodyViewController.h"
 #import "SMMessageThreadCellViewController.h"
 
 static const NSUInteger HEADER_HEIGHT = 36;
 
 @implementation SMMessageThreadCellViewController {
+	NSProgressIndicator *_progressIndicator;
 	NSLayoutConstraint *_heightConstraint;
 	CGFloat _messageViewHeight;
 	BOOL _collapsed;
@@ -67,6 +69,21 @@ static const NSUInteger HEADER_HEIGHT = 36;
 		 
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
 
+		// init progress indicator
+
+		_progressIndicator = [[NSProgressIndicator alloc] init];
+		_progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+		
+		[_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+		[_progressIndicator setDisplayedWhenStopped:NO];
+		[_progressIndicator startAnimation:self];
+		
+		[view addSubview:_progressIndicator];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+		
 		// finally, commit the main view
 		
 		[self setView:view];
@@ -89,6 +106,8 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	
 	if(!_collapsed)
 	{
+		[_progressIndicator setHidden:YES];
+		
 		NSAssert(_heightConstraint == nil, @"height constraint already exists");
 		
 		_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT];
@@ -102,10 +121,16 @@ static const NSUInteger HEADER_HEIGHT = 36;
 		[view removeConstraint:_heightConstraint];
 		
 		_heightConstraint = nil;
-
+		
 		_collapsed = NO;
-	}
 
+		[_progressIndicator setHidden:NO];
+	}
+}
+
+- (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
+	[_messageViewController setMessageViewText:htmlText uid:uid folder:folder];
+	[_progressIndicator stopAnimation:self];
 }
 
 @end

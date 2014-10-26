@@ -17,6 +17,8 @@
 
 @property SMMessageViewController *messageViewController;
 
+- (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
+
 - (void)enableCollapse;
 
 @end

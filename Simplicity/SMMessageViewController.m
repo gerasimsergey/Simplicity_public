@@ -17,8 +17,6 @@
 
 @implementation SMMessageViewController {
 	SMMessageDetailsViewController *_messageDetailsViewController;
-	SMMessageBodyViewController *_messageBodyViewController;
-	NSProgressIndicator *_progressIndicator;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -57,19 +55,6 @@
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
 
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:300] priority:NSLayoutPriorityDefaultLow];
-
-		_progressIndicator = [[NSProgressIndicator alloc] init];
-		_progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-		
-		[_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
-		[_progressIndicator setDisplayedWhenStopped:NO];
-		[_progressIndicator startAnimation:self];
-		
-		[view addSubview:_progressIndicator];
-
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
-
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
 	
 		[self setView:view];
 	}
@@ -87,7 +72,6 @@
 	NSAssert(messageBodyView, @"messageBodyView");
 
 	[_messageBodyViewController setMessageViewText:htmlText uid:uid folder:folder];
-	[_progressIndicator stopAnimation:self];
 }
 
 - (void)setMessageDetails:(SMMessage*)message {
