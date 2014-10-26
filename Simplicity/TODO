@@ -42,3 +42,13 @@ NEW FEATURES
 
 ...
 
+SEARCH (ideas to implement)
+
+- current message thread content search ("local search");
+- "global search" for messages across folders (based on search expressions, see [MCOIMAPSession searchOperationWithFolder:kind:searchString:] and [MCOIMAPSession searchExpressionOperationWithFolder:expression:]);
+- search results to appear as a message list;
+- search history in the leftside toolbar above the folder list;
+- highlight search pattern occurrences in the found message (for local AND global search);
+- ...?
+
+
