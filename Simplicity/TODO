@@ -8,7 +8,8 @@ BUGS
 
 NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
 
-- Fix 'to' address list initial layout.
+- Fix 'to' address list initial layout;
+- Fix selected message thread / message cursor disappearance on folder update.
 
 MESSAGE THREAD
 
