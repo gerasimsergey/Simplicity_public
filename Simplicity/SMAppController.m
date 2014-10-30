@@ -17,6 +17,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 
 @implementation SMAppController {
 	NSButton *button1, *button2;
+	NSToolbarItem *__weak _activeSearchItem;
 }
 
 @synthesize mailboxViewController = _mailboxViewController;
@@ -163,6 +164,42 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	// does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed
 	// The set of allowed items is used to construct the customization palette
 	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+}
+
+- (void) toolbarWillAddItem: (NSNotification *) notif {
+	// Optional delegate method:  Before an new item is added to the toolbar, this notification is posted.
+	// This is the best place to notice a new item is going into the toolbar.  For instance, if you need to
+	// cache a reference to the toolbar item or need to set up some initial state, this is the best place
+	// to do it.  The notification object is the toolbar to which the item is being added.  The item being
+	// added is found by referencing the @"item" key in the userInfo
+	NSToolbarItem *addedItem = [[notif userInfo] objectForKey: @"item"];
+	
+	if([[addedItem itemIdentifier] isEqual: SearchDocToolbarItemIdentifier]) {
+		[addedItem setTarget: self];
+		[addedItem setAction: @selector(searchUsingToolbarSearchField:)];
+		
+		_activeSearchItem = addedItem;
+	}
+}
+
+- (void) searchUsingToolbarSearchField:(id) sender {
+	// This message is sent when the user strikes return in the search field in the toolbar
+	NSString *searchString = [(NSTextField *)[_activeSearchItem view] stringValue];
+	
+	NSLog(@"%s: searching for string '%@'", __func__, searchString);
+	
+/*
+	NSArray *rangesOfString = [self rangesOfStringInDocument:searchString];
+	if ([rangesOfString count]) {
+		if ([documentTextView respondsToSelector:@selector(setSelectedRanges:)]) {
+			// NSTextView can handle multiple selections in 10.4 and later.
+			[documentTextView setSelectedRanges: rangesOfString];
+		} else {
+			// If we can't do multiple selection, just select the first range.
+			[documentTextView setSelectedRange: [[rangesOfString objectAtIndex:0] rangeValue]];
+		}
+	}
+*/
 }
 
 @end
