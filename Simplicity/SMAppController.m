@@ -110,9 +110,10 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 		// NSToolbarItem doens't normally autovalidate items that hold custom views, but we want this guy to be disabled when there is no text to search.
 		toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
 		
-		NSMenu *submenu = nil;
+/*
+ NSMenu *submenu = nil;
 		NSMenuItem *submenuItem = nil, *menuFormRep = nil;
-		
+*/
 		// Set up the standard properties
 		[toolbarItem setLabel: @"Search"];
 		[toolbarItem setPaletteLabel: @"Search"];
@@ -187,6 +188,48 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSString *searchString = [(NSTextField *)[_activeSearchItem view] stringValue];
 	
 	NSLog(@"%s: searching for string '%@'", __func__, searchString);
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	MCOIMAPSession *session = [[appDelegate model] session];
+	
+	NSAssert(session, @"session is nil");
+	
+	NSString *folderName = @"INBOX";
+	MCOIMAPSearchOperation *op = [session searchOperationWithFolder:folderName kind:MCOIMAPSearchKindContent searchString:searchString];
+
+	[op start:^(NSError *error, MCOIndexSet *searchResult) {
+		if(error == nil) {
+			if(searchResult.count > 0) {
+				// TODO: refactor and use it via fetchMessaHeaders
+				MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
+				(MCOIMAPMessagesRequestKindHeaders |
+				 MCOIMAPMessagesRequestKindStructure |
+				 MCOIMAPMessagesRequestKindFullHeaders    |
+				 MCOIMAPMessagesRequestKindInternalDate |
+				 MCOIMAPMessagesRequestKindHeaderSubject |
+				 MCOIMAPMessagesRequestKindFlags |
+				 MCOIMAPMessagesRequestKindGmailLabels |
+				 MCOIMAPMessagesRequestKindGmailMessageID |
+				 MCOIMAPMessagesRequestKindGmailThreadID);
+				
+				MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:searchResult];
+				
+				[fetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
+					if(error) {
+						NSLog(@"Error downloading found messages list: %@", error);
+					} else {
+						for(id m in messages) {
+							NSLog(@"%s: found message %@", __func__, m);
+						}
+					}
+				}];
+			} else {
+				NSLog(@"%s: nothing found", __func__);
+			}
+		} else {
+			
+		}
+	}];
 	
 /*
 	NSArray *rangesOfString = [self rangesOfStringInDocument:searchString];
