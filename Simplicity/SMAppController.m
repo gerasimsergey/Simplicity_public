@@ -13,6 +13,8 @@
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
 
+static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
+
 @implementation SMAppController {
 	NSButton *button1, *button2;
 }
@@ -46,8 +48,6 @@
 	NSView *messageListView = [ _messageListViewController view ];
 
 	NSAssert(messageListView, @"messageListView");
-	
-	//	[messageListView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
 	
 	//
 	
@@ -98,6 +98,71 @@
 
 - (void)updateMailboxFolderListView {
 	[ _mailboxViewController updateFolderListView ];
+}
+
+- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	// Required delegate method:  Given an item identifier, this method returns an item
+	// The toolbar will use this method to obtain toolbar items that can be displayed in the customization sheet, or in the toolbar itself
+	NSToolbarItem *toolbarItem = nil;
+	
+	if([itemIdent isEqual: SearchDocToolbarItemIdentifier]) {
+		// NSToolbarItem doens't normally autovalidate items that hold custom views, but we want this guy to be disabled when there is no text to search.
+		toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
+		
+		NSMenu *submenu = nil;
+		NSMenuItem *submenuItem = nil, *menuFormRep = nil;
+		
+		// Set up the standard properties
+		[toolbarItem setLabel: @"Search"];
+		[toolbarItem setPaletteLabel: @"Search"];
+		[toolbarItem setToolTip: @"Search Your Document"];
+		
+		_searchField = [[NSSearchField alloc] initWithFrame:[_searchField frame]];
+		
+		// Use a custom view, a text field, for the search item
+		[toolbarItem setView:_searchField];
+		[toolbarItem setMinSize:NSMakeSize(30, NSHeight([_searchField frame]))];
+		[toolbarItem setMaxSize:NSMakeSize(400,NSHeight([_searchField frame]))];
+		
+		// By default, in text only mode, a custom items label will be shown as disabled text, but you can provide a
+		// custom menu of your own by using <item> setMenuFormRepresentation]
+/*
+ submenu = [[[NSMenu alloc] init] autorelease];
+		submenuItem = [[[NSMenuItem alloc] initWithTitle: @"Search Panel" action: @selector(searchUsingSearchPanel:) keyEquivalent: @""] autorelease];
+		menuFormRep = [[[NSMenuItem alloc] init] autorelease];
+		[submenu addItem: submenuItem];
+		[submenuItem setTarget: self];
+		[menuFormRep setSubmenu: submenu];
+		[menuFormRep setTitle: [toolbarItem label]];
+ 
+		// Normally, a menuFormRep with a submenu should just act like a pull down.  However, in 10.4 and later, the menuFormRep can have its own target / action.  If it does, on click and hold (or if the user clicks and drags down), the submenu will appear.  However, on just a click, the menuFormRep will fire its own action.
+		[menuFormRep setTarget: self];
+		[menuFormRep setAction: @selector(searchMenuFormRepresentationClicked:)];
+		
+		// Please note, from a user experience perspective, you wouldn't set up your search field and menuFormRep like we do here.  This is simply an example which shows you all of the features you could use.
+		[toolbarItem setMenuFormRepresentation: menuFormRep];
+ */
+	} else {
+		// itemIdent refered to a toolbar item that is not provide or supported by us or cocoa
+		// Returning nil will inform the toolbar this kind of item is not supported
+		toolbarItem = nil;
+	}
+	
+	return toolbarItem;
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar {
+	// Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default
+	// If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
+	// user chooses to revert to the default items this set will be used
+	return [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, SearchDocToolbarItemIdentifier, nil];
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
+	// Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar
+	// does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed
+	// The set of allowed items is used to construct the customization palette
+	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 }
 
 @end

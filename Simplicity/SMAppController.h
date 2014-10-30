@@ -14,9 +14,12 @@
 @class SMMessageViewController;
 @class SMMessageThreadViewController;
 
-@interface SMAppController : NSObject
+@interface SMAppController : NSObject <NSToolbarDelegate>
 
 @property (weak, nonatomic) IBOutlet NSView *view;
+
+@property (nonatomic) IBOutlet NSToolbar *toolbar;
+@property (nonatomic) IBOutlet NSTextField *searchField;
 
 @property SMMailboxViewController *mailboxViewController;
 @property SMMessageListViewController *messageListViewController;

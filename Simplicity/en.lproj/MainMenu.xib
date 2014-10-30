@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment defaultVersion="1070" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
@@ -656,7 +657,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="810" height="410"/>
                 <autoresizingMask key="autoresizingMask"/>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="ED6517C5-1C8B-4899-9F7F-FA2B80694CE9" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="small" id="brI-OO-hr2">
+            <toolbar key="toolbar" implicitIdentifier="ED6517C5-1C8B-4899-9F7F-FA2B80694CE9" displayMode="iconOnly" sizeMode="small" id="brI-OO-hr2">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="Lmu-0x-jkn"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Bkb-Vs-bn9"/>
@@ -668,6 +669,9 @@
                     <toolbarItem reference="LJz-2L-q4X"/>
                     <toolbarItem reference="M6Q-T4-DkB"/>
                 </defaultToolbarItems>
+                <connections>
+                    <outlet property="delegate" destination="544" id="9fL-Fp-vfQ"/>
+                </connections>
             </toolbar>
             <point key="canvasLocation" x="250" y="362"/>
         </window>
@@ -679,9 +683,25 @@
         <customObject id="420" customClass="NSFontManager"/>
         <customObject id="544" customClass="SMAppController">
             <connections>
+                <outlet property="searchField" destination="w9B-OG-la5" id="Lof-qa-D7m"/>
+                <outlet property="toolbar" destination="brI-OO-hr2" id="9mI-DB-aU4"/>
                 <outlet property="view" destination="372" id="OSt-G0-4ik"/>
             </connections>
         </customObject>
+        <customView id="aBI-Ag-RVt">
+            <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w9B-OG-la5">
+                    <rect key="frame" x="27" y="37" width="96" height="22"/>
+                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="9v6-Rb-Gt2">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </searchFieldCell>
+                </searchField>
+            </subviews>
+        </customView>
     </objects>
     <resources>
         <image name="search-icon" width="100" height="100"/>
