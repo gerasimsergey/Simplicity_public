@@ -200,7 +200,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	[op start:^(NSError *error, MCOIndexSet *searchResult) {
 		if(error == nil) {
 			if(searchResult.count > 0) {
-				// TODO: refactor and use it via fetchMessaHeaders
+				// TODO: refactor and use it via fetchMessageHeaders
 				MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
 				(MCOIMAPMessagesRequestKindHeaders |
 				 MCOIMAPMessagesRequestKindStructure |

@@ -48,11 +48,12 @@
 
 @interface SMMessageListController()
 
-- (void)fetchMessageHeaders:(Folder*)folder;
+- (void)fetchMessageHeaders;
+- (void)fetchMessageBodies;
+- (BOOL)fetchMessageBody:(uint32_t)uid threadId:(uint64_t)threadId urgent:(BOOL)urgent;
+
 - (void)updateMessageList:(NSArray*)imapMessages;
 - (void)scheduleMessageListUpdate;
-- (BOOL)fetchMessageBody:(uint32_t)uid threadId:(uint64_t)threadId urgent:(BOOL)urgent;
-- (void)fetchMessageBodies:(Folder*)folder;
 
 @end
 
@@ -140,8 +141,7 @@
 
 	NSAssert(session, @"session lost");
 	
-	Folder *folder = _currentFolder;
-	MCOIMAPFolderInfoOperation *folderInfoOp = [session folderInfoOperation:[folder name]];
+	MCOIMAPFolderInfoOperation *folderInfoOp = [session folderInfoOperation:[_currentFolder name]];
 	
 	_folderInfoOp = folderInfoOp;
 		
@@ -153,29 +153,25 @@
 		if(error) {
 			NSLog(@"Error fetching folder info: %@", error);
 		} else {
-			NSAssert(folder == _currentFolder, @"folders dont match");
-			
 			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
 			NSLog(@"UIDVALIDITY: %lu", (unsigned long) [info uidValidity]);
 			NSLog(@"Messages count %u", [info messageCount]);
 			
-			folder.totalMessagesCount = [info messageCount];
+			_currentFolder.totalMessagesCount = [info messageCount];
 
-			[self fetchMessageHeaders:folder];
+			[self fetchMessageHeaders];
 		}
 	}];
 }
 
-- (void)fetchMessageHeaders:(Folder*)folder {
-	NSAssert(folder == _currentFolder, @"bad current folder");
-	
-	NSAssert([folder messageHeadersFetched] <= [folder totalMessagesCount], @"invalid messageHeadersFetched");
+- (void)fetchMessageHeaders {
+	NSAssert([_currentFolder messageHeadersFetched] <= [_currentFolder totalMessagesCount], @"invalid messageHeadersFetched");
 	
 	BOOL end = YES;
 	
-	if([folder totalMessagesCount] == [folder messageHeadersFetched]) {
+	if([_currentFolder totalMessagesCount] == [_currentFolder messageHeadersFetched]) {
 //		NSLog(@"%s: all %llu message headers fetched", __FUNCTION__, [folder totalMessagesCount]);
-	} else if([folder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
+	} else if([_currentFolder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
 //		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [folder messageHeadersFetched]);
 	} else {
 		end = NO;
@@ -188,13 +184,13 @@
 		
 		_fetchMessageHeadersOp = nil;
 		
-		[self fetchMessageBodies:folder];
+		[self fetchMessageBodies];
 		[self scheduleMessageListUpdate];
 
 		return;
 	}
 
-	const uint64_t restOfMessages = [folder totalMessagesCount] - [folder messageHeadersFetched];
+	const uint64_t restOfMessages = [_currentFolder totalMessagesCount] - [_currentFolder messageHeadersFetched];
 	const uint64_t numberOfMessagesToFetch = MIN(restOfMessages, MESSAGE_HEADERS_TO_FETCH_AT_ONCE) - 1;
 	const uint64_t fetchMessagesFromIndex = restOfMessages - numberOfMessagesToFetch;
 
@@ -219,7 +215,7 @@
 	 MCOIMAPMessagesRequestKindGmailMessageID |
 	 MCOIMAPMessagesRequestKindGmailThreadID);
 	
-	MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByNumberOperationWithFolder:[folder name] requestKind:requestKind numbers:regionToFetch];
+	MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByNumberOperationWithFolder:[_currentFolder name] requestKind:requestKind numbers:regionToFetch];
 	
 	_fetchMessageHeadersOp = fetchOperation;
 
@@ -231,9 +227,7 @@
 		if(error) {
 			NSLog(@"Error downloading messages list: %@", error);
 		} else {
-			NSAssert(folder == _currentFolder, @"folders dont match");
-			
-			folder.messageHeadersFetched += [messages count];
+			_currentFolder.messageHeadersFetched += [messages count];
 			
 //			for(MCOIMAPMessage *m in messages) {
 //				NSLog(@"%s: fetched message uid %u", __func__, [m uid]);
@@ -242,7 +236,7 @@
 //			}
 
 			[self updateMessageList:messages];
-			[self fetchMessageHeaders:folder];
+			[self fetchMessageHeaders];
 		}
 	}];	
 }
@@ -266,21 +260,19 @@
 	[self performSelector:@selector(updateMessages) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
 }
 
-- (void)fetchMessageBodies:(Folder*)folder {
-//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, [folder name]);
+- (void)fetchMessageBodies {
+//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, [_currentFolder name]);
 	
-	NSAssert(_currentFolder == folder, @"current/active folders mismatch");
-
 	NSUInteger fetchCount = 0;
 	
-	for(MCOIMAPMessage *message in folder.fetchedImapMessages) {
+	for(MCOIMAPMessage *message in _currentFolder.fetchedImapMessages) {
 		if([self fetchMessageBody:[message uid] threadId:[message gmailThreadID] urgent:NO])
 			fetchCount++;
 	}
 
-//	NSLog(@"%s: fetching %lu message bodies for folder '%@'", __FUNCTION__, fetchCount, [folder name]);
+//	NSLog(@"%s: fetching %lu message bodies for folder '%@'", __FUNCTION__, fetchCount, [_currentFolder name]);
 
-	[folder.fetchedImapMessages removeAllObjects];
+	[_currentFolder.fetchedImapMessages removeAllObjects];
 }
 
 - (BOOL)fetchMessageBody:(uint32_t)uid threadId:(uint64_t)threadId urgent:(BOOL)urgent {
