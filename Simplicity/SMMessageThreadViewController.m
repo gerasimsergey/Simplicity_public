@@ -88,7 +88,7 @@
 		if(htmlMessageBodyText) {
 			[message fetchInlineAttachments];
 			
-			[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
+			[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message folder]];
 		} else {
 			NSLog(@"%s: no message body!", __FUNCTION__);
 			
@@ -214,7 +214,7 @@
 			SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 			SMMessageListController *messageListController = [[appDelegate model] messageListController];
 			
-			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
+			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message folder]];
 			
 			[[_threadCellControllers[i] messageViewController] setMessageDetails:message];
 			
@@ -228,46 +228,5 @@
 	
 	[self updateMessageView:[[messageInfo objectForKey:@"UID"] unsignedIntValue] threadId:[[messageInfo objectForKey:@"ThreadId"] unsignedLongLongValue]];
 }
-
-/*
- - (void)tableViewSelectionDidChange:(NSNotification *)notification {
- //	NSInteger selectedRow = [ _messageListTableView selectedRow ];
-	
-	// TODO
-	
- if(selectedRow >= 0) {
- SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
- SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow];
- 
- NSAssert(messageThread, @"messageThread == 0");
- 
- NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
- SMMessageListController *messageListController = [[appDelegate model] messageListController];
- 
- if(htmlMessageBodyText) {
- if(_currentlyViewedMessage != message) {
- [[[appDelegate appController] messageViewController] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[messageListController currentFolderName]];
- 
- [message fetchInlineAttachments];
- 
- _currentlyViewedMessage = message;
- 
- MCOIMAPMessage *imapMessage = [message getImapMessage];
- NSLog(@"%s: fetched message uid %u, gmailMessageID %llu, gmailThreadID %llu", __func__, [imapMessage uid], [imapMessage gmailMessageID], [imapMessage gmailThreadID]);
- 
- for(NSString *label in [imapMessage gmailLabels])
- NSLog(@"label: %@", label);
- 
- }
- } else {
- NSLog(@"%s: no message body!", __FUNCTION__);
- 
- [messageListController fetchMessageBodyUrgently:[message uid] threadId:[message gmailThreadId]];
- }
- 
- [[[appDelegate appController] messageViewController] setMessageDetails:message];
- }
- }
- */
 
 @end

@@ -31,8 +31,6 @@
 	MCOMessageParser *_msgParser;
 	NSAttributedString *_htmlMessageBody;
 	NSData *_data;
-	
-	NSString *_folder;
 }
 
 @synthesize htmlBodyRendering = _htmlBodyRendering;

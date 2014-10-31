@@ -26,7 +26,7 @@
 @property NSString* name;
 @property uint64_t totalMessagesCount;
 @property uint64_t messageHeadersFetched;
-@property NSMutableArray* fetchedImapMessages;
+@property NSMutableArray* fetchedMessageHeaders;
 @end
 
 @implementation Folder
@@ -38,7 +38,7 @@
 		_name = name;
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
-		_fetchedImapMessages = [NSMutableArray new];
+		_fetchedMessageHeaders = [NSMutableArray new];
 	}
 	
 	return self;
@@ -79,9 +79,6 @@
 - (void)changeFolder:(NSString*)folderName {
 	NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
 	
-//	if([[_currentFolder name] compare:folderName] == NSOrderedSame)
-//		return;
-
 	Folder *folder = [_folders objectForKey:folderName];
 	if(folder == nil) {
 		folder = [[Folder alloc] initWithName:folderName];
@@ -113,15 +110,10 @@
 	[messageListView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 	[messageListView reloadData];
 	
-	[self updateMessages];
+	[self startMessagesUpdate];
 }
 
-- (NSString *)currentFolderName {
-	NSAssert(_currentFolder, @"No current folder");
-	return [_currentFolder name];
-}
-
-- (void)updateMessages {
+- (void)startMessagesUpdate {
 	SMSimplicityContainer *model = _model;
 	
 	if(!model) {
@@ -167,21 +159,21 @@
 - (void)fetchMessageHeaders {
 	NSAssert([_currentFolder messageHeadersFetched] <= [_currentFolder totalMessagesCount], @"invalid messageHeadersFetched");
 	
-	BOOL end = YES;
+	BOOL finishFetch = YES;
 	
 	if([_currentFolder totalMessagesCount] == [_currentFolder messageHeadersFetched]) {
-//		NSLog(@"%s: all %llu message headers fetched", __FUNCTION__, [folder totalMessagesCount]);
+		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, [_currentFolder totalMessagesCount]);
 	} else if([_currentFolder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
-//		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [folder messageHeadersFetched]);
+		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [_currentFolder messageHeadersFetched]);
 	} else {
-		end = NO;
+		finishFetch = NO;
 	}
 	
-	if(end) {
-//		NSLog(@"%s: fetching message headers finished", __FUNCTION__);
-		
+	if(finishFetch) {
 		[[_model messageStorage] endUpdate];
 		
+		[_fetchMessageHeadersOp cancel];
+
 		_fetchMessageHeadersOp = nil;
 		
 		[self fetchMessageBodies];
@@ -228,12 +220,6 @@
 			NSLog(@"Error downloading messages list: %@", error);
 		} else {
 			_currentFolder.messageHeadersFetched += [messages count];
-			
-//			for(MCOIMAPMessage *m in messages) {
-//				NSLog(@"%s: fetched message uid %u", __func__, [m uid]);
-//				for(NSString *ref in [[m header] references])
-//					NSLog(@"reference to: %@", ref);
-//			}
 
 			[self updateMessageList:messages];
 			[self fetchMessageHeaders];
@@ -253,7 +239,7 @@
 	
 	[appController performSelectorOnMainThread:@selector(updateMessageListView) withObject:nil waitUntilDone:NO];
 
-	[_currentFolder.fetchedImapMessages addObjectsFromArray:imapMessages];
+	[_currentFolder.fetchedMessageHeaders addObjectsFromArray:imapMessages];
 }
 
 - (void)scheduleMessageListUpdate {
@@ -265,14 +251,14 @@
 	
 	NSUInteger fetchCount = 0;
 	
-	for(MCOIMAPMessage *message in _currentFolder.fetchedImapMessages) {
+	for(MCOIMAPMessage *message in _currentFolder.fetchedMessageHeaders) {
 		if([self fetchMessageBody:[message uid] threadId:[message gmailThreadID] urgent:NO])
 			fetchCount++;
 	}
 
 //	NSLog(@"%s: fetching %lu message bodies for folder '%@'", __FUNCTION__, fetchCount, [_currentFolder name]);
 
-	[_currentFolder.fetchedImapMessages removeAllObjects];
+	[_currentFolder.fetchedMessageHeaders removeAllObjects];
 }
 
 - (BOOL)fetchMessageBody:(uint32_t)uid threadId:(uint64_t)threadId urgent:(BOOL)urgent {

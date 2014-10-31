@@ -19,6 +19,7 @@
 @property (readonly) NSDate *date;
 @property (readonly) uint32_t uid;
 @property (readonly) NSString *htmlBodyRendering;
+@property (readonly) NSString *folder;
 
 @property (assign) NSData *data;
 
