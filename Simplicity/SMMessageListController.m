@@ -89,17 +89,11 @@
 
 	_currentFolder = folder;
 	
-	if(_folderInfoOp != nil) {
-		[_folderInfoOp cancel];
-		
-		_folderInfoOp = nil;
-	}
+	[_folderInfoOp cancel];
+	_folderInfoOp = nil;
 	
-	if(_fetchMessageHeadersOp != nil) {
-		[_fetchMessageHeadersOp cancel];
-
-		_fetchMessageHeadersOp = nil;
-	}
+	[_fetchMessageHeadersOp cancel];
+	_fetchMessageHeadersOp = nil;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // ???
 
@@ -243,7 +237,7 @@
 }
 
 - (void)scheduleMessageListUpdate {
-	[self performSelector:@selector(updateMessages) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
+	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
 }
 
 - (void)fetchMessageBodies {
