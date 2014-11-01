@@ -101,7 +101,7 @@
 		_fetchMessageHeadersOp = nil;
 	}
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // ???
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -236,7 +236,7 @@
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
-	
+
 	[appController performSelectorOnMainThread:@selector(updateMessageListView) withObject:nil waitUntilDone:NO];
 
 	[_currentFolder.fetchedMessageHeaders addObjectsFromArray:imapMessages];
@@ -271,8 +271,7 @@
 	
 	NSAssert(session, @"session is nil");
 	
-	Folder *folder = _currentFolder;
-	MCOIMAPFetchContentOperation * op = [session fetchMessageByUIDOperationWithFolder:[folder name] uid:uid urgent:urgent];
+	MCOIMAPFetchContentOperation * op = [session fetchMessageByUIDOperationWithFolder:[_currentFolder name] uid:uid urgent:urgent];
 	
 	// TODO: this op should be stored in the a message property
 	// TODO: don't fetch if body is already being fetched (non-urgently!)
