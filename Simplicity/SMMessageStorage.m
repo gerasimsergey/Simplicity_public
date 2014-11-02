@@ -32,18 +32,10 @@
 
 @end
 
-@interface SMMessageStorage()
-
-- (void)cancelUpdate;
-
-@end
-
 @implementation SMMessageStorage {
 @private
+	// keeps a collection of message threads for each folder
 	NSMutableDictionary *_foldersMessageThreadsMap;
-	NSString *_currentFolder;
-	
-	BOOL _updating;
 }
 
 @synthesize comparators;
@@ -55,34 +47,26 @@
 		comparators = [SMMessageComparators new];
 		
 		_foldersMessageThreadsMap = [NSMutableDictionary new];
-		_currentFolder = @"";
-		_updating = NO;
-		
-		[self switchFolder:_currentFolder];
 	}
 
 	return self;
 }
 
-- (void)switchFolder:(NSString*)folderName {
-	NSLog(@"%s: folder name '%@", __FUNCTION__, folderName);
+- (void)ensureFolderExists:(NSString*)folder {
+	NSLog(@"%s: folder name '%@", __FUNCTION__, folder);
 	
-	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:folderName];
+	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:folder];
 	
 	if(collection == nil)
-		[_foldersMessageThreadsMap setValue:[MessageThreadCollection new] forKey:folderName];
-	
- 	_currentFolder = folderName;
+		[_foldersMessageThreadsMap setValue:[MessageThreadCollection new] forKey:folder];
 }
 
-- (MessageThreadCollection*)getCurrentFolderMessageThread {
-	return [_foldersMessageThreadsMap objectForKey:_currentFolder];
+- (MessageThreadCollection*)messageThreadForFolder:(NSString*)folder {
+	return [_foldersMessageThreadsMap objectForKey:folder];
 }
 
-- (void)updateIMAPMessages:(NSArray*)imapMessages session:(MCOIMAPSession*)session {
-	NSAssert(_updating, @"no update in process");
-	
-	MessageThreadCollection *collection = [self getCurrentFolderMessageThread];
+- (void)updateIMAPMessages:(NSArray*)imapMessages folder:(NSString*)folder session:(MCOIMAPSession*)session {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	NSAssert(collection, @"bad folder collection");
 	
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
@@ -100,7 +84,7 @@
 		NSUInteger oldMessageThreadIndexByDate = 0;
 		
 		if(messageThread == nil) {
-			messageThread = [[SMMessageThread alloc] initWithThreadId:threadId folder:_currentFolder];
+			messageThread = [[SMMessageThread alloc] initWithThreadId:threadId folder:folder];
 			[[collection messageThreads] setObject:messageThread forKey:threadIdKey];
 			
 			newThread = true;
@@ -135,18 +119,16 @@
 	}
 }
 
-- (void)startUpdate {
-	NSLog(@"%s: current folder '%@'", __FUNCTION__, _currentFolder);
+- (void)startUpdate:(NSString*)folder {
+	NSLog(@"%s: folder '%@'", __FUNCTION__, folder);
 
-	[self cancelUpdate];
-
-	_updating = YES;
+	[self cancelUpdate:folder];
 }
 
-- (void)endUpdate {
-	NSLog(@"%s: current folder '%@'", __FUNCTION__, _currentFolder);
+- (void)endUpdate:(NSString*)folder {
+	NSLog(@"%s: folder '%@'", __FUNCTION__, folder);
 	
-	MessageThreadCollection *collection = [self getCurrentFolderMessageThread];
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	NSAssert(collection, @"bad folder collection");
 	
 	NSMutableSet *vanishedThreads = [NSMutableSet new];
@@ -161,54 +143,48 @@
 
 	[collection.messageThreads removeObjectsForKeys:[vanishedThreads allObjects]];
 	[collection.messageThreadsByDate removeObjectsInArray:[vanishedThreads allObjects]];
-
-	_updating = NO;
 }
 
-- (void)cancelUpdate {
-	MessageThreadCollection *collection = [self getCurrentFolderMessageThread];
+- (void)cancelUpdate:(NSString*)folder {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	NSAssert(collection, @"bad folder collection");
 	
-	if(!_updating) {
-		NSLog(@"no updating is in process");
-		return;
-	}
-
 	for(NSNumber *threadId in collection.messageThreads) {
 		SMMessageThread *thread = [collection.messageThreads objectForKey:threadId];
 		[thread cancelUpdate];
 	}
-	
-	_updating = NO;
 }
 
-- (void)setMessageData:(NSData*)data uid:(uint32_t)uid threadId:(uint64_t)threadId {
-	MessageThreadCollection *collection = [self getCurrentFolderMessageThread];
+- (void)setMessageData:(NSData*)data uid:(uint32_t)uid folder:(NSString*)folder threadId:(uint64_t)threadId {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	NSAssert(collection, @"bad folder collection");
 	
 	SMMessageThread *thread = [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
 	[thread setMessageData:data uid:uid];
 }
 
-- (BOOL)messageHasData:(uint32_t)uid threadId:(uint64_t)threadId {
-	MessageThreadCollection *collection = [self getCurrentFolderMessageThread];
+- (BOOL)messageHasData:(uint32_t)uid folder:(NSString*)folder threadId:(uint64_t)threadId {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	NSAssert(collection, @"bad folder collection");
 
 	SMMessageThread *thread = [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
 	return [thread messageHasData:uid];
 }
 
-- (NSInteger)messageThreadsCount {
-	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:_currentFolder];
+- (NSInteger)messageThreadsCount:(NSString*)folder {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 
-	NSAssert(collection, @"no thread collection for current folder");
+	// usually this means that no folders loaded yet
+	if(collection == nil)
+		return 0;
+
 	return [collection.messageThreads count];
 }
 
-- (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index {
-	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:_currentFolder];
+- (SMMessageThread*)messageThreadAtIndexByDate:(NSString*)folder index:(NSUInteger)index {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	
-	NSAssert(collection, @"no thread collection for current folder");
+	NSAssert(collection, @"no thread collection found");
 	
 	if(index >= [collection.messageThreadsByDate count]) {
 		NSLog(@"%s: message index %lu >= message thread message count %lu", __func__, index, [collection.messageThreadsByDate count]);

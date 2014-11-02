@@ -15,6 +15,8 @@
 
 - (id)initWithModel:(SMSimplicityContainer*)model;
 - (void)changeFolder:(NSString*)folderName;
+- (NSString*)currentFolder;
 - (void)fetchMessageBodyUrgently:(uint32_t)uid threadId:(uint64_t)threadId;
+- (void)loadSearchResultMessages:(MCOIndexSet*)messageUIDs;
 
 @end

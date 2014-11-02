@@ -24,6 +24,7 @@ MESSAGE LIST
 - Resolve possible UID conflicts;
 - Fix current message switch on list renewal;
 - Implement unused messages cleanup to keep memory footprint reasonable;
+- Implement message sharing between folders and threads;
 
 ===================================================================
 

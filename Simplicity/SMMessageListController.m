@@ -76,6 +76,10 @@
 	return self;
 }
 
+- (NSString*)currentFolder {
+	return [_currentFolder name];
+}
+
 - (void)changeFolder:(NSString*)folderName {
 	NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
 	
@@ -85,7 +89,7 @@
 		[_folders setValue:folder forKey:folderName];
 	}
 
-	[[_model messageStorage] switchFolder:folderName];
+	[[_model messageStorage] ensureFolderExists:folderName];
 
 	_currentFolder = folder;
 	
@@ -95,7 +99,7 @@
 	[_fetchMessageHeadersOp cancel];
 	_fetchMessageHeadersOp = nil;
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // ???
+	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -119,7 +123,7 @@
 
 	_currentFolder.messageHeadersFetched = 0;
 	
-	[[_model messageStorage] startUpdate];
+	[[_model messageStorage] startUpdate:[_currentFolder name]];
 
 	MCOIMAPSession *session = [model session];
 	
@@ -164,10 +168,9 @@
 	}
 	
 	if(finishFetch) {
-		[[_model messageStorage] endUpdate];
+		[[_model messageStorage] endUpdate:[_currentFolder name]];
 		
 		[_fetchMessageHeadersOp cancel];
-
 		_fetchMessageHeadersOp = nil;
 		
 		[self fetchMessageBodies];
@@ -226,7 +229,7 @@
 
 	MCOIMAPSession *session = [_model session];
 
-	[[_model messageStorage] updateIMAPMessages:imapMessages session:session];
+	[[_model messageStorage] updateIMAPMessages:imapMessages folder:[_currentFolder name] session:session];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -258,7 +261,7 @@
 - (BOOL)fetchMessageBody:(uint32_t)uid threadId:(uint64_t)threadId urgent:(BOOL)urgent {
 //	NSLog(@"%s: uid %u, threadId %llu, urgent %s", __FUNCTION__, uid, threadId, urgent? "YES" : "NO");
 
-	if([[_model messageStorage] messageHasData:uid threadId:threadId])
+	if([[_model messageStorage] messageHasData:uid folder:[_currentFolder name] threadId:threadId])
 		return NO;
 		
 	MCOIMAPSession *session = [_model session];
@@ -282,7 +285,7 @@
 		
 		NSAssert(_model, @"model is disposed");
 		
-		[[_model messageStorage] setMessageData:data uid:uid threadId:threadId];
+		[[_model messageStorage] setMessageData:data uid:uid folder:[_currentFolder name] threadId:threadId];
 		
 		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
 		
@@ -300,6 +303,10 @@
 
 - (void)fetchMessageBodyUrgently:(uint32_t)uid threadId:(uint64_t)threadId {
 	[self fetchMessageBody:uid threadId:threadId urgent:YES];
+}
+
+- (void)loadSearchResultMessages:(MCOIndexSet*)messageUIDs {
+	
 }
 
 @end

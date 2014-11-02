@@ -25,8 +25,10 @@
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
-	NSInteger messageThreadsCount = [[ [ appDelegate model ] messageStorage ] messageThreadsCount ];
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+	
+	NSInteger messageThreadsCount = [[[appDelegate model] messageStorage] messageThreadsCount:[messageListController currentFolder]];
 
 //	NSLog(@"%s: self %@, tableView %@, its datasource %@, view %@, messagesTableView %@, message threads count %ld", __FUNCTION__, self, tableView, [tableView dataSource], [self view], _messageListTableView, messageThreadsCount);
 	
@@ -40,7 +42,8 @@
 
 	if(selectedRow >= 0) {
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow];
+		SMMessageListController *messageListController = [[appDelegate model] messageListController];
+		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:[messageListController currentFolder] index:selectedRow];
 		
 		NSAssert(messageThread, @"messageThread == 0");
 
@@ -52,7 +55,8 @@
 //	NSLog(@"%s: tableView %@, datasource %@, delegate call: %@, row %ld", __FUNCTION__, tableView, [tableView dataSource], [tableColumn identifier], row);
 	
 	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
-	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row ];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:[messageListController currentFolder] index:row];
 	
 	if(messageThread == nil) {
 		NSLog(@"%s: row %ld, message thread is nil", __FUNCTION__, row);

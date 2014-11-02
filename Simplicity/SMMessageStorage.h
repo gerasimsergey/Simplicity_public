@@ -18,17 +18,17 @@
 
 @property (readonly) SMMessageComparators *comparators;
 
-- (NSInteger)messageThreadsCount;
+- (void)ensureFolderExists:(NSString*)folder;
 
-- (void)startUpdate;
-- (void)updateIMAPMessages:(NSArray*)imapMessages session:(MCOIMAPSession*)session;
-- (void)endUpdate;
+- (NSInteger)messageThreadsCount:(NSString*)folder;
 
-- (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index;
+- (void)startUpdate:(NSString*)folder;
+- (void)updateIMAPMessages:(NSArray*)imapMessages folder:(NSString*)folder session:(MCOIMAPSession*)session;
+- (void)endUpdate:(NSString*)folder;
 
-- (void)setMessageData:(NSData*)data uid:(uint32_t)uid threadId:(uint64_t)threadId;
-- (BOOL)messageHasData:(uint32_t)uid threadId:(uint64_t)threadId;
+- (SMMessageThread*)messageThreadAtIndexByDate:(NSString*)folder index:(NSUInteger)index;
 
-- (void)switchFolder:(NSString*)folderName;
+- (void)setMessageData:(NSData*)data uid:(uint32_t)uid folder:(NSString*)folder threadId:(uint64_t)threadId;
+- (BOOL)messageHasData:(uint32_t)uid folder:(NSString*)folder threadId:(uint64_t)threadId;
 
 @end

@@ -211,9 +211,6 @@
 			
 			[message fetchInlineAttachments];
 			
-			SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-			SMMessageListController *messageListController = [[appDelegate model] messageListController];
-			
 			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message folder]];
 			
 			[[_threadCellControllers[i] messageViewController] setMessageDetails:message];
