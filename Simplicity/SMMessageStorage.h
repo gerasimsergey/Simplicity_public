@@ -23,7 +23,7 @@
 - (NSInteger)messageThreadsCount:(NSString*)folder;
 
 - (void)startUpdate:(NSString*)folder;
-- (void)updateIMAPMessages:(NSArray*)imapMessages folder:(NSString*)folder session:(MCOIMAPSession*)session;
+- (void)updateIMAPMessages:(NSArray*)imapMessages threadFolder:(NSString*)threadFolder messagesFolder:(NSString*)messagesFolder session:(MCOIMAPSession*)session;
 - (void)endUpdate:(NSString*)folder;
 
 - (SMMessageThread*)messageThreadAtIndexByDate:(NSString*)folder index:(NSUInteger)index;

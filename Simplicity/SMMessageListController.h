@@ -14,9 +14,9 @@
 @interface SMMessageListController : NSObject
 
 - (id)initWithModel:(SMSimplicityContainer*)model;
-- (void)changeFolder:(NSString*)folderName;
+- (void)changeFolder:(NSString*)folder;
 - (NSString*)currentFolder;
-- (void)fetchMessageBodyUrgently:(uint32_t)uid threadId:(uint64_t)threadId;
-- (void)loadSearchResultMessages:(MCOIndexSet*)messageUIDs;
+- (void)fetchMessageBodyUrgently:(uint32_t)uid fromFolder:(NSString*)fromFolder threadId:(uint64_t)threadId;
+- (void)loadSearchResults:(MCOIndexSet*)searchResults folderToSearch:(NSString*)folderToSearch;
 
 @end

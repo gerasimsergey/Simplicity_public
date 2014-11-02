@@ -14,7 +14,7 @@
 
 @interface SMMessageThread : NSObject
 
-- (id)initWithThreadId:(uint64_t)threadId folder:(NSString*)folder;
+- (id)initWithThreadId:(uint64_t)threadId;
 
 - (uint64_t)threadId;
 - (SMMessage*)latestMessage;
@@ -23,7 +23,7 @@
 - (NSArray*)messagesSortedByDate;
 - (SMMessage*)getMessage:(uint32_t)uid;
 
-- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage session:(MCOIMAPSession*)session;
+- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage folder:(NSString*)folder session:(MCOIMAPSession*)session;
 - (void)endUpdate;
 - (void)cancelUpdate;
 

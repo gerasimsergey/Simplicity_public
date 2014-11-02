@@ -52,6 +52,7 @@ SEARCH (ideas to implement)
 - search results to appear as a message list;
 - search history in the leftside toolbar above the folder list;
 - highlight search pattern occurrences in the found message (for local AND global search);
+- show folders in the search results; allow to collapse search results for each folder;
 - ...?
 
 

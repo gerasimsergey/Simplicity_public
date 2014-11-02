@@ -9,6 +9,7 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 #import "SMMailboxViewController.h"
+#import "SMMessageListController.h"
 #import "SMMessageListViewController.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
@@ -194,35 +195,13 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	
 	NSAssert(session, @"session is nil");
 	
-	NSString *folderName = @"INBOX";
+	NSString *folderName = [[[appDelegate model] messageListController] currentFolder];
 	MCOIMAPSearchOperation *op = [session searchOperationWithFolder:folderName kind:MCOIMAPSearchKindContent searchString:searchString];
 
-	[op start:^(NSError *error, MCOIndexSet *searchResult) {
+	[op start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {
-			if(searchResult.count > 0) {
-				// TODO: refactor and use it via fetchMessageHeaders
-				MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-				(MCOIMAPMessagesRequestKindHeaders |
-				 MCOIMAPMessagesRequestKindStructure |
-				 MCOIMAPMessagesRequestKindFullHeaders    |
-				 MCOIMAPMessagesRequestKindInternalDate |
-				 MCOIMAPMessagesRequestKindHeaderSubject |
-				 MCOIMAPMessagesRequestKindFlags |
-				 MCOIMAPMessagesRequestKindGmailLabels |
-				 MCOIMAPMessagesRequestKindGmailMessageID |
-				 MCOIMAPMessagesRequestKindGmailThreadID);
-				
-				MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:searchResult];
-				
-				[fetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
-					if(error) {
-						NSLog(@"Error downloading found messages list: %@", error);
-					} else {
-						for(id m in messages) {
-							NSLog(@"%s: found message %@", __func__, m);
-						}
-					}
-				}];
+			if(searchResults.count > 0) {
+				[[[appDelegate model] messageListController] loadSearchResults:searchResults folderToSearch:folderName];
 			} else {
 				NSLog(@"%s: nothing found", __func__);
 			}

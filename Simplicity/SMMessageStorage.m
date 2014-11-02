@@ -1,4 +1,4 @@
-//
+ //
 //  SM_messagestorage.m
 //  Simplicity
 //
@@ -65,8 +65,8 @@
 	return [_foldersMessageThreadsMap objectForKey:folder];
 }
 
-- (void)updateIMAPMessages:(NSArray*)imapMessages folder:(NSString*)folder session:(MCOIMAPSession*)session {
-	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
+- (void)updateIMAPMessages:(NSArray*)imapMessages threadFolder:(NSString*)threadFolder messagesFolder:(NSString*)messagesFolder session:(MCOIMAPSession*)session {
+	MessageThreadCollection *collection = [self messageThreadForFolder:threadFolder];
 	NSAssert(collection, @"bad folder collection");
 	
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
@@ -84,7 +84,7 @@
 		NSUInteger oldMessageThreadIndexByDate = 0;
 		
 		if(messageThread == nil) {
-			messageThread = [[SMMessageThread alloc] initWithThreadId:threadId folder:folder];
+			messageThread = [[SMMessageThread alloc] initWithThreadId:threadId];
 			[[collection messageThreads] setObject:messageThread forKey:threadIdKey];
 			
 			newThread = true;
@@ -98,7 +98,7 @@
 			firstMessageDate = [firstMessage date];
 		}
 
-		[messageThread updateIMAPMessage:imapMessage session:session];
+		[messageThread updateIMAPMessage:imapMessage folder:messagesFolder session:session];
 
 		Boolean doInsertion = true;
 		

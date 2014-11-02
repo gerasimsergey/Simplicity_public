@@ -41,15 +41,13 @@
 
 @implementation SMMessageThread {
 	uint64_t _threadId;
-	NSString *_folder;
 	MessageCollection *_messageCollection;
 }
 
-- (id)initWithThreadId:(uint64_t)threadId folder:(NSString*)folder {
+- (id)initWithThreadId:(uint64_t)threadId {
 	self = [super init];
 	if(self) {
 		_threadId = threadId;
-		_folder = folder;
 		_messageCollection = [MessageCollection new];
 	}
 	return self;
@@ -92,7 +90,7 @@
 		
 		[ message setData:data ];
 	} else {
-		NSLog(@"%s: message for uid %u not found in current threadId %llu, folder '%@'", __FUNCTION__, uid, _threadId, _folder);
+		NSLog(@"%s: message for uid %u not found in current threadId %llu", __FUNCTION__, uid, _threadId);
 	}
 }
 
@@ -126,7 +124,7 @@
 	return message;
 }
 
-- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage session:(MCOIMAPSession*)session {
+- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage folder:(NSString*)folder session:(MCOIMAPSession*)session {
 	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication ] delegate];
 	SMMessageComparators *comparators = [[[appDelegate model] messageStorage] comparators];
 
@@ -147,7 +145,7 @@
 	}
 	
 	// update the messages list
-	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage folder:_folder];
+	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage folder:folder];
 	
 	[ message setUpdated:YES];
 	
@@ -160,8 +158,6 @@
 }
 
 - (void)endUpdate {
-//	NSLog(@"%s: threadId %llu, folder '%@'", __FUNCTION__, _threadId, _folder);
-	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	
 	NSMutableIndexSet *notUpdatedMessageIndices = [NSMutableIndexSet new];

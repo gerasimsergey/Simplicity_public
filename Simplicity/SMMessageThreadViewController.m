@@ -17,7 +17,6 @@
 @interface SMMessageThreadViewController()
 - (void)messageBodyFetched:(NSNotification *)notification;
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId;
-- (void)arrangeCellSubviews;
 @end
 
 @implementation SMMessageThreadViewController {
@@ -57,10 +56,6 @@
 	
 	_currentMessageThread = messageThread;
 	
-	[self arrangeCellSubviews];
-}
-
-- (void)arrangeCellSubviews {
 	[_threadCellControllers removeAllObjects];
 	
 	_contentView = [[NSView alloc] initWithFrame:[_messageThreadView frame]];
@@ -92,7 +87,7 @@
 		} else {
 			NSLog(@"%s: no message body!", __FUNCTION__);
 			
-			[messageListController fetchMessageBodyUrgently:[message uid] threadId:[_currentMessageThread threadId]];
+			[messageListController fetchMessageBodyUrgently:[message uid] fromFolder:[message folder] threadId:[_currentMessageThread threadId]];
 		}
 		
 		[messageViewController setMessageDetails:message];
