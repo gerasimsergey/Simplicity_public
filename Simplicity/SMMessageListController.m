@@ -188,7 +188,7 @@
 		} else {
 			_currentFolder.messageHeadersFetched += [messages count];
 			
-			[self updateMessageList:messages messagesFolder:folderToSearch];
+			[self updateMessageList:messages remoteFolder:folderToSearch];
 
 			[[_model messageStorage] endUpdate:[_currentFolder name]];
 			
@@ -263,18 +263,18 @@
 		} else {
 			_currentFolder.messageHeadersFetched += [messages count];
 
-			[self updateMessageList:messages messagesFolder:[_currentFolder name]];
+			[self updateMessageList:messages remoteFolder:[_currentFolder name]];
 			[self fetchFolderMessageHeaders];
 		}
 	}];	
 }
 
-- (void)updateMessageList:(NSArray*)imapMessages messagesFolder:(NSString*)messagesFolder {
+- (void)updateMessageList:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolder {
 //	NSLog(@"%s: new messages count %lu", __FUNCTION__, (unsigned long)[imapMessages count]);
 
 	MCOIMAPSession *session = [_model session];
 
-	[[_model messageStorage] updateIMAPMessages:imapMessages threadFolder:[_currentFolder name] messagesFolder:messagesFolder session:session];
+	[[_model messageStorage] updateIMAPMessages:imapMessages localFolder:[_currentFolder name] remoteFolder:remoteFolder session:session];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -288,39 +288,37 @@
 	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
 }
 
-- (void)fetchMessageBodies:(NSString*)fromFolder {
-//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, [_currentFolder name]);
+- (void)fetchMessageBodies:(NSString*)remoteFolder {
+//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, remoteFolder);
 	
 	NSUInteger fetchCount = 0;
 	
 	for(MCOIMAPMessage *message in _currentFolder.fetchedMessageHeaders) {
-		if([self fetchMessageBody:[message uid] fromFolder:fromFolder threadId:[message gmailThreadID] urgent:NO])
+		if([self fetchMessageBody:[message uid] remoteFolder:remoteFolder threadId:[message gmailThreadID] urgent:NO])
 			fetchCount++;
 	}
-
-//	NSLog(@"%s: fetching %lu message bodies for folder '%@'", __FUNCTION__, fetchCount, [_currentFolder name]);
 
 	[_currentFolder.fetchedMessageHeaders removeAllObjects];
 }
 
-- (BOOL)fetchMessageBody:(uint32_t)uid fromFolder:(NSString*)fromFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent {
-	NSLog(@"%s: uid %u, fromFolder %@, threadId %llu, urgent %s", __FUNCTION__, uid, fromFolder, threadId, urgent? "YES" : "NO");
+- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent {
+	NSLog(@"%s: uid %u, remote folder %@, threadId %llu, urgent %s", __FUNCTION__, uid, remoteFolder, threadId, urgent? "YES" : "NO");
 
-	if([[_model messageStorage] messageHasData:uid folder:[_currentFolder name] threadId:threadId])
+	if([[_model messageStorage] messageHasData:uid localFolder:[_currentFolder name] threadId:threadId])
 		return NO;
 
 	MCOIMAPSession *session = [_model session];
 	
 	NSAssert(session, @"session is nil");
 	
-	MCOIMAPFetchContentOperation * op = [session fetchMessageByUIDOperationWithFolder:fromFolder uid:uid urgent:urgent];
+	MCOIMAPFetchContentOperation * op = [session fetchMessageByUIDOperationWithFolder:remoteFolder uid:uid urgent:urgent];
 	
 	// TODO: this op should be stored in the a message property
 	// TODO: don't fetch if body is already being fetched (non-urgently!)
 	// TODO: if urgent fetch is requested, cancel the non-urgent fetch
 	[op start:^(NSError * error, NSData * data) {
 		if ([error code] != MCOErrorNone) {
-			NSLog(@"Error downloading message body for uid %u, folder %@", uid, fromFolder);
+			NSLog(@"Error downloading message body for uid %u, remote folder %@", uid, remoteFolder);
 			return;
 		}
 		
@@ -330,7 +328,7 @@
 		
 		NSAssert(_model, @"model is disposed");
 		
-		[[_model messageStorage] setMessageData:data uid:uid folder:[_currentFolder name] threadId:threadId];
+		[[_model messageStorage] setMessageData:data uid:uid localFolder:[_currentFolder name] threadId:threadId];
 		
 		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
 		
@@ -346,10 +344,10 @@
 	return YES;
 }
 
-- (void)fetchMessageBodyUrgently:(uint32_t)uid fromFolder:(NSString*)fromFolder threadId:(uint64_t)threadId {
-	NSLog(@"%s: msg uid %u, from folder %@, threadId %llu", __FUNCTION__, uid, fromFolder, threadId);
+- (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId {
+	NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
 
-	[self fetchMessageBody:uid fromFolder:fromFolder threadId:threadId urgent:YES];
+	[self fetchMessageBody:uid remoteFolder:remoteFolder threadId:threadId urgent:YES];
 }
 
 @end

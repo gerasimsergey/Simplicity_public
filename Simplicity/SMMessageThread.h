@@ -23,7 +23,7 @@
 - (NSArray*)messagesSortedByDate;
 - (SMMessage*)getMessage:(uint32_t)uid;
 
-- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage folder:(NSString*)folder session:(MCOIMAPSession*)session;
+- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
 - (void)endUpdate;
 - (void)cancelUpdate;
 

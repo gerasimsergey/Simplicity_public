@@ -23,12 +23,12 @@
 - (NSInteger)messageThreadsCount:(NSString*)folder;
 
 - (void)startUpdate:(NSString*)folder;
-- (void)updateIMAPMessages:(NSArray*)imapMessages threadFolder:(NSString*)threadFolder messagesFolder:(NSString*)messagesFolder session:(MCOIMAPSession*)session;
+- (void)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
 - (void)endUpdate:(NSString*)folder;
 
-- (SMMessageThread*)messageThreadAtIndexByDate:(NSString*)folder index:(NSUInteger)index;
+- (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index localFolder:(NSString*)folder;
 
-- (void)setMessageData:(NSData*)data uid:(uint32_t)uid folder:(NSString*)folder threadId:(uint64_t)threadId;
-- (BOOL)messageHasData:(uint32_t)uid folder:(NSString*)folder threadId:(uint64_t)threadId;
+- (void)setMessageData:(NSData*)data uid:(uint32_t)uid localFolder:(NSString*)localFolder threadId:(uint64_t)threadId;
+- (BOOL)messageHasData:(uint32_t)uid localFolder:(NSString*)localFolder threadId:(uint64_t)threadId;
 
 @end

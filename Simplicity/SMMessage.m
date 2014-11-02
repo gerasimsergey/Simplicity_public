@@ -36,7 +36,7 @@
 @synthesize htmlBodyRendering = _htmlBodyRendering;
 
 // TODO: uids not properly used here - they may be changed between sessions!!!
-- (id)initWithRawValues:(int)uid date:(NSDate*)date from:(const unsigned char*)from subject:(const unsigned char*)subject data:(const void*)data dataLength:(int)dataLength folder:(NSString*)folder {
+- (id)initWithRawValues:(int)uid date:(NSDate*)date from:(const unsigned char*)from subject:(const unsigned char*)subject data:(const void*)data dataLength:(int)dataLength remoteFolder:(NSString*)remoteFolder {
 
 	self = [ super init ];
 	
@@ -48,7 +48,7 @@
 		_fromDB = [NSString stringWithUTF8String:(const char*)from];
 		_subjectDB = [NSString stringWithUTF8String:(const char*)subject];
 		_createdFromDB = YES;
-		_folder = folder;
+		_folder = remoteFolder;
 
 		[self setData:[NSData dataWithBytes:data length:dataLength]];
 	}
@@ -56,7 +56,7 @@
 	return self;
 }
 
-- (id)initWithMCOIMAPMessage:(MCOIMAPMessage*)m folder:(NSString*)folder {
+- (id)initWithMCOIMAPMessage:(MCOIMAPMessage*)m remoteFolder:(NSString*)remoteFolder {
 	NSAssert(m, @"imap message is nil");
 	
 	self = [ super init ];
@@ -64,7 +64,7 @@
 	if(self) {
 		_imapMessage = m;
 		_createdFromDB = NO;
-		_folder = folder;
+		_folder = remoteFolder;
 
 //		NSLog(@"%s: uid %u, object %@, date %@", __FUNCTION__, [ m uid ], m, [[m header] date]);
 	}

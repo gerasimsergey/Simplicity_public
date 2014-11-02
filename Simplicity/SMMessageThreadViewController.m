@@ -87,7 +87,7 @@
 		} else {
 			NSLog(@"%s: no message body!", __FUNCTION__);
 			
-			[messageListController fetchMessageBodyUrgently:[message uid] fromFolder:[message folder] threadId:[_currentMessageThread threadId]];
+			[messageListController fetchMessageBodyUrgently:[message uid] remoteFolder:[message folder] threadId:[_currentMessageThread threadId]];
 		}
 		
 		[messageViewController setMessageDetails:message];

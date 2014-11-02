@@ -124,7 +124,7 @@
 	return message;
 }
 
-- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage folder:(NSString*)folder session:(MCOIMAPSession*)session {
+- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session {
 	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication ] delegate];
 	SMMessageComparators *comparators = [[[appDelegate model] messageStorage] comparators];
 
@@ -145,7 +145,7 @@
 	}
 	
 	// update the messages list
-	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage folder:folder];
+	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage remoteFolder:remoteFolder];
 	
 	[ message setUpdated:YES];
 	

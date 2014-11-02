@@ -47,7 +47,7 @@
 	if(selectedRow >= 0) {
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
-		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:[messageListController currentFolder] index:selectedRow];
+		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[messageListController currentFolder]];
 		
 		NSAssert(messageThread, @"messageThread == 0");
 
@@ -60,7 +60,7 @@
 	
 	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
-	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:[messageListController currentFolder] index:row];
+	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row localFolder:[messageListController currentFolder]];
 	
 	if(messageThread == nil) {
 		NSLog(@"%s: row %ld, message thread is nil", __FUNCTION__, row);
