@@ -20,6 +20,10 @@
 #import "SMMessageThread.h"
 #import "SMMessageStorage.h"
 
+@interface SMMessageListViewController()
+@property (weak) IBOutlet NSTableView *messageListTableView;
+@end
+
 @implementation SMMessageListViewController {
 	SMMessage *_currentlyViewedMessage;
 }
@@ -88,6 +92,11 @@
 
 	// TODO: this won't work if messages are added to the beginning of the list
 	[ _messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO ];
+}
+
+- (void)reloadMessageList {
+	[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+	[_messageListTableView reloadData];
 }
 
 @end

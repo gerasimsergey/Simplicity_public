@@ -10,8 +10,7 @@
 
 @interface SMMessageListViewController : NSViewController<NSTableViewDataSource, NSTableViewDelegate>
 
-@property (weak) IBOutlet NSTableView *messageListTableView;
-
 - (void)updateMessageListView;
+- (void)reloadMessageList;
 
 @end

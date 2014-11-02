@@ -103,10 +103,8 @@
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
-	NSTableView *messageListView = [[appController messageListViewController] messageListTableView];
 	
-	[messageListView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-	[messageListView reloadData];
+	[[appController messageListViewController] reloadMessageList];
 	
 	[self startMessagesUpdate];
 }
