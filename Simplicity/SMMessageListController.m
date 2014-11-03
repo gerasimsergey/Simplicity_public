@@ -103,8 +103,10 @@
 }
 
 - (void)changeFolder:(NSString*)folder {
-	[self changeFolderInternal:folder];
-	[self startMessagesUpdate];
+	if(![_currentFolder.name isEqual:folder]) {
+		[self changeFolderInternal:folder];
+		[self startMessagesUpdate];
+	}
 }
 
 - (void)startMessagesUpdate {

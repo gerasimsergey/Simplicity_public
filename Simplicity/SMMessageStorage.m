@@ -187,6 +187,7 @@
 	NSAssert(collection, @"no thread collection found");
 	
 	if(index >= [collection.messageThreadsByDate count]) {
+		// TODO!!!
 		NSLog(@"%s: message index %lu >= message thread message count %lu", __func__, index, [collection.messageThreadsByDate count]);
 	}
 	

@@ -15,10 +15,12 @@
 #import "SMMailboxViewController.h"
 
 @interface SMMailboxViewController()
-	- (SMFolder*)rootFolder;
+- (SMFolder*)rootFolder;
 @end
 
-@implementation SMMailboxViewController
+@implementation SMMailboxViewController {
+	SMFolder *__weak _lastFolder;
+}
 
 - (void)updateFolderListView {
 	NSInteger selectedRow = [ _folderListView selectedRow ];
@@ -104,6 +106,11 @@ NSLog(@"trace: %s", __func__);
 		return;		
 	}
 	
+	if(folder == _lastFolder) {
+		NSLog(@"%s: selected folder didn't change'", __func__);
+		return;
+	}
+	
 	NSAssert(folder, @"no folder selected"); // TODO: FIX!!!
 
 	NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, [folder shortName], [folder fullName]);
@@ -112,6 +119,8 @@ NSLog(@"trace: %s", __func__);
 	SMSimplicityContainer *model = [appDelegate model];
 
 	[[model messageListController] changeFolder:[folder fullName]];
+	
+	_lastFolder = folder;
 }
 
 - (SMFolder*)rootFolder {
