@@ -121,7 +121,8 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 		[toolbarItem setToolTip: @"Search Your Document"];
 		
 		_searchField = [[NSSearchField alloc] initWithFrame:[_searchField frame]];
-		
+		[_searchField.cell setSendsWholeSearchString:YES];
+
 		// Use a custom view, a text field, for the search item
 		[toolbarItem setView:_searchField];
 		[toolbarItem setMinSize:NSMakeSize(30, NSHeight([_searchField frame]))];
@@ -206,7 +207,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 				NSLog(@"%s: nothing found", __func__);
 			}
 		} else {
-			
+			NSLog(@"%s: error %@", __func__, error);
 		}
 	}];
 	
