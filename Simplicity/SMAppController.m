@@ -18,6 +18,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 
 @implementation SMAppController {
 	NSButton *button1, *button2;
+	MCOIMAPSearchOperation *_currentSearchOp;
 	NSToolbarItem *__weak _activeSearchItem;
 }
 
@@ -200,11 +201,15 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSAssert(session, @"session is nil");
 	
 	NSString *folderName = [[[appDelegate model] messageListController] currentFolder];
-	MCOIMAPSearchOperation *op = [session searchOperationWithFolder:folderName kind:MCOIMAPSearchKindContent searchString:searchString];
+	
+	[_currentSearchOp cancel];
+	_currentSearchOp = [session searchOperationWithFolder:folderName kind:MCOIMAPSearchKindContent searchString:searchString];
 
-	[op start:^(NSError *error, MCOIndexSet *searchResults) {
+	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {
 			if(searchResults.count > 0) {
+				NSLog(@"%s: %u messages found, loading...", __func__, [searchResults count]);
+
 				[[[appDelegate model] messageListController] loadSearchResults:searchResults folderToSearch:folderName];
 			} else {
 				NSLog(@"%s: nothing found", __func__);

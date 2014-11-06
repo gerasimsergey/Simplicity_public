@@ -19,7 +19,7 @@
 #import "SMAppController.h"
 
 #define MAX_MESSAGE_HEADERS_TO_FETCH 300
-#define MESSAGE_HEADERS_TO_FETCH_AT_ONCE 50
+#define MESSAGE_HEADERS_TO_FETCH_AT_ONCE 20
 #define MESSAGE_LIST_UPDATE_INTERVAL_SEC 15
 
 #define SEARCH_RESULTS_FOLDER @"//search_results//" // TODO: fix by introducing folder descriptor
@@ -142,7 +142,7 @@
 			
 			_currentFolder.totalMessagesCount = [info messageCount];
 			
-			[self fetchFolderMessageHeaders];
+			[self fetchMessageHeaders];
 		}
 	}];
 }
@@ -163,7 +163,29 @@
 	NSAssert(session, @"session lost");
 	
 	_currentFolder.totalMessagesCount = searchResults.count;
+	
+	MCOIndexSet *const searchResultsToLoad = [MCOIndexSet indexSet];
+	MCORange *const ranges = [searchResults allRanges];
 
+	for(unsigned int i = 0; i < [searchResults rangesCount]; i++) {
+		const uint64_t len = MCORangeRightBound(ranges[i]) - MCORangeLeftBound(ranges[i]) + 1;
+		const uint64_t maxCountToLoad = MESSAGE_HEADERS_TO_FETCH_AT_ONCE - searchResultsToLoad.count;
+
+		if(len < maxCountToLoad) {
+			[searchResultsToLoad addRange:ranges[i]];
+		} else {
+			const MCORange range = MCORangeMake(MCORangeLeftBound(ranges[i]), maxCountToLoad - 1);
+
+			[searchResultsToLoad addRange:range];
+			
+			break;
+		}
+	}
+	
+	[searchResults removeIndexSet:searchResultsToLoad];
+
+	NSLog(@"%s: loading %u of %u search results...", __func__, searchResultsToLoad.count, searchResults.count);
+	
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)(
 		MCOIMAPMessagesRequestKindHeaders |
 		MCOIMAPMessagesRequestKindStructure |
@@ -176,33 +198,30 @@
 		MCOIMAPMessagesRequestKindGmailThreadID
 	);
 
-	MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByUIDOperationWithFolder:folderToSearch requestKind:requestKind uids:searchResults];
+	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
-	_fetchMessageHeadersOp = fetchOperation;
+	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:folderToSearch requestKind:requestKind uids:searchResultsToLoad];
 	
-	[fetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
-		NSAssert(_fetchMessageHeadersOp == fetchOperation, @"message headers fetch ops dont match");
-		
+	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
 		
-		if(error) {
-			NSLog(@"Error downloading messages list: %@", error);
-		} else {
+		if(error == nil) {
+			NSLog(@"%s: loaded %lu message headers...", __func__, messages.count);
+
 			_currentFolder.messageHeadersFetched += [messages count];
 			
 			[self updateMessageList:messages remoteFolder:folderToSearch];
 
 			[[_model messageStorage] endUpdate:[_currentFolder name]];
 			
-			[_fetchMessageHeadersOp cancel];
-			_fetchMessageHeadersOp = nil;
-			
 			[self fetchMessageBodies:folderToSearch];
+		} else {
+			NSLog(@"%s: Error downloading search results: %@", __func__, error);
 		}
 	}];
 }
 
-- (void)fetchFolderMessageHeaders {
+- (void)fetchMessageHeaders {
 	NSAssert([_currentFolder messageHeadersFetched] <= [_currentFolder totalMessagesCount], @"invalid messageHeadersFetched");
 	
 	BOOL finishFetch = YES;
@@ -251,22 +270,20 @@
 		MCOIMAPMessagesRequestKindGmailThreadID
 	);
 	
-	MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByNumberOperationWithFolder:[_currentFolder name] requestKind:requestKind numbers:regionToFetch];
-	
-	_fetchMessageHeadersOp = fetchOperation;
+	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 
-	[fetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
-		NSAssert(_fetchMessageHeadersOp == fetchOperation, @"message headers fetch ops dont match");
-		
+	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:[_currentFolder name] requestKind:requestKind numbers:regionToFetch];
+	
+	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
 		
-		if(error) {
-			NSLog(@"Error downloading messages list: %@", error);
-		} else {
+		if(error == nil) {
 			_currentFolder.messageHeadersFetched += [messages count];
 
 			[self updateMessageList:messages remoteFolder:[_currentFolder name]];
-			[self fetchFolderMessageHeaders];
+			[self fetchMessageHeaders];
+		} else {
+			NSLog(@"Error downloading messages list: %@", error);
 		}
 	}];	
 }
@@ -304,7 +321,7 @@
 }
 
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent {
-	NSLog(@"%s: uid %u, remote folder %@, threadId %llu, urgent %s", __FUNCTION__, uid, remoteFolder, threadId, urgent? "YES" : "NO");
+//	NSLog(@"%s: uid %u, remote folder %@, threadId %llu, urgent %s", __FUNCTION__, uid, remoteFolder, threadId, urgent? "YES" : "NO");
 
 	if([[_model messageStorage] messageHasData:uid localFolder:[_currentFolder name] threadId:threadId])
 		return NO;
