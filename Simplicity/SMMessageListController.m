@@ -60,6 +60,18 @@
 	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 }
 
+static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
+	MCOIMAPMessagesRequestKindHeaders |
+	MCOIMAPMessagesRequestKindStructure |
+	MCOIMAPMessagesRequestKindFullHeaders    |
+	MCOIMAPMessagesRequestKindInternalDate |
+	MCOIMAPMessagesRequestKindHeaderSubject |
+	MCOIMAPMessagesRequestKindFlags |
+	MCOIMAPMessagesRequestKindGmailLabels |
+	MCOIMAPMessagesRequestKindGmailMessageID |
+	MCOIMAPMessagesRequestKindGmailThreadID
+);
+
 - (id)initWithModel:(SMSimplicityContainer*)model {
 	self = [ super init ];
 	
@@ -148,33 +160,58 @@
 }
 
 - (void)loadSearchResults:(MCOIndexSet*)searchResults folderToSearch:(NSString*)folderToSearch {
-	NSAssert(searchResults != nil && searchResults.count > 0, @"bad search results");
-
 	[self changeFolderInternal:SEARCH_RESULTS_FOLDER];
-	
-	NSAssert(_model != nil, @"model disposed");
 	
 	_currentFolder.messageHeadersFetched = 0;
 	
 	[[_model messageStorage] startUpdate:[_currentFolder name]];
-	
-	MCOIMAPSession *session = [_model session];
 
-	NSAssert(session, @"session lost");
-	
 	_currentFolder.totalMessagesCount = searchResults.count;
 	
+	[self loadSearchResultsInternal:searchResults folderToSearch:folderToSearch];
+}
+
+- (void)loadSearchResultsInternal:(MCOIndexSet*)searchResults folderToSearch:(NSString*)folderToSearch {
+	NSAssert(searchResults != nil && searchResults.count > 0, @"bad search results");
+	
+	NSAssert(_model != nil, @"model disposed");
+	
+	MCOIMAPSession *session = [_model session];
+	
+	NSAssert(session, @"session lost");
+
+	BOOL finishFetch = YES;
+	
+	if([_currentFolder totalMessagesCount] == [_currentFolder messageHeadersFetched]) {
+		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, [_currentFolder totalMessagesCount]);
+	} else if([_currentFolder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
+		// TODO: implement and on-demand "load more results" scheme
+		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [_currentFolder messageHeadersFetched]);
+	} else {
+		finishFetch = NO;
+	}
+	
+	if(finishFetch) {
+		[[_model messageStorage] endUpdate:[_currentFolder name]];
+
+		[self fetchMessageBodies:folderToSearch];
+		
+		return;
+	}
+
 	MCOIndexSet *const searchResultsToLoad = [MCOIndexSet indexSet];
 	MCORange *const ranges = [searchResults allRanges];
-
-	for(unsigned int i = 0; i < [searchResults rangesCount]; i++) {
-		const uint64_t len = MCORangeRightBound(ranges[i]) - MCORangeLeftBound(ranges[i]) + 1;
+	
+	for(unsigned int i = [searchResults rangesCount]; i > 0; i--) {
+		const MCORange currentRange = ranges[i-1];
+		const uint64_t len = MCORangeRightBound(currentRange) - MCORangeLeftBound(currentRange) + 1;
 		const uint64_t maxCountToLoad = MESSAGE_HEADERS_TO_FETCH_AT_ONCE - searchResultsToLoad.count;
-
+		
 		if(len < maxCountToLoad) {
-			[searchResultsToLoad addRange:ranges[i]];
+			[searchResultsToLoad addRange:currentRange];
 		} else {
-			const MCORange range = MCORangeMake(MCORangeLeftBound(ranges[i]), maxCountToLoad - 1);
+			// note: "- 1" is because zero length means one element range
+			const MCORange range = MCORangeMake(MCORangeRightBound(currentRange) - maxCountToLoad + 1, maxCountToLoad - 1);
 
 			[searchResultsToLoad addRange:range];
 			
@@ -183,38 +220,24 @@
 	}
 	
 	[searchResults removeIndexSet:searchResultsToLoad];
-
+	
 	NSLog(@"%s: loading %u of %u search results...", __func__, searchResultsToLoad.count, searchResults.count);
 	
-	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)(
-		MCOIMAPMessagesRequestKindHeaders |
-		MCOIMAPMessagesRequestKindStructure |
-		MCOIMAPMessagesRequestKindFullHeaders    |
-		MCOIMAPMessagesRequestKindInternalDate |
-		MCOIMAPMessagesRequestKindHeaderSubject |
-		MCOIMAPMessagesRequestKindFlags |
-		MCOIMAPMessagesRequestKindGmailLabels |
-		MCOIMAPMessagesRequestKindGmailMessageID |
-		MCOIMAPMessagesRequestKindGmailThreadID
-	);
-
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
-	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:folderToSearch requestKind:requestKind uids:searchResultsToLoad];
+	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:folderToSearch requestKind:messageHeadersRequestKind uids:searchResultsToLoad];
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
 		
 		if(error == nil) {
 			NSLog(@"%s: loaded %lu message headers...", __func__, messages.count);
-
+			
 			_currentFolder.messageHeadersFetched += [messages count];
 			
 			[self updateMessageList:messages remoteFolder:folderToSearch];
-
-			[[_model messageStorage] endUpdate:[_currentFolder name]];
 			
-			[self fetchMessageBodies:folderToSearch];
+			[self loadSearchResultsInternal:searchResults folderToSearch:folderToSearch];
 		} else {
 			NSLog(@"%s: Error downloading search results: %@", __func__, error);
 		}
@@ -258,21 +281,9 @@
 	
 	NSAssert(session, @"session lost");
 	
-	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)(
-		MCOIMAPMessagesRequestKindHeaders |
-		MCOIMAPMessagesRequestKindStructure |
-		MCOIMAPMessagesRequestKindFullHeaders    |
-		MCOIMAPMessagesRequestKindInternalDate |
-		MCOIMAPMessagesRequestKindHeaderSubject |
-		MCOIMAPMessagesRequestKindFlags |
-		MCOIMAPMessagesRequestKindGmailLabels |
-		MCOIMAPMessagesRequestKindGmailMessageID |
-		MCOIMAPMessagesRequestKindGmailThreadID
-	);
-	
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 
-	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:[_currentFolder name] requestKind:requestKind numbers:regionToFetch];
+	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:[_currentFolder name] requestKind:messageHeadersRequestKind numbers:regionToFetch];
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
