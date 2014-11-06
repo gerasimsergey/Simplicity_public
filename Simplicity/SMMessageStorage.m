@@ -187,11 +187,9 @@
 	NSAssert(collection, @"no thread collection found");
 	
 	if(index >= [collection.messageThreadsByDate count]) {
-		// TODO!!!
-		NSLog(@"%s: message index %lu >= message thread message count %lu", __func__, index, [collection.messageThreadsByDate count]);
+		NSLog(@"%s: index %lu is beyond message thread size %lu", __func__, index, [collection.messageThreadsByDate count]);
+		return nil;
 	}
-	
-	NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
 
 	return [collection.messageThreadsByDate objectAtIndex:index];
 }

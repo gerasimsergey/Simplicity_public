@@ -188,6 +188,9 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 - (void) searchUsingToolbarSearchField:(id) sender {
 	// This message is sent when the user strikes return in the search field in the toolbar
 	NSString *searchString = [(NSTextField *)[_activeSearchItem view] stringValue];
+
+	if(searchString.length == 0)
+		return;
 	
 	NSLog(@"%s: searching for string '%@'", __func__, searchString);
 	
@@ -207,7 +210,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 				NSLog(@"%s: nothing found", __func__);
 			}
 		} else {
-			NSLog(@"%s: error %@", __func__, error);
+			NSLog(@"%s: search in folder %@ failed, error %@", __func__, folderName, error);
 		}
 	}];
 	

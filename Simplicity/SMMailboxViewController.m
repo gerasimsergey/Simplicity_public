@@ -103,11 +103,11 @@ NSLog(@"trace: %s", __func__);
 	
 	if(folder == nil) {
 		NSLog(@"%s: no row selected'", __func__);
-		return;		
+		return;
 	}
 	
 	if(folder == _lastFolder) {
-		NSLog(@"%s: selected folder didn't change'", __func__);
+		NSLog(@"%s: selected folder didn't change", __func__);
 		return;
 	}
 	
