@@ -10,6 +10,7 @@
 #import <WebKit/WebKit.h>
 
 @class SMMailboxViewController;
+@class SMSearchResultsListViewController;
 @class SMMessageListViewController;
 @class SMMessageViewController;
 @class SMMessageThreadViewController;
@@ -22,6 +23,7 @@
 @property (nonatomic) IBOutlet NSTextField *searchField;
 
 @property SMMailboxViewController *mailboxViewController;
+@property SMSearchResultsListViewController *searchResultsListViewController;
 @property SMMessageListViewController *messageListViewController;
 @property SMMessageThreadViewController *messageThreadViewController;
 

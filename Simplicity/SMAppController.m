@@ -9,6 +9,7 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 #import "SMMailboxViewController.h"
+#import "SMSearchResultsListViewController.h"
 #import "SMMessageListController.h"
 #import "SMMessageListViewController.h"
 #import "SMMessageDetailsViewController.h"
@@ -31,7 +32,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	appDelegate.appController = self;
-	
+
 	//
 
 	_mailboxViewController = [ [ SMMailboxViewController alloc ] initWithNibName:@"SMMailboxViewController" bundle:nil ];
@@ -41,7 +42,17 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSView *mailboxView = [ _mailboxViewController view ];
 
 	NSAssert(mailboxView, @"mailboxView");
+
+	//
 	
+	_searchResultsListViewController = [ [ SMSearchResultsListViewController alloc ] initWithNibName:nil bundle:nil ];
+	
+	NSAssert(_searchResultsListViewController, @"_searchResultsListViewController");
+	
+	NSView *searchResultsListView = [ _searchResultsListViewController view ];
+	
+	NSAssert(searchResultsListView, @"searchResultsListView");
+
 	//
 
 	_messageListViewController = [ [ SMMessageListViewController alloc ] initWithNibName:@"SMMessageListViewController" bundle:nil ];
@@ -66,13 +77,26 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 
 	//
 	
+	NSSplitView *mailboxAndSearchResultsView = [[NSSplitView alloc] init];
+	mailboxAndSearchResultsView.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[mailboxAndSearchResultsView setVertical:NO];
+	[mailboxAndSearchResultsView setDividerStyle:NSSplitViewDividerStyleThin];
+	
+	[mailboxAndSearchResultsView addSubview:mailboxView];
+	[mailboxAndSearchResultsView addSubview:searchResultsListView];
+	
+	[mailboxAndSearchResultsView adjustSubviews];
+	
+	//
+	
 	NSSplitView *splitView = [[NSSplitView alloc] init];
 	splitView.translatesAutoresizingMaskIntoConstraints = NO;
 
 	[splitView setVertical:YES];
 	[splitView setDividerStyle:NSSplitViewDividerStyleThin];
 	
-	[splitView addSubview:mailboxView];
+	[splitView addSubview:mailboxAndSearchResultsView];
 	[splitView addSubview:messageListView];
 	[splitView addSubview:messageThreadView];
 	
@@ -85,7 +109,9 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	[_view addSubview:splitView];
 	
 	// 
-	
+
+	[_view addConstraint:[NSLayoutConstraint constraintWithItem:mailboxView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:_view attribute:NSLayoutAttributeHeight multiplier:0.3 constant:0]];
+
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
 	
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0]];
