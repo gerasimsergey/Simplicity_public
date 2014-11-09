@@ -8,29 +8,32 @@
 
 #import "SMAppDelegate.h"
 #import "SMSimplicityContainer.h"
+#import "SMMessageListController.h"
 #import "SMSearchResultsListController.h"
 #import "SMSearchResultsListViewController.h"
 
-@implementation SMSearchResultsListViewController
+@implementation SMSearchResultsListViewController {
+	NSTableView *_tableView;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		NSTableView *view = [[NSTableView alloc] init];
-		view.translatesAutoresizingMaskIntoConstraints = NO;
+		_tableView = [[NSTableView alloc] init];
+		_tableView.translatesAutoresizingMaskIntoConstraints = NO;
 
 		NSTableColumn *column =[[NSTableColumn alloc]initWithIdentifier:@"1"];
 		[column.headerCell setTitle:@"Search results"];
 		
-		[view addTableColumn:column];
+		[_tableView addTableColumn:column];
 
-		[view setDataSource:self];
-		[view setDelegate:self];
+		[_tableView setDataSource:self];
+		[_tableView setDelegate:self];
 		
 		// finally, commit the main view
 		
-		[self setView:view];
+		[self setView:_tableView];
 	}
 	
 	return self;
@@ -47,6 +50,8 @@
  
 	if(result == nil) {
 		result = [[NSTextField alloc] init];
+		[result setEditable:NO];
+
 		result.identifier = viewId;
 	}
  
@@ -58,8 +63,21 @@
  
 }
 
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+	NSInteger selectedRow = [_tableView selectedRow];
+	
+	if(selectedRow >= 0) {
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMSearchResultsListController *searchResultsListController = [[appDelegate model] searchResultsListController];
+		
+		if(selectedRow < searchResultsListController.searchResultsCount) {
+			[[[appDelegate model] messageListController] changeFolder:[searchResultsListController searchResultsLocalFolder:selectedRow]];
+		}
+	}
+}
+
 - (void)reloadData {
-	[((NSTableView*)[self view]) reloadData];
+	[_tableView reloadData];
 }
 
 @end
