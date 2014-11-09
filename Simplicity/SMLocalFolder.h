@@ -17,4 +17,7 @@
 
 - (id)initWithName:(NSString*)name;
 
+- (void)fetchMessageBodies:(NSString*)remoteFolder;
+- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent;
+
 @end

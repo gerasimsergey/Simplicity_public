@@ -171,7 +171,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	if(finishFetch) {
 		[[_model messageStorage] endUpdate:[_currentFolder name]];
 
-		[self fetchMessageBodies:remoteFolderToSearch];
+		[_currentFolder fetchMessageBodies:remoteFolderToSearch];
 		
 		return;
 	}
@@ -241,7 +241,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		[_fetchMessageHeadersOp cancel];
 		_fetchMessageHeadersOp = nil;
 		
-		[self fetchMessageBodies:[_currentFolder name]];
+		[_currentFolder fetchMessageBodies:[_currentFolder name]];
+
 		[self scheduleMessageListUpdate];
 
 		return;
@@ -295,66 +296,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
 }
 
-- (void)fetchMessageBodies:(NSString*)remoteFolder {
-//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, remoteFolder);
-	
-	NSUInteger fetchCount = 0;
-	
-	for(MCOIMAPMessage *message in _currentFolder.fetchedMessageHeaders) {
-		if([self fetchMessageBody:[message uid] remoteFolder:remoteFolder threadId:[message gmailThreadID] urgent:NO])
-			fetchCount++;
-	}
-
-	[_currentFolder.fetchedMessageHeaders removeAllObjects];
-}
-
-- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent {
-//	NSLog(@"%s: uid %u, remote folder %@, threadId %llu, urgent %s", __FUNCTION__, uid, remoteFolder, threadId, urgent? "YES" : "NO");
-
-	if([[_model messageStorage] messageHasData:uid localFolder:[_currentFolder name] threadId:threadId])
-		return NO;
-
-	MCOIMAPSession *session = [_model session];
-	
-	NSAssert(session, @"session is nil");
-	
-	MCOIMAPFetchContentOperation * op = [session fetchMessageByUIDOperationWithFolder:remoteFolder uid:uid urgent:urgent];
-	
-	// TODO: this op should be stored in the a message property
-	// TODO: don't fetch if body is already being fetched (non-urgently!)
-	// TODO: if urgent fetch is requested, cancel the non-urgent fetch
-	[op start:^(NSError * error, NSData * data) {
-		if ([error code] != MCOErrorNone) {
-			NSLog(@"Error downloading message body for uid %u, remote folder %@", uid, remoteFolder);
-			return;
-		}
-		
-		NSAssert(data != nil, @"data != nil");
-		
-//		NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
-		
-		NSAssert(_model, @"model is disposed");
-		
-		[[_model messageStorage] setMessageData:data uid:uid localFolder:[_currentFolder name] threadId:threadId];
-		
-		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
-		
-		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		SMAppController *appController = [appDelegate appController];
-		SMMessageThread *currentMessageThread = [[appController messageThreadViewController] currentMessageThread];
-		
-		if(currentMessageThread != nil && [currentMessageThread threadId] == threadId) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageBodyFetched" object:nil userInfo:messageInfo];
-		}
-	}];
-
-	return YES;
-}
-
 - (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId {
 	NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
 
-	[self fetchMessageBody:uid remoteFolder:remoteFolder threadId:threadId urgent:YES];
+	[_currentFolder fetchMessageBody:uid remoteFolder:remoteFolder threadId:threadId urgent:YES];
 }
 
 @end
