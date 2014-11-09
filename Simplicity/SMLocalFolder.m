@@ -13,7 +13,9 @@
 #import "SMAppController.h"
 #import "SMLocalFolder.h"
 
-@implementation SMLocalFolder
+@implementation SMLocalFolder {
+	NSMutableDictionary *_fetchMessageBodyOps;
+}
 
 - (id)initWithName:(NSString*)name {
 	self = [ super init ];
@@ -23,6 +25,7 @@
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
 		_fetchedMessageHeaders = [NSMutableArray new];
+		_fetchMessageBodyOps = [NSMutableDictionary new];
 	}
 	
 	return self;
@@ -53,12 +56,15 @@
 	
 	NSAssert(session, @"session is nil");
 	
-	MCOIMAPFetchContentOperation * op = [session fetchMessageByUIDOperationWithFolder:remoteFolder uid:uid urgent:urgent];
+	MCOIMAPFetchContentOperation *op = [session fetchMessageByUIDOperationWithFolder:remoteFolder uid:uid urgent:urgent];
 	
-	// TODO: this op should be stored in the a message property
+	[_fetchMessageBodyOps setObject:op forKey:[NSNumber numberWithUnsignedInt:uid]];
+	
 	// TODO: don't fetch if body is already being fetched (non-urgently!)
 	// TODO: if urgent fetch is requested, cancel the non-urgent fetch
 	[op start:^(NSError * error, NSData * data) {
+		[_fetchMessageBodyOps removeObjectForKey:[NSNumber numberWithUnsignedInt:uid]];
+
 		if ([error code] != MCOErrorNone) {
 			NSLog(@"Error downloading message body for uid %u, remote folder %@", uid, remoteFolder);
 			return;
