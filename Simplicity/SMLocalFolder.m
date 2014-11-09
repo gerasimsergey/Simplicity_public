@@ -9,8 +9,6 @@
 #import <MailCore/MailCore.h>
 
 #import "SMAppDelegate.h"
-#import "SMMessageThread.h"
-#import "SMMessageThreadViewController.h"
 #import "SMMessageStorage.h"
 #import "SMAppController.h"
 #import "SMLocalFolder.h"
@@ -65,22 +63,16 @@
 			NSLog(@"Error downloading message body for uid %u, remote folder %@", uid, remoteFolder);
 			return;
 		}
-		
+
 		NSAssert(data != nil, @"data != nil");
-		
-		//		NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
+
+		//	NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
 		
 		[[[appDelegate model] messageStorage] setMessageData:data uid:uid localFolder:_name threadId:threadId];
 		
 		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
-		
-		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		SMAppController *appController = [appDelegate appController];
-		SMMessageThread *currentMessageThread = [[appController messageThreadViewController] currentMessageThread];
-		
-		if(currentMessageThread != nil && [currentMessageThread threadId] == threadId) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageBodyFetched" object:nil userInfo:messageInfo];
-		}
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageBodyFetched" object:nil userInfo:messageInfo];
 	}];
 	
 	return YES;

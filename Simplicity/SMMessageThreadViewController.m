@@ -199,6 +199,7 @@
 	for(NSInteger i = 0; i < messages.count; i++) {
 		SMMessage *message = messages[i];
 		
+		// TODO: optimize search
 		if(message.uid == uid) {
 			NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
 			
