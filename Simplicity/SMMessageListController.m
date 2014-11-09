@@ -15,36 +15,13 @@
 #import "SMMessage.h"
 #import "SMMessageThread.h"
 #import "SMMessageStorage.h"
+#import "SMLocalFolder.h"
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 
 #define MAX_MESSAGE_HEADERS_TO_FETCH 300
 #define MESSAGE_HEADERS_TO_FETCH_AT_ONCE 20
 #define MESSAGE_LIST_UPDATE_INTERVAL_SEC 15
-
-@interface Folder : NSObject
-@property NSString* name;
-@property uint64_t totalMessagesCount;
-@property uint64_t messageHeadersFetched;
-@property NSMutableArray* fetchedMessageHeaders;
-@end
-
-@implementation Folder
-
-- (id)initWithName:(NSString*)name {
-	self = [ super init ];
-	
-	if(self) {
-		_name = name;
-		_totalMessagesCount = 0;
-		_messageHeadersFetched = 0;
-		_fetchedMessageHeaders = [NSMutableArray new];
-	}
-	
-	return self;
-}
-
-@end
 
 @interface SMMessageListController()
 - (void)startMessagesUpdate;
@@ -53,7 +30,7 @@
 @implementation SMMessageListController {
 	__weak SMSimplicityContainer *_model;
 	NSMutableDictionary *_folders;
-	Folder *_currentFolder;
+	SMLocalFolder *_currentFolder;
 	MCOIMAPFolderInfoOperation *_folderInfoOp;
 	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 }
@@ -90,9 +67,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(folderName != nil, @"no folder name");
 	
-	Folder *folder = [_folders objectForKey:folderName];
+	SMLocalFolder *folder = [_folders objectForKey:folderName];
 	if(folder == nil) {
-		folder = [[Folder alloc] initWithName:folderName];
+		folder = [[SMLocalFolder alloc] initWithName:folderName];
 		[_folders setValue:folder forKey:folderName];
 	}
 	
@@ -161,7 +138,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
 	[self changeFolderInternal:searchResultsLocalFolder];
-	
+
 	_currentFolder.messageHeadersFetched = 0;
 	
 	[[_model messageStorage] startUpdate:[_currentFolder name]];

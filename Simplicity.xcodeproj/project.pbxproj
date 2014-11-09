@@ -31,6 +31,7 @@
 		0082F5F11A0DCE290050578A /* SMSearchResultsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */; };
 		0082F5F81A0DD39B0050578A /* SMSearchResultsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */; };
 		0082F5FB1A0DE40E0050578A /* SMSearchResultsListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */; };
+		0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */; };
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
 		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
 		009742721957C78E00620145 /* SMMailbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 009742711957C78E00620145 /* SMMailbox.m */; };
@@ -151,6 +152,8 @@
 		0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListController.m; sourceTree = "<group>"; };
 		0082F5F91A0DE40E0050578A /* SMSearchResultsListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListCellView.h; sourceTree = "<group>"; };
 		0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListCellView.m; sourceTree = "<group>"; };
+		0082F5FC1A0FFAAC0050578A /* SMLocalFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLocalFolder.h; sourceTree = "<group>"; };
+		0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLocalFolder.m; sourceTree = "<group>"; };
 		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
 		0097426C195686F900620145 /* SMMailboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxViewController.h; sourceTree = "<group>"; };
 		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
@@ -283,6 +286,8 @@
 		005B086517D4F3BD00341051 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0082F5FC1A0FFAAC0050578A /* SMLocalFolder.h */,
+				0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */,
 				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
 				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
 				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
@@ -506,6 +511,7 @@
 				00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */,
 				00F96C0D19343D8000CA5836 /* SMMessageDetailsView.m in Sources */,
 				00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */,
+				0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */,
 				00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */,
 				0082F5F81A0DD39B0050578A /* SMSearchResultsListController.m in Sources */,
 				00172FF5198D5C6100DB975E /* SMMessageThreadViewController.m in Sources */,
