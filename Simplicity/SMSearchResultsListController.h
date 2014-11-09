@@ -10,4 +10,12 @@
 
 @interface SMSearchResultsListController : NSObject
 
+// TODO: introduce search pattern descriptor and search results descriptors
+
+- (NSString*)startNewSearch:(NSString*)searchPattern;
+- (void)deleteSearch:(NSString*)searchResultsLocalFolder;
+- (NSUInteger)searchResultsCount;
+- (NSString*)searchResultsLocalFolder:(NSUInteger)index;
+- (NSString*)searchPattern:(NSUInteger)index;
+
 @end

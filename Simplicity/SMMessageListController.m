@@ -22,8 +22,6 @@
 #define MESSAGE_HEADERS_TO_FETCH_AT_ONCE 20
 #define MESSAGE_LIST_UPDATE_INTERVAL_SEC 15
 
-#define SEARCH_RESULTS_FOLDER @"//search_results//" // TODO: fix by introducing folder descriptor
-
 @interface Folder : NSObject
 @property NSString* name;
 @property uint64_t totalMessagesCount;
@@ -89,6 +87,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)changeFolderInternal:(NSString*)folderName {
 	NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
+	
+	NSAssert(folderName != nil, @"no folder name");
 	
 	Folder *folder = [_folders objectForKey:folderName];
 	if(folder == nil) {
@@ -159,8 +159,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}];
 }
 
-- (void)loadSearchResults:(MCOIndexSet*)searchResults folderToSearch:(NSString*)folderToSearch {
-	[self changeFolderInternal:SEARCH_RESULTS_FOLDER];
+- (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
+	[self changeFolderInternal:searchResultsLocalFolder];
 	
 	_currentFolder.messageHeadersFetched = 0;
 	
@@ -168,11 +168,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	_currentFolder.totalMessagesCount = searchResults.count;
 	
-	[self loadSearchResultsInternal:searchResults folderToSearch:folderToSearch];
+	[self loadSearchResultsInternal:searchResults remoteFolderToSearch:remoteFolderToSearch];
 }
 
-- (void)loadSearchResultsInternal:(MCOIndexSet*)searchResults folderToSearch:(NSString*)folderToSearch {
-	NSAssert(searchResults != nil && searchResults.count > 0, @"bad search results");
+- (void)loadSearchResultsInternal:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch {
+	NSAssert(searchResults != nil, @"bad search results");
 	
 	NSAssert(_model != nil, @"model disposed");
 	
@@ -187,14 +187,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	} else if([_currentFolder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
 		// TODO: implement and on-demand "load more results" scheme
 		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [_currentFolder messageHeadersFetched]);
-	} else {
+	} else if(searchResults.count > 0) {
 		finishFetch = NO;
 	}
 	
 	if(finishFetch) {
 		[[_model messageStorage] endUpdate:[_currentFolder name]];
 
-		[self fetchMessageBodies:folderToSearch];
+		[self fetchMessageBodies:remoteFolderToSearch];
 		
 		return;
 	}
@@ -225,7 +225,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
-	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:folderToSearch requestKind:messageHeadersRequestKind uids:searchResultsToLoad];
+	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:remoteFolderToSearch requestKind:messageHeadersRequestKind uids:searchResultsToLoad];
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
@@ -235,9 +235,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			
 			_currentFolder.messageHeadersFetched += [messages count];
 			
-			[self updateMessageList:messages remoteFolder:folderToSearch];
+			[self updateMessageList:messages remoteFolder:remoteFolderToSearch];
 			
-			[self loadSearchResultsInternal:searchResults folderToSearch:folderToSearch];
+			[self loadSearchResultsInternal:searchResults remoteFolderToSearch:remoteFolderToSearch];
 		} else {
 			NSLog(@"%s: Error downloading search results: %@", __func__, error);
 		}

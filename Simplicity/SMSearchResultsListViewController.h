@@ -10,4 +10,6 @@
 
 @interface SMSearchResultsListViewController : NSViewController<NSTableViewDataSource, NSTableViewDelegate>
 
+- (void)reloadData;
+
 @end

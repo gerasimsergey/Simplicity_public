@@ -30,6 +30,7 @@
 		006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */; };
 		0082F5F11A0DCE290050578A /* SMSearchResultsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */; };
 		0082F5F81A0DD39B0050578A /* SMSearchResultsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */; };
+		0082F5FB1A0DE40E0050578A /* SMSearchResultsListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */; };
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
 		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
 		009742721957C78E00620145 /* SMMailbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 009742711957C78E00620145 /* SMMailbox.m */; };
@@ -148,6 +149,8 @@
 		0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListViewController.m; sourceTree = "<group>"; };
 		0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListController.h; sourceTree = "<group>"; };
 		0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListController.m; sourceTree = "<group>"; };
+		0082F5F91A0DE40E0050578A /* SMSearchResultsListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListCellView.h; sourceTree = "<group>"; };
+		0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListCellView.m; sourceTree = "<group>"; };
 		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
 		0097426C195686F900620145 /* SMMailboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxViewController.h; sourceTree = "<group>"; };
 		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
@@ -280,25 +283,25 @@
 		005B086517D4F3BD00341051 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
+				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
+				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
+				00ED317B17F88DA700B04F5B /* SMAttachmentStorage.m */,
+				00C75607195921AA006ED86B /* SMFolder.h */,
+				00C75608195921AA006ED86B /* SMFolder.m */,
+				009742701957C78E00620145 /* SMMailbox.h */,
+				009742711957C78E00620145 /* SMMailbox.m */,
+				0077C99219E8E58C00118CA5 /* SMMailLogin.h */,
+				00ED317817F88DA700B04F5B /* SMMessage.h */,
+				00ED317917F88DA700B04F5B /* SMMessage.m */,
+				001A41CC199EFB5300AA3AE6 /* SMMessageComparators.h */,
+				001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */,
+				00ED317E17F88DA700B04F5B /* SMMessageStorage.h */,
+				00ED317F17F88DA700B04F5B /* SMMessageStorage.m */,
 				00EB7E85199C70FA00CA2B1B /* SMMessageThread.h */,
 				00EB7E86199C70FA00CA2B1B /* SMMessageThread.m */,
 				00ED318417F88E3000B04F5B /* SMSimplicityContainer.h */,
 				00ED318517F88E3000B04F5B /* SMSimplicityContainer.m */,
-				009742701957C78E00620145 /* SMMailbox.h */,
-				009742711957C78E00620145 /* SMMailbox.m */,
-				00C75607195921AA006ED86B /* SMFolder.h */,
-				00C75608195921AA006ED86B /* SMFolder.m */,
-				00ED317817F88DA700B04F5B /* SMMessage.h */,
-				00ED317917F88DA700B04F5B /* SMMessage.m */,
-				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
-				00ED317B17F88DA700B04F5B /* SMAttachmentStorage.m */,
-				00ED317E17F88DA700B04F5B /* SMMessageStorage.h */,
-				00ED317F17F88DA700B04F5B /* SMMessageStorage.m */,
-				0077C99219E8E58C00118CA5 /* SMMailLogin.h */,
-				001A41CC199EFB5300AA3AE6 /* SMMessageComparators.h */,
-				001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */,
-				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
-				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -306,30 +309,30 @@
 		005B086C17D4F5D000341051 /* Control */ = {
 			isa = PBXGroup;
 			children = (
+				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
+				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
+				00DC84941967A70E00577667 /* SMMailboxController.h */,
+				00DC84951967A70E00577667 /* SMMailboxController.m */,
+				0097426C195686F900620145 /* SMMailboxViewController.h */,
+				0097426D195686F900620145 /* SMMailboxViewController.m */,
+				00172FED198B3BB700DB975E /* SMMessageBodyViewController.h */,
+				00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */,
+				00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */,
+				00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */,
+				00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */,
+				00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */,
+				00E9107B17D2F6F50028C679 /* SMMessageListViewController.h */,
+				00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */,
 				00FC3C7619AADD67002DAF9C /* SMMessageThreadCellViewController.h */,
 				00FC3C7D19AADF68002DAF9C /* SMMessageThreadCellViewController.m */,
 				00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */,
 				00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */,
-				00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */,
-				00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */,
-				00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */,
-				00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */,
-				00E9107B17D2F6F50028C679 /* SMMessageListViewController.h */,
-				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
-				0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */,
-				00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */,
-				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
-				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
-				0082F5EF1A0DCE290050578A /* SMSearchResultsListViewController.h */,
-				0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */,
-				00DC84941967A70E00577667 /* SMMailboxController.h */,
-				00DC84951967A70E00577667 /* SMMailboxController.m */,
 				00172FE8198B39BA00DB975E /* SMMessageViewController.h */,
 				00172FE9198B39BA00DB975E /* SMMessageViewController.m */,
-				00172FED198B3BB700DB975E /* SMMessageBodyViewController.h */,
-				00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */,
-				0097426C195686F900620145 /* SMMailboxViewController.h */,
-				0097426D195686F900620145 /* SMMailboxViewController.m */,
+				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
+				0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */,
+				0082F5EF1A0DCE290050578A /* SMSearchResultsListViewController.h */,
+				0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */,
 			);
 			name = Control;
 			sourceTree = "<group>";
@@ -337,14 +340,16 @@
 		005B086D17D4F62600341051 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0034EBBF19EA3A3200CDF656 /* SMTokenField.h */,
-				0034EBC019EA3A3200CDF656 /* SMTokenField.m */,
 				0040B0F7196A5331004E55CC /* SMFolderCellView.h */,
 				0040B0F8196A5331004E55CC /* SMFolderCellView.m */,
 				00F96C0B19343D8000CA5836 /* SMMessageDetailsView.h */,
 				00F96C0C19343D8000CA5836 /* SMMessageDetailsView.m */,
 				0002A0B617D224C600EA4AFF /* SMMessageListCellView.h */,
 				0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */,
+				0082F5F91A0DE40E0050578A /* SMSearchResultsListCellView.h */,
+				0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */,
+				0034EBBF19EA3A3200CDF656 /* SMTokenField.h */,
+				0034EBC019EA3A3200CDF656 /* SMTokenField.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -352,9 +357,9 @@
 		00621CF619230D4200BF1C01 /* Forms */ = {
 			isa = PBXGroup;
 			children = (
-				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
 				0002A0A617D1B1E000EA4AFF /* MainMenu.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
+				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
 			);
 			name = Forms;
 			sourceTree = "<group>";
@@ -507,6 +512,7 @@
 				00ED318017F88DA700B04F5B /* SMMessage.m in Sources */,
 				00ED318117F88DA700B04F5B /* SMAttachmentStorage.m in Sources */,
 				00ED318317F88DA700B04F5B /* SMMessageStorage.m in Sources */,
+				0082F5FB1A0DE40E0050578A /* SMSearchResultsListCellView.m in Sources */,
 				009742721957C78E00620145 /* SMMailbox.m in Sources */,
 				0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */,
 				00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */,

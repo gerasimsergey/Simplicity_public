@@ -14,6 +14,7 @@
 @class SMMessageStorage;
 @class SMAttachmentStorage;
 @class SMMessageListController;
+@class SMSearchResultsListController;
 @class SMMailboxController;
 @class SMMessageComparators;
 
@@ -22,10 +23,12 @@
 @interface SMSimplicityContainer : NSObject
 
 @property MCOIMAPSession *session;
+
 @property (readonly) SMMessageStorage *messageStorage;
 @property (readonly) SMAttachmentStorage *attachmentStorage;
 @property (readonly) MCOIndexSet *imapServerCapabilities;
 @property (readonly) SMMessageListController *messageListController;
+@property (readonly) SMSearchResultsListController *searchResultsListController;
 @property (readonly) SMMailboxController *mailboxController;
 @property (readonly) SMMailbox *mailbox;
 @property (readonly) SMMessageComparators *messageComparators;

@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAppDelegate.h"
+#import "SMSimplicityContainer.h"
+#import "SMSearchResultsListController.h"
 #import "SMSearchResultsListViewController.h"
 
 @implementation SMSearchResultsListViewController
@@ -34,25 +37,29 @@
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-	return 3;
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	return [[[appDelegate model] searchResultsListController] searchResultsCount];
 }
 
-- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	NSString *viewId = @"SearchResultView";
 	NSTextField *result = [tableView makeViewWithIdentifier:viewId owner:self];
  
 	if(result == nil) {
-		
 		result = [[NSTextField alloc] init];
-		
 		result.identifier = viewId;
 	}
  
-	result.stringValue = @"Some string";
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
+	result.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
  
 	return result;
  
+}
+
+- (void)reloadData {
+	[((NSTableView*)[self view]) reloadData];
 }
 
 @end

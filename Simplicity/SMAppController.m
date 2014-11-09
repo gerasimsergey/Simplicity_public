@@ -9,6 +9,7 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 #import "SMMailboxViewController.h"
+#import "SMSearchResultsListController.h"
 #import "SMSearchResultsListViewController.h"
 #import "SMMessageListController.h"
 #import "SMMessageListViewController.h"
@@ -234,9 +235,14 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {
 			if(searchResults.count > 0) {
-				NSLog(@"%s: %u messages found, loading...", __func__, [searchResults count]);
+				SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+				NSString *searchResultsLocalFolder = [[[appDelegate model] searchResultsListController] startNewSearch:searchString];
+		
+				NSLog(@"%s: %u messages found in folder %@, loading to local folder %@", __func__, [searchResults count], folderName, searchResultsLocalFolder);
+				
+				[[[appDelegate appController] searchResultsListViewController] reloadData];
 
-				[[[appDelegate model] messageListController] loadSearchResults:searchResults folderToSearch:folderName];
+				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:folderName searchResultsLocalFolder:searchResultsLocalFolder];
 			} else {
 				NSLog(@"%s: nothing found", __func__);
 			}

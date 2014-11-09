@@ -13,6 +13,7 @@
 #import "SMMessageStorage.h"
 #import "SMAttachmentStorage.h"
 #import "SMMessageListController.h"
+#import "SMSearchResultsListController.h"
 #import "SMMailboxController.h"
 #import "SMMessageComparators.h"
 
@@ -51,6 +52,7 @@
 		_attachmentStorage = [ SMAttachmentStorage new ];
 		
 		_messageListController = [[ SMMessageListController alloc ] initWithModel:self ];
+		_searchResultsListController = [[SMSearchResultsListController alloc] init];
 		_mailboxController = [[ SMMailboxController alloc ] initWithModel:self ];
 		_messageComparators = [SMMessageComparators new];
 
