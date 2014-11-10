@@ -13,15 +13,31 @@
 #import "SMAppController.h"
 #import "SMLocalFolder.h"
 
+static const NSUInteger MAX_MESSAGE_HEADERS_TO_FETCH = 300;
+static const NSUInteger MESSAGE_HEADERS_TO_FETCH_AT_ONCE = 20;
+
+static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
+	MCOIMAPMessagesRequestKindHeaders |
+	MCOIMAPMessagesRequestKindStructure |
+	MCOIMAPMessagesRequestKindFullHeaders    |
+	MCOIMAPMessagesRequestKindInternalDate |
+	MCOIMAPMessagesRequestKindHeaderSubject |
+	MCOIMAPMessagesRequestKindFlags |
+	MCOIMAPMessagesRequestKindGmailLabels |
+	MCOIMAPMessagesRequestKindGmailMessageID |
+	MCOIMAPMessagesRequestKindGmailThreadID
+);
+
 @implementation SMLocalFolder {
+	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 	NSMutableDictionary *_fetchMessageBodyOps;
 }
 
-- (id)initWithName:(NSString*)name {
+- (id)initWithLocalFolderName:(NSString*)localFolderName {
 	self = [ super init ];
 	
 	if(self) {
-		_name = name;
+		_name = localFolderName;
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
 		_fetchedMessageHeaders = [NSMutableArray new];
@@ -47,7 +63,7 @@
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent {
 	//	NSLog(@"%s: uid %u, remote folder %@, threadId %llu, urgent %s", __FUNCTION__, uid, remoteFolder, threadId, urgent? "YES" : "NO");
 
-	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 
 	if([[[appDelegate model] messageStorage] messageHasData:uid localFolder:_name threadId:threadId])
 		return NO;
@@ -82,6 +98,70 @@
 	}];
 	
 	return YES;
+}
+
+- (void)fetchMessageHeaders {
+	NSAssert(_messageHeadersFetched <= _totalMessagesCount, @"invalid messageHeadersFetched");
+	
+	BOOL finishFetch = YES;
+	
+	if(_totalMessagesCount == _messageHeadersFetched) {
+		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
+	} else if(_messageHeadersFetched >= MAX_MESSAGE_HEADERS_TO_FETCH) {
+		// TODO: implement and on-demand "load more results" scheme
+		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
+	} else {
+		finishFetch = NO;
+	}
+	
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+
+	if(finishFetch) {
+		[[[appDelegate model] messageStorage] endUpdate:_name];
+
+		[_fetchMessageHeadersOp cancel];
+		_fetchMessageHeadersOp = nil;
+		
+		[self fetchMessageBodies:_name];
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetchFinished" object:nil userInfo:[NSDictionary dictionaryWithObject:_name forKey:@"LocalFolderName"]];
+		
+		return;
+	}
+	
+	const uint64_t restOfMessages = _totalMessagesCount - _messageHeadersFetched;
+	const uint64_t numberOfMessagesToFetch = MIN(restOfMessages, MESSAGE_HEADERS_TO_FETCH_AT_ONCE) - 1;
+	const uint64_t fetchMessagesFromIndex = restOfMessages - numberOfMessagesToFetch;
+	
+	MCOIndexSet *regionToFetch = [MCOIndexSet indexSetWithRange:MCORangeMake(fetchMessagesFromIndex, numberOfMessagesToFetch)];
+	MCOIMAPSession *session = [[appDelegate model] session];
+	
+	// TODO: handle session reopening/uids validation
+	
+	NSAssert(session, @"session lost");
+	
+	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
+	
+	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:_name requestKind:messageHeadersRequestKind numbers:regionToFetch];
+	
+	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
+		_fetchMessageHeadersOp = nil;
+		
+		if(error == nil) {
+			_messageHeadersFetched += [messages count];
+
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", messages, @"MessagesList", nil]];
+			
+			[self fetchMessageHeaders];
+		} else {
+			NSLog(@"Error downloading messages list: %@", error);
+		}
+	}];	
+}
+
+- (void)cancelUpdate {
+	[_fetchMessageHeadersOp cancel];
+	_fetchMessageHeadersOp = nil;
 }
 
 @end

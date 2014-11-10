@@ -15,8 +15,11 @@
 @property uint64_t messageHeadersFetched;
 @property NSMutableArray* fetchedMessageHeaders;
 
-- (id)initWithName:(NSString*)name;
+- (id)initWithLocalFolderName:(NSString*)localFolderName;
 
+- (void)cancelUpdate;
+
+- (void)fetchMessageHeaders;
 - (void)fetchMessageBodies:(NSString*)remoteFolder;
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent;
 

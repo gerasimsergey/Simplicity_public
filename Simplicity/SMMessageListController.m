@@ -32,7 +32,6 @@
 	NSMutableDictionary *_folders;
 	SMLocalFolder *_currentFolder;
 	MCOIMAPFolderInfoOperation *_folderInfoOp;
-	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 }
 
 static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
@@ -53,6 +52,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	if(self) {
 		_model = model;
 		_folders = [NSMutableDictionary new];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetched:) name:@"MessageHeadersFetched" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetchFinished:) name:@"MessageHeadersFetchFinished" object:nil];
 	}
 
 	return self;
@@ -69,19 +71,19 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	SMLocalFolder *folder = [_folders objectForKey:folderName];
 	if(folder == nil) {
-		folder = [[SMLocalFolder alloc] initWithName:folderName];
+		folder = [[SMLocalFolder alloc] initWithLocalFolderName:folderName];
 		[_folders setValue:folder forKey:folderName];
 	}
 	
 	[[_model messageStorage] ensureFolderExists:folderName];
-	
+
+	// TODO: don't do it for the search results folder
+	[_currentFolder cancelUpdate];
+
 	_currentFolder = folder;
 	
 	[_folderInfoOp cancel];
 	_folderInfoOp = nil;
-	
-	[_fetchMessageHeadersOp cancel];
-	_fetchMessageHeadersOp = nil;
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 	
@@ -131,7 +133,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			
 			_currentFolder.totalMessagesCount = [info messageCount];
 			
-			[self fetchMessageHeaders];
+			[_currentFolder fetchMessageHeaders];
 		}
 	}];
 }
@@ -199,7 +201,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[searchResults removeIndexSet:searchResultsToLoad];
 	
 	NSLog(@"%s: loading %u of %u search results...", __func__, searchResultsToLoad.count, searchResults.count);
-	
+
+#if 0
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
 	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:remoteFolderToSearch requestKind:messageHeadersRequestKind uids:searchResultsToLoad];
@@ -219,62 +222,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			NSLog(@"%s: Error downloading search results: %@", __func__, error);
 		}
 	}];
-}
-
-- (void)fetchMessageHeaders {
-	NSAssert([_currentFolder messageHeadersFetched] <= [_currentFolder totalMessagesCount], @"invalid messageHeadersFetched");
-	
-	BOOL finishFetch = YES;
-	
-	if([_currentFolder totalMessagesCount] == [_currentFolder messageHeadersFetched]) {
-		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, [_currentFolder totalMessagesCount]);
-	} else if([_currentFolder messageHeadersFetched] >= MAX_MESSAGE_HEADERS_TO_FETCH) {
-		// TODO: implement and on-demand "load more results" scheme
-		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, [_currentFolder messageHeadersFetched]);
-	} else {
-		finishFetch = NO;
-	}
-	
-	if(finishFetch) {
-		[[_model messageStorage] endUpdate:[_currentFolder name]];
-		
-		[_fetchMessageHeadersOp cancel];
-		_fetchMessageHeadersOp = nil;
-		
-		[_currentFolder fetchMessageBodies:[_currentFolder name]];
-
-		[self scheduleMessageListUpdate];
-
-		return;
-	}
-
-	const uint64_t restOfMessages = [_currentFolder totalMessagesCount] - [_currentFolder messageHeadersFetched];
-	const uint64_t numberOfMessagesToFetch = MIN(restOfMessages, MESSAGE_HEADERS_TO_FETCH_AT_ONCE) - 1;
-	const uint64_t fetchMessagesFromIndex = restOfMessages - numberOfMessagesToFetch;
-
-	MCOIndexSet *regionToFetch = [MCOIndexSet indexSetWithRange:MCORangeMake(fetchMessagesFromIndex, numberOfMessagesToFetch)];
-	MCOIMAPSession *session = [ _model session ];
-	
-	// TODO: handle session reopening/uids validation
-	
-	NSAssert(session, @"session lost");
-	
-	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
-
-	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:[_currentFolder name] requestKind:messageHeadersRequestKind numbers:regionToFetch];
-	
-	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
-		_fetchMessageHeadersOp = nil;
-		
-		if(error == nil) {
-			_currentFolder.messageHeadersFetched += [messages count];
-
-			[self updateMessageList:messages remoteFolder:[_currentFolder name]];
-			[self fetchMessageHeaders];
-		} else {
-			NSLog(@"Error downloading messages list: %@", error);
-		}
-	}];	
+#else
+	NSAssert(NO, @"search temporaly disabled!");
+#endif
 }
 
 - (void)updateMessageList:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolder {
@@ -300,6 +250,16 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
 
 	[_currentFolder fetchMessageBody:uid remoteFolder:remoteFolder threadId:threadId urgent:YES];
+}
+
+- (void)messageHeadersFetched:(NSNotification *)notification {
+	if([_currentFolder.name isEqualToString:[[notification userInfo] objectForKey:@"LocalFolderName"]])
+		[self updateMessageList:[[notification userInfo] objectForKey:@"MessagesList"] remoteFolder:_currentFolder.name];
+}
+
+- (void)messageHeadersFetchFinished:(NSNotification *)notification {
+	if([_currentFolder.name isEqualToString:[[notification userInfo] objectForKey:@"LocalFolderName"]])
+		[self scheduleMessageListUpdate];
 }
 
 @end
