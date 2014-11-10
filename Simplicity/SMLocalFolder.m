@@ -29,6 +29,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 );
 
 @implementation SMLocalFolder {
+	MCOIMAPFolderInfoOperation *_folderInfoOp;
 	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 	NSMutableDictionary *_fetchMessageBodyOps;
 }
@@ -45,6 +46,39 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}
 	
 	return self;
+}
+
+- (void)startMessagesUpdate {
+	_messageHeadersFetched = 0;
+	
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	[[[appDelegate model] messageStorage] startUpdate:_name];
+	
+	MCOIMAPSession *session = [[appDelegate model] session];
+	
+	NSAssert(session, @"session lost");
+
+	// TODO: handle session reopening/uids validation
+	
+	NSAssert(_folderInfoOp == nil, @"another folder info operation is in progress");
+
+	_folderInfoOp = [session folderInfoOperation:_name];
+	
+	[_folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
+		_folderInfoOp = nil;
+		
+		if(error == nil) {
+			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
+			NSLog(@"UIDVALIDITY: %lu", (unsigned long) [info uidValidity]);
+			NSLog(@"Messages count %u", [info messageCount]);
+			
+			_totalMessagesCount = [info messageCount];
+			
+			[self fetchMessageHeaders];
+		} else {
+			NSLog(@"Error fetching folder info: %@", error);
+		}
+	}];
 }
 
 - (void)fetchMessageBodies:(NSString*)remoteFolder {
@@ -139,7 +173,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	// TODO: handle session reopening/uids validation
 	
 	NSAssert(session, @"session lost");
-	
+
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
 	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:_name requestKind:messageHeadersRequestKind numbers:regionToFetch];
@@ -148,6 +182,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		_fetchMessageHeadersOp = nil;
 		
 		if(error == nil) {
+			[_fetchedMessageHeaders addObjectsFromArray:messages];
+
 			_messageHeadersFetched += [messages count];
 
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", messages, @"MessagesList", nil]];
@@ -160,8 +196,13 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)cancelUpdate {
+	[_folderInfoOp cancel];
+	_folderInfoOp = nil;
+
 	[_fetchMessageHeadersOp cancel];
 	_fetchMessageHeadersOp = nil;
+	
+	// TODO: cancel bodies fetch as well?
 }
 
 @end

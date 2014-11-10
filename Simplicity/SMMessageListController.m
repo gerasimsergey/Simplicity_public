@@ -94,48 +94,15 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)changeFolder:(NSString*)folder {
-	if(![_currentFolder.name isEqual:folder]) {
-		[self changeFolderInternal:folder];
-		[self startMessagesUpdate];
-	}
+	if([_currentFolder.name isEqualToString:folder])
+		return;
+
+	[self changeFolderInternal:folder];
+	[self startMessagesUpdate];
 }
 
 - (void)startMessagesUpdate {
-	NSAssert(_model != nil, @"model disposed");
-	
-	//	NSLog(@"%s: imap server capabilities %@", __FUNCTION__, [_model imapServerCapabilities]);
-	
-	_currentFolder.messageHeadersFetched = 0;
-	
-	[[_model messageStorage] startUpdate:[_currentFolder name]];
-	
-	MCOIMAPSession *session = [_model session];
-	
-	// TODO: handle session reopening/uids validation
-	
-	NSAssert(session, @"session lost");
-	
-	MCOIMAPFolderInfoOperation *folderInfoOp = [session folderInfoOperation:[_currentFolder name]];
-	
-	_folderInfoOp = folderInfoOp;
-	
-	[folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
-		NSAssert(_folderInfoOp == folderInfoOp, @"previous folder info op not cancelled");
-		
-		_folderInfoOp = nil;
-		
-		if(error) {
-			NSLog(@"Error fetching folder info: %@", error);
-		} else {
-			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
-			NSLog(@"UIDVALIDITY: %lu", (unsigned long) [info uidValidity]);
-			NSLog(@"Messages count %u", [info messageCount]);
-			
-			_currentFolder.totalMessagesCount = [info messageCount];
-			
-			[_currentFolder fetchMessageHeaders];
-		}
-	}];
+	[_currentFolder startMessagesUpdate];
 }
 
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
@@ -238,8 +205,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	SMAppController *appController = [appDelegate appController];
 
 	[appController performSelectorOnMainThread:@selector(updateMessageListView) withObject:nil waitUntilDone:NO];
-
-	[_currentFolder.fetchedMessageHeaders addObjectsFromArray:imapMessages];
 }
 
 - (void)scheduleMessageListUpdate {

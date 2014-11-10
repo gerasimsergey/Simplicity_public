@@ -17,6 +17,7 @@
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName;
 
+- (void)startMessagesUpdate;
 - (void)cancelUpdate;
 
 - (void)fetchMessageHeaders;
