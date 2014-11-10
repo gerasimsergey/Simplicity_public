@@ -32,6 +32,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	MCOIMAPFolderInfoOperation *_folderInfoOp;
 	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 	NSMutableDictionary *_fetchMessageBodyOps;
+	uint64_t _totalMessagesCount;
+	uint64_t _messageHeadersFetched;
+	NSMutableArray *_fetchedMessageHeaders;
 }
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName {

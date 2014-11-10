@@ -106,6 +106,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
+#if 0
 	[self changeFolderInternal:searchResultsLocalFolder];
 
 	_currentFolder.messageHeadersFetched = 0;
@@ -115,9 +116,13 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_currentFolder.totalMessagesCount = searchResults.count;
 	
 	[self loadSearchResultsInternal:searchResults remoteFolderToSearch:remoteFolderToSearch];
+#else
+	NSAssert(NO, @"search temporaly disabled!");
+#endif
 }
 
 - (void)loadSearchResultsInternal:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch {
+#if 0
 	NSAssert(searchResults != nil, @"bad search results");
 	
 	NSAssert(_model != nil, @"model disposed");
@@ -169,7 +174,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSLog(@"%s: loading %u of %u search results...", __func__, searchResultsToLoad.count, searchResults.count);
 
-#if 0
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
 	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:remoteFolderToSearch requestKind:messageHeadersRequestKind uids:searchResultsToLoad];

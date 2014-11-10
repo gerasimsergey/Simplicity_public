@@ -11,9 +11,6 @@
 @interface SMLocalFolder : NSObject
 
 @property NSString* name;
-@property uint64_t totalMessagesCount;
-@property uint64_t messageHeadersFetched;
-@property NSMutableArray* fetchedMessageHeaders;
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName;
 
