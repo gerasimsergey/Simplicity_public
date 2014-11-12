@@ -14,11 +14,15 @@
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName;
 
-- (void)startMessagesUpdate;
-- (void)cancelUpdate;
+// these two methods are used to sync the content of this folder
+// with the remote folder with the same name
+- (void)startRemoteFolderSync;
+- (void)stopRemoteFolderSync;
 
-- (void)fetchMessageHeaders;
-- (void)fetchMessageBodies:(NSString*)remoteFolder;
+// loads the messages specified by their UIDs from the specific remote folder
+- (void)loadMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder;
+
+// fetches the body of the message specified by its UID
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent;
 
 @end
