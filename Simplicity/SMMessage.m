@@ -48,7 +48,7 @@
 		_fromDB = [NSString stringWithUTF8String:(const char*)from];
 		_subjectDB = [NSString stringWithUTF8String:(const char*)subject];
 		_createdFromDB = YES;
-		_folder = remoteFolder;
+		_remoteFolder = remoteFolder;
 
 		[self setData:[NSData dataWithBytes:data length:dataLength]];
 	}
@@ -64,7 +64,7 @@
 	if(self) {
 		_imapMessage = m;
 		_createdFromDB = NO;
-		_folder = remoteFolder;
+		_remoteFolder = remoteFolder;
 
 //		NSLog(@"%s: uid %u, object %@, date %@", __FUNCTION__, [ m uid ], m, [[m header] date]);
 	}
@@ -255,7 +255,7 @@
 		
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
-		NSURL *attachmentUrl = [[[appDelegate model] attachmentStorage] attachmentLocation:attachmentContentId uid:uid folder:_folder];
+		NSURL *attachmentUrl = [[[appDelegate model] attachmentStorage] attachmentLocation:attachmentContentId uid:uid folder:_remoteFolder];
 		
 		NSError *err;
 		if([attachmentUrl checkResourceIsReachableAndReturnError:&err] == YES) {
@@ -264,7 +264,7 @@
 		}
 		
 		if(attachmentData) {
-			[[[appDelegate model] attachmentStorage] storeAttachment:attachmentData folder:_folder uid:uid contentId:attachmentContentId];
+			[[[appDelegate model] attachmentStorage] storeAttachment:attachmentData folder:_remoteFolder uid:uid contentId:attachmentContentId];
 		} else {
 			MCOAbstractPart *part = [_imapMessage partForUniqueID:[attachment uniqueID]];
 			
@@ -283,7 +283,7 @@
 			// TODO: for older sessions, terminate attachment fetching
 			NSAssert(session, @"bad session");
 			
-			MCOIMAPFetchContentOperation *op = [session fetchMessageAttachmentByUIDOperationWithFolder:_folder uid:uid partID:partId encoding:[imapPart encoding] urgent:YES];
+			MCOIMAPFetchContentOperation *op = [session fetchMessageAttachmentByUIDOperationWithFolder:_remoteFolder uid:uid partID:partId encoding:[imapPart encoding] urgent:YES];
 			
 			// TODO: check if there is a leak if imapPart is accessed in this block!!!
 			[op start:^(NSError * error, NSData * data) {
@@ -291,7 +291,7 @@
 					NSAssert(data, @"no data");
 					
 					SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
-					[[[appDelegate model] attachmentStorage] storeAttachment:data folder:_folder uid:uid contentId:[imapPart contentID]];
+					[[[appDelegate model] attachmentStorage] storeAttachment:data folder:_remoteFolder uid:uid contentId:[imapPart contentID]];
 				} else {
 					NSLog(@"Error downloading message body for msg uid %u, part unique id %@: %@", uid, partId, error);
 				}

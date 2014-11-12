@@ -83,11 +83,11 @@
 		if(htmlMessageBodyText) {
 			[message fetchInlineAttachments];
 			
-			[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message folder]];
+			[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
 		} else {
 			NSLog(@"%s: no message body!", __FUNCTION__);
 			
-			[messageListController fetchMessageBodyUrgently:[message uid] remoteFolder:[message folder] threadId:[_currentMessageThread threadId]];
+			[messageListController fetchMessageBodyUrgently:[message uid] remoteFolder:[message remoteFolder] threadId:[_currentMessageThread threadId]];
 		}
 		
 		[messageViewController setMessageDetails:message];
@@ -207,7 +207,7 @@
 			
 			[message fetchInlineAttachments];
 			
-			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message folder]];
+			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
 			
 			[[_threadCellControllers[i] messageViewController] setMessageDetails:message];
 			
