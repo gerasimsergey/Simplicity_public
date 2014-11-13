@@ -7,9 +7,11 @@
 //
 
 #import "SMAppDelegate.h"
+#import "SMAppController.h"
 #import "SMSimplicityContainer.h"
 #import "SMMessageListController.h"
 #import "SMSearchResultsListController.h"
+#import "SMMailboxViewController.h"
 #import "SMSearchResultsListViewController.h"
 
 @implementation SMSearchResultsListViewController {
@@ -72,12 +74,17 @@
 		
 		if(selectedRow < searchResultsListController.searchResultsCount) {
 			[[[appDelegate model] messageListController] changeFolder:[searchResultsListController searchResultsLocalFolder:selectedRow]];
+			[[[appDelegate appController] mailboxViewController] clearSelection];
 		}
 	}
 }
 
 - (void)reloadData {
 	[_tableView reloadData];
+}
+
+- (void)clearSelection {
+	[_tableView deselectAll:self];
 }
 
 @end

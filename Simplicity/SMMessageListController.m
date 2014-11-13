@@ -19,9 +19,7 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 
-#define MAX_MESSAGE_HEADERS_TO_FETCH 300
-#define MESSAGE_HEADERS_TO_FETCH_AT_ONCE 20
-#define MESSAGE_LIST_UPDATE_INTERVAL_SEC 15
+static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 
 @interface SMMessageListController()
 - (void)startMessagesUpdate;
@@ -33,18 +31,6 @@
 	SMLocalFolder *_currentFolder;
 	MCOIMAPFolderInfoOperation *_folderInfoOp;
 }
-
-static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
-	MCOIMAPMessagesRequestKindHeaders |
-	MCOIMAPMessagesRequestKindStructure |
-	MCOIMAPMessagesRequestKindFullHeaders    |
-	MCOIMAPMessagesRequestKindInternalDate |
-	MCOIMAPMessagesRequestKindHeaderSubject |
-	MCOIMAPMessagesRequestKindFlags |
-	MCOIMAPMessagesRequestKindGmailLabels |
-	MCOIMAPMessagesRequestKindGmailMessageID |
-	MCOIMAPMessagesRequestKindGmailThreadID
-);
 
 - (id)initWithModel:(SMSimplicityContainer*)model {
 	self = [ super init ];
@@ -64,14 +50,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	return [_currentFolder name];
 }
 
-- (void)changeFolderInternal:(NSString*)folderName {
+- (void)changeFolderInternal:(NSString*)folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
 	NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
 	
 	NSAssert(folderName != nil, @"no folder name");
 	
 	SMLocalFolder *folder = [_folders objectForKey:folderName];
 	if(folder == nil) {
-		folder = [[SMLocalFolder alloc] initWithLocalFolderName:folderName];
+		folder = [[SMLocalFolder alloc] initWithLocalFolderName:folderName syncWithRemoteFolder:syncWithRemoteFolder];
 		[_folders setValue:folder forKey:folderName];
 	}
 	
@@ -86,6 +72,16 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_folderInfoOp = nil;
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
+}
+
+- (void)changeFolder:(NSString*)folder {
+	if([_currentFolder.name isEqualToString:folder])
+		return;
+
+	// search folders won't be created on this path
+	// so set "sync with remote" to true
+	[self changeFolderInternal:folder syncWithRemoteFolder:YES];
+	[self startMessagesUpdate];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -93,20 +89,12 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[[appController messageListViewController] reloadMessageList];
 }
 
-- (void)changeFolder:(NSString*)folder {
-	if([_currentFolder.name isEqualToString:folder])
-		return;
-
-	[self changeFolderInternal:folder];
-	[self startMessagesUpdate];
-}
-
 - (void)startMessagesUpdate {
 	[_currentFolder startRemoteFolderSync];
 }
 
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
-	[self changeFolderInternal:searchResultsLocalFolder];
+	[self changeFolderInternal:searchResultsLocalFolder syncWithRemoteFolder:NO];
 	
 	[_currentFolder loadMessages:searchResults remoteFolder:remoteFolderToSearch];
 }

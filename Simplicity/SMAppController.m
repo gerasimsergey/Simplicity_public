@@ -227,27 +227,28 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	
 	NSAssert(session, @"session is nil");
 	
-	NSString *folderName = [[[appDelegate model] messageListController] currentFolder];
+	// TODO: handle search in search results differently
+	NSString *remoteFolder = [[[appDelegate model] messageListController] currentFolder];
+	NSString *searchResultsLocalFolder = [[[appDelegate model] searchResultsListController] startNewSearch:searchString];
+
+	[[[appDelegate appController] searchResultsListViewController] reloadData];
 	
 	[_currentSearchOp cancel];
-	_currentSearchOp = [session searchOperationWithFolder:folderName kind:MCOIMAPSearchKindContent searchString:searchString];
+	_currentSearchOp = [session searchOperationWithFolder:remoteFolder kind:MCOIMAPSearchKindContent searchString:searchString];
 
 	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {
 			if(searchResults.count > 0) {
 				SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-				NSString *searchResultsLocalFolder = [[[appDelegate model] searchResultsListController] startNewSearch:searchString];
 		
-				NSLog(@"%s: %u messages found in folder %@, loading to local folder %@", __func__, [searchResults count], folderName, searchResultsLocalFolder);
+				NSLog(@"%s: %u messages found in remote folder %@, loading to local folder %@", __func__, [searchResults count], remoteFolder, searchResultsLocalFolder);
 				
-				[[[appDelegate appController] searchResultsListViewController] reloadData];
-
-				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:folderName searchResultsLocalFolder:searchResultsLocalFolder];
+				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:remoteFolder searchResultsLocalFolder:searchResultsLocalFolder];
 			} else {
 				NSLog(@"%s: nothing found", __func__);
 			}
 		} else {
-			NSLog(@"%s: search in folder %@ failed, error %@", __func__, folderName, error);
+			NSLog(@"%s: search in remote folder %@ failed, error %@", __func__, remoteFolder, error);
 		}
 	}];
 	

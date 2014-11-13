@@ -12,7 +12,7 @@
 
 @property NSString* name;
 
-- (id)initWithLocalFolderName:(NSString*)localFolderName;
+- (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 
 // these two methods are used to sync the content of this folder
 // with the remote folder with the same name

@@ -7,11 +7,13 @@
 //
 
 #import "SMAppDelegate.h"
+#import "SMAppController.h"
 #import "SMMailbox.h"
 #import "SMFolder.h"
 #import "SMFolderCellView.h"
 #import "SMSimplicityContainer.h"
 #import "SMMessageListController.h"
+#import "SMSearchResultsListViewController.h"
 #import "SMMailboxViewController.h"
 
 @interface SMMailboxViewController()
@@ -121,6 +123,8 @@ NSLog(@"trace: %s", __func__);
 	[[model messageListController] changeFolder:[folder fullName]];
 	
 	_lastFolder = folder;
+	
+	[[[appDelegate appController] searchResultsListViewController] clearSelection];
 }
 
 - (SMFolder*)rootFolder {
@@ -130,5 +134,10 @@ NSLog(@"trace: %s", __func__);
 	return [mailbox root];
 }
 
+- (void)clearSelection {
+	[_folderListView deselectAll:self];
+
+	_lastFolder = nil;
+}
 
 @end

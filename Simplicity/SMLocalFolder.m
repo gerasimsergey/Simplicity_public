@@ -35,9 +35,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	uint64_t _totalMessagesCount;
 	uint64_t _messageHeadersFetched;
 	NSMutableArray *_fetchedMessageHeaders;
+	Boolean _syncWithRemoteFolder;
 }
 
-- (id)initWithLocalFolderName:(NSString*)localFolderName {
+- (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
 	self = [ super init ];
 	
 	if(self) {
@@ -46,12 +47,18 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		_messageHeadersFetched = 0;
 		_fetchedMessageHeaders = [NSMutableArray new];
 		_fetchMessageBodyOps = [NSMutableDictionary new];
+		_syncWithRemoteFolder = syncWithRemoteFolder;
 	}
 	
 	return self;
 }
 
 - (void)startRemoteFolderSync {
+	if(!_syncWithRemoteFolder) {
+		NSLog(@"%s: folder %@ is not synched with server", __func__, _name);
+		return;
+	}
+	
 	_messageHeadersFetched = 0;
 	
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
@@ -82,6 +89,22 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			NSLog(@"Error fetching folder info: %@", error);
 		}
 	}];
+}
+
+- (void)stopRemoteFolderSync {
+	if(!_syncWithRemoteFolder) {
+		NSLog(@"%s: folder %@ is not synched with server", __func__, _name);
+		return;
+	}
+	
+	[_folderInfoOp cancel];
+	_folderInfoOp = nil;
+	
+	[_fetchMessageHeadersOp cancel];
+	_fetchMessageHeadersOp = nil;
+	
+	// TODO: cancel bodies fetch as well?
+	// TODO: how to cancel ops for non-synched folders?
 }
 
 - (void)fetchMessageBodies:(NSString*)remoteFolder {
@@ -196,16 +219,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			NSLog(@"Error downloading messages list: %@", error);
 		}
 	}];	
-}
-
-- (void)stopRemoteFolderSync {
-	[_folderInfoOp cancel];
-	_folderInfoOp = nil;
-
-	[_fetchMessageHeadersOp cancel];
-	_fetchMessageHeadersOp = nil;
-	
-	// TODO: cancel bodies fetch as well?
 }
 
 - (void)loadMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder {

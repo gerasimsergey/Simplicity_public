@@ -15,5 +15,6 @@
 @property (weak) IBOutlet NSOutlineView *folderListView;
 
 - (void)updateFolderListView;
+- (void)clearSelection;
 
 @end

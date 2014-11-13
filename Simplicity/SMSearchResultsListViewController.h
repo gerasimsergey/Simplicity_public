@@ -11,5 +11,6 @@
 @interface SMSearchResultsListViewController : NSViewController<NSTableViewDataSource, NSTableViewDelegate>
 
 - (void)reloadData;
+- (void)clearSelection;
 
 @end
