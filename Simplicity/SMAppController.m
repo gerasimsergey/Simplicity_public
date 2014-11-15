@@ -11,6 +11,7 @@
 #import "SMMailboxViewController.h"
 #import "SMSearchResultsListController.h"
 #import "SMSearchResultsListViewController.h"
+#import "SMLocalFolder.h"
 #import "SMMessageListController.h"
 #import "SMMessageListViewController.h"
 #import "SMMessageDetailsViewController.h"
@@ -228,7 +229,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSAssert(session, @"session is nil");
 	
 	// TODO: handle search in search results differently
-	NSString *remoteFolder = [[[appDelegate model] messageListController] currentFolder];
+	NSString *remoteFolder = [[[[appDelegate model] messageListController] currentLocalFolder] name];
 	NSString *searchResultsLocalFolder = [[[appDelegate model] searchResultsListController] startNewSearch:searchString];
 
 	[[[appDelegate appController] searchResultsListViewController] reloadData];

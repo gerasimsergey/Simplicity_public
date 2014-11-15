@@ -365,9 +365,9 @@
 			isa = PBXGroup;
 			children = (
 				0002A0A617D1B1E000EA4AFF /* MainMenu.xib */,
-				00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
+				00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */,
 			);
 			name = Forms;
 			sourceTree = "<group>";

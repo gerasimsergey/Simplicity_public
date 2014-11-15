@@ -32,8 +32,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	MCOIMAPFolderInfoOperation *_folderInfoOp;
 	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 	NSMutableDictionary *_fetchMessageBodyOps;
-	uint64_t _totalMessagesCount;
-	uint64_t _messageHeadersFetched;
 	NSMutableArray *_fetchedMessageHeaders;
 	Boolean _syncWithRemoteFolder;
 }
@@ -304,6 +302,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			NSLog(@"%s: Error downloading search results: %@", __func__, error);
 		}
 	}];
+}
+
+- (Boolean)isStillUpdating {
+	// TODO: use message bodies fetch op as well
+	return _fetchMessageHeadersOp != nil;
 }
 
 @end

@@ -10,7 +10,10 @@
 
 @interface SMLocalFolder : NSObject
 
-@property NSString* name;
+@property (readonly) NSString* name;
+
+@property (readonly) uint64_t totalMessagesCount;
+@property (readonly) uint64_t messageHeadersFetched;
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 
@@ -24,5 +27,8 @@
 
 // fetches the body of the message specified by its UID
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent;
+
+// tells whether there is message loading progress underway
+- (Boolean)isStillUpdating;
 
 @end

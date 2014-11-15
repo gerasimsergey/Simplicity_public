@@ -16,6 +16,7 @@
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
 #import "SMSimplicityContainer.h"
+#import "SMLocalFolder.h"
 #import "SMMessage.h"
 #import "SMMessageThread.h"
 #import "SMMessageStorage.h"
@@ -32,7 +33,8 @@
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 	
-	NSInteger messageThreadsCount = [[[appDelegate model] messageStorage] messageThreadsCount:[messageListController currentFolder]];
+	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+	NSInteger messageThreadsCount = [[[appDelegate model] messageStorage] messageThreadsCount:[currentFolder name]];
 
 //	NSLog(@"%s: self %@, tableView %@, its datasource %@, view %@, messagesTableView %@, message threads count %ld", __FUNCTION__, self, tableView, [tableView dataSource], [self view], _messageListTableView, messageThreadsCount);
 	
@@ -47,7 +49,8 @@
 	if(selectedRow >= 0) {
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
-		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[messageListController currentFolder]];
+		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
 		
 		NSAssert(messageThread, @"messageThread == 0");
 
@@ -60,7 +63,8 @@
 	
 	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
-	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row localFolder:[messageListController currentFolder]];
+	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row localFolder:[currentFolder name]];
 	
 	if(messageThread == nil) {
 		NSLog(@"%s: row %ld, message thread is nil", __FUNCTION__, row);

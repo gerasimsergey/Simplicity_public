@@ -38,17 +38,24 @@
 	return folder;
 }
 
+- (NSInteger)getSearchIndex:(NSString*)searchResultsLocalFolder {
+	for(NSInteger i = 0; i < _searchResultsOrdered.count; i++) {
+		if([_searchResultsOrdered[i] isEqualToString:searchResultsLocalFolder])
+			return i;
+	}
+	
+	return -1;
+}
+
 - (void)deleteSearch:(NSString*)searchResultsLocalFolder {
 	NSAssert([_searchResults objectForKey:searchResultsLocalFolder] != nil, @"no such search results folder");
 
 	[_searchResults removeObjectForKey:searchResultsLocalFolder];
+
+	const NSInteger index = [self getSearchIndex:searchResultsLocalFolder];
 	
-	for(NSUInteger i = 0; i < _searchResultsOrdered.count; i++) {
-		if([_searchResultsOrdered[i] isEqualToString:searchResultsLocalFolder]) {
-			[_searchResultsOrdered removeObjectAtIndex:i];
-			break;
-		}
-	}
+	if(index >= 0)
+		[_searchResultsOrdered removeObjectAtIndex:index];
 }
 
 - (NSUInteger)searchResultsCount {

@@ -14,6 +14,7 @@
 
 - (NSString*)startNewSearch:(NSString*)searchPattern;
 - (void)deleteSearch:(NSString*)searchResultsLocalFolder;
+- (NSInteger)getSearchIndex:(NSString*)searchResultsLocalFolder;
 - (NSUInteger)searchResultsCount;
 - (NSString*)searchResultsLocalFolder:(NSUInteger)index;
 - (NSString*)searchPattern:(NSUInteger)index;

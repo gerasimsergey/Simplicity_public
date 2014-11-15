@@ -12,6 +12,7 @@
 #import "SMMessageListController.h"
 #import "SMSearchResultsListController.h"
 #import "SMMailboxViewController.h"
+#import "SMLocalFolder.h"
 #import "SMSearchResultsListCellView.h"
 #import "SMSearchResultsListViewController.h"
 
@@ -37,6 +38,10 @@
 		// finally, commit the main view
 		
 		[self setView:_tableView];
+
+		// set async event handler
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetched:) name:@"MessageHeadersFetched" object:nil];
 	}
 	
 	return self;
@@ -78,8 +83,25 @@
 	NSAssert(result != nil, @"bad cell found");
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	
+	NSString *searchLocalFolderName = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:row];
+	NSAssert(searchLocalFolderName != nil, @"bad search folder name");
+	
+	SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:searchLocalFolderName];
+	
+	// search folder may not exist yet because the search is just started
+	// and there is no any search results... that is, the folder is not created
+	if(searchFolder == nil || [searchFolder isStillUpdating]) {
+		[result.progressIndicator setHidden:NO];
+		[result.progressIndicator startAnimation:self];
+	} else {
+		[result.progressIndicator setHidden:YES];
+	}
+
+	[result.progressIndicator setNeedsDisplay:YES];
+
 	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
- 
+
 	return result;
 }
 
@@ -99,6 +121,7 @@
 		
 		if(selectedRow < searchResultsListController.searchResultsCount) {
 			[[[appDelegate model] messageListController] changeFolder:[searchResultsListController searchResultsLocalFolder:selectedRow]];
+
 			[[[appDelegate appController] mailboxViewController] clearSelection];
 		}
 	}
@@ -110,6 +133,31 @@
 
 - (void)clearSelection {
 	[_tableView deselectAll:self];
+}
+
+- (void)messageHeadersFetched:(NSNotification *)notification {
+	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	NSInteger index = [[[appDelegate model] searchResultsListController] getSearchIndex:localFolder];
+
+	if(index >= 0) {
+		SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:localFolder];
+		SMSearchResultsListCellView *result = [self getSearchResultCell:_tableView row:index];
+
+		NSAssert(result != nil, @"bad cell found");
+
+		if(searchFolder.messageHeadersFetched == searchFolder.totalMessagesCount) {
+			[result.progressIndicator stopAnimation:self];
+		} else {
+			double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
+			
+			[result.progressIndicator setDoubleValue:loadRatio];
+			[result.progressIndicator setNeedsDisplay:YES];
+		}
+		
+		[_tableView reloadData];
+	}
 }
 
 @end

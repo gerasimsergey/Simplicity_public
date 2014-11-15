@@ -46,8 +46,12 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	return self;
 }
 
-- (NSString*)currentFolder {
-	return [_currentFolder name];
+- (SMLocalFolder*)currentLocalFolder {
+	return _currentFolder;
+}
+
+- (SMLocalFolder*)getLocalFolder:(NSString*)folderName {
+	return [_folders objectForKey:folderName];
 }
 
 - (void)changeFolderInternal:(NSString*)folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
