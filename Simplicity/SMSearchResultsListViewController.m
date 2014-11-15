@@ -88,17 +88,27 @@
 	NSAssert(searchLocalFolderName != nil, @"bad search folder name");
 	
 	SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:searchLocalFolderName];
-	
+
 	// search folder may not exist yet because the search is just started
 	// and there is no any search results... that is, the folder is not created
-	if(searchFolder == nil || [searchFolder isStillUpdating]) {
-		[result.progressIndicator setHidden:NO];
+	if(searchFolder == nil) {
+		// in this case the found messages aren't being loaded yet
+		// so we can't show any percentage
+		[result.progressIndicator setIndeterminate:YES];
 		[result.progressIndicator startAnimation:self];
-	} else {
-		[result.progressIndicator setHidden:YES];
+	} else if([searchFolder isStillUpdating]) {
+		if([result.progressIndicator isIndeterminate])
+			[result.progressIndicator setIndeterminate:NO];
+		
+		if(searchFolder.messageHeadersFetched == searchFolder.totalMessagesCount) {
+			[result.progressIndicator stopAnimation:self];
+		} else {
+			double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
+			[result.progressIndicator setDoubleValue:loadRatio];
+		}
 	}
 
-	[result.progressIndicator setNeedsDisplay:YES];
+//	[result.progressIndicator setNeedsDisplay:YES];
 
 	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
 
@@ -142,20 +152,6 @@
 	NSInteger index = [[[appDelegate model] searchResultsListController] getSearchIndex:localFolder];
 
 	if(index >= 0) {
-		SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:localFolder];
-		SMSearchResultsListCellView *result = [self getSearchResultCell:_tableView row:index];
-
-		NSAssert(result != nil, @"bad cell found");
-
-		if(searchFolder.messageHeadersFetched == searchFolder.totalMessagesCount) {
-			[result.progressIndicator stopAnimation:self];
-		} else {
-			double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
-			
-			[result.progressIndicator setDoubleValue:loadRatio];
-			[result.progressIndicator setNeedsDisplay:YES];
-		}
-		
 		[_tableView reloadData];
 	}
 }
