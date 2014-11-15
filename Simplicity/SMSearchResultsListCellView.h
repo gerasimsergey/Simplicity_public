@@ -2,7 +2,7 @@
 //  SMSearchResultsListCellView.h
 //  Simplicity
 //
-//  Created by Evgeny Baskakov on 11/8/14.
+//  Created by Evgeny Baskakov on 11/14/14.
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
@@ -10,4 +10,5 @@
 
 @interface SMSearchResultsListCellView : NSTableCellView
 
+@property IBOutlet NSProgressIndicator *progressIndicator;
 @end

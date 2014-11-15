@@ -21,6 +21,8 @@
 		001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */ = {isa = PBXBuildFile; fileRef = 001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */; };
 		0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0034EBC019EA3A3200CDF656 /* SMTokenField.m */; };
 		0040B0F9196A5331004E55CC /* SMFolderCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0040B0F8196A5331004E55CC /* SMFolderCellView.m */; };
+		00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00414ED71A16454F00068742 /* SMSearchResultsListCellView.m */; };
+		00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */; };
 		004F7FEA1866A973004DEC3C /* search-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 004F7FE91866A973004DEC3C /* search-icon.png */; };
 		005B086017D4EFF500341051 /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; };
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
@@ -30,7 +32,6 @@
 		006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */; };
 		0082F5F11A0DCE290050578A /* SMSearchResultsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */; };
 		0082F5F81A0DD39B0050578A /* SMSearchResultsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */; };
-		0082F5FB1A0DE40E0050578A /* SMSearchResultsListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */; };
 		0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */; };
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
 		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
@@ -139,6 +140,9 @@
 		0034EBC019EA3A3200CDF656 /* SMTokenField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMTokenField.m; sourceTree = "<group>"; };
 		0040B0F7196A5331004E55CC /* SMFolderCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFolderCellView.h; sourceTree = "<group>"; };
 		0040B0F8196A5331004E55CC /* SMFolderCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFolderCellView.m; sourceTree = "<group>"; };
+		00414ED61A16454F00068742 /* SMSearchResultsListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListCellView.h; sourceTree = "<group>"; };
+		00414ED71A16454F00068742 /* SMSearchResultsListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListCellView.m; sourceTree = "<group>"; };
+		00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMSearchResultsListCellView.xib; sourceTree = "<group>"; };
 		004F7FE91866A973004DEC3C /* search-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-icon.png"; path = "Simplicity/search-icon.png"; sourceTree = "<group>"; };
 		005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mailcore2.xcodeproj; path = "../mailcore2/build-mac/mailcore2.xcodeproj"; sourceTree = "<group>"; };
 		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -150,8 +154,6 @@
 		0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListViewController.m; sourceTree = "<group>"; };
 		0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListController.h; sourceTree = "<group>"; };
 		0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListController.m; sourceTree = "<group>"; };
-		0082F5F91A0DE40E0050578A /* SMSearchResultsListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListCellView.h; sourceTree = "<group>"; };
-		0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListCellView.m; sourceTree = "<group>"; };
 		0082F5FC1A0FFAAC0050578A /* SMLocalFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLocalFolder.h; sourceTree = "<group>"; };
 		0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLocalFolder.m; sourceTree = "<group>"; };
 		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
@@ -351,8 +353,8 @@
 				00F96C0C19343D8000CA5836 /* SMMessageDetailsView.m */,
 				0002A0B617D224C600EA4AFF /* SMMessageListCellView.h */,
 				0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */,
-				0082F5F91A0DE40E0050578A /* SMSearchResultsListCellView.h */,
-				0082F5FA1A0DE40E0050578A /* SMSearchResultsListCellView.m */,
+				00414ED61A16454F00068742 /* SMSearchResultsListCellView.h */,
+				00414ED71A16454F00068742 /* SMSearchResultsListCellView.m */,
 				0034EBBF19EA3A3200CDF656 /* SMTokenField.h */,
 				0034EBC019EA3A3200CDF656 /* SMTokenField.m */,
 			);
@@ -363,6 +365,7 @@
 			isa = PBXGroup;
 			children = (
 				0002A0A617D1B1E000EA4AFF /* MainMenu.xib */,
+				00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
 			);
@@ -477,6 +480,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */,
+				00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */,
 				00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */,
 				0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */,
 				0002A0A817D1B1E000EA4AFF /* MainMenu.xib in Resources */,
@@ -505,6 +509,7 @@
 				0097426E195686F900620145 /* SMMailboxViewController.m in Sources */,
 				0002A0A517D1B1E000EA4AFF /* SMAppDelegate.m in Sources */,
 				00172FEB198B39BA00DB975E /* SMMessageViewController.m in Sources */,
+				00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */,
 				0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */,
 				00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */,
 				0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */,
@@ -518,7 +523,6 @@
 				00ED318017F88DA700B04F5B /* SMMessage.m in Sources */,
 				00ED318117F88DA700B04F5B /* SMAttachmentStorage.m in Sources */,
 				00ED318317F88DA700B04F5B /* SMMessageStorage.m in Sources */,
-				0082F5FB1A0DE40E0050578A /* SMSearchResultsListCellView.m in Sources */,
 				009742721957C78E00620145 /* SMMailbox.m in Sources */,
 				0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */,
 				00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */,

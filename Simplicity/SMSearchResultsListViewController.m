@@ -12,6 +12,7 @@
 #import "SMMessageListController.h"
 #import "SMSearchResultsListController.h"
 #import "SMMailboxViewController.h"
+#import "SMSearchResultsListCellView.h"
 #import "SMSearchResultsListViewController.h"
 
 @implementation SMSearchResultsListViewController {
@@ -46,23 +47,47 @@
 	return [[[appDelegate model] searchResultsListController] searchResultsCount];
 }
 
-- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-	NSString *viewId = @"SearchResultView";
-	NSTextField *result = [tableView makeViewWithIdentifier:viewId owner:self];
+- (SMSearchResultsListCellView*)getSearchResultCell:(NSTableView *)tableView row:(NSInteger)row {
+	NSString *viewId = @"SearchResultsCell";
+	SMSearchResultsListCellView *result = [tableView makeViewWithIdentifier:viewId owner:self];
  
 	if(result == nil) {
-		result = [[NSTextField alloc] init];
-		[result setEditable:NO];
-
+		NSArray *topLevelObjects = [[NSArray alloc] init];
+		Boolean loadResult = [[NSBundle mainBundle] loadNibNamed:@"SMSearchResultsListCellView" owner:self topLevelObjects:&topLevelObjects];
+		
+		NSAssert(loadResult, @"Cannot load search results list cell");
+		
+		// TODO: looks stupid, find out a better way
+		for(id object in topLevelObjects) {
+			if([object isKindOfClass:[SMSearchResultsListCellView class]]) {
+				result = object;
+				break;
+			}
+		}
+		
+		NSAssert(result != nil, @"bad top objects");
+		
 		result.identifier = viewId;
 	}
- 
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	
+	return result;
+}
 
-	result.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+	SMSearchResultsListCellView *result = [self getSearchResultCell:tableView row:row];
+	NSAssert(result != nil, @"bad cell found");
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
  
 	return result;
- 
+}
+
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
+	SMSearchResultsListCellView *result = [self getSearchResultCell:tableView row:row];
+	NSAssert(result != nil, @"bad cell found");
+
+	return result.frame.size.height;
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
