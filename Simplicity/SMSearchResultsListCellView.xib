@@ -25,13 +25,12 @@
                 </textField>
             </subviews>
             <constraints>
-                <constraint firstItem="aPL-vU-Oio" firstAttribute="top" secondItem="i4E-vf-ypC" secondAttribute="bottom" constant="10" id="X1G-2n-ArS"/>
+                <constraint firstItem="aPL-vU-Oio" firstAttribute="trailing" secondItem="i4E-vf-ypC" secondAttribute="trailing" id="ONb-GZ-Wyj"/>
                 <constraint firstAttribute="trailing" secondItem="i4E-vf-ypC" secondAttribute="trailing" constant="3" id="fDT-Hh-Szv"/>
-                <constraint firstItem="aPL-vU-Oio" firstAttribute="leading" secondItem="cu9-mq-9j6" secondAttribute="leading" constant="3" id="hlp-M5-QDk"/>
-                <constraint firstAttribute="trailing" secondItem="aPL-vU-Oio" secondAttribute="trailing" constant="3" id="n7R-RC-YpB"/>
-                <constraint firstAttribute="bottom" secondItem="aPL-vU-Oio" secondAttribute="bottom" constant="3" id="nsS-NJ-FKi"/>
                 <constraint firstItem="i4E-vf-ypC" firstAttribute="leading" secondItem="cu9-mq-9j6" secondAttribute="leading" constant="3" id="pZd-33-3mj"/>
+                <constraint firstItem="aPL-vU-Oio" firstAttribute="leading" secondItem="i4E-vf-ypC" secondAttribute="leading" id="qcc-zb-C7h"/>
                 <constraint firstItem="i4E-vf-ypC" firstAttribute="top" secondItem="cu9-mq-9j6" secondAttribute="top" constant="5" id="svw-C3-8t7"/>
+                <constraint firstAttribute="bottom" secondItem="aPL-vU-Oio" secondAttribute="bottom" constant="3" id="xcP-v5-bbl"/>
             </constraints>
             <connections>
                 <outlet property="progressIndicator" destination="aPL-vU-Oio" id="OIS-px-cr9"/>
