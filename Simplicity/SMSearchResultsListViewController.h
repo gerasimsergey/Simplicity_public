@@ -12,5 +12,6 @@
 
 - (void)reloadData;
 - (void)clearSelection;
+- (void)selectSearchResult:(NSString*)searchResultsLocalFolder;
 
 @end

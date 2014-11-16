@@ -291,8 +291,6 @@
 		005B086517D4F3BD00341051 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				006C34601A181DEC00337A49 /* SMSearchDescriptor.h */,
-				006C34611A181DEC00337A49 /* SMSearchDescriptor.m */,
 				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
 				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
 				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
@@ -312,6 +310,8 @@
 				00ED317F17F88DA700B04F5B /* SMMessageStorage.m */,
 				00EB7E85199C70FA00CA2B1B /* SMMessageThread.h */,
 				00EB7E86199C70FA00CA2B1B /* SMMessageThread.m */,
+				006C34601A181DEC00337A49 /* SMSearchDescriptor.h */,
+				006C34611A181DEC00337A49 /* SMSearchDescriptor.m */,
 				00ED318417F88E3000B04F5B /* SMSimplicityContainer.h */,
 				00ED318517F88E3000B04F5B /* SMSimplicityContainer.m */,
 			);

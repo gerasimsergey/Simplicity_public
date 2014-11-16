@@ -245,16 +245,20 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 				NSLog(@"%s: %u messages found in remote folder %@, loading to local folder %@", __func__, [searchResults count], remoteFolder, searchResultsLocalFolder);
 
 				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:remoteFolder searchResultsLocalFolder:searchResultsLocalFolder];
+				
+				[_searchResultsListViewController selectSearchResult:searchResultsLocalFolder];
 			} else {
 				NSLog(@"%s: nothing found", __func__);
 				
 				[[[appDelegate model] searchResultsListController] searchHasFailed:searchResultsLocalFolder];
-
-				[_searchResultsListViewController reloadData];
 			}
 		} else {
 			NSLog(@"%s: search in remote folder %@ failed, error %@", __func__, remoteFolder, error);
+
+			[[[appDelegate model] searchResultsListController] searchHasFailed:searchResultsLocalFolder];
 		}
+
+		[_searchResultsListViewController reloadData];
 	}];
 	
 /*

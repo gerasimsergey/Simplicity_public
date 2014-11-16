@@ -160,4 +160,14 @@
 	}
 }
 
+- (void)selectSearchResult:(NSString*)searchResultsLocalFolder {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	NSInteger index = [[[appDelegate model] searchResultsListController] getSearchIndex:searchResultsLocalFolder];
+	
+	if(index >= 0) {
+		[_tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+		[_tableView setNeedsDisplay:YES];
+	}
+}
+
 @end
