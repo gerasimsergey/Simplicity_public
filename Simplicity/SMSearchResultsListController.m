@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMSearchDescriptor.h"
 #import "SMSearchResultsListController.h"
 
 @implementation SMSearchResultsListController {
@@ -32,7 +33,9 @@
 	NSAssert(folder != nil, @"folder name couldn't be generated");
 	NSAssert([_searchResults objectForKey:folder] == nil, @"duplicated generated folder name");
 	
-	[_searchResults setObject:searchPattern forKey:folder];
+	SMSearchDescriptor *searchDescriptor = [[SMSearchDescriptor alloc] init:searchPattern localFolder:folder];
+	
+	[_searchResults setObject:searchDescriptor forKey:folder];
 	[_searchResultsOrdered addObject:folder];
 	
 	return folder;
@@ -67,8 +70,22 @@
 }
 
 - (NSString*)searchPattern:(NSUInteger)index {
-	return [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
+	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
+
+	return searchDescriptor.searchPattern;
 }
 
+- (void)searchHasFailed:(NSString*)searchResultsLocalFolder {
+	const NSInteger index = [self getSearchIndex:searchResultsLocalFolder];
+	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
+	
+	searchDescriptor.searchFailed = true;
+}
+
+- (Boolean)hasSearchFailed:(NSUInteger)index {
+	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
+	
+	return searchDescriptor.searchFailed;
+}
 
 @end

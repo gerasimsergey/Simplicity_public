@@ -18,5 +18,7 @@
 - (NSUInteger)searchResultsCount;
 - (NSString*)searchResultsLocalFolder:(NSUInteger)index;
 - (NSString*)searchPattern:(NSUInteger)index;
+- (void)searchHasFailed:(NSString*)searchResultsLocalFolder;
+- (Boolean)hasSearchFailed:(NSUInteger)index;
 
 @end

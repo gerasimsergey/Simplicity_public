@@ -30,8 +30,8 @@
 		NSTableColumn *column =[[NSTableColumn alloc]initWithIdentifier:@"1"];
 		[column.headerCell setTitle:@"Search results"];
 		
+		[_tableView setGridStyleMask:NSTableViewSolidHorizontalGridLineMask];
 		[_tableView addTableColumn:column];
-
 		[_tableView setDataSource:self];
 		[_tableView setDelegate:self];
 		
@@ -84,31 +84,35 @@
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	
-	NSString *searchLocalFolderName = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:row];
-	NSAssert(searchLocalFolderName != nil, @"bad search folder name");
-	
-	SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:searchLocalFolderName];
+	Boolean searchFailed = [[[appDelegate model] searchResultsListController] hasSearchFailed:row];
 
-	// search folder may not exist yet because the search is just started
-	// and there is no any search results... that is, the folder is not created
-	if(searchFolder == nil) {
-		// in this case the found messages aren't being loaded yet
-		// so we can't show any percentage
-		[result.progressIndicator setIndeterminate:YES];
-		[result.progressIndicator startAnimation:self];
-	} else if([searchFolder isStillUpdating]) {
-		if([result.progressIndicator isIndeterminate])
-			[result.progressIndicator setIndeterminate:NO];
+	if(!searchFailed) {
+		NSString *searchLocalFolderName = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:row];
+		NSAssert(searchLocalFolderName != nil, @"bad search folder name");
 		
-		if(searchFolder.messageHeadersFetched == searchFolder.totalMessagesCount) {
-			[result.progressIndicator stopAnimation:self];
-		} else {
-			double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
-			[result.progressIndicator setDoubleValue:loadRatio];
+		SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:searchLocalFolderName];
+		
+		// search folder may not exist yet because the search is just started
+		// and there is no any search results... that is, the folder is not created
+		if(searchFolder == nil) {
+			// in this case the found messages aren't being loaded yet
+			// so we can't show any percentage
+			[result.progressIndicator setIndeterminate:YES];
+			[result.progressIndicator startAnimation:self];
+		} else if([searchFolder isStillUpdating]) {
+			if([result.progressIndicator isIndeterminate])
+				[result.progressIndicator setIndeterminate:NO];
+			
+			if(searchFolder.messageHeadersFetched == searchFolder.totalMessagesCount) {
+				[result.progressIndicator stopAnimation:self];
+			} else {
+				double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
+				[result.progressIndicator setDoubleValue:loadRatio];
+			}
 		}
+	} else {
+		[result.progressIndicator stopAnimation:self];
 	}
-
-//	[result.progressIndicator setNeedsDisplay:YES];
 
 	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
 
