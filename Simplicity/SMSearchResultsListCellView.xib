@@ -25,7 +25,7 @@
                 </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="651-hE-2bo">
                     <rect key="frame" x="217" y="1" width="15" height="25"/>
-                    <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" image="NSRefreshTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ayh-8Y-yfh">
+                    <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" image="NSStopProgressTemplate" imagePosition="overlaps" alignment="center" alternateImage="NSRefreshTemplate" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ayh-8Y-yfh">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -55,6 +55,8 @@
             </constraints>
             <connections>
                 <outlet property="progressIndicator" destination="aPL-vU-Oio" id="OIS-px-cr9"/>
+                <outlet property="removeButton" destination="r2A-kG-ZUF" id="Qdc-uJ-WeA"/>
+                <outlet property="stopOrReloadButton" destination="651-hE-2bo" id="2w9-Kj-ABH"/>
                 <outlet property="textField" destination="i4E-vf-ypC" id="4hM-4v-vmB"/>
             </connections>
             <point key="canvasLocation" x="259.5" y="93.5"/>
@@ -63,5 +65,6 @@
     <resources>
         <image name="NSRefreshTemplate" width="11" height="15"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
+        <image name="NSStopProgressTemplate" width="11" height="11"/>
     </resources>
 </document>
