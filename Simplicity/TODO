@@ -11,7 +11,7 @@ NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
 - Fix 'to' address list initial layout;
 - Fix selected message thread / message cursor disappearance on folder update;
 - Fix recurring search from the 'search results' folder;
-- Fix stalled search (report "unable to search").
+- Fix latest search cell auto selection;
 
 MESSAGE THREAD
 
@@ -27,6 +27,8 @@ MESSAGE LIST
 - Fix current message switch on list renewal;
 - Implement unused messages cleanup to keep memory footprint reasonable;
 - Implement message sharing between folders and threads;
+- Add 'stop/reload' and 'cancel' button to the search resutls cell;
+- Add 'load more' button at the bottom of the message list;
 
 ===================================================================
 
