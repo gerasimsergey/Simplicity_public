@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment defaultVersion="1070" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
     </dependencies>
     <objects>
@@ -16,8 +17,8 @@
             <rect key="frame" x="0.0" y="0.0" width="153" height="396"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="gDp-pD-1WG">
-                    <rect key="frame" x="0.0" y="0.0" width="150" height="396"/>
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="gDp-pD-1WG">
+                    <rect key="frame" x="0.0" y="0.0" width="153" height="396"/>
                     <clipView key="contentView" id="2Im-sc-EYw">
                         <rect key="frame" x="1" y="17" width="240" height="378"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -28,7 +29,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="145" minWidth="16" maxWidth="1000" id="Z07-e3-PoH">
+                                    <tableColumn width="150" minWidth="16" maxWidth="1000" id="Z07-e3-PoH">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -42,7 +43,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="FolderCellView" id="q8j-Aa-kEy" customClass="SMFolderCellView">
-                                                <rect key="frame" x="1" y="1" width="145" height="17"/>
+                                                <rect key="frame" x="1" y="1" width="150" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BKT-xZ-fBQ">
@@ -81,7 +82,7 @@
                 </scrollView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="gDp-pD-1WG" secondAttribute="trailing" constant="3" id="94O-cV-KQg"/>
+                <constraint firstAttribute="trailing" secondItem="gDp-pD-1WG" secondAttribute="trailing" id="94O-cV-KQg"/>
                 <constraint firstItem="gDp-pD-1WG" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="ILh-fX-6Fd"/>
                 <constraint firstAttribute="bottom" secondItem="gDp-pD-1WG" secondAttribute="bottom" id="bcn-yI-H97"/>
                 <constraint firstItem="gDp-pD-1WG" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="elq-VM-eL0"/>

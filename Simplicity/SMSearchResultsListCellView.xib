@@ -9,34 +9,59 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <tableCellView identifier="SearchResultsCell" id="cu9-mq-9j6" customClass="SMSearchResultsListCellView">
-            <rect key="frame" x="0.0" y="0.0" width="212" height="47"/>
+            <rect key="frame" x="0.0" y="0.0" width="235" height="51"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <progressIndicator maxValue="100" doubleValue="40" displayedWhenStopped="NO" controlSize="small" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="aPL-vU-Oio">
-                    <rect key="frame" x="3" y="3" width="206" height="12"/>
+                    <rect key="frame" x="3" y="3" width="206" height="16"/>
                 </progressIndicator>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i4E-vf-ypC">
-                    <rect key="frame" x="1" y="25" width="210" height="17"/>
+                    <rect key="frame" x="1" y="29" width="210" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="44e-Kn-1cz">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="651-hE-2bo">
+                    <rect key="frame" x="217" y="1" width="15" height="25"/>
+                    <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" image="NSRefreshTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ayh-8Y-yfh">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="r2A-kG-ZUF">
+                    <rect key="frame" x="217" y="23" width="15" height="25"/>
+                    <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="FUu-na-bNV">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstItem="aPL-vU-Oio" firstAttribute="trailing" secondItem="i4E-vf-ypC" secondAttribute="trailing" id="ONb-GZ-Wyj"/>
-                <constraint firstAttribute="trailing" secondItem="i4E-vf-ypC" secondAttribute="trailing" constant="3" id="fDT-Hh-Szv"/>
-                <constraint firstItem="i4E-vf-ypC" firstAttribute="leading" secondItem="cu9-mq-9j6" secondAttribute="leading" constant="3" id="pZd-33-3mj"/>
-                <constraint firstItem="aPL-vU-Oio" firstAttribute="leading" secondItem="i4E-vf-ypC" secondAttribute="leading" id="qcc-zb-C7h"/>
-                <constraint firstItem="i4E-vf-ypC" firstAttribute="top" secondItem="cu9-mq-9j6" secondAttribute="top" constant="5" id="svw-C3-8t7"/>
-                <constraint firstAttribute="bottom" secondItem="aPL-vU-Oio" secondAttribute="bottom" constant="3" id="xcP-v5-bbl"/>
+                <constraint firstItem="i4E-vf-ypC" firstAttribute="top" secondItem="cu9-mq-9j6" secondAttribute="top" constant="5" id="AhC-VD-pUe"/>
+                <constraint firstItem="aPL-vU-Oio" firstAttribute="top" secondItem="i4E-vf-ypC" secondAttribute="bottom" constant="10" id="GhQ-4d-9qw"/>
+                <constraint firstAttribute="bottom" secondItem="aPL-vU-Oio" secondAttribute="bottom" constant="3" id="Jed-2D-JEe"/>
+                <constraint firstItem="i4E-vf-ypC" firstAttribute="leading" secondItem="cu9-mq-9j6" secondAttribute="leading" constant="3" id="KyA-Ld-J65"/>
+                <constraint firstItem="aPL-vU-Oio" firstAttribute="width" secondItem="i4E-vf-ypC" secondAttribute="width" id="LoC-5T-vnq"/>
+                <constraint firstItem="r2A-kG-ZUF" firstAttribute="leading" secondItem="i4E-vf-ypC" secondAttribute="trailing" constant="8" id="Lv8-3T-zyE"/>
+                <constraint firstAttribute="trailing" secondItem="r2A-kG-ZUF" secondAttribute="trailing" constant="3" id="OjL-td-BGB"/>
+                <constraint firstItem="aPL-vU-Oio" firstAttribute="leading" secondItem="cu9-mq-9j6" secondAttribute="leading" constant="3" id="Skq-d5-awU"/>
+                <constraint firstItem="651-hE-2bo" firstAttribute="top" secondItem="r2A-kG-ZUF" secondAttribute="bottom" id="XQr-Jh-uTK"/>
+                <constraint firstAttribute="bottom" secondItem="651-hE-2bo" secondAttribute="bottom" constant="3" id="ZDR-cg-iFn"/>
+                <constraint firstItem="651-hE-2bo" firstAttribute="leading" secondItem="aPL-vU-Oio" secondAttribute="trailing" constant="8" id="drK-2M-VYl"/>
+                <constraint firstItem="r2A-kG-ZUF" firstAttribute="top" secondItem="cu9-mq-9j6" secondAttribute="top" constant="4" id="edH-tD-hNc"/>
+                <constraint firstAttribute="trailing" secondItem="651-hE-2bo" secondAttribute="trailing" constant="3" id="mXL-oO-zcn"/>
             </constraints>
             <connections>
                 <outlet property="progressIndicator" destination="aPL-vU-Oio" id="OIS-px-cr9"/>
                 <outlet property="textField" destination="i4E-vf-ypC" id="4hM-4v-vmB"/>
             </connections>
-            <point key="canvasLocation" x="248" y="93.5"/>
+            <point key="canvasLocation" x="259.5" y="93.5"/>
         </tableCellView>
     </objects>
+    <resources>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
+    </resources>
 </document>
