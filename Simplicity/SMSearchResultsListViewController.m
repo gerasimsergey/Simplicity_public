@@ -107,12 +107,16 @@
 				[result.progressIndicator stopAnimation:self];
 			} else {
 				double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
+
 				[result.progressIndicator setDoubleValue:loadRatio];
 			}
 		}
 	} else {
 		[result.progressIndicator stopAnimation:self];
 	}
+
+//	[btnZoomIn setAction:@selector(zoomIn:)];
+//4	[btnZoomIn setTarget:objectThatRespondsToZoomIn];
 
 	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
 

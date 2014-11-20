@@ -11,7 +11,8 @@
 @interface SMSearchResultsListCellView : NSTableCellView
 
 @property IBOutlet NSButton *removeButton;
-@property IBOutlet NSButton *stopOrReloadButton;
+@property IBOutlet NSButton *reloadButton;
+@property IBOutlet NSButton *stopButton;
 
 @property IBOutlet NSProgressIndicator *progressIndicator;
 
