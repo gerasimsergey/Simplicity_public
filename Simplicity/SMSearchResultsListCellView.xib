@@ -29,6 +29,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="removeSearch:" target="cu9-mq-9j6" id="Rok-vo-Cwb"/>
+                    </connections>
                 </button>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sz0-K7-IDe">
                     <rect key="frame" x="229" y="16" width="11" height="16"/>
@@ -36,6 +39,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="reloadSearch:" target="cu9-mq-9j6" id="77c-lg-zK7"/>
+                    </connections>
                 </button>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="651-hE-2bo">
                     <rect key="frame" x="229" y="1" width="11" height="15"/>
@@ -43,6 +49,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="stopSearch:" target="cu9-mq-9j6" id="KYL-nk-BZW"/>
+                    </connections>
                 </button>
             </subviews>
             <constraints>

@@ -71,7 +71,7 @@
 		}
 		
 		NSAssert(result != nil, @"bad top objects");
-		
+
 		result.identifier = viewId;
 	}
 	
@@ -115,10 +115,8 @@
 		[result.progressIndicator stopAnimation:self];
 	}
 
-//	[btnZoomIn setAction:@selector(zoomIn:)];
-//4	[btnZoomIn setTarget:objectThatRespondsToZoomIn];
-
 	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
+	result.searchResultsListRow = [NSNumber numberWithInteger:row];
 
 	return result;
 }
@@ -172,6 +170,18 @@
 		[_tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 		[_tableView setNeedsDisplay:YES];
 	}
+}
+
+- (void)removeSearch:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
+}
+
+- (void)reloadSearch:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
+}
+
+- (void)stopSearch:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
 }
 
 @end

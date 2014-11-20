@@ -14,4 +14,8 @@
 - (void)clearSelection;
 - (void)selectSearchResult:(NSString*)searchResultsLocalFolder;
 
+- (void)removeSearch:(NSInteger)index;
+- (void)reloadSearch:(NSInteger)index;
+- (void)stopSearch:(NSInteger)index;
+
 @end

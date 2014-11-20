@@ -16,4 +16,6 @@
 
 @property IBOutlet NSProgressIndicator *progressIndicator;
 
+@property NSNumber *searchResultsListRow;
+
 @end
