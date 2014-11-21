@@ -10,7 +10,6 @@
 
 @interface SMMessageListViewController : NSViewController<NSTableViewDataSource, NSTableViewDelegate>
 
-- (void)updateMessageListView;
-- (void)reloadMessageList;
+- (void)reloadMessageList:(Boolean)preserveSelection;
 
 @end

@@ -50,17 +50,6 @@
 	return -1;
 }
 
-- (void)deleteSearch:(NSString*)searchResultsLocalFolder {
-	NSAssert([_searchResults objectForKey:searchResultsLocalFolder] != nil, @"no such search results folder");
-
-	[_searchResults removeObjectForKey:searchResultsLocalFolder];
-
-	const NSInteger index = [self getSearchIndex:searchResultsLocalFolder];
-	
-	if(index >= 0)
-		[_searchResultsOrdered removeObjectAtIndex:index];
-}
-
 - (NSUInteger)searchResultsCount {
 	return [_searchResults count];
 }
@@ -86,6 +75,33 @@
 	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
 	
 	return searchDescriptor.searchFailed;
+}
+
+- (void)removeSearch:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
+
+	NSAssert(index >= 0 && index < _searchResultsOrdered.count, @"index is out of bounds");
+
+	[_searchResults removeObjectForKey:[_searchResultsOrdered objectAtIndex:index]];
+	[_searchResultsOrdered removeObjectAtIndex:index];
+	
+	// TODO: delete the search local folder as well
+}
+
+- (void)reloadSearch:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
+
+	NSAssert(index >= 0 && index < _searchResultsOrdered.count, @"index is out of bounds");
+	
+	// TODO
+}
+
+- (void)stopSearch:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
+
+	NSAssert(index >= 0 && index < _searchResultsOrdered.count, @"index is out of bounds");
+
+	// TODO
 }
 
 @end

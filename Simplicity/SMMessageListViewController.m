@@ -86,21 +86,21 @@
 	return view;
 }
 
-- (void)updateMessageListView {
-	//NSLog(@"%s: self %@, view %@, _messageListTableView %@", __FUNCTION__, self, [self view], _messageListTableView);
-	//NSLog(@"%s: tableView %@, its datasource %@", __FUNCTION__, _messageListTableView, [ _messageListTableView dataSource ]);
+- (void)reloadMessageList:(Boolean)preserveSelection {
+	NSInteger selectedRow = -1;
+	
+	if(preserveSelection) {
+		selectedRow = [ _messageListTableView selectedRow ];
+	} else {
+		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+	}
 
-	NSInteger selectedRow = [ _messageListTableView selectedRow ];
-
-	[ _messageListTableView reloadData ];
-
-	// TODO: this won't work if messages are added to the beginning of the list
-	[ _messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO ];
-}
-
-- (void)reloadMessageList {
-	[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 	[_messageListTableView reloadData];
+
+	if(preserveSelection) {
+		// TODO: this won't work if messages are added to the beginning of the list
+		[ _messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO ];
+	}
 }
 
 @end

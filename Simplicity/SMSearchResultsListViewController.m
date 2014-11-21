@@ -10,6 +10,7 @@
 #import "SMAppController.h"
 #import "SMSimplicityContainer.h"
 #import "SMMessageListController.h"
+#import "SMMessageListViewController.h"
 #import "SMSearchResultsListController.h"
 #import "SMMailboxViewController.h"
 #import "SMLocalFolder.h"
@@ -144,7 +145,16 @@
 }
 
 - (void)reloadData {
+	NSInteger selectedRow = [_tableView selectedRow];
+
 	[_tableView reloadData];
+	
+	if([_tableView numberOfRows] > 0) {
+		if(selectedRow == [_tableView numberOfRows])
+			--selectedRow;
+
+		[_tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+	}
 }
 
 - (void)clearSelection {
@@ -158,7 +168,7 @@
 	NSInteger index = [[[appDelegate model] searchResultsListController] getSearchIndex:localFolder];
 
 	if(index >= 0) {
-		[_tableView reloadData];
+		[self reloadData];
 	}
 }
 
@@ -171,17 +181,34 @@
 		[_tableView setNeedsDisplay:YES];
 	}
 }
-
 - (void)removeSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] searchResultsListController] removeSearch:index];
+
+	if([_tableView selectedRow] == index) {
+		[self clearSelection];
+
+		Boolean preserveSelection = NO;
+		[[[appDelegate appController] messageListViewController] reloadMessageList:preserveSelection];
+	}
+
+	[self reloadData];
 }
 
 - (void)reloadSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] searchResultsListController] reloadSearch:index];
 }
 
 - (void)stopSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] searchResultsListController] stopSearch:index];
 }
 
 @end
