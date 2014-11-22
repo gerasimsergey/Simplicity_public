@@ -14,6 +14,7 @@
 #import "SMSearchResultsListController.h"
 #import "SMMailboxViewController.h"
 #import "SMLocalFolder.h"
+#import "SMLocalFolderRegistry.h"
 #import "SMSearchResultsListCellView.h"
 #import "SMSearchResultsListViewController.h"
 
@@ -91,7 +92,7 @@
 		NSString *searchLocalFolderName = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:row];
 		NSAssert(searchLocalFolderName != nil, @"bad search folder name");
 		
-		SMLocalFolder *searchFolder = [[[appDelegate model] messageListController] getLocalFolder:searchLocalFolderName];
+		SMLocalFolder *searchFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchLocalFolderName];
 		
 		// search folder may not exist yet because the search is just started
 		// and there is no any search results... that is, the folder is not created
@@ -185,6 +186,9 @@
 	NSLog(@"%s: request for index %ld", __func__, index);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	NSString *localFolder = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:index];
+	
+	[[[appDelegate model] localFolderRegistry] removeLocalFolder:localFolder];
 	[[[appDelegate model] searchResultsListController] removeSearch:index];
 
 	if([_tableView selectedRow] == index) {

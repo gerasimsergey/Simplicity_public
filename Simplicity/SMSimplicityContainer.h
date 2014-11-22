@@ -12,6 +12,7 @@
 
 @class SMMailbox;
 @class SMMessageStorage;
+@class SMLocalFolderRegistry;
 @class SMAttachmentStorage;
 @class SMMessageListController;
 @class SMSearchResultsListController;
@@ -25,6 +26,7 @@
 @property MCOIMAPSession *session;
 
 @property (readonly) SMMessageStorage *messageStorage;
+@property (readonly) SMLocalFolderRegistry *localFolderRegistry;
 @property (readonly) SMAttachmentStorage *attachmentStorage;
 @property (readonly) MCOIndexSet *imapServerCapabilities;
 @property (readonly) SMMessageListController *messageListController;

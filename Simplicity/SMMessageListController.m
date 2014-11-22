@@ -15,6 +15,7 @@
 #import "SMMessage.h"
 #import "SMMessageThread.h"
 #import "SMMessageStorage.h"
+#import "SMLocalFolderRegistry.h"
 #import "SMLocalFolder.h"
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
@@ -27,7 +28,6 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 
 @implementation SMMessageListController {
 	__weak SMSimplicityContainer *_model;
-	NSMutableDictionary *_folders;
 	SMLocalFolder *_currentFolder;
 	MCOIMAPFolderInfoOperation *_folderInfoOp;
 }
@@ -37,7 +37,6 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	
 	if(self) {
 		_model = model;
-		_folders = [NSMutableDictionary new];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetched:) name:@"MessageHeadersFetched" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersSyncFinished:) name:@"MessageHeadersSyncFinished" object:nil];
@@ -50,24 +49,14 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	return _currentFolder;
 }
 
-- (SMLocalFolder*)getLocalFolder:(NSString*)folderName {
-	return [_folders objectForKey:folderName];
-}
-
 - (void)changeFolderInternal:(NSString*)folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
 	NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
-	
+
 	NSAssert(folderName != nil, @"no folder name");
 	
-	SMLocalFolder *folder = [_folders objectForKey:folderName];
-	if(folder == nil) {
-		folder = [[SMLocalFolder alloc] initWithLocalFolderName:folderName syncWithRemoteFolder:syncWithRemoteFolder];
-		[_folders setValue:folder forKey:folderName];
-	}
-	
-	[[_model messageStorage] ensureFolderExists:folderName];
+	SMLocalFolder *folder = [[_model localFolderRegistry] getOrCreateLocalFolder:folderName syncWithRemoteFolder:syncWithRemoteFolder];
+	NSAssert(folder != nil, @"folder registry returned nil folder");
 
-	// TODO: don't do it for the search results folder
 	[_currentFolder stopRemoteFolderSync];
 
 	_currentFolder = folder;

@@ -84,8 +84,6 @@
 
 	[_searchResults removeObjectForKey:[_searchResultsOrdered objectAtIndex:index]];
 	[_searchResultsOrdered removeObjectAtIndex:index];
-	
-	// TODO: delete the search local folder as well
 }
 
 - (void)reloadSearch:(NSInteger)index {

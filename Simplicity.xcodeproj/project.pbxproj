@@ -15,6 +15,7 @@
 		0002A0A817D1B1E000EA4AFF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0002A0A617D1B1E000EA4AFF /* MainMenu.xib */; };
 		0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0B417D1BB0100EA4AFF /* SMAppController.m */; };
 		0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */; };
+		00036D7F1A205FCB0085C266 /* SMLocalFolderRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */; };
 		00172FEB198B39BA00DB975E /* SMMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FE9198B39BA00DB975E /* SMMessageViewController.m */; };
 		00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */; };
 		00172FF5198D5C6100DB975E /* SMMessageThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */; };
@@ -54,6 +55,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		00036D861A205FCC0085C266 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27780C3A19CF9CD100C77E44;
+			remoteInfo = "mailcore ios";
+		};
+		00036D881A205FCC0085C266 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C6B5AE0219F630B3001352A6;
+			remoteInfo = unittest;
+		};
 		005B085417D4EF3E00341051 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
@@ -129,6 +144,8 @@
 		0002A0B417D1BB0100EA4AFF /* SMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAppController.m; sourceTree = "<group>"; };
 		0002A0B617D224C600EA4AFF /* SMMessageListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListCellView.h; sourceTree = "<group>"; };
 		0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListCellView.m; sourceTree = "<group>"; };
+		00036D7D1A205FCB0085C266 /* SMLocalFolderRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLocalFolderRegistry.h; sourceTree = "<group>"; };
+		00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLocalFolderRegistry.m; sourceTree = "<group>"; };
 		00172FE8198B39BA00DB975E /* SMMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageViewController.h; sourceTree = "<group>"; };
 		00172FE9198B39BA00DB975E /* SMMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageViewController.m; sourceTree = "<group>"; };
 		00172FED198B3BB700DB975E /* SMMessageBodyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageBodyViewController.h; sourceTree = "<group>"; };
@@ -284,6 +301,8 @@
 				005B085917D4EF3E00341051 /* tests */,
 				005B085B17D4EF3E00341051 /* test-ios.app */,
 				005B085D17D4EF3E00341051 /* MailCore.framework */,
+				00036D871A205FCC0085C266 /* MailCore.framework */,
+				00036D891A205FCC0085C266 /* unittest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -291,6 +310,8 @@
 		005B086517D4F3BD00341051 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				00036D7D1A205FCB0085C266 /* SMLocalFolderRegistry.h */,
+				00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */,
 				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
 				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
 				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
@@ -442,6 +463,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		00036D871A205FCC0085C266 /* MailCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MailCore.framework;
+			remoteRef = 00036D861A205FCC0085C266 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		00036D891A205FCC0085C266 /* unittest.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = unittest.xctest;
+			remoteRef = 00036D881A205FCC0085C266 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		005B085517D4EF3E00341051 /* libMailCore.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -509,6 +544,7 @@
 				0082F5F11A0DCE290050578A /* SMSearchResultsListViewController.m in Sources */,
 				0002A09E17D1B1E000EA4AFF /* main.m in Sources */,
 				001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */,
+				00036D7F1A205FCB0085C266 /* SMLocalFolderRegistry.m in Sources */,
 				0040B0F9196A5331004E55CC /* SMFolderCellView.m in Sources */,
 				00C75609195921AA006ED86B /* SMFolder.m in Sources */,
 				0097426E195686F900620145 /* SMMailboxViewController.m in Sources */,
