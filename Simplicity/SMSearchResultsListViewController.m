@@ -190,8 +190,7 @@
 	if([_tableView selectedRow] == index) {
 		[self clearSelection];
 
-		Boolean preserveSelection = NO;
-		[[[appDelegate appController] messageListViewController] reloadMessageList:preserveSelection];
+		[[[appDelegate model] messageListController] clearCurrentFolderSelection];
 	}
 
 	[self reloadData];

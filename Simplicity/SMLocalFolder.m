@@ -130,7 +130,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(session, @"session is nil");
 	
-	MCOIMAPFetchContentOperation *op = [session fetchMessageByUIDOperationWithFolder:remoteFolder uid:uid urgent:urgent];
+	MCOIMAPFetchContentOperation *op = [session fetchMessageOperationWithFolder:remoteFolder uid:uid urgent:urgent];
 	
 	[_fetchMessageBodyOps setObject:op forKey:[NSNumber numberWithUnsignedInt:uid]];
 	
@@ -285,7 +285,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
-	_fetchMessageHeadersOp = [session fetchMessagesByUIDOperationWithFolder:remoteFolder requestKind:messageHeadersRequestKind uids:messageUIDsToLoadNow];
+	_fetchMessageHeadersOp = [session fetchMessagesOperationWithFolder:remoteFolder requestKind:messageHeadersRequestKind uids:messageUIDsToLoadNow];
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;

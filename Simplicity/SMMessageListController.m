@@ -94,6 +94,21 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[[appController messageListViewController] reloadMessageList:preserveSelection];
 }
 
+- (void)clearCurrentFolderSelection {
+	NSString *emptyFolderName = @""; // TODO: create a descriptor for empty folder
+	
+	if([_currentFolder.name isEqualToString:emptyFolderName])
+		return;
+	
+	[self changeFolderInternal:emptyFolderName syncWithRemoteFolder:NO];
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+	
+	Boolean preserveSelection = NO;
+	[[appController messageListViewController] reloadMessageList:preserveSelection];
+}
+
 - (void)startMessagesUpdate {
 	[_currentFolder startRemoteFolderSync];
 }

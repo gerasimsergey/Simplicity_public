@@ -283,7 +283,7 @@
 			// TODO: for older sessions, terminate attachment fetching
 			NSAssert(session, @"bad session");
 			
-			MCOIMAPFetchContentOperation *op = [session fetchMessageAttachmentByUIDOperationWithFolder:_remoteFolder uid:uid partID:partId encoding:[imapPart encoding] urgent:YES];
+			MCOIMAPFetchContentOperation *op = [session fetchMessageAttachmentOperationWithFolder:_remoteFolder uid:uid partID:partId encoding:[imapPart encoding] urgent:YES];
 			
 			// TODO: check if there is a leak if imapPart is accessed in this block!!!
 			[op start:^(NSError * error, NSData * data) {
