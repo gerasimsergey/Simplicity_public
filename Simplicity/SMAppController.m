@@ -11,7 +11,6 @@
 #import "SMMailboxViewController.h"
 #import "SMSearchResultsListController.h"
 #import "SMSearchResultsListViewController.h"
-#import "SMLocalFolder.h"
 #import "SMMessageListController.h"
 #import "SMMessageListViewController.h"
 #import "SMMessageDetailsViewController.h"
@@ -21,7 +20,6 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 
 @implementation SMAppController {
 	NSButton *button1, *button2;
-	MCOIMAPSearchOperation *_currentSearchOp;
 	NSToolbarItem *__weak _activeSearchItem;
 }
 
@@ -225,55 +223,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSLog(@"%s: searching for string '%@'", __func__, searchString);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
-	
-	NSAssert(session, @"session is nil");
-	
-	// TODO: handle search in search results differently
-	NSString *remoteFolder = [[[[appDelegate model] messageListController] currentLocalFolder] name];
-	NSString *searchResultsLocalFolder = [[[appDelegate model] searchResultsListController] startNewSearch:searchString];
-
-	[[[appDelegate appController] searchResultsListViewController] reloadData];
-	
-	[_currentSearchOp cancel];
-	_currentSearchOp = [session searchOperationWithFolder:remoteFolder kind:MCOIMAPSearchKindContent searchString:searchString];
-
-	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
-		if(error == nil) {
-			if(searchResults.count > 0) {
-				SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		
-				NSLog(@"%s: %u messages found in remote folder %@, loading to local folder %@", __func__, [searchResults count], remoteFolder, searchResultsLocalFolder);
-
-				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:remoteFolder searchResultsLocalFolder:searchResultsLocalFolder];
-				
-				[_searchResultsListViewController selectSearchResult:searchResultsLocalFolder];
-			} else {
-				NSLog(@"%s: nothing found", __func__);
-				
-				[[[appDelegate model] searchResultsListController] searchHasFailed:searchResultsLocalFolder];
-			}
-		} else {
-			NSLog(@"%s: search in remote folder %@ failed, error %@", __func__, remoteFolder, error);
-
-			[[[appDelegate model] searchResultsListController] searchHasFailed:searchResultsLocalFolder];
-		}
-
-		[_searchResultsListViewController reloadData];
-	}];
-	
-/*
-	NSArray *rangesOfString = [self rangesOfStringInDocument:searchString];
-	if ([rangesOfString count]) {
-		if ([documentTextView respondsToSelector:@selector(setSelectedRanges:)]) {
-			// NSTextView can handle multiple selections in 10.4 and later.
-			[documentTextView setSelectedRanges: rangesOfString];
-		} else {
-			// If we can't do multiple selection, just select the first range.
-			[documentTextView setSelectedRange: [[rangesOfString objectAtIndex:0] rangeValue]];
-		}
-	}
-*/
+	[[[appDelegate model] searchResultsListController] startNewSearch:searchString];
 }
 
 @end

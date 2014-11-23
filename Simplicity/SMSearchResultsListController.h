@@ -12,7 +12,7 @@
 
 // TODO: introduce search pattern descriptor and search results descriptors
 
-- (NSString*)startNewSearch:(NSString*)searchPattern;
+- (void)startNewSearch:(NSString*)searchPattern;
 - (NSInteger)getSearchIndex:(NSString*)searchResultsLocalFolder;
 - (NSUInteger)searchResultsCount;
 - (NSString*)searchResultsLocalFolder:(NSUInteger)index;
