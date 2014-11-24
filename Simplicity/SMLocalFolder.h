@@ -31,4 +31,7 @@
 // tells whether there is message loading progress underway
 - (Boolean)isStillUpdating;
 
+// stops message headers loading; does not turn off sync nor bodies loading
+- (void)stopMessageHeadersLoading;
+
 @end

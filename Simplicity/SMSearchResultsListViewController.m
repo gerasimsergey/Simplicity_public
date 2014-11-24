@@ -11,6 +11,7 @@
 #import "SMSimplicityContainer.h"
 #import "SMMessageListController.h"
 #import "SMMessageListViewController.h"
+#import "SMSearchDescriptor.h"
 #import "SMSearchResultsListController.h"
 #import "SMMailboxViewController.h"
 #import "SMLocalFolder.h"
@@ -85,20 +86,13 @@
 	NSAssert(result != nil, @"bad cell found");
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	
-	Boolean searchFailed = [[[appDelegate model] searchResultsListController] hasSearchFailed:row];
+	SMSearchDescriptor *searchResults = [[[appDelegate model] searchResultsListController] getSearchResults:row];
 
-	if(!searchFailed) {
-		NSString *searchLocalFolderName = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:row];
-		NSAssert(searchLocalFolderName != nil, @"bad search folder name");
-		
+	if(!searchResults.searchFailed && !searchResults.searchStopped) {
+		NSString *searchLocalFolderName = searchResults.localFolder;
 		SMLocalFolder *searchFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchLocalFolderName];
 		
-		// search folder may not exist yet because the search is just started
-		// and there is no any search results... that is, the folder is not created
-		if(searchFolder == nil) {
-			// in this case the found messages aren't being loaded yet
-			// so we can't show any percentage
+		if(!searchResults.messagesLoadingStarted) {
 			[result.progressIndicator setIndeterminate:YES];
 			[result.progressIndicator startAnimation:self];
 		} else if([searchFolder isStillUpdating]) {
@@ -117,7 +111,7 @@
 		[result.progressIndicator stopAnimation:self];
 	}
 
-	result.textField.stringValue = [[[appDelegate model] searchResultsListController] searchPattern:row];
+	result.textField.stringValue = [[[[appDelegate model] searchResultsListController] getSearchResults:row] searchPattern];
 	result.searchResultsListRow = [NSNumber numberWithInteger:row];
 
 	return result;
@@ -138,7 +132,8 @@
 		SMSearchResultsListController *searchResultsListController = [[appDelegate model] searchResultsListController];
 		
 		if(selectedRow < searchResultsListController.searchResultsCount) {
-			[[[appDelegate model] messageListController] changeFolder:[searchResultsListController searchResultsLocalFolder:selectedRow]];
+			NSString *localFolder = [[searchResultsListController getSearchResults:selectedRow] localFolder];
+			[[[appDelegate model] messageListController] changeFolder:localFolder];
 
 			[[[appDelegate appController] mailboxViewController] clearSelection];
 		}
@@ -186,7 +181,7 @@
 	NSLog(@"%s: request for index %ld", __func__, index);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	NSString *localFolder = [[[appDelegate model] searchResultsListController] searchResultsLocalFolder:index];
+	NSString *localFolder = [[[[appDelegate model] searchResultsListController] getSearchResults:index] localFolder];
 	
 	[[[appDelegate model] localFolderRegistry] removeLocalFolder:localFolder];
 	[[[appDelegate model] searchResultsListController] removeSearch:index];
@@ -212,6 +207,8 @@
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] searchResultsListController] stopSearch:index];
+
+	[_tableView reloadData];
 }
 
 @end

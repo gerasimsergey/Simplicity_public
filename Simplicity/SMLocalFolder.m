@@ -309,4 +309,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	return _fetchMessageHeadersOp != nil;
 }
 
+- (void)stopMessageHeadersLoading {
+	[_fetchMessageHeadersOp cancel];
+	_fetchMessageHeadersOp = nil;
+}
+
 @end

@@ -106,6 +106,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[self changeFolderInternal:searchResultsLocalFolder syncWithRemoteFolder:NO];
 	
 	[_currentFolder loadMessages:searchResults remoteFolder:remoteFolderToSearch];
+
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
 	

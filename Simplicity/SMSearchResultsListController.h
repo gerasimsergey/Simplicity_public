@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class SMSearchDescriptor;
+
 @interface SMSearchResultsListController : NSObject
 
 // TODO: introduce search pattern descriptor and search results descriptors
@@ -15,10 +17,8 @@
 - (void)startNewSearch:(NSString*)searchPattern;
 - (NSInteger)getSearchIndex:(NSString*)searchResultsLocalFolder;
 - (NSUInteger)searchResultsCount;
-- (NSString*)searchResultsLocalFolder:(NSUInteger)index;
-- (NSString*)searchPattern:(NSUInteger)index;
+- (SMSearchDescriptor*)getSearchResults:(NSUInteger)index;
 - (void)searchHasFailed:(NSString*)searchResultsLocalFolder;
-- (Boolean)hasSearchFailed:(NSUInteger)index;
 
 - (void)removeSearch:(NSInteger)index;
 - (void)reloadSearch:(NSInteger)index;

@@ -14,6 +14,8 @@
 @property (readonly) NSString *localFolder;
 
 @property Boolean searchFailed;
+@property Boolean searchStopped;
+@property Boolean messagesLoadingStarted;
 
 - (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder;
 

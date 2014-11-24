@@ -10,6 +10,7 @@
 #import "SMAppController.h"
 #import "SMSearchDescriptor.h"
 #import "SMLocalFolder.h"
+#import "SMLocalFolderRegistry.h"
 #import "SMMessageListController.h"
 #import "SMSearchResultsListViewController.h"
 #import "SMSearchResultsListController.h"
@@ -17,7 +18,7 @@
 @implementation SMSearchResultsListController {
 	NSUInteger _searchId;
 	NSMutableDictionary *_searchResults;
-	NSMutableArray *_searchResultsOrdered;
+	NSMutableArray *_searchResultsFolderNames;
 	MCOIMAPSearchOperation *_currentSearchOp;
 }
 
@@ -26,7 +27,7 @@
 	
 	if(self != nil) {
 		_searchResults = [[NSMutableDictionary alloc] init];
-		_searchResultsOrdered = [[NSMutableArray alloc] init];
+		_searchResultsFolderNames = [[NSMutableArray alloc] init];
 	}
 	
 	return self;
@@ -49,10 +50,14 @@
 	NSAssert(searchResultsLocalFolder != nil, @"folder name couldn't be generated");
 	NSAssert([_searchResults objectForKey:searchResultsLocalFolder] == nil, @"duplicated generated folder name");
 	
+	if([[[appDelegate model] localFolderRegistry] getOrCreateLocalFolder:searchResultsLocalFolder syncWithRemoteFolder:NO] == nil) {
+		NSAssert(false, @"could not create local folder for search results");
+	}
+	
 	SMSearchDescriptor *searchDescriptor = [[SMSearchDescriptor alloc] init:searchString localFolder:searchResultsLocalFolder];
 	
 	[_searchResults setObject:searchDescriptor forKey:searchResultsLocalFolder];
-	[_searchResultsOrdered addObject:searchResultsLocalFolder];
+	[_searchResultsFolderNames addObject:searchResultsLocalFolder];
 
 	[[[appDelegate appController] searchResultsListViewController] reloadData];
 	
@@ -62,9 +67,9 @@
 	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {
 			if(searchResults.count > 0) {
-				SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-				
 				NSLog(@"%s: %u messages found in remote folder %@, loading to local folder %@", __func__, [searchResults count], remoteFolder, searchResultsLocalFolder);
+				
+				searchDescriptor.messagesLoadingStarted = YES;
 				
 				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:remoteFolder searchResultsLocalFolder:searchResultsLocalFolder];
 				
@@ -98,8 +103,8 @@
 }
 
 - (NSInteger)getSearchIndex:(NSString*)searchResultsLocalFolder {
-	for(NSInteger i = 0; i < _searchResultsOrdered.count; i++) {
-		if([_searchResultsOrdered[i] isEqualToString:searchResultsLocalFolder])
+	for(NSInteger i = 0; i < _searchResultsFolderNames.count; i++) {
+		if([_searchResultsFolderNames[i] isEqualToString:searchResultsLocalFolder])
 			return i;
 	}
 	
@@ -110,42 +115,28 @@
 	return [_searchResults count];
 }
 
-- (NSString*)searchResultsLocalFolder:(NSUInteger)index {
-	return _searchResultsOrdered[index];
-}
-
-- (NSString*)searchPattern:(NSUInteger)index {
-	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
-
-	return searchDescriptor.searchPattern;
+- (SMSearchDescriptor*)getSearchResults:(NSUInteger)index {
+	return [_searchResults objectForKey:[_searchResultsFolderNames objectAtIndex:index]];
 }
 
 - (void)searchHasFailed:(NSString*)searchResultsLocalFolder {
-	const NSInteger index = [self getSearchIndex:searchResultsLocalFolder];
-	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
-	
+	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:searchResultsLocalFolder];
 	searchDescriptor.searchFailed = true;
-}
-
-- (Boolean)hasSearchFailed:(NSUInteger)index {
-	SMSearchDescriptor *searchDescriptor = [_searchResults objectForKey:[self searchResultsLocalFolder:index]];
-	
-	return searchDescriptor.searchFailed;
 }
 
 - (void)removeSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
 
-	NSAssert(index >= 0 && index < _searchResultsOrdered.count, @"index is out of bounds");
+	NSAssert(index >= 0 && index < _searchResultsFolderNames.count, @"index is out of bounds");
 
-	[_searchResults removeObjectForKey:[_searchResultsOrdered objectAtIndex:index]];
-	[_searchResultsOrdered removeObjectAtIndex:index];
+	[_searchResults removeObjectForKey:[_searchResultsFolderNames objectAtIndex:index]];
+	[_searchResultsFolderNames removeObjectAtIndex:index];
 }
 
 - (void)reloadSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
 
-	NSAssert(index >= 0 && index < _searchResultsOrdered.count, @"index is out of bounds");
+	NSAssert(index >= 0 && index < _searchResultsFolderNames.count, @"index is out of bounds");
 	
 	// TODO
 }
@@ -153,9 +144,22 @@
 - (void)stopSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
 
-	NSAssert(index >= 0 && index < _searchResultsOrdered.count, @"index is out of bounds");
+	NSAssert(index >= 0 && index < _searchResultsFolderNames.count, @"index is out of bounds");
 
-	// TODO
+	// stop search op itself, if any
+	[_currentSearchOp cancel];
+	_currentSearchOp = nil;
+
+	// stop message list loading, if anys
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMSearchDescriptor *searchDescriptor = [self getSearchResults:index];
+
+	SMLocalFolder *localFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchDescriptor.localFolder];
+	[localFolder stopMessageHeadersLoading];
+	
+	searchDescriptor.searchStopped = true;
+
+	// TODO: stop message bodies loading?
 }
 
 @end

@@ -17,6 +17,8 @@
 		_searchPattern = searchPattern;
 		_localFolder = localFolder;
 		_searchFailed = false;
+		_searchStopped = false;
+		_messagesLoadingStarted = false;
 	}
 	
 	return self;

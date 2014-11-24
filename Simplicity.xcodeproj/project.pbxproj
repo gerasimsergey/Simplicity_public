@@ -310,8 +310,6 @@
 		005B086517D4F3BD00341051 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				00036D7D1A205FCB0085C266 /* SMLocalFolderRegistry.h */,
-				00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */,
 				0002A0A317D1B1E000EA4AFF /* SMAppDelegate.h */,
 				0002A0A417D1B1E000EA4AFF /* SMAppDelegate.m */,
 				00ED317A17F88DA700B04F5B /* SMAttachmentStorage.h */,
@@ -320,6 +318,8 @@
 				00C75608195921AA006ED86B /* SMFolder.m */,
 				0082F5FC1A0FFAAC0050578A /* SMLocalFolder.h */,
 				0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */,
+				00036D7D1A205FCB0085C266 /* SMLocalFolderRegistry.h */,
+				00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */,
 				009742701957C78E00620145 /* SMMailbox.h */,
 				009742711957C78E00620145 /* SMMailbox.m */,
 				0077C99219E8E58C00118CA5 /* SMMailLogin.h */,
