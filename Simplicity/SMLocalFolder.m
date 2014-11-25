@@ -314,4 +314,21 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_fetchMessageHeadersOp = nil;
 }
 
+
+- (void)stopMessagesLoading {
+	// TODO: folder info op?
+
+	[self stopMessageHeadersLoading];
+
+	for(id key in _fetchMessageBodyOps) {
+		NSNumber *uid = key;
+		MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:uid];
+
+		[op cancel];
+	}
+	
+	[_fetchMessageBodyOps removeAllObjects];
+}
+
+
 @end

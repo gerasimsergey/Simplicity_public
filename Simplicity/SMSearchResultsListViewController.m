@@ -21,12 +21,15 @@
 
 @implementation SMSearchResultsListViewController {
 	NSTableView *_tableView;
+	NSMutableDictionary *_cells;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
+		_cells = [NSMutableDictionary new];
+		
 		_tableView = [[NSTableView alloc] init];
 		_tableView.translatesAutoresizingMaskIntoConstraints = NO;
 
@@ -77,6 +80,10 @@
 
 		result.identifier = viewId;
 	}
+	
+	// this prevents the cells from being deallocated
+	// if it happens, the action button might send the action to deallocated cells
+	[_cells setObject:result forKey:[NSNumber numberWithInteger:row]];
 	
 	return result;
 }
@@ -180,6 +187,8 @@
 - (void)removeSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
 	
+	[self stopSearch:index];
+	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	NSString *localFolder = [[[[appDelegate model] searchResultsListController] getSearchResults:index] localFolder];
 	
@@ -206,9 +215,12 @@
 	NSLog(@"%s: request for index %ld", __func__, index);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[[[appDelegate model] searchResultsListController] stopSearch:index];
 
-	[_tableView reloadData];
+	if(![[[appDelegate model] searchResultsListController] searchStopped:index]) {
+		[[[appDelegate model] searchResultsListController] stopSearch:index];
+		
+		[_tableView reloadData];
+	}
 }
 
 @end

@@ -162,4 +162,15 @@
 	// TODO: stop message bodies loading?
 }
 
+- (Boolean)searchStopped:(NSInteger)index {
+	NSLog(@"%s: request for index %ld", __func__, index);
+	
+	NSAssert(index >= 0 && index < _searchResultsFolderNames.count, @"index is out of bounds");
+	
+	// stop message list loading, if anys
+	SMSearchDescriptor *searchDescriptor = [self getSearchResults:index];
+	
+	return searchDescriptor.searchStopped;
+}
+
 @end

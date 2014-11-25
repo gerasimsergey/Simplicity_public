@@ -34,4 +34,7 @@
 // stops message headers loading; does not turn off sync nor bodies loading
 - (void)stopMessageHeadersLoading;
 
+// stops message headers and bodies loading; also stops sync, if any
+- (void)stopMessagesLoading;
+
 @end

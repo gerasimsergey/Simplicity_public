@@ -45,6 +45,9 @@
 }
 
 - (void)removeLocalFolder:(NSString*)folderName {
+	SMLocalFolder *localFolder = [_folders objectForKey:folderName];
+	[localFolder stopMessagesLoading];
+
 	[_folders removeObjectForKey:folderName];
 }
 
