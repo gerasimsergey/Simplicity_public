@@ -30,16 +30,16 @@
 	return [_folders objectForKey:folderName];
 }
 
-- (SMLocalFolder*)getOrCreateLocalFolder:folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
-	SMLocalFolder *folder = [_folders objectForKey:folderName];
+- (SMLocalFolder*)getOrCreateLocalFolder:localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
+	SMLocalFolder *folder = [_folders objectForKey:localFolderName];
 	
 	if(folder == nil) {
-		folder = [[SMLocalFolder alloc] initWithLocalFolderName:folderName syncWithRemoteFolder:syncWithRemoteFolder];
-		[_folders setValue:folder forKey:folderName];
+		folder = [[SMLocalFolder alloc] initWithLocalFolderName:localFolderName syncWithRemoteFolder:syncWithRemoteFolder];
+		[_folders setValue:folder forKey:localFolderName];
 	}
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[[[appDelegate model] messageStorage] ensureFolderExists:folderName];
+	[[[appDelegate model] messageStorage] ensureLocalFolderExists:localFolderName];
 	
 	return folder;
 }

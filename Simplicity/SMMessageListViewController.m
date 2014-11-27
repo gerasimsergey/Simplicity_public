@@ -34,7 +34,7 @@
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 	
 	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
-	NSInteger messageThreadsCount = [[[appDelegate model] messageStorage] messageThreadsCount:[currentFolder name]];
+	NSInteger messageThreadsCount = [[[appDelegate model] messageStorage] messageThreadsCountInLocalFolder:[currentFolder name]];
 
 //	NSLog(@"%s: self %@, tableView %@, its datasource %@, view %@, messagesTableView %@, message threads count %ld", __FUNCTION__, self, tableView, [tableView dataSource], [self view], _messageListTableView, messageThreadsCount);
 	

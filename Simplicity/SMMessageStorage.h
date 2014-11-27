@@ -18,9 +18,10 @@
 
 @property (readonly) SMMessageComparators *comparators;
 
-- (void)ensureFolderExists:(NSString*)folder;
+- (void)ensureLocalFolderExists:(NSString*)localFolder;
+- (void)removeLocalFolder:(NSString*)localFolder;
 
-- (NSInteger)messageThreadsCount:(NSString*)folder;
+- (NSInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder;
 
 - (void)startUpdate:(NSString*)folder;
 - (void)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;

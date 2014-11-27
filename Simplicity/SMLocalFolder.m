@@ -335,6 +335,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[self stopMessagesLoading];
 	
 	[_fetchedMessageHeaders removeAllObjects];
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] messageStorage] removeLocalFolder:_name];
 }
 
 @end

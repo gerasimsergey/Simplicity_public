@@ -52,13 +52,17 @@
 	return self;
 }
 
-- (void)ensureFolderExists:(NSString*)folder {
-	NSLog(@"%s: folder name '%@", __FUNCTION__, folder);
+- (void)ensureLocalFolderExists:(NSString*)localFolder {
+	NSLog(@"%s: folder name '%@", __FUNCTION__, localFolder);
 	
-	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:folder];
+	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:localFolder];
 	
 	if(collection == nil)
-		[_foldersMessageThreadsMap setValue:[MessageThreadCollection new] forKey:folder];
+		[_foldersMessageThreadsMap setValue:[MessageThreadCollection new] forKey:localFolder];
+}
+
+- (void)removeLocalFolder:(NSString*)localFolder {
+	[_foldersMessageThreadsMap removeObjectForKey:localFolder];
 }
 
 - (MessageThreadCollection*)messageThreadForFolder:(NSString*)folder {
@@ -171,8 +175,8 @@
 	return [thread messageHasData:uid];
 }
 
-- (NSInteger)messageThreadsCount:(NSString*)folder {
-	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
+- (NSInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder {
+	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 
 	// usually this means that no folders loaded yet
 	if(collection == nil)
