@@ -12,6 +12,7 @@
 #import "SMLocalFolder.h"
 #import "SMLocalFolderRegistry.h"
 #import "SMMessageListController.h"
+#import "SMMessageListViewController.h"
 #import "SMSearchResultsListViewController.h"
 #import "SMSearchResultsListController.h"
 
@@ -33,7 +34,7 @@
 	return self;
 }
 
-- (void)startNewSearch:(NSString*)searchString {
+- (void)startNewSearch:(NSString*)searchString exitingLocalFolder:(NSString*)existingLocalFolder {
 	NSLog(@"%s: searching for string '%@'", __func__, searchString);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
@@ -41,20 +42,34 @@
 	
 	NSAssert(session, @"session is nil");
 	
-	// TODO: handle search in search results differently
-	NSString *remoteFolder = [[[[appDelegate model] messageListController] currentLocalFolder] name];
+	NSString *remoteFolder = nil;
+	NSString *searchResultsLocalFolder = nil;
+	SMSearchDescriptor *searchDescriptor = nil;
+	
+	if(existingLocalFolder == nil) {
+		// TODO: handle search in search results differently
+		remoteFolder = [[[[appDelegate model] messageListController] currentLocalFolder] name];
 
-	// TODO: introduce search results descriptor to avoid this funny folder name
-	NSString *searchResultsLocalFolder = [NSString stringWithFormat:@"//search_results//%lu", _searchId++];
-	
-	NSAssert(searchResultsLocalFolder != nil, @"folder name couldn't be generated");
-	NSAssert([_searchResults objectForKey:searchResultsLocalFolder] == nil, @"duplicated generated folder name");
-	
-	if([[[appDelegate model] localFolderRegistry] getOrCreateLocalFolder:searchResultsLocalFolder syncWithRemoteFolder:NO] == nil) {
-		NSAssert(false, @"could not create local folder for search results");
+		// TODO: introduce search results descriptor to avoid this funny folder name
+		searchResultsLocalFolder = [NSString stringWithFormat:@"//search_results//%lu", _searchId++];
+		
+		NSAssert(searchResultsLocalFolder != nil, @"folder name couldn't be generated");
+		NSAssert([_searchResults objectForKey:searchResultsLocalFolder] == nil, @"duplicated generated folder name");
+		
+		if([[[appDelegate model] localFolderRegistry] getOrCreateLocalFolder:searchResultsLocalFolder syncWithRemoteFolder:NO] == nil) {
+			NSAssert(false, @"could not create local folder for search results");
+		}
+		
+		searchDescriptor = [[SMSearchDescriptor alloc] init:searchString localFolder:searchResultsLocalFolder remoteFolder:remoteFolder];
+	} else {
+		searchResultsLocalFolder = existingLocalFolder;
+		searchDescriptor = [_searchResults objectForKey:existingLocalFolder];
+		remoteFolder = [searchDescriptor remoteFolder];
+
+		NSAssert(searchDescriptor != nil, @"no search descriptor found for exiting local folder");
+		
+		[searchDescriptor clearState];
 	}
-	
-	SMSearchDescriptor *searchDescriptor = [[SMSearchDescriptor alloc] init:searchString localFolder:searchResultsLocalFolder];
 	
 	[_searchResults setObject:searchDescriptor forKey:searchResultsLocalFolder];
 	[_searchResultsFolderNames addObject:searchResultsLocalFolder];
@@ -138,7 +153,18 @@
 
 	NSAssert(index >= 0 && index < _searchResultsFolderNames.count, @"index is out of bounds");
 	
-	// TODO
+	SMSearchDescriptor *searchDescriptor = [self getSearchResults:index];
+	NSAssert(searchDescriptor != nil, @"search descriptor not found");
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMLocalFolder *localFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchDescriptor.localFolder];
+	
+	[localFolder clear];
+
+	Boolean preserveSelection = NO;
+	[[[appDelegate appController] messageListViewController] reloadMessageList:preserveSelection];
+
+	[self startNewSearch:searchDescriptor.searchPattern exitingLocalFolder:localFolder.name];
 }
 
 - (void)stopSearch:(NSInteger)index {
@@ -153,6 +179,7 @@
 	// stop message list loading, if anys
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMSearchDescriptor *searchDescriptor = [self getSearchResults:index];
+	NSAssert(searchDescriptor != nil, @"search descriptor not found");
 
 	SMLocalFolder *localFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchDescriptor.localFolder];
 	[localFolder stopMessageHeadersLoading];

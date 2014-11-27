@@ -223,7 +223,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSLog(@"%s: searching for string '%@'", __func__, searchString);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[[[appDelegate model] searchResultsListController] startNewSearch:searchString];
+	[[[appDelegate model] searchResultsListController] startNewSearch:searchString exitingLocalFolder:nil];
 }
 
 @end

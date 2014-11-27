@@ -12,11 +12,14 @@
 
 @property (readonly) NSString *searchPattern;
 @property (readonly) NSString *localFolder;
+@property (readonly) NSString *remoteFolder; // TODO: this will be more sophisticated
 
 @property Boolean searchFailed;
 @property Boolean searchStopped;
 @property Boolean messagesLoadingStarted;
 
-- (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder;
+- (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder;
+
+- (void)clearState;
 
 @end

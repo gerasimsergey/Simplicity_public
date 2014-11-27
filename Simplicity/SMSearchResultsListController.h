@@ -14,7 +14,8 @@
 
 // TODO: introduce search pattern descriptor and search results descriptors
 
-- (void)startNewSearch:(NSString*)searchPattern;
+- (void)startNewSearch:(NSString*)searchPattern exitingLocalFolder:(NSString*)existingLocalFolder;
+
 - (NSInteger)getSearchIndex:(NSString*)searchResultsLocalFolder;
 - (NSUInteger)searchResultsCount;
 - (SMSearchDescriptor*)getSearchResults:(NSUInteger)index;

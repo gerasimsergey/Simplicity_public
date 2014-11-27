@@ -37,4 +37,8 @@
 // stops message headers and bodies loading; also stops sync, if any
 - (void)stopMessagesLoading;
 
+// stops message headers and bodies loading; also stops sync, if any
+// then removes the local folder contents (does not affect the remote folder, if any)
+- (void)clear;
+
 @end

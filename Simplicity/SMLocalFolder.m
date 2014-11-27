@@ -316,7 +316,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 
 - (void)stopMessagesLoading {
-	// TODO: folder info op?
+	[_folderInfoOp cancel];
+	_folderInfoOp = nil;
 
 	[self stopMessageHeadersLoading];
 
@@ -330,5 +331,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[_fetchMessageBodyOps removeAllObjects];
 }
 
+- (void)clear {
+	[self stopMessagesLoading];
+	
+	[_fetchedMessageHeaders removeAllObjects];
+}
 
 @end

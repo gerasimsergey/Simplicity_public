@@ -216,6 +216,8 @@
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] searchResultsListController] reloadSearch:index];
+
+	[self reloadData];
 }
 
 - (void)stopSearch:(NSInteger)index {
