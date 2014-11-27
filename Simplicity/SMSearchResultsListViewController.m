@@ -21,14 +21,14 @@
 
 @implementation SMSearchResultsListViewController {
 	NSTableView *_tableView;
-	NSMutableDictionary *_cells;
+	NSMutableDictionary *_cellViews;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		_cells = [NSMutableDictionary new];
+		_cellViews = [[NSMutableDictionary alloc] init];
 		
 		_tableView = [[NSTableView alloc] init];
 		_tableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -55,7 +55,14 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	return [[[appDelegate model] searchResultsListController] searchResultsCount];
+	NSInteger rowCount = [[[appDelegate model] searchResultsListController] searchResultsCount];
+	
+	if(rowCount < _cellViews.count) {
+		for(NSInteger r = rowCount, rc = _cellViews.count; r < rc; r++)
+			[_cellViews removeObjectForKey:[NSNumber numberWithInteger:r]];
+	}
+
+	return rowCount;
 }
 
 - (SMSearchResultsListCellView*)getSearchResultCell:(NSTableView *)tableView row:(NSInteger)row {
@@ -83,7 +90,7 @@
 	
 	// this prevents the cells from being deallocated
 	// if it happens, the action button might send the action to deallocated cells
-	[_cells setObject:result forKey:[NSNumber numberWithInteger:row]];
+	[_cellViews setObject:result forKey:[NSNumber numberWithInteger:row]];
 	
 	return result;
 }
