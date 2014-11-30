@@ -210,6 +210,7 @@
 		[_tableView setNeedsDisplay:YES];
 	}
 }
+
 - (void)removeSearch:(NSInteger)index {
 	NSLog(@"%s: request for index %ld", __func__, index);
 	
@@ -247,7 +248,7 @@
 	if(![[[appDelegate model] searchResultsListController] searchStopped:index]) {
 		[[[appDelegate model] searchResultsListController] stopSearch:index];
 		
-		[_tableView reloadData];
+		[self reloadData];
 	}
 }
 
