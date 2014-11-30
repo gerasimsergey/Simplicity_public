@@ -66,9 +66,10 @@
 }
 
 - (SMSearchResultsListCellView*)getSearchResultCell:(NSTableView *)tableView row:(NSInteger)row {
-	NSString *viewId = @"SearchResultsCell";
-	SMSearchResultsListCellView *result = [tableView makeViewWithIdentifier:viewId owner:self];
- 
+	NSNumber *rowNumber = [NSNumber numberWithInteger:row];
+	
+	SMSearchResultsListCellView *result = [_cellViews objectForKey:[NSNumber numberWithInteger:row]];
+
 	if(result == nil) {
 		NSArray *topLevelObjects = [[NSArray alloc] init];
 		Boolean loadResult = [[NSBundle mainBundle] loadNibNamed:@"SMSearchResultsListCellView" owner:self topLevelObjects:&topLevelObjects];
@@ -85,12 +86,12 @@
 		
 		NSAssert(result != nil, @"bad top objects");
 
-		result.identifier = viewId;
+		result.searchResultsListRow = rowNumber;
+
+		[_cellViews setObject:result forKey:rowNumber];
+	} else {
+		NSAssert(result.searchResultsListRow == rowNumber, @"search results list cell row is invalid");
 	}
-	
-	// this prevents the cells from being deallocated
-	// if it happens, the action button might send the action to deallocated cells
-	[_cellViews setObject:result forKey:[NSNumber numberWithInteger:row]];
 	
 	return result;
 }
@@ -101,11 +102,21 @@
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMSearchDescriptor *searchResults = [[[appDelegate model] searchResultsListController] getSearchResults:row];
+	NSAssert(searchResults != nil, @"no search results");
 
+	NSString *searchPattern = [searchResults searchPattern];
+	NSAssert(searchPattern != nil, @"no search pattern");
+
+	NSLog(@"%s: row %ld, searchPattern '%@', searchFailed %d, searchStopped %d", __func__, row, searchResults.searchPattern, searchResults.searchFailed, searchResults.searchStopped);
+
+	Boolean stopProgress = NO;
+	
 	if(!searchResults.searchFailed && !searchResults.searchStopped) {
 		NSString *searchLocalFolderName = searchResults.localFolder;
 		SMLocalFolder *searchFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchLocalFolderName];
-		
+
+		NSLog(@"%s: messagesLoadingStarted %d, searchFolder.isStillUpdating %d", __func__, searchResults.messagesLoadingStarted, [searchFolder isStillUpdating]);
+
 		if(!searchResults.messagesLoadingStarted) {
 			[result.progressIndicator setIndeterminate:YES];
 			[result.progressIndicator startAnimation:self];
@@ -113,20 +124,27 @@
 			if([result.progressIndicator isIndeterminate])
 				[result.progressIndicator setIndeterminate:NO];
 			
-			if(searchFolder.messageHeadersFetched == searchFolder.totalMessagesCount) {
-				[result.progressIndicator stopAnimation:self];
-			} else {
-				double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
+			double loadRatio = (searchFolder.messageHeadersFetched * 100) / (double)searchFolder.totalMessagesCount;
 
-				[result.progressIndicator setDoubleValue:loadRatio];
-			}
+			[result.progressIndicator setDoubleValue:loadRatio];
+		} else {
+			NSLog(@"%s: stopping progress indicator (case 1)...", __func__);
+			stopProgress = YES;
 		}
 	} else {
+		NSLog(@"%s: stopping progress indicator (case 2)...", __func__);
+		stopProgress = YES;
+	}
+	
+	if(stopProgress) {
+		[result.progressIndicator setIndeterminate:YES];
+		[result.progressIndicator setDisplayedWhenStopped:NO];
 		[result.progressIndicator stopAnimation:self];
 	}
 
-	result.textField.stringValue = [[[[appDelegate model] searchResultsListController] getSearchResults:row] searchPattern];
-	result.searchResultsListRow = [NSNumber numberWithInteger:row];
+	[result.progressIndicator setNeedsDisplay:YES];
+
+	result.textField.stringValue = searchPattern;
 
 	return result;
 }
@@ -178,6 +196,7 @@
 	NSInteger index = [[[appDelegate model] searchResultsListController] getSearchIndex:localFolder];
 
 	if(index >= 0) {
+		NSLog(@"%s: reloading table", __func__);
 		[self reloadData];
 	}
 }

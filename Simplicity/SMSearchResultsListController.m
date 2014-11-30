@@ -61,18 +61,23 @@
 		}
 		
 		searchDescriptor = [[SMSearchDescriptor alloc] init:searchString localFolder:searchResultsLocalFolder remoteFolder:remoteFolder];
+
+		[_searchResults setObject:searchDescriptor forKey:searchResultsLocalFolder];
+		[_searchResultsFolderNames addObject:searchResultsLocalFolder];
 	} else {
 		searchResultsLocalFolder = existingLocalFolder;
-		searchDescriptor = [_searchResults objectForKey:existingLocalFolder];
-		remoteFolder = [searchDescriptor remoteFolder];
 
+		searchDescriptor = [_searchResults objectForKey:existingLocalFolder];
+		NSAssert(searchDescriptor != nil, @"no search descriptor for existing search results");
+	
+		NSInteger index = [self getSearchIndex:searchResultsLocalFolder];
+		NSAssert(index >= 0, @"no index for existing search results folder");
+
+		remoteFolder = [searchDescriptor remoteFolder];
 		NSAssert(searchDescriptor != nil, @"no search descriptor found for exiting local folder");
 		
 		[searchDescriptor clearState];
 	}
-	
-	[_searchResults setObject:searchDescriptor forKey:searchResultsLocalFolder];
-	[_searchResultsFolderNames addObject:searchResultsLocalFolder];
 
 	[[[appDelegate appController] searchResultsListViewController] reloadData];
 	
