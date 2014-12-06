@@ -50,11 +50,15 @@
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+		NSAssert(currentFolder != nil, @"bad corrent folder");
+
 		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
 		
-		NSAssert(messageThread, @"messageThread == 0");
-
-		[[[appDelegate appController] messageThreadViewController] setMessageThread:messageThread];
+		if(messageThread != nil) {
+			[[[appDelegate appController] messageThreadViewController] setMessageThread:messageThread];
+		} else {
+			[_messageListTableView selectRowIndexes:[[NSIndexSet alloc] init] byExtendingSelection:NO];
+		}
 	}
 }
 
