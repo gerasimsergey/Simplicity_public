@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SMMessageListViewController">
             <connections>
+                <outlet property="loadMoreMessagesButton" destination="L8V-cN-uTh" id="NV9-c7-Vqf"/>
                 <outlet property="messageListTableView" destination="4" id="183"/>
                 <outlet property="view" destination="1" id="184"/>
             </connections>
@@ -127,6 +128,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="loadMoreMessages:" target="-2" id="pMc-Uy-mR1"/>
+                    </connections>
                 </button>
             </subviews>
             <constraints>

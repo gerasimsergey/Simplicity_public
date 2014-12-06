@@ -107,4 +107,8 @@
 	}
 }
 
+- (IBAction)loadMoreMessages:(id)sender {
+	NSLog(@"%s: sender %@", __func__, sender);
+}
+
 @end
