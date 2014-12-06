@@ -131,6 +131,12 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
 }
 
+- (void)forceMessageListUpdate {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
+
+	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:0];
+}
+
 - (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId {
 	NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
 

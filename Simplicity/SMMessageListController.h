@@ -20,5 +20,6 @@
 - (SMLocalFolder*)currentLocalFolder;
 - (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId;
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder;
+- (void)forceMessageListUpdate;
 
 @end

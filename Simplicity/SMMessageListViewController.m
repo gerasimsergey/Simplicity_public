@@ -109,6 +109,15 @@
 
 - (IBAction)loadMoreMessages:(id)sender {
 	NSLog(@"%s: sender %@", __func__, sender);
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+
+	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+	if(currentFolder != nil) {
+		[currentFolder increaseLocalFolderCapacity];
+		[messageListController forceMessageListUpdate];
+	}
 }
 
 @end

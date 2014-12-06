@@ -207,9 +207,13 @@
 			
 			[message fetchInlineAttachments];
 			
-			[_threadCellControllers[i] setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
+			NSAssert(i < _threadCellControllers.count, @"inconsistent thread cell controllers array");
 			
-			[[_threadCellControllers[i] messageViewController] setMessageDetails:message];
+			SMMessageThreadCellViewController *cellController = _threadCellControllers[i];
+			
+			[cellController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
+			
+			[[cellController messageViewController] setMessageDetails:message];
 			
 			break;
 		}

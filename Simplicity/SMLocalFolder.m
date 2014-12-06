@@ -13,7 +13,8 @@
 #import "SMAppController.h"
 #import "SMLocalFolder.h"
 
-static const NSUInteger MAX_MESSAGE_HEADERS_TO_FETCH = 300;
+static const NSUInteger DEFAULT_MAX_MESSAGES_PER_FOLDER = 300;
+static const NSUInteger INCREASE_MESSAGES_PER_FOLDER = 50;
 static const NSUInteger MESSAGE_HEADERS_TO_FETCH_AT_ONCE = 20;
 
 static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
@@ -41,6 +42,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	if(self) {
 		_name = localFolderName;
+		_maxMessagesPerLocalFolder = DEFAULT_MAX_MESSAGES_PER_FOLDER;
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
 		_fetchedMessageHeaders = [NSMutableArray new];
@@ -66,10 +68,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(session, @"session lost");
 
-	// TODO: handle session reopening/uids validation
+	// TODO: handle session reopening/uids validation	
 	
-	NSAssert(_folderInfoOp == nil, @"another folder info operation is in progress");
-
 	_folderInfoOp = [session folderInfoOperation:_name];
 	
 	[_folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
@@ -87,6 +87,17 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			NSLog(@"Error fetching folder info: %@", error);
 		}
 	}];
+}
+
+- (void)increaseLocalFolderCapacity {
+	if(![self folderUpdateIsInProgress]) {
+		if(_messageHeadersFetched + INCREASE_MESSAGES_PER_FOLDER < _totalMessagesCount)
+			_maxMessagesPerLocalFolder += INCREASE_MESSAGES_PER_FOLDER;
+	}
+}
+
+- (Boolean)folderUpdateIsInProgress {
+	return _folderInfoOp != nil || _fetchMessageHeadersOp != nil;
 }
 
 - (void)stopRemoteFolderSync {
@@ -165,7 +176,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	if(_totalMessagesCount == _messageHeadersFetched) {
 		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
-	} else if(_messageHeadersFetched >= MAX_MESSAGE_HEADERS_TO_FETCH) {
+	} else if(_messageHeadersFetched >= _maxMessagesPerLocalFolder) {
 		// TODO: implement and on-demand "load more results" scheme
 		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
 	} else {
@@ -244,7 +255,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	if(_totalMessagesCount == _messageHeadersFetched) {
 		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
-	} else if(_messageHeadersFetched >= MAX_MESSAGE_HEADERS_TO_FETCH) {
+	} else if(_messageHeadersFetched >= _maxMessagesPerLocalFolder) {
 		// TODO: implement and on-demand "load more results" scheme
 		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
 	} else if(messageUIDs.count > 0) {

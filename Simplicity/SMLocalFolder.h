@@ -15,7 +15,12 @@
 @property (readonly) uint64_t totalMessagesCount;
 @property (readonly) uint64_t messageHeadersFetched;
 
+@property (readonly) uint64_t maxMessagesPerLocalFolder;
+
 - (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
+
+// increases local folder capacity and forces update
+- (void)increaseLocalFolderCapacity;
 
 // these two methods are used to sync the content of this folder
 // with the remote folder with the same name
