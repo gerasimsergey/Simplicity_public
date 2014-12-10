@@ -120,6 +120,8 @@
 			
 			[sortedMessageThreads insertObject:messageThread atIndex:messageThreadIndexByDate];
 		}
+		
+		NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count not equal to sorted threads count");
 	}
 }
 
@@ -135,18 +137,23 @@
 	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
 	NSAssert(collection, @"bad folder collection");
 	
-	NSMutableSet *vanishedThreads = [NSMutableSet new];
+	NSMutableSet *vanishedThreads = [[NSMutableSet alloc] init];
+	NSMutableSet *vanishedThreadIds = [[NSMutableSet alloc] init];
 
 	for(NSNumber *threadId in collection.messageThreads) {
 		SMMessageThread *thread = [collection.messageThreads objectForKey:threadId];
 		[thread endUpdate];
 		
-		if([thread messagesCount] == 0)
+		if([thread messagesCount] == 0) {
 			[vanishedThreads addObject:thread];
+			[vanishedThreadIds addObject:[NSNumber numberWithUnsignedLongLong:[thread threadId]]];
+		}
 	}
 
-	[collection.messageThreads removeObjectsForKeys:[vanishedThreads allObjects]];
+	[collection.messageThreads removeObjectsForKeys:[vanishedThreadIds allObjects]];
 	[collection.messageThreadsByDate removeObjectsInArray:[vanishedThreads allObjects]];
+
+	NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count not equal to sorted threads count");
 }
 
 - (void)cancelUpdate:(NSString*)folder {
