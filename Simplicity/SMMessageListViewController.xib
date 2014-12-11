@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SMMessageListViewController">
             <connections>
                 <outlet property="loadMoreMessagesButton" destination="L8V-cN-uTh" id="NV9-c7-Vqf"/>
+                <outlet property="loadingMessagesProgressIndicator" destination="8Od-aj-dKF" id="jOx-lu-NsI"/>
                 <outlet property="messageListTableView" destination="4" id="183"/>
                 <outlet property="view" destination="1" id="184"/>
             </connections>
@@ -24,7 +25,7 @@
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="54" rowSizeStyle="automatic" viewBased="YES" id="4">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="54" rowSizeStyle="automatic" viewBased="YES" id="4">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -132,6 +133,9 @@
                         <action selector="loadMoreMessages:" target="-2" id="pMc-Uy-mR1"/>
                     </connections>
                 </button>
+                <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="8Od-aj-dKF">
+                    <rect key="frame" x="199" y="2" width="16" height="16"/>
+                </progressIndicator>
             </subviews>
             <constraints>
                 <constraint firstItem="L8V-cN-uTh" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="143-1A-tAx"/>

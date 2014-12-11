@@ -117,7 +117,14 @@
 	if(currentFolder != nil) {
 		[currentFolder increaseLocalFolderCapacity];
 		[messageListController forceMessageListUpdate];
+
+		[_loadingMessagesProgressIndicator setHidden:NO];
+		[_loadingMessagesProgressIndicator startAnimation:self];
 	}
+}
+
+- (void)messageHeadersSyncFinished {
+	[_loadingMessagesProgressIndicator stopAnimation:self];
 }
 
 @end
