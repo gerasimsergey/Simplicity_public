@@ -157,13 +157,14 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 - (void)messageHeadersSyncFinished:(NSNotification *)notification {
 	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
 
-	if([_currentFolder.name isEqualToString:localFolder])
+	if([_currentFolder.name isEqualToString:localFolder]) {
 		[self scheduleMessageListUpdate];
 	
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	SMAppController *appController = [appDelegate appController];
-	
-	[[appController messageListViewController] messageHeadersSyncFinished];
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMAppController *appController = [appDelegate appController];
+		
+		[[appController messageListViewController] messageHeadersSyncFinished];
+	}
 }
 
 @end
