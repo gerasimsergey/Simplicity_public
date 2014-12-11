@@ -4,10 +4,6 @@ BUGS
 
 2014-04-15 23:49:02.371 Simplicity[72210:303] __50-[SMSimplicityContainer getIMAPServerCapabilities]_block_invoke: error getting IMAP capabilities: Error Domain=MCOErrorDomain Code=1 "A stable connection to the server could not be established." UserInfo=0x618000266980 {NSLocalizedDescription=A stable connection to the server could not be established.}
 
-- Fix this:
-
-NSAssert(index < [collection.messageThreadsByDate count], @"bad index");
-
 - Fix 'to' address list initial layout;
 - Fix selected message thread / message cursor disappearance on folder update;
 - Fix recurring search from the 'search results' folder;
@@ -28,10 +24,7 @@ MESSAGE LIST
 - Implement unused messages cleanup to keep memory footprint reasonable;
 - Implement message sharing between folders and threads;
 - Add 'stop/reload' and 'cancel' button to the search resutls cell;
-- Add 'load more' button at the bottom of the message list;
-
-===================================================================
-
+- Implement progress indicator for the message list being loaded;
 - Message body preview;
 - Message flags (unseen, star, etc);
 - Server capabilities use (IDLE, etc);
@@ -45,21 +38,19 @@ MESSAGE LIST
 
 NEW FEATURES
 
-- Search (very basic for now);
-
-...
+- Folder & messages coloring;
+- Convenient folder list;
+- Advanced message search dialog;
+- Advanced text search;
+- ...?
 
 SEARCH (ideas to implement)
 
 - current message thread content search ("local search");
 - "global search" for messages across folders (based on search expressions, see [MCOIMAPSession searchOperationWithFolder:kind:searchString:] and [MCOIMAPSession searchExpressionOperationWithFolder:expression:]);
-- search results to appear as a message list;
-- search history in the leftside toolbar above the folder list;
 - highlight search pattern occurrences in the found message (for local AND global search);
 - show folders in the search results; allow to collapse search results for each folder;
 - search in the search results, and add the new search results to the history pane... so the search evolution could be conveniently navigated;
-- cancel search button;
-- search progress (can easily be implemented - just update it on each k / max fetch);
 - ...?
 
 
