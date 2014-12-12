@@ -82,7 +82,10 @@
 	[[[appDelegate appController] searchResultsListViewController] reloadData];
 	
 	[_currentSearchOp cancel];
+
 	_currentSearchOp = [session searchOperationWithFolder:remoteFolder kind:MCOIMAPSearchKindContent searchString:searchString];
+	
+	_currentSearchOp.urgent = YES;
 	
 	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {

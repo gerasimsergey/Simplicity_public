@@ -80,7 +80,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	// TODO: handle session reopening/uids validation	
 	
 	_folderInfoOp = [session folderInfoOperation:_name];
-	
+	_folderInfoOp.urgent = YES;
+
 	[_folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
 		_folderInfoOp = nil;
 		
@@ -205,6 +206,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:_name requestKind:messageHeadersRequestKind numbers:regionToFetch];
 	
+	_fetchMessageHeadersOp.urgent = YES;
+	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
 		
@@ -292,6 +295,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
 	_fetchMessageHeadersOp = [session fetchMessagesOperationWithFolder:_selectedMessagesRemoteFolder requestKind:messageHeadersRequestKind uids:messageUIDsToLoadNow];
+	
+	_fetchMessageHeadersOp.urgent = YES;
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
