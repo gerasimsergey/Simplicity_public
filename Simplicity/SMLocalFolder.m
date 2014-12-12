@@ -34,6 +34,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	MCOIMAPFetchMessagesOperation *_fetchMessageHeadersOp;
 	NSMutableDictionary *_fetchMessageBodyOps;
 	NSMutableArray *_fetchedMessageHeaders;
+	MCOIndexSet *_selectedMessageUIDsToLoad;
+	NSString *_selectedMessagesRemoteFolder;
 	Boolean _syncWithRemoteFolder;
 }
 
@@ -42,25 +44,27 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	if(self) {
 		_name = localFolderName;
-		_maxMessagesPerLocalFolder = DEFAULT_MAX_MESSAGES_PER_FOLDER;
+		_maxMessagesPerThisFolder = DEFAULT_MAX_MESSAGES_PER_FOLDER;
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
 		_fetchedMessageHeaders = [NSMutableArray new];
 		_fetchMessageBodyOps = [NSMutableDictionary new];
 		_syncWithRemoteFolder = syncWithRemoteFolder;
+		_selectedMessageUIDsToLoad = nil;
+		_selectedMessagesRemoteFolder = nil;
 	}
 	
 	return self;
 }
 
-- (void)startRemoteFolderSync {
-	if(!_syncWithRemoteFolder) {
-		NSLog(@"%s: folder %@ is not synched with server", __func__, _name);
+- (void)startLocalFolderSync {
+	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil) {
+		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _name);
 		return;
 	}
 	
-	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil) {
-		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _name);
+	if(!_syncWithRemoteFolder) {
+		[self loadSelectedMessagesInternal];
 		return;
 	}
 	
@@ -97,28 +101,12 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 - (void)increaseLocalFolderCapacity {
 	if(![self folderUpdateIsInProgress]) {
 		if(_messageHeadersFetched + INCREASE_MESSAGES_PER_FOLDER < _totalMessagesCount)
-			_maxMessagesPerLocalFolder += INCREASE_MESSAGES_PER_FOLDER;
+			_maxMessagesPerThisFolder += INCREASE_MESSAGES_PER_FOLDER;
 	}
 }
 
 - (Boolean)folderUpdateIsInProgress {
 	return _folderInfoOp != nil || _fetchMessageHeadersOp != nil;
-}
-
-- (void)stopRemoteFolderSync {
-	if(!_syncWithRemoteFolder) {
-		NSLog(@"%s: folder %@ is not synched with server", __func__, _name);
-		return;
-	}
-	
-	[_folderInfoOp cancel];
-	_folderInfoOp = nil;
-	
-	[_fetchMessageHeadersOp cancel];
-	_fetchMessageHeadersOp = nil;
-	
-	// TODO: cancel bodies fetch as well?
-	// TODO: how to cancel ops for non-synched folders?
 }
 
 - (void)fetchMessageBodies:(NSString*)remoteFolder {
@@ -181,8 +169,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	if(_totalMessagesCount == _messageHeadersFetched) {
 		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
-	} else if(_messageHeadersFetched >= _maxMessagesPerLocalFolder) {
-		// TODO: implement and on-demand "load more results" scheme
+	} else if(_messageHeadersFetched >= _maxMessagesPerThisFolder) {
 		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
 	} else {
 		finishFetch = NO;
@@ -235,50 +222,55 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}];	
 }
 
-- (void)loadMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder {
+- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder {
 	_messageHeadersFetched = 0;
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
 	[[[appDelegate model] messageStorage] startUpdate:_name];
 	
-	_totalMessagesCount = messageUIDs.count;
+	_selectedMessagesRemoteFolder = remoteFolder;
+	_selectedMessageUIDsToLoad = messageUIDs;
+
+	_totalMessagesCount = _selectedMessageUIDsToLoad.count;
 	
-	[self loadMessagesInternal:messageUIDs remoteFolder:remoteFolder];
+	[self loadSelectedMessagesInternal];
 }
 
-- (void)loadMessagesInternal:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder {
-	NSAssert(messageUIDs != nil, @"bad message uids array");
-	NSAssert(remoteFolder != nil, @"bad remote folder");
+- (void)loadSelectedMessagesInternal {
+	NSAssert(_selectedMessagesRemoteFolder != nil, @"bad remote folder");
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	MCOIMAPSession *session = [[appDelegate model] session];
 	
 	NSAssert(session, @"session lost");
+
+	NSAssert(_selectedMessageUIDsToLoad != nil, @"bad message uids to load array");
 	
 	BOOL finishFetch = YES;
 	
 	if(_totalMessagesCount == _messageHeadersFetched) {
 		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
-	} else if(_messageHeadersFetched >= _maxMessagesPerLocalFolder) {
-		// TODO: implement and on-demand "load more results" scheme
+	} else if(_messageHeadersFetched >= _maxMessagesPerThisFolder) {
 		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
-	} else if(messageUIDs.count > 0) {
+	} else if(_selectedMessageUIDsToLoad.count > 0) {
 		finishFetch = NO;
 	}
 	
 	if(finishFetch) {
 		[[[appDelegate model] messageStorage] endUpdate:_name];
 		
-		[self fetchMessageBodies:remoteFolder];
+		[self fetchMessageBodies:_selectedMessagesRemoteFolder];
 		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObject:_name forKey:@"LocalFolderName"]];
+
 		return;
 	}
 	
 	MCOIndexSet *const messageUIDsToLoadNow = [MCOIndexSet indexSet];
-	MCORange *const ranges = [messageUIDs allRanges];
+	MCORange *const ranges = [_selectedMessageUIDsToLoad allRanges];
 	
-	for(unsigned int i = [messageUIDs rangesCount]; i > 0; i--) {
+	for(unsigned int i = [_selectedMessageUIDsToLoad rangesCount]; i > 0; i--) {
 		const MCORange currentRange = ranges[i-1];
 		const uint64_t len = MCORangeRightBound(currentRange) - MCORangeLeftBound(currentRange) + 1;
 		const uint64_t maxCountToLoad = MESSAGE_HEADERS_TO_FETCH_AT_ONCE - messageUIDsToLoadNow.count;
@@ -295,13 +287,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		}
 	}
 	
-	NSLog(@"%s: loading %u of %u search results...", __func__, messageUIDsToLoadNow.count, messageUIDs.count);
-	
-	[messageUIDs removeIndexSet:messageUIDsToLoadNow];
+	NSLog(@"%s: loading %u of %u search results...", __func__, messageUIDsToLoadNow.count, _selectedMessageUIDsToLoad.count);
 	
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
-	_fetchMessageHeadersOp = [session fetchMessagesOperationWithFolder:remoteFolder requestKind:messageHeadersRequestKind uids:messageUIDsToLoadNow];
+	_fetchMessageHeadersOp = [session fetchMessagesOperationWithFolder:_selectedMessagesRemoteFolder requestKind:messageHeadersRequestKind uids:messageUIDsToLoadNow];
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
@@ -309,11 +299,13 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		if(error == nil) {
 			NSLog(@"%s: loaded %lu message headers...", __func__, messages.count);
 
+			[_selectedMessageUIDsToLoad removeIndexSet:messageUIDsToLoadNow];
+			
 			_messageHeadersFetched += [messages count];
 			
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", remoteFolder, @"RemoteFolderName", messages, @"MessagesList", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", _selectedMessagesRemoteFolder, @"RemoteFolderName", messages, @"MessagesList", nil]];
 			
-			[self loadMessagesInternal:messageUIDs remoteFolder:remoteFolder];
+			[self loadSelectedMessagesInternal];
 		} else {
 			NSLog(@"%s: Error downloading search results: %@", __func__, error);
 		}
@@ -321,20 +313,22 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (Boolean)messageHeadersAreBeingLoaded {
-	return _folderInfoOp != nil && _fetchMessageHeadersOp != nil;
+	return _folderInfoOp != nil || _fetchMessageHeadersOp != nil;
 }
 
-- (void)stopMessageHeadersLoading {
+- (void)stopLocalFolderSync {
+	[_folderInfoOp cancel];
+	_folderInfoOp = nil;
+	
 	[_fetchMessageHeadersOp cancel];
 	_fetchMessageHeadersOp = nil;
 }
-
 
 - (void)stopMessagesLoading {
 	[_folderInfoOp cancel];
 	_folderInfoOp = nil;
 
-	[self stopMessageHeadersLoading];
+	[self stopLocalFolderSync];
 
 	for(id key in _fetchMessageBodyOps) {
 		NSNumber *uid = key;

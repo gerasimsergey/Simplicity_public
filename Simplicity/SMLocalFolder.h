@@ -15,7 +15,7 @@
 @property (readonly) uint64_t totalMessagesCount;
 @property (readonly) uint64_t messageHeadersFetched;
 
-@property (readonly) uint64_t maxMessagesPerLocalFolder;
+@property (readonly) uint64_t maxMessagesPerThisFolder;
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 
@@ -24,11 +24,10 @@
 
 // these two methods are used to sync the content of this folder
 // with the remote folder with the same name
-- (void)startRemoteFolderSync;
-- (void)stopRemoteFolderSync;
+- (void)startLocalFolderSync;
 
 // loads the messages specified by their UIDs from the specific remote folder
-- (void)loadMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder;
+- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder;
 
 // fetches the body of the message specified by its UID
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent;
@@ -36,8 +35,8 @@
 // tells whether there is message headers loading progress underway
 - (Boolean)messageHeadersAreBeingLoaded;
 
-// stops message headers loading; does not turn off sync nor bodies loading
-- (void)stopMessageHeadersLoading;
+// stops message headers loading (synching)
+- (void)stopLocalFolderSync;
 
 // stops message headers and bodies loading; also stops sync, if any
 - (void)stopMessagesLoading;

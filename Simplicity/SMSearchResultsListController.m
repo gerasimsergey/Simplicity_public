@@ -187,7 +187,7 @@
 	NSAssert(searchDescriptor != nil, @"search descriptor not found");
 
 	SMLocalFolder *localFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchDescriptor.localFolder];
-	[localFolder stopMessageHeadersLoading];
+	[localFolder stopLocalFolderSync];
 	
 	searchDescriptor.searchStopped = true;
 
