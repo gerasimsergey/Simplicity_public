@@ -115,12 +115,12 @@
 		NSString *searchLocalFolderName = searchResults.localFolder;
 		SMLocalFolder *searchFolder = [[[appDelegate model] localFolderRegistry] getLocalFolder:searchLocalFolderName];
 
-		NSLog(@"%s: messagesLoadingStarted %d, searchFolder.isStillUpdating %d", __func__, searchResults.messagesLoadingStarted, [searchFolder isStillUpdating]);
+		NSLog(@"%s: messagesLoadingStarted %d, searchFolder.isStillUpdating %d", __func__, searchResults.messagesLoadingStarted, [searchFolder messageHeadersAreBeingLoaded]);
 
 		if(!searchResults.messagesLoadingStarted) {
 			[result.progressIndicator setIndeterminate:YES];
 			[result.progressIndicator startAnimation:self];
-		} else if([searchFolder isStillUpdating]) {
+		} else if([searchFolder messageHeadersAreBeingLoaded]) {
 			if([result.progressIndicator isIndeterminate])
 				[result.progressIndicator setIndeterminate:NO];
 			

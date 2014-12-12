@@ -59,6 +59,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		return;
 	}
 	
+	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil) {
+		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _name);
+		return;
+	}
+	
 	_messageHeadersFetched = 0;
 	
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
@@ -315,9 +320,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}];
 }
 
-- (Boolean)isStillUpdating {
-	// TODO: use message bodies fetch op as well
-	return _fetchMessageHeadersOp != nil;
+- (Boolean)messageHeadersAreBeingLoaded {
+	return _folderInfoOp != nil && _fetchMessageHeadersOp != nil;
 }
 
 - (void)stopMessageHeadersLoading {

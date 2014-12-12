@@ -114,7 +114,7 @@
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
 	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
-	if(currentFolder != nil) {
+	if(currentFolder != nil && [currentFolder messageHeadersAreBeingLoaded] == NO) {
 		[currentFolder increaseLocalFolderCapacity];
 		[messageListController forceMessageListUpdate];
 
