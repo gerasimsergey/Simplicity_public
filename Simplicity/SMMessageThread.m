@@ -157,9 +157,12 @@
 	[ _messageCollection.messagesByDate insertObject:message atIndex:messageIndexByDate ];
 }
 
-- (void)endUpdate:(Boolean)removeVanishedMessages {
+- (Boolean)endUpdate:(Boolean)removeVanishedMessages {
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
+	NSAssert(_messageCollection.messagesByDate.count > 0, @"empty message thread");
 	
+	SMMessage *firstMessage = [_messageCollection.messagesByDate firstObject];
+
 	if(removeVanishedMessages) {
 		NSMutableIndexSet *notUpdatedMessageIndices = [NSMutableIndexSet new];
 		
@@ -197,6 +200,14 @@
 	// clear update marks for future updates
 	for(SMMessage *message in _messageCollection.messages)
 		[message setUpdated:NO];
+
+	if([_messageCollection count] > 0) {
+		SMMessage *newFirstMessage = [_messageCollection.messagesByDate firstObject];
+		return firstMessage.date != newFirstMessage.date;
+	} else {
+		return YES;
+	}
+	
 }
 
 - (void)cancelUpdate {
