@@ -179,7 +179,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 
 	if(finishFetch) {
-		[[[appDelegate model] messageStorage] endUpdate:_name];
+		[[[appDelegate model] messageStorage] endUpdate:_name removeVanishedMessages:YES];
 
 		[_fetchMessageHeadersOp cancel];
 		_fetchMessageHeadersOp = nil;
@@ -261,7 +261,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}
 	
 	if(finishFetch) {
-		[[[appDelegate model] messageStorage] endUpdate:_name];
+		[[[appDelegate model] messageStorage] endUpdate:_name removeVanishedMessages:NO];
 		
 		[self fetchMessageBodies:_selectedMessagesRemoteFolder];
 		

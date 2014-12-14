@@ -24,7 +24,7 @@
 - (SMMessage*)getMessage:(uint32_t)uid;
 
 - (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
-- (void)endUpdate;
+- (void)endUpdate:(Boolean)removeVanishedMessages;
 - (void)cancelUpdate;
 
 - (void)setMessageData:(NSData*)data uid:(uint32_t)uid;

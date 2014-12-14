@@ -157,38 +157,40 @@
 	[ _messageCollection.messagesByDate insertObject:message atIndex:messageIndexByDate ];
 }
 
-- (void)endUpdate {
+- (void)endUpdate:(Boolean)removeVanishedMessages {
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	
-	NSMutableIndexSet *notUpdatedMessageIndices = [NSMutableIndexSet new];
-	
-	for(NSUInteger i = 0, count = [_messageCollection count]; i < count; i++) {
-		SMMessage *message = [_messageCollection.messages objectAtIndex:i];
+	if(removeVanishedMessages) {
+		NSMutableIndexSet *notUpdatedMessageIndices = [NSMutableIndexSet new];
 		
-		if(![message updated]) {
-			NSLog(@"%s: uid %u - message vanished", __FUNCTION__, [message uid]);
+		for(NSUInteger i = 0, count = [_messageCollection count]; i < count; i++) {
+			SMMessage *message = [_messageCollection.messages objectAtIndex:i];
 			
-			[notUpdatedMessageIndices addIndex:i];
+			if(![message updated]) {
+				NSLog(@"%s: uid %u - message vanished", __FUNCTION__, [message uid]);
+				
+				[notUpdatedMessageIndices addIndex:i];
+			}
 		}
-	}
-	
-	// remove obsolete messages from the storage
-	[_messageCollection.messages removeObjectsAtIndexes:notUpdatedMessageIndices];
-	
-	// remove obsolete messages from the date sorted messages list
-	[notUpdatedMessageIndices removeAllIndexes];
-	
-	for(NSUInteger i = 0, count = [_messageCollection.messagesByDate count]; i < count; i++) {
-		SMMessage *message = [_messageCollection.messagesByDate objectAtIndex:i];
 		
-		if(![message updated]) {
-			NSLog(@"%s: uid %u - message vanished", __FUNCTION__, [message uid]);
+		// remove obsolete messages from the storage
+		[_messageCollection.messages removeObjectsAtIndexes:notUpdatedMessageIndices];
+		
+		// remove obsolete messages from the date sorted messages list
+		[notUpdatedMessageIndices removeAllIndexes];
+		
+		for(NSUInteger i = 0, count = [_messageCollection.messagesByDate count]; i < count; i++) {
+			SMMessage *message = [_messageCollection.messagesByDate objectAtIndex:i];
 			
-			[notUpdatedMessageIndices addIndex:i];
+			if(![message updated]) {
+				NSLog(@"%s: uid %u - message vanished", __FUNCTION__, [message uid]);
+				
+				[notUpdatedMessageIndices addIndex:i];
+			}
 		}
+		
+		[_messageCollection.messagesByDate removeObjectsAtIndexes:notUpdatedMessageIndices];
 	}
-	
-	[_messageCollection.messagesByDate removeObjectsAtIndexes:notUpdatedMessageIndices];
 	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	

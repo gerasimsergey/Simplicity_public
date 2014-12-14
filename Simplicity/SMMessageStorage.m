@@ -78,12 +78,12 @@
 	
 	for(MCOIMAPMessage *imapMessage in imapMessages) {
 		//NSLog(@"%s: looking for imap message with uid %u, gmailThreadId %llu", __FUNCTION__, [imapMessage uid], [imapMessage gmailThreadID]);
-		
+
 		const uint64_t threadId = [imapMessage gmailThreadID];
 		NSNumber *threadIdKey = [NSNumber numberWithUnsignedLongLong:threadId];
 		SMMessageThread *messageThread = [[collection messageThreads] objectForKey:threadIdKey];
 
-		Boolean newThread = false;
+		Boolean updateThread = NO;
 		NSDate *firstMessageDate = nil;
 		NSUInteger oldMessageThreadIndexByDate = 0;
 		
@@ -91,36 +91,50 @@
 			messageThread = [[SMMessageThread alloc] initWithThreadId:threadId];
 			[[collection messageThreads] setObject:messageThread forKey:threadIdKey];
 			
-			newThread = true;
+			updateThread = YES;
 		} else {
 			oldMessageThreadIndexByDate = [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:0 usingComparator:messageThreadComparator];
-			
+
 			NSAssert(oldMessageThreadIndexByDate != NSNotFound, @"message thread not found");
 			
 			SMMessage *firstMessage = messageThread.messagesSortedByDate.firstObject;
-
 			firstMessageDate = [firstMessage date];
 		}
 
 		[messageThread updateIMAPMessage:imapMessage remoteFolder:remoteFolder session:session];
 
-		Boolean doInsertion = true;
-		
-		if(!newThread) {
+		if(!updateThread) {
 			SMMessage *firstMessage = messageThread.messagesSortedByDate.firstObject;
 
-			if(firstMessageDate != [firstMessage date])
+			if(firstMessageDate != [firstMessage date]) {
 				[sortedMessageThreads removeObjectAtIndex:oldMessageThreadIndexByDate];
-			else
-				doInsertion = false;
+				updateThread = YES;
+			}
 		}
 		
-		if(doInsertion) {
+		if(updateThread) {
 			NSUInteger messageThreadIndexByDate = [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:NSBinarySearchingInsertionIndex usingComparator:messageThreadComparator];
 			
 			[sortedMessageThreads insertObject:messageThread atIndex:messageThreadIndexByDate];
+
+#if 0
+			NSLog(@"validate threads");
+			SMMessageThread *p = nil;
+			for(id i in sortedMessageThreads) {
+				SMMessageThread *t = i;
+				SMMessage *pi = t.messagesSortedByDate.firstObject;
+				NSLog(@"threadId %llu, date %@", t.threadId, pi.date);
+				if(p != nil) {
+					SMMessage *m = t.messagesSortedByDate.firstObject;
+					SMMessage *pm = p.messagesSortedByDate.firstObject;
+					NSComparisonResult r = [pm.date compare:m.date];
+					NSAssert(r != NSOrderedAscending, @"threads not sorted");
+				}
+				p = i;
+			}
+#endif
 		}
-		
+
 		NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count not equal to sorted threads count");
 	}
 }
@@ -131,7 +145,7 @@
 	[self cancelUpdate:folder];
 }
 
-- (void)endUpdate:(NSString*)folder {
+- (void)endUpdate:(NSString*)folder removeVanishedMessages:(Boolean)removeVanishedMessages {
 	NSLog(@"%s: folder '%@'", __FUNCTION__, folder);
 	
 	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
@@ -142,7 +156,7 @@
 
 	for(NSNumber *threadId in collection.messageThreads) {
 		SMMessageThread *thread = [collection.messageThreads objectForKey:threadId];
-		[thread endUpdate];
+		[thread endUpdate:removeVanishedMessages];
 		
 		if([thread messagesCount] == 0) {
 			[vanishedThreads addObject:thread];

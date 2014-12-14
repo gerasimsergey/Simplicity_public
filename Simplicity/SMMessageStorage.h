@@ -25,7 +25,7 @@
 
 - (void)startUpdate:(NSString*)folder;
 - (void)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
-- (void)endUpdate:(NSString*)folder;
+- (void)endUpdate:(NSString*)folder removeVanishedMessages:(Boolean)removeVanishedMessages;
 
 - (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index localFolder:(NSString*)folder;
 
