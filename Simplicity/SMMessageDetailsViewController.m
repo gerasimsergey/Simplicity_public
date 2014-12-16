@@ -63,19 +63,34 @@
 - (void)setMessageDetails:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
-	_currentMessage = message;
-	
-	[_fromAddress setStringValue:[_currentMessage from]];
-	[_subject setStringValue:[_currentMessage subject]];
-	[_date setStringValue:[_currentMessage localizedDate]];
-	
-	NSArray *array = [_toAddresses objectValue];
-	NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
-	
-	for(MCOAddress *to in [message.header to])
-		[newArray addObject:[SMMessage parseAddress:to]];
+	Boolean updateAddressLists = NO;
 
-	[_toAddresses setObjectValue:newArray];
+	if(_currentMessage != message) {
+		_currentMessage = message;
+		
+		[_fromAddress setStringValue:[_currentMessage from]];
+		[_subject setStringValue:[_currentMessage subject]];
+		[_date setStringValue:[_currentMessage localizedDate]];
+
+		updateAddressLists = YES;
+	} else {
+		NSArray *currentToAddressList = [_toAddresses objectValue];
+
+		if(currentToAddressList == nil || currentToAddressList.count == 0)
+			updateAddressLists = YES;
+	}
+
+	if(updateAddressLists) {
+		//NSLog(@"%s: updating address lists for message UID %u", __func__, message.uid);
+
+		NSArray *array = [_toAddresses objectValue];
+		NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
+		
+		for(MCOAddress *to in [message.header to])
+			[newArray addObject:[SMMessage parseAddress:to]];
+		
+		[_toAddresses setObjectValue:newArray];
+	}
 }
 
 #define V_MARGIN 10
