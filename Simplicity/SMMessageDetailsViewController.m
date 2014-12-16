@@ -292,6 +292,10 @@
 
 - (void)viewDidAppear {
 	if(!_addressListsFramesValid) {
+		// this is critical because the frame height for each SMTokenField must be
+		// recalculated after its width is known, which happens when it is drawn
+		// for the first time
+		
 		[_toAddresses invalidateIntrinsicContentSize];
 		
 		_addressListsFramesValid = YES;
