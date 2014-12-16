@@ -23,12 +23,15 @@
 	NSTokenField *_toAddresses;
 	NSTextField *_ccLabel;
 	NSMutableArray *_ccAddresses;
+	Boolean _addressListsFramesValid;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
+		_addressListsFramesValid = NO;
+
 		SMMessageDetailsView *view = [[SMMessageDetailsView alloc] init];
 		view.translatesAutoresizingMaskIntoConstraints = NO;
 		[view setViewController:self];
@@ -73,12 +76,6 @@
 		[newArray addObject:[SMMessage parseAddress:to]];
 
 	[_toAddresses setObjectValue:newArray];
-	
-	// force the insertion point after the added token
-	NSText *fieldEditor = [_toAddresses currentEditor];
-	[fieldEditor setSelectedRange:NSMakeRange([[fieldEditor string] length], 0)];
-	
-	[[self view] invalidateIntrinsicContentSize];
 }
 
 #define V_MARGIN 10
@@ -160,10 +157,6 @@
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
 
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
-	
-	// trigger instrinsic size invalidation
-	// TODO: remove this ridiculous hack
-	[_toAddresses setFrame:NSMakeRect(0,0,100,0)];
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
@@ -295,6 +288,14 @@
 {
 //	NSLog(@"%s", __func__);
 	return representedObject;
+}
+
+- (void)viewDidAppear {
+	if(!_addressListsFramesValid) {
+		[_toAddresses invalidateIntrinsicContentSize];
+		
+		_addressListsFramesValid = YES;
+	}
 }
 
 @end
