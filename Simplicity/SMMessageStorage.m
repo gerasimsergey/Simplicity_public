@@ -93,6 +93,7 @@
 	
 	[sortedMessageThreads insertObject:messageThread atIndex:messageThreadIndexByDate];
 
+	//TODO: remove/leave in debug mode only
 	//NSLog(@"validate threads");
 	SMMessageThread *p = nil;
 	for(id i in sortedMessageThreads) {

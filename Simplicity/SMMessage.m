@@ -302,7 +302,7 @@
 
 - (NSString*)htmlBodyRendering {
 	if(_htmlBodyRendering) {
-		NSLog(@"%s: html body for message uid %u already generated", __FUNCTION__, [_imapMessage uid]);
+		//NSLog(@"%s: html body for message uid %u already generated", __FUNCTION__, [_imapMessage uid]);
 		return _htmlBodyRendering;
 	}
 	
