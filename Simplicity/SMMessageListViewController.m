@@ -107,6 +107,15 @@
 	}
 }
 
+- (IBAction)updateMessages:(id)sender {
+	NSLog(@"%s: sender %@", __func__, sender);
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+
+	[messageListController forceMessageListUpdate];
+}
+
 - (IBAction)loadMoreMessages:(id)sender {
 	NSLog(@"%s: sender %@", __func__, sender);
 
