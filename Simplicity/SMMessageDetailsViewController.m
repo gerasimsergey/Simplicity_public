@@ -348,6 +348,7 @@
 		// for the first time
 		
 		[_toAddresses invalidateIntrinsicContentSize];
+		[_ccAddresses invalidateIntrinsicContentSize];
 		
 		_addressListsFramesValid = YES;
 	}
