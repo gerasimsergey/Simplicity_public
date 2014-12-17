@@ -27,8 +27,6 @@ MESSAGE LIST
 - App finalization;
 - DB compression (tokyo cabinet? MEDIUMBLOB won't be needed);
 - DB error checks w/o crashes;
-- Message list refresh on demand;
-- Load older messages on demand;
 - Message deletion propagation to the server;
 - Save/restore view layout on app exit/startup;
 
