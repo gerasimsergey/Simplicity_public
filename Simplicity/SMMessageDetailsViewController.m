@@ -216,6 +216,7 @@
 
 - (NSSize)intrinsicContentViewSize {
 	NSSize sz = NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAddresses intrinsicContentSize].height + V_GAP_HALF + [_ccAddresses intrinsicContentSize].height + V_GAP);
+
 	return sz;
 }
 
