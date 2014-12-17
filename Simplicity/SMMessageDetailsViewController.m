@@ -22,7 +22,7 @@
 	NSTextField *_toLabel;
 	NSTokenField *_toAddresses;
 	NSTextField *_ccLabel;
-	NSMutableArray *_ccAddresses;
+	NSTokenField *_ccAddresses;
 	Boolean _addressListsFramesValid;
 }
 
@@ -83,13 +83,19 @@
 	if(updateAddressLists) {
 		//NSLog(@"%s: updating address lists for message UID %u", __func__, message.uid);
 
-		NSArray *array = [_toAddresses objectValue];
-		NSMutableArray *newArray = [NSMutableArray arrayWithArray:array];
+		NSMutableArray *newToArray = [NSMutableArray arrayWithArray:[_toAddresses objectValue]];
+
+		for(MCOAddress *a in [message.header to])
+			[newToArray addObject:[SMMessage parseAddress:a]];
 		
-		for(MCOAddress *to in [message.header to])
-			[newArray addObject:[SMMessage parseAddress:to]];
+		[_toAddresses setObjectValue:newToArray];
+
+		NSMutableArray *newCcArray = [NSMutableArray arrayWithArray:[_ccAddresses objectValue]];
 		
-		[_toAddresses setObjectValue:newArray];
+		for(MCOAddress *a in [message.header cc])
+			[newCcArray addObject:[SMMessage parseAddress:a]];
+		
+		[_ccAddresses setObjectValue:newCcArray];
 	}
 }
 
@@ -98,6 +104,7 @@
 #define FROM_W 5
 #define H_GAP 5
 #define V_GAP 10
+#define V_GAP_HALF (V_GAP/2)
 
 - (void)createSubviews {
 	NSView *view = [self view];
@@ -145,7 +152,7 @@
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
-	// init to label
+	// init 'to' label
 
 	_toLabel = [self createLabel:@"To:" bold:NO];
 	_toLabel.textColor = [NSColor blackColor];
@@ -172,6 +179,34 @@
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
 
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
+	
+	// init 'cc' label
+	
+	_ccLabel = [self createLabel:@"Cc:" bold:NO];
+	_ccLabel.textColor = [NSColor blackColor];
+
+	[view addSubview:_ccLabel];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
+
+	// init 'cc' address list
+	
+	_ccAddresses = [[SMTokenField alloc] init];
+	_ccAddresses.delegate = self; // TODO: reference loop here?
+	_ccAddresses.tokenStyle = NSPlainTextTokenStyle;
+	_ccAddresses.translatesAutoresizingMaskIntoConstraints = NO;
+	[_ccAddresses setBordered:NO];
+	[_ccAddresses setDrawsBackground:NO];
+	
+	[view addSubview:_ccAddresses];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_ccLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF] priority:NSLayoutPriorityDefaultLow];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _ccLabel.frame.size.width]];
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
@@ -180,7 +215,7 @@
 }
 
 - (NSSize)intrinsicContentViewSize {
-	NSSize sz = NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAddresses intrinsicContentSize].height + V_GAP);
+	NSSize sz = NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAddresses intrinsicContentSize].height + V_GAP_HALF + [_ccAddresses intrinsicContentSize].height + V_GAP);
 	return sz;
 }
 
