@@ -20,7 +20,6 @@ MESSAGE LIST
 - Fix current message switch on list renewal;
 - Implement unused messages cleanup to keep memory footprint reasonable;
 - Implement message sharing between folders and threads;
-- Add 'stop/reload' and 'cancel' button to the search resutls cell;
 - Implement progress indicator for the message list being loaded;
 - Message body preview;
 - Message flags (unseen, star, etc);
