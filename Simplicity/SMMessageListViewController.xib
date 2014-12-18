@@ -37,7 +37,7 @@
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="54" rowSizeStyle="automatic" viewBased="YES" id="4">
+                            <tableView appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="54" rowSizeStyle="automatic" viewBased="YES" id="4">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -148,7 +148,7 @@
                 <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="8Od-aj-dKF">
                     <rect key="frame" x="199" y="2" width="16" height="16"/>
                 </progressIndicator>
-                <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="9e7-R3-3CM">
+                <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="9e7-R3-3CM">
                     <rect key="frame" x="199" y="453" width="16" height="16"/>
                 </progressIndicator>
             </subviews>
@@ -161,9 +161,11 @@
                 <constraint firstAttribute="trailing" secondItem="8Od-aj-dKF" secondAttribute="trailing" id="G4d-E6-D1J"/>
                 <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="InT-hQ-S4M"/>
                 <constraint firstAttribute="bottom" secondItem="8Od-aj-dKF" secondAttribute="bottom" constant="2" id="LJj-Np-hrQ"/>
+                <constraint firstItem="9e7-R3-3CM" firstAttribute="top" secondItem="1" secondAttribute="top" constant="3" id="Tb1-Rw-3z8"/>
                 <constraint firstItem="Crp-Ot-AgV" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="biX-qf-b0i"/>
                 <constraint firstItem="L8V-cN-uTh" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-1" id="dXx-vu-McS"/>
                 <constraint firstItem="3" firstAttribute="top" secondItem="Crp-Ot-AgV" secondAttribute="bottom" constant="-1" id="euv-RI-fnt"/>
+                <constraint firstAttribute="trailing" secondItem="9e7-R3-3CM" secondAttribute="trailing" id="mqp-SH-tP9"/>
                 <constraint firstItem="3" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="xMY-F2-sSP"/>
             </constraints>
         </customView>
