@@ -5,10 +5,11 @@ Simplicity is a mail client for Mac.
 
 It will replace the Mail.app on my Mac eventually.
 
-Planned features:
+Features
+--------
 
 - Fast folder-oriented interface;
-- Hidden (unused) and popular folders;
+- Hidden (unused) and favorite folders;
 - Folder color marks;
 - Message threads with collapsible cells;
 - Search in folder/mailbox;
@@ -16,6 +17,4 @@ Planned features:
 - Search in any of previous search results;
 - Highlighting search patterns in the found messages;
 - Undo/redo for as many mail operations as possible;
-- Small local message database;
-
-More ideas?..
+- Small local message database.
