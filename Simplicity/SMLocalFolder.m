@@ -36,7 +36,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	NSMutableArray *_fetchedMessageHeaders;
 	MCOIndexSet *_selectedMessageUIDsToLoad;
 	NSString *_selectedMessagesRemoteFolder;
-	Boolean _syncWithRemoteFolder;
 }
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
@@ -49,7 +48,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		_messageHeadersFetched = 0;
 		_fetchedMessageHeaders = [NSMutableArray new];
 		_fetchMessageBodyOps = [NSMutableDictionary new];
-		_syncWithRemoteFolder = syncWithRemoteFolder;
+		_syncedWithRemoteFolder = syncWithRemoteFolder;
 		_selectedMessageUIDsToLoad = nil;
 		_selectedMessagesRemoteFolder = nil;
 	}
@@ -63,7 +62,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		return;
 	}
 	
-	if(!_syncWithRemoteFolder) {
+	if(!_syncedWithRemoteFolder) {
 		[self loadSelectedMessagesInternal];
 		return;
 	}
@@ -321,7 +320,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	return _folderInfoOp != nil || _fetchMessageHeadersOp != nil;
 }
 
-- (void)stopLocalFolderSync {
+- (void)stopMessageHeadersLoading {
 	[_folderInfoOp cancel];
 	_folderInfoOp = nil;
 	
@@ -329,24 +328,23 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_fetchMessageHeadersOp = nil;
 }
 
-- (void)stopMessagesLoading {
-	[_folderInfoOp cancel];
-	_folderInfoOp = nil;
+- (void)stopMessagesLoading:(Boolean)stopBodiesLoading {
+	[self stopMessageHeadersLoading];
 
-	[self stopLocalFolderSync];
-
-	for(id key in _fetchMessageBodyOps) {
-		NSNumber *uid = key;
-		MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:uid];
-
-		[op cancel];
+	if(stopBodiesLoading) {
+		for(id key in _fetchMessageBodyOps) {
+			NSNumber *uid = key;
+			MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:uid];
+			
+			[op cancel];
+		}
+		
+		[_fetchMessageBodyOps removeAllObjects];
 	}
-	
-	[_fetchMessageBodyOps removeAllObjects];
 }
 
 - (void)clear {
-	[self stopMessagesLoading];
+	[self stopMessagesLoading:YES];
 	
 	[_fetchedMessageHeaders removeAllObjects];
 

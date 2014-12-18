@@ -57,7 +57,8 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	SMLocalFolder *folder = [[_model localFolderRegistry] getOrCreateLocalFolder:folderName syncWithRemoteFolder:syncWithRemoteFolder];
 	NSAssert(folder != nil, @"folder registry returned nil folder");
 
-	[_currentFolder stopLocalFolderSync];
+	if([_currentFolder syncedWithRemoteFolder])
+		[_currentFolder stopMessagesLoading:NO];
 
 	_currentFolder = folder;
 	

@@ -43,7 +43,6 @@ SEARCH (ideas to implement)
 - current message thread content search ("local search");
 - "global search" for messages across folders (based on search expressions, see [MCOIMAPSession searchOperationWithFolder:kind:searchString:] and [MCOIMAPSession searchExpressionOperationWithFolder:expression:]);
 - highlight search pattern occurrences in the found message (for local AND global search);
-- show folders in the search results; allow to collapse search results for each folder;
 - search in the search results, and add the new search results to the history pane... so the search evolution could be conveniently navigated;
 - ...?
 
