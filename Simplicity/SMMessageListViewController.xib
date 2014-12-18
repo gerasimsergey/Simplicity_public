@@ -8,9 +8,10 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SMMessageListViewController">
             <connections>
                 <outlet property="loadMoreMessagesButton" destination="L8V-cN-uTh" id="NV9-c7-Vqf"/>
-                <outlet property="loadingMessagesProgressIndicator" destination="8Od-aj-dKF" id="jOx-lu-NsI"/>
+                <outlet property="loadingMoreMessagesProgressIndicator" destination="8Od-aj-dKF" id="wZH-rF-vez"/>
                 <outlet property="messageListTableView" destination="4" id="183"/>
                 <outlet property="updateMessagesButton" destination="Crp-Ot-AgV" id="Ibq-uc-faK"/>
+                <outlet property="updatingMessagesProgressIndicator" destination="9e7-R3-3CM" id="OzG-ja-cvY"/>
                 <outlet property="view" destination="1" id="184"/>
             </connections>
         </customObject>
@@ -146,6 +147,9 @@
                 </button>
                 <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="8Od-aj-dKF">
                     <rect key="frame" x="199" y="2" width="16" height="16"/>
+                </progressIndicator>
+                <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="9e7-R3-3CM">
+                    <rect key="frame" x="199" y="453" width="16" height="16"/>
                 </progressIndicator>
             </subviews>
             <constraints>

@@ -12,7 +12,8 @@
 
 @property IBOutlet NSButton *updateMessagesButton;
 @property IBOutlet NSButton *loadMoreMessagesButton;
-@property IBOutlet NSProgressIndicator *loadingMessagesProgressIndicator;
+@property IBOutlet NSProgressIndicator *updatingMessagesProgressIndicator;
+@property IBOutlet NSProgressIndicator *loadingMoreMessagesProgressIndicator;
 
 - (IBAction)updateMessages:(id)sender;
 - (IBAction)loadMoreMessages:(id)sender;

@@ -114,6 +114,9 @@
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
 	[messageListController forceMessageListUpdate];
+
+	[_updatingMessagesProgressIndicator setHidden:NO];
+	[_updatingMessagesProgressIndicator startAnimation:self];
 }
 
 - (IBAction)loadMoreMessages:(id)sender {
@@ -127,13 +130,14 @@
 		[currentFolder increaseLocalFolderCapacity];
 		[messageListController forceMessageListUpdate];
 
-		[_loadingMessagesProgressIndicator setHidden:NO];
-		[_loadingMessagesProgressIndicator startAnimation:self];
+		[_loadingMoreMessagesProgressIndicator setHidden:NO];
+		[_loadingMoreMessagesProgressIndicator startAnimation:self];
 	}
 }
 
 - (void)messageHeadersSyncFinished {
-	[_loadingMessagesProgressIndicator stopAnimation:self];
+	[_updatingMessagesProgressIndicator stopAnimation:self];
+	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
 }
 
 @end
