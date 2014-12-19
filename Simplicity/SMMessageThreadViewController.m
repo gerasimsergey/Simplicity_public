@@ -102,14 +102,6 @@
 	[self setViewConstraints];
 }
 
-- (void)setCellConstraints:(NSView*)cell height:(CGFloat)height {
-	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationLessThanOrEqual toItem:nil attribute:0 multiplier:0 constant:height];
-
-	constraint.priority = NSLayoutPriorityRequired;
-	
-	[cell addConstraint:constraint];
-}
-
 - (void)setViewConstraints {
 	NSArray *subviews = [_contentView subviews];
 	NSView *prevSubView = nil;
@@ -166,29 +158,6 @@
 	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:[_contentView superview] attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 	
 	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:[_contentView superview] attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-}
-
-- (void)buttonPressed:(id)sender {
-	NSLog(@"%s: %@", __func__, sender);
-	
-	NSButton *button = sender;
-	CGFloat h = [button frame].size.height;
-	NSView *outerView = [button superview];
-	NSView *cellView = nil;
-	
-	[button removeFromSuperview];
-	
-	for(int i = 0; i < 3; i++) {
-		[outerView setFrameSize:NSMakeSize(outerView.frame.size.width, outerView.frame.size.height - h)];
-		if(i < 2) {
-			cellView = outerView;
-			outerView = [outerView superview];
-		}
-	}
-
-	[cellView removeConstraints:[cellView constraints]];
-	
-	[self setCellConstraints:cellView height:cellView.frame.size.height];
 }
 
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId {
