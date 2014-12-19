@@ -10,11 +10,12 @@ Features
 
 - Fast folder-oriented interface;
 - Hidden (unused) and favorite folders;
-- Folder color marks;
+- Folders and messages coloring;
 - Message threads with collapsible cells;
 - Search in folder/mailbox;
 - Search history;
 - Search in any of previous search results;
 - Highlighting search patterns in the found messages;
 - Undo/redo for as many mail operations as possible;
-- Small local message database.
+- Small local message database;
+- Configurable key shortcuts.
