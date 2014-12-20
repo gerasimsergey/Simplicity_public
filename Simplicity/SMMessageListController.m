@@ -128,6 +128,13 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[appController performSelectorOnMainThread:@selector(updateMessageListView) withObject:nil waitUntilDone:NO];
 }
 
+- (void)updateMessageThreadView {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+	
+	[[appController messageThreadViewController] updateMessageThread];
+}
+
 - (void)scheduleMessageListUpdate {
 	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
 }
@@ -152,6 +159,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 		NSString *remoteFolder = [[notification userInfo] objectForKey:@"RemoteFolderName"];
 
 		[self updateMessageList:messages remoteFolder:remoteFolder];
+		[self updateMessageThreadView];
 	}
 }
 

@@ -20,7 +20,6 @@
 @end
 
 @implementation SMMessageThreadViewController {
-	SMMessageThread *_currentMessageThread;
 	NSMutableArray *_threadCellControllers;
 	NSMutableArray *_messages;
 	NSView *_contentView;
@@ -44,10 +43,6 @@
 	}
 	
 	return self;
-}
-
-- (SMMessageThread*)currentMessageThread {
-	return _currentMessageThread;
 }
 
 - (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message {
@@ -109,9 +104,11 @@
 	[self setViewConstraints];
 }
 
-- (void)updateMessageThread:(SMMessageThread*)messageThread {
-	NSAssert(messageThread == _currentMessageThread, @"foreign message thread");
-	NSAssert([messageThread messagesCount] > 0, @"no messages in message thread");
+- (void)updateMessageThread {
+	if(_currentMessageThread == nil)
+		return;
+
+	NSAssert(_messages != nil, @"no messages in the current thread");
 
 	NSArray *newMessages = [_currentMessageThread messagesSortedByDate];
 	
@@ -119,7 +116,7 @@
 	if(newMessages.count == _messages.count) {
 		Boolean equal = YES;
 
-		for(NSInteger i = _messages.count; i > 0; i--) {
+		for(NSInteger i = 0; i < _messages.count; i++) {
 			if(newMessages[i] != _messages[i]) {
 				equal = NO;
 				break;
@@ -129,6 +126,8 @@
 		if(equal)
 			return;
 	}
+	
+	NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, (unsigned long)_messages.count, (long)_currentMessageThread.messagesCount);
 	
 	// remove old (vanished) messages
 	for(NSInteger i = _messages.count; i > 0; i--) {
@@ -149,13 +148,13 @@
 	NSMutableArray *updatedMessages = [NSMutableArray new];
 
 	// add new messages
-	for(NSInteger i = 0, j = 0; i < updatedMessages.count; i++) {
-		SMMessage *updatedMessage = updatedMessages[i];
+	for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
+		SMMessage *newMessage = newMessages[i];
 		
-		if(j >= _messages.count || _messages[j] != updatedMessage) {
-			[updatedMessages addObject:updatedMessage];
+		if(j >= _messages.count || _messages[j] != newMessage) {
+			[updatedMessages addObject:newMessage];
 			
-			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:updatedMessage];
+			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:newMessage];
 			
 			if(updatedMessages.count > 1)
 				[messageThreadCellViewController enableCollapse];
