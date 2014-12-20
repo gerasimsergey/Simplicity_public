@@ -22,6 +22,7 @@
 @implementation SMMessageThreadViewController {
 	NSMutableArray *_threadCellControllers;
 	NSMutableArray *_messages;
+	NSMutableArray *_subviews; // we keep a private list of subviews to define ordering
 	NSView *_contentView;
 }
 
@@ -38,6 +39,7 @@
 		
 		_threadCellControllers = [NSMutableArray new];
 		_messages = [NSMutableArray new];
+		_subviews = [NSMutableArray new];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageBodyFetched:) name:@"MessageBodyFetched" object:nil];
 	}
@@ -79,24 +81,29 @@
 		return;
 	
 	_currentMessageThread = messageThread;
-	
+
 	[_threadCellControllers removeAllObjects];
 	[_messages removeAllObjects];
-	
+	[_subviews removeAllObjects];
+
 	_contentView = [[NSView alloc] initWithFrame:[_messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	NSArray *messages = [_currentMessageThread messagesSortedByDate];
-
-	[_messages addObjectsFromArray:messages];
-
-	for(NSInteger i = 0; i < messages.count; i++) {
-		SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:messages[i]];
+	if(_currentMessageThread != nil) {
+		NSArray *messages = [_currentMessageThread messagesSortedByDate];
 		
-		if(messages.count > 1)
-			[messageThreadCellViewController enableCollapse];
+		[_messages addObjectsFromArray:messages];
 		
-		[_contentView addSubview:[messageThreadCellViewController view]];
+		for(NSInteger i = 0; i < messages.count; i++) {
+			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:messages[i]];
+			
+			if(messages.count > 1)
+				[messageThreadCellViewController enableCollapse];
+			
+			[_contentView addSubview:[messageThreadCellViewController view]];
+		}
+		
+		[_subviews addObjectsFromArray:[_contentView subviews]];
 	}
 	
 	[_messageThreadView setDocumentView:_contentView];
@@ -141,44 +148,55 @@
 			[[messageViewController view] removeFromSuperview];
 
 			[_threadCellControllers removeObjectAtIndex:index];
+
 			[_messages removeObjectAtIndex:index];
+			[_subviews removeObjectAtIndex:index];
 		}
 	}
 
-	NSMutableArray *updatedMessages = [NSMutableArray new];
-
 	// add new messages
+	NSMutableArray *updatedMessages = [NSMutableArray arrayWithCapacity:newMessages.count];
+	NSMutableArray *updatedSubviews = [NSMutableArray arrayWithCapacity:newMessages.count];
+	
+	NSAssert(_messages.count == _subviews.count, @"messages count (%lu) and subviews count (%lu) mismatch", _messages.count, _subviews.count);
+
 	for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
 		SMMessage *newMessage = newMessages[i];
 		
 		if(j >= _messages.count || _messages[j] != newMessage) {
-			[updatedMessages addObject:newMessage];
-			
 			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:newMessage];
 			
-			if(updatedMessages.count > 1)
+			if(newMessages.count > 1)
 				[messageThreadCellViewController enableCollapse];
 			
-			[_contentView addSubview:[messageThreadCellViewController view]];
+			NSView *newSubview = [messageThreadCellViewController view];
+			
+			[_contentView addSubview:newSubview];
+
+			updatedMessages[i] = newMessage;
+			updatedSubviews[i] = newSubview;
 		} else {
-			[updatedMessages addObject:_messages[j++]];
+			updatedMessages[i] = _messages[j];
+			updatedSubviews[i] = _subviews[j];
+
+			j++;
 		}
+
+		[_contentView addSubview:updatedSubviews[i]];
 	}
 
 	// populate the updated view
 	_messages = updatedMessages;
+	_subviews = updatedSubviews;
 
 	[_contentView removeConstraints:[_contentView constraints]];
 	[self setViewConstraints];
 }
 
 - (void)setViewConstraints {
-	NSArray *subviews = [_contentView subviews];
-	NSView *prevSubView = nil;
-
-	if(subviews.count == 1)
+	if(_subviews.count == 1)
 	{
-		NSView *subview = subviews[0];
+		NSView *subview = _subviews[0];
 
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
@@ -190,8 +208,10 @@
 	}
 	else
 	{
-		for(NSInteger i = 0; i < subviews.count; i++) {
-			NSView *subview = subviews[i];
+		NSView *prevSubView = nil;
+		
+		for(NSInteger i = 0; i < _subviews.count; i++) {
+			NSView *subview = _subviews[i];
 
 			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 
