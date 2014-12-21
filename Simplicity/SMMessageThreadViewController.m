@@ -14,21 +14,30 @@
 #import "SMMessageListController.h"
 #import "SMAppDelegate.h"
 
+@interface ThreadCell : NSObject
+@property SMMessageThreadCellViewController *viewController;
+@property SMMessage *message;
+- (id)initWithMessage:(SMMessage*)message viewController:(SMMessageThreadCellViewController*)viewController;
+@end
+
+@implementation ThreadCell
+- (id)initWithMessage:(SMMessage*)message viewController:(SMMessageThreadCellViewController*)viewController {
+	self = [super init];
+	if(self) {
+		_message = message;
+		_viewController = viewController;
+	}
+	return self;
+}
+@end
+
 @interface SMMessageThreadViewController()
 - (void)messageBodyFetched:(NSNotification *)notification;
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId;
 @end
 
-@interface ThreadCell
-@property NSMutableArray *threadCellControllers;
-@property NSMutableArray *messages;
-@property NSMutableArray *subviews;
-@end
-
 @implementation SMMessageThreadViewController {
-	NSMutableArray *_threadCellControllers;
-	NSMutableArray *_messages;
-	NSMutableArray *_subviews; // we keep a private list of subviews to define ordering
+	NSMutableArray *_cells;
 	NSView *_contentView;
 }
 
@@ -43,9 +52,7 @@
 		[_messageThreadView setHasHorizontalScroller:NO];
 		[_messageThreadView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 		
-		_threadCellControllers = [NSMutableArray new];
-		_messages = [NSMutableArray new];
-		_subviews = [NSMutableArray new];
+		_cells = [NSMutableArray new];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageBodyFetched:) name:@"MessageBodyFetched" object:nil];
 	}
@@ -55,8 +62,6 @@
 
 - (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message {
 	SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] init];
-	
-	[_threadCellControllers addObject:messageThreadCellViewController];
 	
 	SMMessageViewController *messageViewController = [messageThreadCellViewController messageViewController];
 	
@@ -88,28 +93,27 @@
 	
 	_currentMessageThread = messageThread;
 
-	[_threadCellControllers removeAllObjects];
-	[_messages removeAllObjects];
-	[_subviews removeAllObjects];
+	[_cells removeAllObjects];
 
 	_contentView = [[NSView alloc] initWithFrame:[_messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	if(_currentMessageThread != nil) {
 		NSArray *messages = [_currentMessageThread messagesSortedByDate];
-		
-		[_messages addObjectsFromArray:messages];
-		
+
+		_cells = [NSMutableArray arrayWithCapacity:messages.count];
+
 		for(NSInteger i = 0; i < messages.count; i++) {
 			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:messages[i]];
 			
 			if(messages.count > 1)
 				[messageThreadCellViewController enableCollapse];
-			
+
 			[_contentView addSubview:[messageThreadCellViewController view]];
+
+			_cells[i] = [[ThreadCell alloc] initWithMessage:messages[i] viewController:messageThreadCellViewController];
 		}
 		
-		[_subviews addObjectsFromArray:[_contentView subviews]];
 	}
 	
 	[_messageThreadView setDocumentView:_contentView];
@@ -121,16 +125,16 @@
 	if(_currentMessageThread == nil)
 		return;
 
-	NSAssert(_messages != nil, @"no messages in the current thread");
+	NSAssert(_cells != nil, @"no cells in the current thread");
 
 	NSArray *newMessages = [_currentMessageThread messagesSortedByDate];
 	
 	// check whether messages did not change
-	if(newMessages.count == _messages.count) {
+	if(newMessages.count == _cells.count) {
 		Boolean equal = YES;
 
-		for(NSInteger i = 0; i < _messages.count; i++) {
-			if(newMessages[i] != _messages[i]) {
+		for(NSInteger i = 0; i < _cells.count; i++) {
+			if(newMessages[i] != ((ThreadCell*)_cells[i]).message) {
 				equal = NO;
 				break;
 			}
@@ -140,66 +144,51 @@
 			return;
 	}
 	
-	NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, (unsigned long)_messages.count, (long)_currentMessageThread.messagesCount);
+	NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, _cells.count, _currentMessageThread.messagesCount);
 	
 	// remove old (vanished) messages
-	for(NSInteger i = _messages.count; i > 0; i--) {
-		NSInteger index = i-1;
-		SMMessage *message = _messages[index];
+	for(NSInteger t = _cells.count; t > 0; t--) {
+		NSInteger i = t-1;
+		ThreadCell *cell = _cells[i];
 
-		// TODO: use the sorting info for search
-		if(![newMessages containsObject:message]) {
-			[_threadCellControllers removeObjectAtIndex:index];
-
-			[_subviews[index] removeFromSuperview];
-
-			[_messages removeObjectAtIndex:index];
-			[_subviews removeObjectAtIndex:index];
+		// TODO: use the sorting info for fast search
+		if(![newMessages containsObject:cell.message]) {
+			[cell.viewController.view removeFromSuperview];
+			[_cells removeObjectAtIndex:i];
 		}
 	}
 
 	// add new messages
-	NSMutableArray *updatedMessages = [NSMutableArray arrayWithCapacity:newMessages.count];
-	NSMutableArray *updatedSubviews = [NSMutableArray arrayWithCapacity:newMessages.count];
+	NSMutableArray *updatedCells = [NSMutableArray arrayWithCapacity:newMessages.count];
 	
-	NSAssert(_messages.count == _subviews.count, @"messages count (%lu) and subviews count (%lu) mismatch", _messages.count, _subviews.count);
-
 	for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
 		SMMessage *newMessage = newMessages[i];
 		
-		if(j >= _messages.count || _messages[j] != newMessage) {
-			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:newMessage];
+		if(j >= _cells.count || ((ThreadCell*)_cells[j]).message != newMessage) {
+			SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage];
 			
 			if(newMessages.count > 1)
-				[messageThreadCellViewController enableCollapse];
+				[viewController enableCollapse];
 			
-			NSView *newSubview = [messageThreadCellViewController view];
+			[_contentView addSubview:[viewController view]];
 
-			[_contentView addSubview:newSubview];
-
-			updatedMessages[i] = newMessage;
-			updatedSubviews[i] = newSubview;
+			updatedCells[i] = [[ThreadCell alloc] initWithMessage:newMessage viewController:viewController];
 		} else {
-			updatedMessages[i] = _messages[j];
-			updatedSubviews[i] = _subviews[j];
-
-			j++;
+			updatedCells[i] = _cells[j++];
 		}
 	}
 
 	// populate the updated view
-	_messages = updatedMessages;
-	_subviews = updatedSubviews;
-
-	[_contentView removeConstraints:[_contentView constraints]];
+	_cells = updatedCells;
 	
+	[_contentView removeConstraints:[_contentView constraints]];
 	[self setViewConstraints];
 }
 
 - (void)setViewConstraints {
-	if(_subviews.count == 1)
+	if(_cells.count == 1)
 	{
-		NSView *subview = _subviews[0];
+		NSView *subview = ((ThreadCell*)_cells[0]).viewController.view;
 
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
@@ -213,8 +202,8 @@
 	{
 		NSView *prevSubView = nil;
 		
-		for(NSInteger i = 0; i < _subviews.count; i++) {
-			NSView *subview = _subviews[i];
+		for(NSInteger i = 0; i < _cells.count; i++) {
+			NSView *subview = ((ThreadCell*)_cells[i]).viewController.view;
 
 			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 
@@ -258,24 +247,22 @@
 		return;
 	
 	NSArray *messages = [_currentMessageThread messagesSortedByDate];
+	NSAssert(messages.count == _cells.count, @"messages count %ld is inconsistent with cells count %ld", messages.count, _cells.count);
+
 	for(NSInteger i = 0; i < messages.count; i++) {
 		SMMessage *message = messages[i];
 		
 		// TODO: optimize search
 		if(message.uid == uid) {
-			NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
-			
+			NSString *htmlMessageBodyText = [message htmlBodyRendering];
 			NSAssert(htmlMessageBodyText != nil, @"message has no body");
 			
 			[message fetchInlineAttachments];
 			
-			NSAssert(i < _threadCellControllers.count, @"inconsistent thread cell controllers array");
+			SMMessageThreadCellViewController *viewController = ((ThreadCell*)_cells[i]).viewController;
 			
-			SMMessageThreadCellViewController *cellController = _threadCellControllers[i];
-			
-			[cellController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
-			
-			[[cellController messageViewController] setMessageDetails:message];
+			[viewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
+			[[viewController messageViewController] setMessageDetails:message];
 			
 			break;
 		}
