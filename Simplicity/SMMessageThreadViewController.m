@@ -19,6 +19,12 @@
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId;
 @end
 
+@interface ThreadCell
+@property NSMutableArray *threadCellControllers;
+@property NSMutableArray *messages;
+@property NSMutableArray *subviews;
+@end
+
 @implementation SMMessageThreadViewController {
 	NSMutableArray *_threadCellControllers;
 	NSMutableArray *_messages;
@@ -140,14 +146,12 @@
 	for(NSInteger i = _messages.count; i > 0; i--) {
 		NSInteger index = i-1;
 		SMMessage *message = _messages[index];
-		
+
 		// TODO: use the sorting info for search
 		if(![newMessages containsObject:message]) {
-			SMMessageViewController *messageViewController = [_threadCellControllers[index] messageViewController];
-
-			[[messageViewController view] removeFromSuperview];
-
 			[_threadCellControllers removeObjectAtIndex:index];
+
+			[_subviews[index] removeFromSuperview];
 
 			[_messages removeObjectAtIndex:index];
 			[_subviews removeObjectAtIndex:index];
@@ -170,7 +174,7 @@
 				[messageThreadCellViewController enableCollapse];
 			
 			NSView *newSubview = [messageThreadCellViewController view];
-			
+
 			[_contentView addSubview:newSubview];
 
 			updatedMessages[i] = newMessage;
@@ -181,8 +185,6 @@
 
 			j++;
 		}
-
-		[_contentView addSubview:updatedSubviews[i]];
 	}
 
 	// populate the updated view
@@ -190,6 +192,7 @@
 	_subviews = updatedSubviews;
 
 	[_contentView removeConstraints:[_contentView constraints]];
+	
 	[self setViewConstraints];
 }
 
