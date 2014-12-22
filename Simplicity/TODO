@@ -4,12 +4,7 @@ BUGS
 
 2014-04-15 23:49:02.371 Simplicity[72210:303] __50-[SMSimplicityContainer getIMAPServerCapabilities]_block_invoke: error getting IMAP capabilities: Error Domain=MCOErrorDomain Code=1 "A stable connection to the server could not be established." UserInfo=0x618000266980 {NSLocalizedDescription=A stable connection to the server could not be established.}
 
-- Fix selected message thread / message cursor disappearance on folder update;
 - Fix latest search cell auto selection;
-
-MESSAGE THREAD
-
-- message thread rebuilding when new messages arrive / vanish
 
 MESSAGE LIST
 
@@ -17,10 +12,8 @@ MESSAGE LIST
 - HTML rendering in background (MCOIMAPMessageRenderingOperation);
 - Session renew;
 - Resolve possible UID conflicts;
-- Fix current message switch on list renewal;
 - Implement unused messages cleanup to keep memory footprint reasonable;
 - Implement message sharing between folders and threads;
-- Implement progress indicator for the message list being loaded;
 - Message body preview;
 - Message flags (unseen, star, etc);
 - Server capabilities use (IDLE, etc);
@@ -33,7 +26,7 @@ MESSAGE LIST
 NEW FEATURES
 
 - Folder & messages coloring;
-- Convenient folder list;
+- Convenient (flat) folder list;
 - Advanced message search dialog;
 - Advanced text search;
 - ...?
@@ -45,5 +38,3 @@ SEARCH (ideas to implement)
 - highlight search pattern occurrences in the found message (for local AND global search);
 - search in the search results, and add the new search results to the history pane... so the search evolution could be conveniently navigated;
 - ...?
-
-

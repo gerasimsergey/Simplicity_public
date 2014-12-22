@@ -168,9 +168,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	BOOL finishFetch = YES;
 	
 	if(_totalMessagesCount == _messageHeadersFetched) {
-		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
+//		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
 	} else if(_messageHeadersFetched >= _maxMessagesPerThisFolder) {
-		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
+//		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
 	} else {
 		finishFetch = NO;
 	}
@@ -252,9 +252,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	BOOL finishFetch = YES;
 	
 	if(_totalMessagesCount == _messageHeadersFetched) {
-		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
+//		NSLog(@"%s: all %llu message headers fetched, stopping", __FUNCTION__, _totalMessagesCount);
 	} else if(_messageHeadersFetched >= _maxMessagesPerThisFolder) {
-		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
+//		NSLog(@"%s: fetched %llu message headers, stopping", __FUNCTION__, _messageHeadersFetched);
 	} else if(_selectedMessageUIDsToLoad.count > 0) {
 		finishFetch = NO;
 	}
