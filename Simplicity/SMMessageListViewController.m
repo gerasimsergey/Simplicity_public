@@ -26,7 +26,7 @@
 @end
 
 @implementation SMMessageListViewController {
-	SMMessage *_currentlyViewedMessage;
+	SMMessageThread *_selectedMessageThread;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -52,12 +52,12 @@
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 		NSAssert(currentFolder != nil, @"bad corrent folder");
 
-		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
-		
-		if(messageThread != nil) {
-			[[[appDelegate appController] messageThreadViewController] setMessageThread:messageThread];
+		_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
+
+		if(_selectedMessageThread != nil) {
+			[[[appDelegate appController] messageThreadViewController] setMessageThread:_selectedMessageThread];
 		} else {
-			[_messageListTableView selectRowIndexes:[[NSIndexSet alloc] init] byExtendingSelection:NO];
+			[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 		}
 	}
 }
@@ -69,7 +69,7 @@
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row localFolder:[currentFolder name]];
-	
+
 	if(messageThread == nil) {
 		NSLog(@"%s: row %ld, message thread is nil", __FUNCTION__, row);
 		return nil;
@@ -91,25 +91,32 @@
 }
 
 - (void)reloadMessageList:(Boolean)preserveSelection {
-	NSInteger selectedRow = -1;
-	
-	if(preserveSelection) {
-		selectedRow = [ _messageListTableView selectedRow ];
-	} else {
+	if(!preserveSelection)
 		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-	}
 
 	[_messageListTableView reloadData];
 
-	if(preserveSelection) {
-		// TODO: this won't work if messages are added to the beginning of the list
-		[ _messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO ];
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+	NSIndexSet *threadIndexSet = [NSIndexSet indexSet];
+
+	if(preserveSelection && _selectedMessageThread != nil) {
+		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+		
+		NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndex:_selectedMessageThread localFolder:currentFolder.name];
+		
+		if(threadIndex != NSNotFound)
+			threadIndexSet = [NSIndexSet indexSetWithIndex:threadIndex];
+		else
+			_selectedMessageThread = nil;
+	} else {
+		_selectedMessageThread = nil;
 	}
+
+	[_messageListTableView selectRowIndexes:threadIndexSet byExtendingSelection:NO];
 }
 
 - (IBAction)updateMessages:(id)sender {
-	NSLog(@"%s: sender %@", __func__, sender);
-
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
@@ -138,6 +145,12 @@
 - (void)messageHeadersSyncFinished {
 	[_updatingMessagesProgressIndicator stopAnimation:self];
 	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
+
+	const Boolean preserveSelection = YES;
+	[self reloadMessageList:preserveSelection];
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	[[[appDelegate appController] messageThreadViewController] updateMessageThread];
 }
 
 @end

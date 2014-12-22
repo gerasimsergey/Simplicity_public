@@ -85,9 +85,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		_folderInfoOp = nil;
 		
 		if(error == nil) {
-			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
-			NSLog(@"UIDVALIDITY: %lu", (unsigned long) [info uidValidity]);
-			NSLog(@"Messages count %u", [info messageCount]);
+//			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
+//			NSLog(@"UIDVALIDITY: %lu", (unsigned long) [info uidValidity]);
+//			NSLog(@"Messages count %u", [info messageCount]);
 			
 			_totalMessagesCount = [info messageCount];
 			

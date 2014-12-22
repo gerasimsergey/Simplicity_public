@@ -129,60 +129,71 @@
 
 	NSArray *newMessages = [_currentMessageThread messagesSortedByDate];
 	
-	// check whether messages did not change
-	if(newMessages.count == _cells.count) {
-		Boolean equal = YES;
-
-		for(NSInteger i = 0; i < _cells.count; i++) {
-			if(newMessages[i] != ((ThreadCell*)_cells[i]).message) {
-				equal = NO;
-				break;
+	if(newMessages.count > 0) {
+		// check whether messages did not change
+		if(newMessages.count == _cells.count) {
+			Boolean equal = YES;
+			
+			for(NSInteger i = 0; i < _cells.count; i++) {
+				if(newMessages[i] != ((ThreadCell*)_cells[i]).message) {
+					equal = NO;
+					break;
+				}
+			}
+			
+			if(equal)
+				return;
+		}
+		
+		NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, _cells.count, _currentMessageThread.messagesCount);
+		
+		// remove old (vanished) messages
+		for(NSInteger t = _cells.count; t > 0; t--) {
+			NSInteger i = t-1;
+			ThreadCell *cell = _cells[i];
+			
+			// TODO: use the sorting info for fast search
+			if(![newMessages containsObject:cell.message]) {
+				[cell.viewController.view removeFromSuperview];
+				[_cells removeObjectAtIndex:i];
 			}
 		}
 		
-		if(equal)
-			return;
-	}
-	
-	NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, _cells.count, _currentMessageThread.messagesCount);
-	
-	// remove old (vanished) messages
-	for(NSInteger t = _cells.count; t > 0; t--) {
-		NSInteger i = t-1;
-		ThreadCell *cell = _cells[i];
-
-		// TODO: use the sorting info for fast search
-		if(![newMessages containsObject:cell.message]) {
-			[cell.viewController.view removeFromSuperview];
-			[_cells removeObjectAtIndex:i];
-		}
-	}
-
-	// add new messages
-	NSMutableArray *updatedCells = [NSMutableArray arrayWithCapacity:newMessages.count];
-	
-	for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
-		SMMessage *newMessage = newMessages[i];
+		// add new messages
+		NSMutableArray *updatedCells = [NSMutableArray arrayWithCapacity:newMessages.count];
 		
-		if(j >= _cells.count || ((ThreadCell*)_cells[j]).message != newMessage) {
-			SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage];
+		for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
+			SMMessage *newMessage = newMessages[i];
 			
-			if(newMessages.count > 1)
-				[viewController enableCollapse];
-			
-			[_contentView addSubview:[viewController view]];
-
-			updatedCells[i] = [[ThreadCell alloc] initWithMessage:newMessage viewController:viewController];
-		} else {
-			updatedCells[i] = _cells[j++];
+			if(j >= _cells.count || ((ThreadCell*)_cells[j]).message != newMessage) {
+				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage];
+				
+				if(newMessages.count > 1)
+					[viewController enableCollapse];
+				
+				[_contentView addSubview:[viewController view]];
+				
+				updatedCells[i] = [[ThreadCell alloc] initWithMessage:newMessage viewController:viewController];
+			} else {
+				updatedCells[i] = _cells[j++];
+			}
 		}
-	}
+		
+		// populate the updated view
+		_cells = updatedCells;
+		
+		[_contentView removeConstraints:[_contentView constraints]];
+		[self setViewConstraints];
+	} else {
+		NSLog(@"%s: message thread id %llu is empty", __func__, _currentMessageThread.threadId);
 
-	// populate the updated view
-	_cells = updatedCells;
-	
-	[_contentView removeConstraints:[_contentView constraints]];
-	[self setViewConstraints];
+		[_cells removeAllObjects];
+
+		for(NSView *subview in _contentView.subviews)
+			[subview removeFromSuperview];
+
+		[_contentView removeConstraints:[_contentView constraints]];
+	}
 }
 
 - (void)setViewConstraints {

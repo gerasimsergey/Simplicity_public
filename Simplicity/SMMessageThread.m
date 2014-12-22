@@ -185,11 +185,8 @@
 		for(NSUInteger i = 0, count = [_messageCollection.messagesByDate count]; i < count; i++) {
 			SMMessage *message = [_messageCollection.messagesByDate objectAtIndex:i];
 			
-			if(![message updated]) {
-				NSLog(@"%s: uid %u - message vanished", __FUNCTION__, [message uid]);
-				
+			if(![message updated])
 				[notUpdatedMessageIndices addIndex:i];
-			}
 		}
 		
 		[_messageCollection.messagesByDate removeObjectsAtIndexes:notUpdatedMessageIndices];

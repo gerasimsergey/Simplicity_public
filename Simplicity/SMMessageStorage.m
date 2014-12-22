@@ -69,14 +69,18 @@
 	return [_foldersMessageThreadsMap objectForKey:folder];
 }
 
-- (NSUInteger)messageThreadIndex:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder {
+- (NSUInteger)getMessageThreadIndex:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder {
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 		
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
 	NSComparator messageThreadComparator = [comparators messageThreadsComparatorByDate];
 
-	return [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:0 usingComparator:messageThreadComparator];
+	if([collection.messageThreads objectForKey:[NSNumber numberWithLongLong:[messageThread threadId]]] != nil) {
+		return [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:0 usingComparator:messageThreadComparator];
+	} else {
+		return NSNotFound;
+	}
 }
 
 - (void)insertMessageThreadAtIndex:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder oldIndex:(NSUInteger)oldIndex {
@@ -90,6 +94,8 @@
 		[sortedMessageThreads removeObjectAtIndex:oldIndex];
 	
 	NSUInteger messageThreadIndexByDate = [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:NSBinarySearchingInsertionIndex usingComparator:messageThreadComparator];
+	
+	NSAssert(messageThreadIndexByDate != NSNotFound, @"message thread not found");
 	
 	[sortedMessageThreads insertObject:messageThread atIndex:messageThreadIndexByDate];
 
@@ -131,7 +137,7 @@
 			
 			updateThread = YES;
 		} else {
-			oldMessageThreadIndex = [self messageThreadIndex:messageThread localFolder:localFolder];
+			oldMessageThreadIndex = [self getMessageThreadIndex:messageThread localFolder:localFolder];
 
 			NSAssert(oldMessageThreadIndex != NSNotFound, @"message thread not found");
 			
@@ -157,13 +163,13 @@
 }
 
 - (void)startUpdate:(NSString*)localFolder {
-	NSLog(@"%s: localFolder '%@'", __FUNCTION__, localFolder);
+//	NSLog(@"%s: localFolder '%@'", __FUNCTION__, localFolder);
 
 	[self cancelUpdate:localFolder];
 }
 
 - (void)endUpdate:(NSString*)localFolder removeVanishedMessages:(Boolean)removeVanishedMessages {
-	NSLog(@"%s: localFolder '%@'", __FUNCTION__, localFolder);
+//	NSLog(@"%s: localFolder '%@'", __FUNCTION__, localFolder);
 	
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad thread collection");
@@ -173,13 +179,16 @@
 
 	for(NSNumber *threadId in collection.messageThreads) {
 		SMMessageThread *messageThread = [collection.messageThreads objectForKey:threadId];
-		NSUInteger oldMessageThreadIndex = [self messageThreadIndex:messageThread localFolder:localFolder];
+		NSUInteger oldMessageThreadIndex = [self getMessageThreadIndex:messageThread localFolder:localFolder];
 
 		if([messageThread endUpdate:removeVanishedMessages]) {
 			if([messageThread messagesCount] == 0) {
+				NSLog(@"%s: message thread %lld vanished", __func__, messageThread.threadId);
+
 				[vanishedThreads addObject:messageThread];
 				[vanishedThreadIds addObject:[NSNumber numberWithUnsignedLongLong:[messageThread threadId]]];
 			} else {
+				NSAssert(oldMessageThreadIndex != NSNotFound, @"message thread not found");
 				[self insertMessageThreadAtIndex:messageThread localFolder:localFolder oldIndex:oldMessageThreadIndex];
 			}
 		}
@@ -210,10 +219,9 @@
 }
 
 - (BOOL)messageHasData:(uint32_t)uid localFolder:(NSString*)localFolder threadId:(uint64_t)threadId {
-	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
-	NSAssert(collection, @"bad folder collection");
+	SMMessageThread *thread = [self messageThreadById:threadId localFolder:localFolder];
+	NSAssert(thread != nil, @"thread id %lld not found in local folder %@", threadId, localFolder);
 
-	SMMessageThread *thread = [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
 	return [thread messageHasData:uid];
 }
 
@@ -238,6 +246,15 @@
 	}
 
 	return [collection.messageThreadsByDate objectAtIndex:index];
+}
+
+- (SMMessageThread*)messageThreadById:(uint64_t)threadId localFolder:(NSString*)folder {
+	MessageThreadCollection *collection = [self messageThreadForFolder:folder];
+
+	if(collection == nil)
+		return nil;
+
+	return [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
 }
 
 @end
