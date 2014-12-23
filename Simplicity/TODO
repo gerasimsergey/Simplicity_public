@@ -5,6 +5,7 @@ BUGS
 2014-04-15 23:49:02.371 Simplicity[72210:303] __50-[SMSimplicityContainer getIMAPServerCapabilities]_block_invoke: error getting IMAP capabilities: Error Domain=MCOErrorDomain Code=1 "A stable connection to the server could not be established." UserInfo=0x618000266980 {NSLocalizedDescription=A stable connection to the server could not be established.}
 
 - Fix latest search cell auto selection;
+- Use proper logging API ();
 
 MESSAGE LIST
 

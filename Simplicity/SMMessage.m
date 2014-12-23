@@ -251,7 +251,7 @@
 		NSString *attachmentContentId = [attachment contentID] != nil? [attachment contentID] : [attachment uniqueID];
 		NSData *attachmentData = [attachment data];
 
-		NSLog(@"%s: message uid %u, attachment unique id %@, contentID %@, body %@", __FUNCTION__, uid, [attachment uniqueID], attachmentContentId, attachment);
+		//NSLog(@"%s: message uid %u, attachment unique id %@, contentID %@, body %@", __FUNCTION__, uid, [attachment uniqueID], attachmentContentId, attachment);
 		
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
@@ -259,7 +259,7 @@
 		
 		NSError *err;
 		if([attachmentUrl checkResourceIsReachableAndReturnError:&err] == YES) {
-			NSLog(@"%s: stored attachment exists at '%@'", __FUNCTION__, attachmentUrl);
+			//NSLog(@"%s: stored attachment exists at '%@'", __FUNCTION__, attachmentUrl);
 			continue;
 		}
 		
@@ -276,7 +276,7 @@
 			
 			NSAssert([attachmentContentId isEqualToString:[imapPart contentID]], @"Attachment contentId is not equal to part contentId");
 			
-			NSLog(@"%s: part %@, id %@, contentID %@", __FUNCTION__, part, partId, [imapPart contentID]);
+			//NSLog(@"%s: part %@, id %@, contentID %@", __FUNCTION__, part, partId, [imapPart contentID]);
 
 			MCOIMAPSession *session = [[appDelegate model] session];
 			

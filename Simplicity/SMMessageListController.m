@@ -146,7 +146,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 }
 
 - (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId {
-	NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
+	//NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
 
 	[_currentFolder fetchMessageBody:uid remoteFolder:remoteFolder threadId:threadId urgent:YES];
 }

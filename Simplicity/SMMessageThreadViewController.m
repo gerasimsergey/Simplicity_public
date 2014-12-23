@@ -256,28 +256,26 @@
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId {
 	if(_currentMessageThread == nil || _currentMessageThread.threadId != threadId)
 		return;
-	
-	NSArray *messages = [_currentMessageThread messagesSortedByDate];
-	NSAssert(messages.count == _cells.count, @"messages count %ld is inconsistent with cells count %ld", messages.count, _cells.count);
 
-	for(NSInteger i = 0; i < messages.count; i++) {
-		SMMessage *message = messages[i];
+	// TODO: optimize search?
+	for(NSInteger i = 0; i < _cells.count; i++) {
+		ThreadCell *cell = _cells[i];
+		SMMessage *message = cell.message;
 		
-		// TODO: optimize search
 		if(message.uid == uid) {
 			NSString *htmlMessageBodyText = [message htmlBodyRendering];
-			NSAssert(htmlMessageBodyText != nil, @"message has no body");
+			NSAssert(htmlMessageBodyText != nil, @"message uid %u (thread id %lld) fetched with no body!!!", uid, threadId);
 			
 			[message fetchInlineAttachments];
+
+			[cell.viewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
+			[[cell.viewController messageViewController] setMessageDetails:message];
 			
-			SMMessageThreadCellViewController *viewController = ((ThreadCell*)_cells[i]).viewController;
-			
-			[viewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
-			[[viewController messageViewController] setMessageDetails:message];
-			
-			break;
+			return;
 		}
 	}
+	
+	NSLog(@"%s: message uid %u doesn't belong to thread id %lld", __func__, uid, threadId);
 }
 
 - (void)messageBodyFetched:(NSNotification *)notification {
