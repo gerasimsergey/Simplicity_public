@@ -46,15 +46,15 @@
                                                 <rect key="frame" x="1" y="1" width="195" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5ue-kD-Kyp">
-                                                        <rect key="frame" x="3" y="0.0" width="17" height="17"/>
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" customClass="SMColorCircle">
+                                                        <rect key="frame" x="-2" y="1" width="10" height="10"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="17" id="s2O-tb-SR8"/>
+                                                            <constraint firstAttribute="width" constant="10" id="3V2-Wu-xCq"/>
+                                                            <constraint firstAttribute="height" constant="10" id="hAn-vb-ntw"/>
                                                         </constraints>
-                                                        <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="lBu-my-anU"/>
-                                                    </imageView>
+                                                    </customView>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9fg-dU-pW6">
-                                                        <rect key="frame" x="25" y="0.0" width="174" height="17"/>
+                                                        <rect key="frame" x="10" y="0.0" width="184" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" usesSingleLineMode="YES" id="KYg-7e-QCg">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -63,15 +63,14 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="5ue-kD-Kyp" firstAttribute="bottom" secondItem="9fg-dU-pW6" secondAttribute="bottom" id="2hc-Mr-1rE"/>
-                                                    <constraint firstItem="9fg-dU-pW6" firstAttribute="leading" secondItem="5ue-kD-Kyp" secondAttribute="trailing" constant="7" id="6br-Rh-irZ"/>
-                                                    <constraint firstItem="5ue-kD-Kyp" firstAttribute="leading" secondItem="ad8-Va-2mb" secondAttribute="leading" constant="3" id="EgK-bd-eqp"/>
-                                                    <constraint firstItem="5ue-kD-Kyp" firstAttribute="top" secondItem="9fg-dU-pW6" secondAttribute="top" id="fLl-za-Gs3"/>
-                                                    <constraint firstAttribute="trailing" secondItem="9fg-dU-pW6" secondAttribute="trailing" constant="-2" id="v76-gg-S8d"/>
-                                                    <constraint firstItem="9fg-dU-pW6" firstAttribute="top" secondItem="ad8-Va-2mb" secondAttribute="top" id="yTP-04-WIH"/>
+                                                    <constraint firstAttribute="trailing" secondItem="9fg-dU-pW6" secondAttribute="trailing" constant="3" id="IuF-VU-yNP"/>
+                                                    <constraint firstItem="9fg-dU-pW6" firstAttribute="top" secondItem="ad8-Va-2mb" secondAttribute="top" id="M9H-yF-Hms"/>
+                                                    <constraint firstItem="9fg-dU-pW6" firstAttribute="leading" secondItem="bpM-hd-kan" secondAttribute="trailing" constant="4" id="OdJ-F7-vhP"/>
+                                                    <constraint firstAttribute="bottom" secondItem="9fg-dU-pW6" secondAttribute="bottom" id="Ps9-hL-QCW"/>
+                                                    <constraint firstItem="bpM-hd-kan" firstAttribute="leading" secondItem="ad8-Va-2mb" secondAttribute="leading" constant="-2" id="UFY-jP-a5V"/>
+                                                    <constraint firstAttribute="centerY" secondItem="bpM-hd-kan" secondAttribute="centerY" constant="-3" id="r9i-JJ-7Hi"/>
                                                 </constraints>
                                                 <connections>
-                                                    <outlet property="imageView" destination="5ue-kD-Kyp" id="2oW-88-MiS"/>
                                                     <outlet property="textField" destination="9fg-dU-pW6" id="Ry0-kn-E4M"/>
                                                 </connections>
                                             </tableCellView>
@@ -108,7 +107,4 @@
         </customView>
         <customObject id="VW2-07-57D" userLabel="View Controller" customClass="SMMailboxViewController"/>
     </objects>
-    <resources>
-        <image name="NSActionTemplate" width="14" height="14"/>
-    </resources>
 </document>

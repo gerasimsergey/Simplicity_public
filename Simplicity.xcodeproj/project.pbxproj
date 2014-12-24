@@ -35,6 +35,7 @@
 		0082F5F11A0DCE290050578A /* SMSearchResultsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F01A0DCE290050578A /* SMSearchResultsListViewController.m */; };
 		0082F5F81A0DD39B0050578A /* SMSearchResultsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */; };
 		0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */; };
+		008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */; };
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
 		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
 		009742721957C78E00620145 /* SMMailbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 009742711957C78E00620145 /* SMMailbox.m */; };
@@ -111,6 +112,13 @@
 			remoteGlobalIDString = C6BD288C170BD71100A91AC1;
 			remoteInfo = "mailcore osx";
 		};
+		008AB9E81A4A80CD00F91D86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C600B6141A242C3F000728F1;
+			remoteInfo = unittestcpp;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -176,6 +184,8 @@
 		0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListController.m; sourceTree = "<group>"; };
 		0082F5FC1A0FFAAC0050578A /* SMLocalFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLocalFolder.h; sourceTree = "<group>"; };
 		0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLocalFolder.m; sourceTree = "<group>"; };
+		008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMColorCircle.h; sourceTree = "<group>"; };
+		008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMColorCircle.m; sourceTree = "<group>"; };
 		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
 		0097426C195686F900620145 /* SMMailboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxViewController.h; sourceTree = "<group>"; };
 		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
@@ -303,6 +313,7 @@
 				005B085D17D4EF3E00341051 /* MailCore.framework */,
 				00036D871A205FCC0085C266 /* MailCore.framework */,
 				00036D891A205FCC0085C266 /* unittest.xctest */,
+				008AB9E91A4A80CD00F91D86 /* unittestcpp */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -373,6 +384,8 @@
 		005B086D17D4F62600341051 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */,
+				008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */,
 				0040B0F7196A5331004E55CC /* SMFolderCellView.h */,
 				0040B0F8196A5331004E55CC /* SMFolderCellView.m */,
 				00F96C0B19343D8000CA5836 /* SMMessageDetailsView.h */,
@@ -512,6 +525,13 @@
 			remoteRef = 005B085C17D4EF3E00341051 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		008AB9E91A4A80CD00F91D86 /* unittestcpp */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = unittestcpp;
+			remoteRef = 008AB9E81A4A80CD00F91D86 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -568,6 +588,7 @@
 				009742721957C78E00620145 /* SMMailbox.m in Sources */,
 				0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */,
 				00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */,
+				008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
