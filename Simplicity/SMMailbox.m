@@ -13,23 +13,16 @@
 #import "SMMailbox.h"
 #import "SMFolder.h"
 
-@interface SMMailbox()
-
-- (void)addFolderToMailbox:(NSString*)folder delimiter:(char)delimiter;
-
-@end
-
 @implementation SMMailbox {
-	SMFolder *_root;
-	NSUInteger _foldersCount;
+	NSMutableArray *_folders;
 }
 
 - (id)init {
 	self = [ super init ];
 	
 	if(self) {
-		_root = [[ SMFolder alloc ] initWithName:@"ROOT" fullName:@"ROOT"];
-		_foldersCount = 0;
+		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT"];
+		_folders = [NSMutableArray arrayWithObject:_rootFolder];
 	}
 	
 	return self;
@@ -72,17 +65,20 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		NSAssert(nil, @"No folders in mailbox");
 	}
 
-//	NSLog(@"number of folders %lu", (unsigned long)_foldersCount);
+//	NSLog(@"number of folders %lu", _folders.count);
 }
 
-- (SMFolder*)root {
-	return _root;
+- (void)dfs:(SMFolder *)folder {
+	[_folders addObject:folder];
+	
+	for(SMFolder *subfolder in folder.subfolders)
+		[self dfs:subfolder];
 }
-	
+
 - (void)addFolderToMailbox:(NSString*)folderFullName delimiter:(char)delimiter {
-	SMFolder *curFolder = _root;
+	SMFolder *curFolder = _rootFolder;
 	
-	NSArray *tokens = [ folderFullName componentsSeparatedByString:[NSString stringWithFormat:@"%c", delimiter]];
+	NSArray *tokens = [folderFullName componentsSeparatedByString:[NSString stringWithFormat:@"%c", delimiter]];
 	NSMutableString *currentFullName = [NSMutableString new];
 	
 	for(NSUInteger i = 0; i < [tokens count]; i++) {
@@ -104,14 +100,22 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		}
 		
 		if(!found) {
-			for(; i < [tokens count]; i++) {
+			for(; i < [tokens count]; i++)
 				curFolder = [curFolder addSubfolder:token fullName:currentFullName];
-				_foldersCount++;
-			}
 			
 			break;
 		}
 	}
+	
+	// build flat structure
+	// TODO: optimize?
+	[_folders removeAllObjects];
+
+	[self dfs:_rootFolder];
+}
+
+- (NSArray*)folders {
+	return _folders;
 }
 
 @end

@@ -12,7 +12,9 @@
 
 @interface SMMailbox : NSObject
 
+@property (readonly) SMFolder *rootFolder;
+
 - (void)updateIMAPFolders:(NSArray *)folders;
-- (SMFolder*)root;
+- (NSArray*)folders;
 
 @end

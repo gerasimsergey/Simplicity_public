@@ -10,9 +10,9 @@
 
 @class SMMailbox;
 
-@interface SMMailboxViewController : NSViewController <NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface SMMailboxViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate>
 
-@property (weak) IBOutlet NSOutlineView *folderListView;
+@property (weak) IBOutlet NSTableView *folderListView;
 
 - (void)updateFolderListView;
 - (void)clearSelection;
