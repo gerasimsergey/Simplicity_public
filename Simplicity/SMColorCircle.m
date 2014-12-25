@@ -12,16 +12,14 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    
-	NSBezierPath* path = [NSBezierPath bezierPath];
- 
-	[[NSColor redColor] setStroke];
-	[[NSColor redColor] setFill];
-
-	[path appendBezierPathWithOvalInRect:dirtyRect];
 	
-	[path stroke];
-	[path fill];
+	NSRect rect = self.bounds;
+	NSPoint point = NSMakePoint(rect.origin.x + rect.size.width/2, rect.origin.y + rect.size.height/2);
+	float spotSide = self.bounds.size.width/2;
+	float halfSide = spotSide / 1.5;
+	NSRect spotRect = NSMakeRect(point.x - halfSide, point.y - halfSide, spotSide, spotSide);
+	[[NSColor blackColor] set];
+	[[NSBezierPath bezierPathWithOvalInRect: spotRect] fill];
 }
 
 @end

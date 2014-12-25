@@ -47,14 +47,14 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" customClass="SMColorCircle">
-                                                        <rect key="frame" x="-2" y="1" width="10" height="10"/>
+                                                        <rect key="frame" x="-2" y="-2" width="15" height="15"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="10" id="3V2-Wu-xCq"/>
-                                                            <constraint firstAttribute="height" constant="10" id="hAn-vb-ntw"/>
+                                                            <constraint firstAttribute="width" constant="15" id="3V2-Wu-xCq"/>
+                                                            <constraint firstAttribute="height" constant="15" id="hAn-vb-ntw"/>
                                                         </constraints>
                                                     </customView>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9fg-dU-pW6">
-                                                        <rect key="frame" x="10" y="0.0" width="184" height="17"/>
+                                                        <rect key="frame" x="15" y="0.0" width="179" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" usesSingleLineMode="YES" id="KYg-7e-QCg">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
