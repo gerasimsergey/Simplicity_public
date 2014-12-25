@@ -240,7 +240,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)loadSelectedMessagesInternal {
-	NSAssert(_selectedMessagesRemoteFolder != nil, @"bad remote folder");
+	if(_selectedMessagesRemoteFolder == nil) {
+		NSLog(@"%s: remote folder is not set", __func__);
+		return;
+	}
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	MCOIMAPSession *session = [[appDelegate model] session];

@@ -72,8 +72,6 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	if([_currentFolder.name isEqualToString:folder])
 		return;
 
-	// search folders won't be created on this path
-	// so set "sync with remote" to true
 	[self changeFolderInternal:folder syncWithRemoteFolder:YES];
 	[self startMessagesUpdate];
 	

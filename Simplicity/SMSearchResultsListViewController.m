@@ -36,7 +36,7 @@
 		NSTableColumn *column =[[NSTableColumn alloc]initWithIdentifier:@"1"];
 		[column.headerCell setTitle:@"Search results"];
 		
-		[_tableView setGridStyleMask:NSTableViewSolidHorizontalGridLineMask];
+		[_tableView setGridStyleMask:NSTableViewGridNone];
 		[_tableView addTableColumn:column];
 		[_tableView setDataSource:self];
 		[_tableView setDelegate:self];
