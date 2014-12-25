@@ -46,7 +46,7 @@
                                                 <rect key="frame" x="1" y="1" width="195" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" customClass="SMColorCircle">
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" userLabel="Color Mark" customClass="SMColorCircle">
                                                         <rect key="frame" x="-2" y="-2" width="15" height="15"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="15" id="3V2-Wu-xCq"/>
@@ -71,6 +71,7 @@
                                                     <constraint firstAttribute="centerY" secondItem="bpM-hd-kan" secondAttribute="centerY" constant="-3" id="r9i-JJ-7Hi"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="imageView" destination="bpM-hd-kan" id="xrQ-6k-0tt"/>
                                                     <outlet property="textField" destination="9fg-dU-pW6" id="Ry0-kn-E4M"/>
                                                 </connections>
                                             </tableCellView>
@@ -88,11 +89,11 @@
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="200" id="q9c-N0-Dqk"/>
                     </constraints>
-                    <scroller key="horizontalScroller" hidden="YES" appearanceType="vibrantLight" verticalHuggingPriority="750" horizontal="YES" id="dIO-OG-3HT">
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="dIO-OG-3HT">
                         <rect key="frame" x="1" y="119" width="223" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" appearanceType="vibrantLight" verticalHuggingPriority="750" horizontal="NO" id="OTl-FG-Clb">
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="OTl-FG-Clb">
                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>

@@ -14,6 +14,7 @@
 #import "SMSimplicityContainer.h"
 #import "SMMessageListController.h"
 #import "SMSearchResultsListViewController.h"
+#import "SMColorCircle.h"
 #import "SMMailboxViewController.h"
 
 @implementation SMMailboxViewController {
@@ -54,7 +55,7 @@
 	NSAssert(folder, @"bad folder");
 	
 	if(folder == _lastFolder) {
-		//NSLog(@"%s: selected folder didn't change", __func__);
+		NSLog(@"%s: selected folder didn't change", __func__);
 		return;
 	}
 	
@@ -91,7 +92,13 @@
 	NSAssert(result != nil, @"cannot make folder text field");
 	NSAssert(row >= 0 && row < mailbox.folders.count, @"row %ld is beyond folders array size %lu", row, mailbox.folders.count);
 	
-	[result.textField setStringValue:[mailbox.folders[row] fullName]];
+	SMFolder *folder = mailbox.folders[row];
+	[result.textField setStringValue:folder.fullName];
+
+	NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
+
+	SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
+	colorMark.color = folder.color;
 	
 	return result;
 }

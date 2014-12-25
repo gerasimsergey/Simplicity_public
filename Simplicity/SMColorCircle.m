@@ -25,7 +25,7 @@
 
 	NSRect innerSpotRect = NSMakeRect(point.x + 1, point.y + 2, spotSide, spotSide);
 
-	[[NSColor blackColor] set];
+	[_color set];
 	[[NSBezierPath bezierPathWithOvalInRect: innerSpotRect] fill];
 }
 

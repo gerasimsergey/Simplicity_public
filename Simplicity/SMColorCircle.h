@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SMColorCircle : NSView
+@interface SMColorCircle : NSImageView
+
+@property NSColor *color;
 
 @end

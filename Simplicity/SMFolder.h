@@ -13,6 +13,7 @@
 @property (readonly) NSString *shortName;
 @property (readonly) NSString *fullName;
 @property (readonly) NSArray *subfolders;
+@property (readonly) NSColor *color;
 
 - (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName;
 - (SMFolder*)addSubfolder:(NSString*)shortName fullName:(NSString*)fullName;
