@@ -20,7 +20,6 @@
 #import "SMSearchResultsListViewController.h"
 
 @implementation SMSearchResultsListViewController {
-	NSTableView *_tableView;
 	NSMutableDictionary *_cellViews;
 }
 
@@ -29,23 +28,6 @@
 	
 	if(self) {
 		_cellViews = [[NSMutableDictionary alloc] init];
-		
-		_tableView = [[NSTableView alloc] init];
-		_tableView.translatesAutoresizingMaskIntoConstraints = NO;
-
-		NSTableColumn *column =[[NSTableColumn alloc]initWithIdentifier:@"1"];
-		[column.headerCell setTitle:@"Search results"];
-		
-		[_tableView setGridStyleMask:NSTableViewGridNone];
-		[_tableView addTableColumn:column];
-		[_tableView setDataSource:self];
-		[_tableView setDelegate:self];
-		
-		// finally, commit the main view
-		
-		[self setView:_tableView];
-
-		// set async event handler
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetched:) name:@"MessageHeadersFetched" object:nil];
 	}

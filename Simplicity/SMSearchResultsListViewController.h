@@ -10,6 +10,8 @@
 
 @interface SMSearchResultsListViewController : NSViewController<NSTableViewDataSource, NSTableViewDelegate>
 
+@property IBOutlet NSTableView *tableView;
+
 - (void)reloadData;
 - (void)clearSelection;
 - (void)selectSearchResult:(NSString*)searchResultsLocalFolder;
