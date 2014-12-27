@@ -32,4 +32,6 @@
 - (void)updateMessageListView;
 - (void)updateMailboxFolderListView;
 
+- (void)toggleSearchResultsView;
+
 @end

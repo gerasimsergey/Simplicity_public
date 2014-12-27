@@ -12,4 +12,6 @@
 
 @property IBOutlet NSView *workView;
 
+- (IBAction)hideSearchResults:(id)sender;
+
 @end

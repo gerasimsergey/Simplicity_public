@@ -362,8 +362,6 @@
 			children = (
 				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
 				00FE6DF21A4E6C0600D2194F /* SMInstrumentPanelViewController.m */,
-				003858FE1A4D024500D4FD70 /* SMSearchResultsListViewController.h */,
-				003858FF1A4D024500D4FD70 /* SMSearchResultsListViewController.m */,
 				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
 				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
 				00DC84941967A70E00577667 /* SMMailboxController.h */,
@@ -386,6 +384,8 @@
 				00172FE9198B39BA00DB975E /* SMMessageViewController.m */,
 				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
 				0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */,
+				003858FE1A4D024500D4FD70 /* SMSearchResultsListViewController.h */,
+				003858FF1A4D024500D4FD70 /* SMSearchResultsListViewController.m */,
 			);
 			name = Control;
 			sourceTree = "<group>";

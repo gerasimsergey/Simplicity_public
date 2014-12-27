@@ -31,6 +31,9 @@
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="hideSearchResults:" target="-2" id="eFJ-Rj-jPf"/>
+                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="arQ-NF-dVx">
                                 <rect key="frame" x="171" y="2" width="31" height="23"/>

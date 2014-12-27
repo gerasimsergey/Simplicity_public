@@ -22,6 +22,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 @implementation SMAppController {
 	NSButton *button1, *button2;
 	NSToolbarItem *__weak _activeSearchItem;
+	NSLayoutConstraint *_searchResultsHeightConstraint;
 }
 
 - (void)awakeFromNib {
@@ -271,6 +272,18 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] searchResultsListController] startNewSearch:searchString exitingLocalFolder:nil];
+}
+
+- (void)toggleSearchResultsView {
+	if(_searchResultsHeightConstraint == nil) {
+		_searchResultsHeightConstraint = [NSLayoutConstraint constraintWithItem:_searchResultsListViewController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:0];
+
+		[_searchResultsListViewController.view addConstraint:_searchResultsHeightConstraint];
+	} else {
+		[_searchResultsListViewController.view removeConstraint:_searchResultsHeightConstraint];
+
+		_searchResultsHeightConstraint = nil;
+	}
 }
 
 @end
