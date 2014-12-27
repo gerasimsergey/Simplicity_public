@@ -14,6 +14,7 @@
 @class SMMessageListViewController;
 @class SMMessageViewController;
 @class SMMessageThreadViewController;
+@class SMInstrumentPanelViewController;
 
 @interface SMAppController : NSObject <NSToolbarDelegate>
 
@@ -26,6 +27,7 @@
 @property SMSearchResultsListViewController *searchResultsListViewController;
 @property SMMessageListViewController *messageListViewController;
 @property SMMessageThreadViewController *messageThreadViewController;
+@property SMInstrumentPanelViewController *instrumentPanelViewController;
 
 - (void)updateMessageListView;
 - (void)updateMailboxFolderListView;

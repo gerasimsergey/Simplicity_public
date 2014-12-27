@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SMInstrumentPanelViewController">
+            <connections>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+                <outlet property="workView" destination="LSm-cq-jH8" id="cDv-eW-wDx"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="433"/>
+            <subviews>
+                <box autoresizesSubviews="NO" title="Box" borderType="line" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="nfi-FJ-ILo">
+                    <rect key="frame" x="-3" y="-4" width="206" height="34"/>
+                    <view key="contentView">
+                        <rect key="frame" x="1" y="1" width="204" height="32"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gll-3h-Kly">
+                                <rect key="frame" x="0.0" y="3" width="31" height="28"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="31" id="oZ3-jt-zhF"/>
+                                </constraints>
+                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSListViewTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="B32-yr-X35">
+                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
+                        </subviews>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="9cq-WR-Py4"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="M5w-g1-HrS"/>
+                        <constraint firstItem="Gll-3h-Kly" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="1" id="e5X-A0-G2z"/>
+                        <constraint firstAttribute="bottom" secondItem="Gll-3h-Kly" secondAttribute="bottom" constant="1" id="m4S-nP-jUp"/>
+                        <constraint firstItem="Gll-3h-Kly" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" constant="-2" id="md8-Bb-31q"/>
+                    </constraints>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </box>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="LSm-cq-jH8">
+                    <rect key="frame" x="0.0" y="27" width="200" height="406"/>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="LSm-cq-jH8" secondAttribute="trailing" id="41A-UY-ULZ"/>
+                <constraint firstAttribute="bottom" secondItem="nfi-FJ-ILo" secondAttribute="bottom" id="96b-Fl-bxA"/>
+                <constraint firstItem="LSm-cq-jH8" firstAttribute="trailing" secondItem="nfi-FJ-ILo" secondAttribute="trailing" id="BX2-8a-i9z"/>
+                <constraint firstAttribute="bottom" secondItem="LSm-cq-jH8" secondAttribute="bottom" constant="27" id="Ppw-c4-B2I"/>
+                <constraint firstItem="nfi-FJ-ILo" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="c0Q-kG-nYq"/>
+                <constraint firstItem="LSm-cq-jH8" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" id="cqH-iw-JCR"/>
+                <constraint firstItem="LSm-cq-jH8" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="eYG-mZ-pNL"/>
+            </constraints>
+            <point key="canvasLocation" x="23.5" y="215.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSListViewTemplate" width="14" height="10"/>
+    </resources>
+</document>

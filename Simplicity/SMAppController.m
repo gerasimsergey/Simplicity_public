@@ -15,6 +15,7 @@
 #import "SMMessageListViewController.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
+#import "SMInstrumentPanelViewController.h"
 
 static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 
@@ -23,16 +24,22 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSToolbarItem *__weak _activeSearchItem;
 }
 
-@synthesize mailboxViewController = _mailboxViewController;
-@synthesize messageListViewController = _messageListViewController;
-@synthesize messageThreadViewController = _messageThreadViewController;
-
 - (void)awakeFromNib {
 	NSLog(@"SMAppController: awakeFromNib: _messageListViewController %@", _messageListViewController);
 	
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	appDelegate.appController = self;
 
+	//
+	
+	_instrumentPanelViewController = [ [ SMInstrumentPanelViewController alloc ] initWithNibName:@"SMInstrumentPanelViewController" bundle:nil ];
+	
+	NSAssert(_instrumentPanelViewController, @"_instrumentPanelViewController");
+	
+	NSView *instrumentPanelView = [ _instrumentPanelViewController view ];
+	
+	NSAssert(instrumentPanelView, @"instrumentPanelView");
+	
 	//
 
 	_mailboxViewController = [ [ SMMailboxViewController alloc ] initWithNibName:@"SMMailboxViewController" bundle:nil ];
@@ -90,13 +97,53 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	
 	//
 	
+	[_instrumentPanelViewController.workView addSubview:mailboxAndSearchResultsView];
+
+	[_instrumentPanelViewController.workView addConstraint:
+	 [NSLayoutConstraint constraintWithItem:_instrumentPanelViewController.workView
+								  attribute:NSLayoutAttributeLeading
+								  relatedBy:NSLayoutRelationEqual
+									 toItem:mailboxAndSearchResultsView
+								  attribute:NSLayoutAttributeLeading
+								 multiplier:1
+								   constant:0]];
+
+	[_instrumentPanelViewController.workView addConstraint:
+	 [NSLayoutConstraint constraintWithItem:_instrumentPanelViewController.workView
+								  attribute:NSLayoutAttributeTrailing
+								  relatedBy:NSLayoutRelationEqual
+									 toItem:mailboxAndSearchResultsView
+								  attribute:NSLayoutAttributeTrailing
+								 multiplier:1
+								   constant:0]];
+	
+	[_instrumentPanelViewController.workView addConstraint:
+	 [NSLayoutConstraint constraintWithItem:_instrumentPanelViewController.workView
+								  attribute:NSLayoutAttributeTop
+								  relatedBy:NSLayoutRelationEqual
+									 toItem:mailboxAndSearchResultsView
+								  attribute:NSLayoutAttributeTop
+								 multiplier:1
+								   constant:0]];
+	
+	[_instrumentPanelViewController.workView addConstraint:
+	 [NSLayoutConstraint constraintWithItem:_instrumentPanelViewController.workView
+								  attribute:NSLayoutAttributeBottom
+								  relatedBy:NSLayoutRelationEqual
+									 toItem:mailboxAndSearchResultsView
+								  attribute:NSLayoutAttributeBottom
+								 multiplier:1
+								   constant:0]];
+	
+	//
+	
 	NSSplitView *splitView = [[NSSplitView alloc] init];
 	splitView.translatesAutoresizingMaskIntoConstraints = NO;
 
 	[splitView setVertical:YES];
 	[splitView setDividerStyle:NSSplitViewDividerStyleThin];
 	
-	[splitView addSubview:mailboxAndSearchResultsView];
+	[splitView addSubview:instrumentPanelView];
 	[splitView addSubview:messageListView];
 	[splitView addSubview:messageThreadView];
 	

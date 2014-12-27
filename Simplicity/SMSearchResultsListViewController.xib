@@ -17,21 +17,13 @@
             <rect key="frame" x="0.0" y="0.0" width="202" height="373"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QHQ-N9-oou">
-                    <rect key="frame" x="0.0" y="351" width="202" height="23"/>
-                    <buttonCell key="cell" type="smallSquare" title="Search results" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2gU-7z-hkZ">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                </button>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xWT-bz-Ncf">
-                    <rect key="frame" x="0.0" y="0.0" width="202" height="352"/>
+                    <rect key="frame" x="0.0" y="0.0" width="202" height="373"/>
                     <clipView key="contentView" id="4Br-5T-O5l">
                         <rect key="frame" x="1" y="0.0" width="238" height="134"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="60q-Gj-Hc3">
-                                <rect key="frame" x="0.0" y="0.0" width="238" height="134"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -70,13 +62,10 @@
                 </scrollView>
             </subviews>
             <constraints>
-                <constraint firstItem="xWT-bz-Ncf" firstAttribute="top" secondItem="QHQ-N9-oou" secondAttribute="bottom" id="3LP-Su-8Ls"/>
-                <constraint firstItem="QHQ-N9-oou" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="CQf-Wv-Cqo"/>
                 <constraint firstItem="xWT-bz-Ncf" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="Pqy-E2-TIf"/>
-                <constraint firstAttribute="trailing" secondItem="QHQ-N9-oou" secondAttribute="trailing" id="hgh-XJ-y8q"/>
                 <constraint firstAttribute="bottom" secondItem="xWT-bz-Ncf" secondAttribute="bottom" id="k8S-ar-326"/>
                 <constraint firstAttribute="trailing" secondItem="xWT-bz-Ncf" secondAttribute="trailing" id="lC1-fV-EcW"/>
-                <constraint firstItem="QHQ-N9-oou" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="peZ-X7-vkJ"/>
+                <constraint firstItem="xWT-bz-Ncf" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="qB8-JJ-50c"/>
             </constraints>
             <point key="canvasLocation" x="220" y="179.5"/>
         </customView>
