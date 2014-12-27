@@ -17,50 +17,64 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="433"/>
             <subviews>
                 <box autoresizesSubviews="NO" title="Box" borderType="line" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="nfi-FJ-ILo">
-                    <rect key="frame" x="-3" y="-4" width="206" height="34"/>
+                    <rect key="frame" x="-3" y="-4" width="206" height="26"/>
                     <view key="contentView">
-                        <rect key="frame" x="1" y="1" width="204" height="32"/>
+                        <rect key="frame" x="1" y="1" width="204" height="24"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gll-3h-Kly">
-                                <rect key="frame" x="0.0" y="3" width="31" height="28"/>
+                                <rect key="frame" x="2" y="2" width="31" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="31" id="oZ3-jt-zhF"/>
                                 </constraints>
-                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSListViewTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="B32-yr-X35">
-                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="search-icon" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="B32-yr-X35">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="arQ-NF-dVx">
+                                <rect key="frame" x="171" y="2" width="31" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="31" id="Y2K-L6-5k1"/>
+                                </constraints>
+                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSSmartBadgeTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LnZ-ts-Awl">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                         </subviews>
                     </view>
                     <constraints>
-                        <constraint firstAttribute="height" constant="28" id="9cq-WR-Py4"/>
+                        <constraint firstAttribute="height" constant="20" id="9cq-WR-Py4"/>
+                        <constraint firstAttribute="trailing" secondItem="arQ-NF-dVx" secondAttribute="trailing" id="FEp-F2-I2b"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="M5w-g1-HrS"/>
-                        <constraint firstItem="Gll-3h-Kly" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="1" id="e5X-A0-G2z"/>
-                        <constraint firstAttribute="bottom" secondItem="Gll-3h-Kly" secondAttribute="bottom" constant="1" id="m4S-nP-jUp"/>
-                        <constraint firstItem="Gll-3h-Kly" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" constant="-2" id="md8-Bb-31q"/>
+                        <constraint firstItem="arQ-NF-dVx" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="-1" id="O9Z-1e-XEG"/>
+                        <constraint firstItem="Gll-3h-Kly" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="-1" id="e5X-A0-G2z"/>
+                        <constraint firstAttribute="bottom" secondItem="Gll-3h-Kly" secondAttribute="bottom" id="m4S-nP-jUp"/>
+                        <constraint firstItem="Gll-3h-Kly" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" id="md8-Bb-31q" userLabel="IHorizontal Space - Square - Box"/>
+                        <constraint firstAttribute="bottom" secondItem="arQ-NF-dVx" secondAttribute="bottom" id="ogI-6W-Qu1"/>
                     </constraints>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </box>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="LSm-cq-jH8">
-                    <rect key="frame" x="0.0" y="27" width="200" height="406"/>
+                    <rect key="frame" x="0.0" y="20" width="200" height="413"/>
                 </customView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="LSm-cq-jH8" secondAttribute="trailing" id="41A-UY-ULZ"/>
                 <constraint firstAttribute="bottom" secondItem="nfi-FJ-ILo" secondAttribute="bottom" id="96b-Fl-bxA"/>
-                <constraint firstItem="LSm-cq-jH8" firstAttribute="trailing" secondItem="nfi-FJ-ILo" secondAttribute="trailing" id="BX2-8a-i9z"/>
-                <constraint firstAttribute="bottom" secondItem="LSm-cq-jH8" secondAttribute="bottom" constant="27" id="Ppw-c4-B2I"/>
+                <constraint firstItem="LSm-cq-jH8" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="KeF-9l-IkY"/>
+                <constraint firstAttribute="bottom" secondItem="LSm-cq-jH8" secondAttribute="bottom" constant="20" symbolic="YES" id="WBt-fa-fSD"/>
                 <constraint firstItem="nfi-FJ-ILo" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="c0Q-kG-nYq"/>
-                <constraint firstItem="LSm-cq-jH8" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" id="cqH-iw-JCR"/>
-                <constraint firstItem="LSm-cq-jH8" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="eYG-mZ-pNL"/>
+                <constraint firstItem="LSm-cq-jH8" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" id="htP-Zd-PS5"/>
+                <constraint firstItem="LSm-cq-jH8" firstAttribute="trailing" secondItem="nfi-FJ-ILo" secondAttribute="trailing" id="mSl-kv-Mi7"/>
+                <constraint firstAttribute="trailing" secondItem="LSm-cq-jH8" secondAttribute="trailing" id="sh4-bE-wds"/>
             </constraints>
-            <point key="canvasLocation" x="23.5" y="215.5"/>
+            <point key="canvasLocation" x="23" y="215.5"/>
         </customView>
     </objects>
     <resources>
-        <image name="NSListViewTemplate" width="14" height="10"/>
+        <image name="NSSmartBadgeTemplate" width="14" height="14"/>
+        <image name="search-icon" width="100" height="100"/>
     </resources>
 </document>
