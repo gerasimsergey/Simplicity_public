@@ -277,19 +277,33 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] searchResultsListController] startNewSearch:searchString exitingLocalFolder:nil];
+	
+	[self showSearchResultsView];
 }
 
-- (void)toggleSearchResultsView {
+- (void)showSearchResultsView {
+	if(_searchResultsShownConstraints != nil) {
+		[_searchResultsListViewController.view removeConstraints:[_searchResultsListViewController.view constraints]];
+		[_searchResultsListViewController.view addConstraints:_searchResultsShownConstraints];
+		
+		_searchResultsShownConstraints = nil;
+	}
+}
+
+- (void)hideSearchResultsView {
 	if(_searchResultsShownConstraints == nil) {
 		_searchResultsShownConstraints = [_searchResultsListViewController.view constraints];
 		
 		[_searchResultsListViewController.view removeConstraints:_searchResultsShownConstraints];
 		[_searchResultsListViewController.view addConstraint:[NSLayoutConstraint constraintWithItem:_searchResultsListViewController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:0]];
-	} else {
-		[_searchResultsListViewController.view removeConstraints:[_searchResultsListViewController.view constraints]];
-		[_searchResultsListViewController.view addConstraints:_searchResultsShownConstraints];
+	}
+}
 
-		_searchResultsShownConstraints = nil;
+- (void)toggleSearchResultsView {
+	if(_searchResultsShownConstraints == nil) {
+		[self hideSearchResultsView];
+	} else {
+		[self showSearchResultsView];
 	}
 }
 
