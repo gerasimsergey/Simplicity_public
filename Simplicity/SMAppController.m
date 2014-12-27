@@ -23,6 +23,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSButton *button1, *button2;
 	NSToolbarItem *__weak _activeSearchItem;
 	NSLayoutConstraint *_searchResultsHeightConstraint;
+	NSArray *_searchResultsShownConstraints;
 }
 
 - (void)awakeFromNib {
@@ -167,6 +168,10 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+	
+	//
+	
+	[self toggleSearchResultsView];
 }
 
 - (void)updateMessageListView {
@@ -275,14 +280,16 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 }
 
 - (void)toggleSearchResultsView {
-	if(_searchResultsHeightConstraint == nil) {
-		_searchResultsHeightConstraint = [NSLayoutConstraint constraintWithItem:_searchResultsListViewController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:0];
-
-		[_searchResultsListViewController.view addConstraint:_searchResultsHeightConstraint];
+	if(_searchResultsShownConstraints == nil) {
+		_searchResultsShownConstraints = [_searchResultsListViewController.view constraints];
+		
+		[_searchResultsListViewController.view removeConstraints:_searchResultsShownConstraints];
+		[_searchResultsListViewController.view addConstraint:[NSLayoutConstraint constraintWithItem:_searchResultsListViewController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:0]];
 	} else {
-		[_searchResultsListViewController.view removeConstraint:_searchResultsHeightConstraint];
+		[_searchResultsListViewController.view removeConstraints:[_searchResultsListViewController.view constraints]];
+		[_searchResultsListViewController.view addConstraints:_searchResultsShownConstraints];
 
-		_searchResultsHeightConstraint = nil;
+		_searchResultsShownConstraints = nil;
 	}
 }
 
