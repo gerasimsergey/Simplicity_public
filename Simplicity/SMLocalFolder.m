@@ -11,6 +11,7 @@
 #import "SMAppDelegate.h"
 #import "SMMessageStorage.h"
 #import "SMAppController.h"
+#import "SMMessageListController.h"
 #import "SMLocalFolder.h"
 
 static const NSUInteger DEFAULT_MAX_MESSAGES_PER_FOLDER = 300;
@@ -56,6 +57,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	return self;
 }
 
+- (void)rescheduleMessageListUpdate {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] messageListController] scheduleMessageListUpdate:NO];
+}
+
 - (void)startLocalFolderSync {
 	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil) {
 		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _name);
@@ -83,6 +89,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	[_folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
 		_folderInfoOp = nil;
+
+		// reschedule must be done as soon as the first async op (folder info) is complete
+		// to avoid false sync stops on connectivity loss in the middle of another
+		// async operation
+		[self rescheduleMessageListUpdate];
 		
 		if(error == nil) {
 //			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
@@ -138,26 +149,37 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	[_fetchMessageBodyOps setObject:op forKey:[NSNumber numberWithUnsignedInt:uid]];
 	
-	// TODO: don't fetch if body is already being fetched (non-urgently!)
-	// TODO: if urgent fetch is requested, cancel the non-urgent fetch
-	[op start:^(NSError * error, NSData * data) {
-		[_fetchMessageBodyOps removeObjectForKey:[NSNumber numberWithUnsignedInt:uid]];
+	void (^opBlock)(NSError *error, NSData * data) = nil;
 
+	opBlock = ^(NSError * error, NSData * data) {
+		//	NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
+		
 		if ([error code] != MCOErrorNone) {
-			NSLog(@"Error downloading message body for uid %u, remote folder %@", uid, remoteFolder);
+			NSLog(@"%s: Error downloading message body for uid %u, remote folder %@", __func__, uid, remoteFolder);
+
+			MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:[NSNumber numberWithUnsignedInt:uid]];
+
+			// restart this message body fetch to prevent data loss
+			// on connectivity/server problems
+			[op start:opBlock];
+
 			return;
 		}
-
+		
+		[_fetchMessageBodyOps removeObjectForKey:[NSNumber numberWithUnsignedInt:uid]];
+		
 		NSAssert(data != nil, @"data != nil");
-
-		//	NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
 		
 		[[[appDelegate model] messageStorage] setMessageData:data uid:uid localFolder:_name threadId:threadId];
 		
 		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
-
+		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageBodyFetched" object:nil userInfo:messageInfo];
-	}];
+	};
+	
+	// TODO: don't fetch if body is already being fetched (non-urgently!)
+	// TODO: if urgent fetch is requested, cancel the non-urgent fetch
+	[op start:opBlock];
 	
 	return YES;
 }
@@ -208,6 +230,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_fetchMessageHeadersOp.urgent = YES;
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
+		// reschedule now to avoid any prev. scheduled operation to break the
+		// ongoing sync process
+		[self rescheduleMessageListUpdate];
+		
 		_fetchMessageHeadersOp = nil;
 		
 		if(error == nil) {

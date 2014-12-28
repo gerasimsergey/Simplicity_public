@@ -32,10 +32,16 @@
 }
 
 - (void)scheduleFolderListUpdate {
+	//NSLog(@"%s: scheduling folder update after %u sec", __func__, FOLDER_LIST_UPDATE_INTERVAL_SEC);
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
+
 	[self performSelector:@selector(updateFolders) withObject:nil afterDelay:FOLDER_LIST_UPDATE_INTERVAL_SEC];
 }
 
 - (void)updateFolders {
+	//NSLog(@"%s: updating folders", __func__);
+
 	MCOIMAPSession *session = [ _model session ];
 	NSAssert(session != nil, @"session is nil");
 
@@ -43,6 +49,12 @@
 		_fetchFoldersOp = [session fetchAllFoldersOperation];
 	
 	[_fetchFoldersOp start:^(NSError * error, NSArray *folders) {
+		_fetchFoldersOp = nil;
+		
+		// schedule now to keep the folder list updated
+		// regardless of any connectivity or server errors
+		[self scheduleFolderListUpdate];
+		
 		if (error != nil && [error code] != MCOErrorNone) {
 			NSLog(@"Error downloading folders structure");
 			return;
@@ -52,8 +64,6 @@
 		NSAssert(mailbox != nil, @"mailbox is nil");
 		
 		[mailbox updateIMAPFolders:folders];
-
-		[self scheduleFolderListUpdate];
 
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMAppController *appController = [appDelegate appController];

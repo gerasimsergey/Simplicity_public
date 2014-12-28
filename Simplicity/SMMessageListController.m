@@ -98,6 +98,8 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 }
 
 - (void)startMessagesUpdate {
+	//NSLog(@"%s: updating message list", __func__);
+
 	[_currentFolder startLocalFolderSync];
 }
 
@@ -133,14 +135,14 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[[appController messageThreadViewController] updateMessageThread];
 }
 
-- (void)scheduleMessageListUpdate {
-	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:MESSAGE_LIST_UPDATE_INTERVAL_SEC];
-}
+- (void)scheduleMessageListUpdate:(Boolean)now {
+	NSTimeInterval delay_sec = now? 0 : MESSAGE_LIST_UPDATE_INTERVAL_SEC;
+	
+	//NSLog(@"%s: scheduling message list update after %lu sec", __func__, (unsigned long)delay_sec);
 
-- (void)forceMessageListUpdate {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 
-	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:0];
+	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:delay_sec];
 }
 
 - (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId {
@@ -165,8 +167,6 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
 
 	if([_currentFolder.name isEqualToString:localFolder]) {
-		[self scheduleMessageListUpdate];
-	
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMAppController *appController = [appDelegate appController];
 		

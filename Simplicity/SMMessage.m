@@ -293,7 +293,7 @@
 					SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
 					[[[appDelegate model] attachmentStorage] storeAttachment:data folder:_remoteFolder uid:uid contentId:[imapPart contentID]];
 				} else {
-					NSLog(@"Error downloading message body for msg uid %u, part unique id %@: %@", uid, partId, error);
+					NSLog(@"%s: Error downloading message body for msg uid %u, part unique id %@: %@", __func__, uid, partId, error);
 				}
 			}];
 		}
@@ -309,7 +309,7 @@
 	if(!_data) {
 		// TODO: Request urgently for the data
 		// TODO: Request future update
-		NSLog(@"%s: no data for message uid %u", __FUNCTION__, [_imapMessage uid]);
+		//NSLog(@"%s: no data for message uid %u", __FUNCTION__, [_imapMessage uid]);
 		return nil;
 	}
 

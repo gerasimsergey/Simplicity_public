@@ -83,16 +83,23 @@
 	NSAssert(_capabilitiesOp == nil, @"_capabilitiesOp is not nil");
 		
 	_capabilitiesOp = [_session capabilityOperation];
-
-	[_capabilitiesOp start:^(NSError * error, MCOIndexSet * capabilities) {
+	
+	void (^opBlock)(NSError*, MCOIndexSet*) = nil;
+	
+	opBlock = ^(NSError * error, MCOIndexSet * capabilities) {
 		if(error) {
 			NSLog(@"%s: error getting IMAP capabilities: %@", __FUNCTION__, error);
+
+			[_capabilitiesOp start:opBlock];
 		} else {
 			NSLog(@"%s: capabilities: %@", __FUNCTION__, capabilities);
-		
+			
 			_imapServerCapabilities = capabilities;
+			_capabilitiesOp = nil;
 		}
-	}];
+	};
+
+	[_capabilitiesOp start:opBlock];
 }
 
 @end

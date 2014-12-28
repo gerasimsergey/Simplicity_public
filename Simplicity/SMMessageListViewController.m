@@ -120,7 +120,7 @@
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
-	[messageListController forceMessageListUpdate];
+	[messageListController scheduleMessageListUpdate:YES];
 
 	[_updatingMessagesProgressIndicator setHidden:NO];
 	[_updatingMessagesProgressIndicator startAnimation:self];
@@ -135,7 +135,7 @@
 	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 	if(currentFolder != nil && [currentFolder messageHeadersAreBeingLoaded] == NO) {
 		[currentFolder increaseLocalFolderCapacity];
-		[messageListController forceMessageListUpdate];
+		[messageListController scheduleMessageListUpdate:YES];
 
 		[_loadingMoreMessagesProgressIndicator setHidden:NO];
 		[_loadingMoreMessagesProgressIndicator startAnimation:self];
