@@ -89,6 +89,8 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	NSSplitView *mailboxAndSearchResultsView = [[NSSplitView alloc] init];
 	mailboxAndSearchResultsView.translatesAutoresizingMaskIntoConstraints = NO;
 	
+	[mailboxAndSearchResultsView setDelegate:self];
+	
 	[mailboxAndSearchResultsView setVertical:NO];
 	[mailboxAndSearchResultsView setDividerStyle:NSSplitViewDividerStyleThin];
 	
@@ -281,8 +283,12 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	[self showSearchResultsView];
 }
 
+- (Boolean)isSearchResultsViewHidden {
+	return _searchResultsShownConstraints != nil;
+}
+
 - (void)showSearchResultsView {
-	if(_searchResultsShownConstraints != nil) {
+	if([self isSearchResultsViewHidden]) {
 		[_searchResultsListViewController.view removeConstraints:[_searchResultsListViewController.view constraints]];
 		[_searchResultsListViewController.view addConstraints:_searchResultsShownConstraints];
 		
@@ -291,7 +297,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 }
 
 - (void)hideSearchResultsView {
-	if(_searchResultsShownConstraints == nil) {
+	if(![self isSearchResultsViewHidden]) {
 		_searchResultsShownConstraints = [_searchResultsListViewController.view constraints];
 		
 		[_searchResultsListViewController.view removeConstraints:_searchResultsShownConstraints];
@@ -300,11 +306,19 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 }
 
 - (void)toggleSearchResultsView {
-	if(_searchResultsShownConstraints == nil) {
-		[self hideSearchResultsView];
-	} else {
+	if([self isSearchResultsViewHidden]) {
 		[self showSearchResultsView];
+	} else {
+		[self hideSearchResultsView];
 	}
+}
+
+- (NSRect)splitView:(NSSplitView *)splitView effectiveRect:(NSRect)proposedEffectiveRect forDrawnRect:(NSRect)drawnRect ofDividerAtIndex:(NSInteger)dividerIndex
+{
+	if([self isSearchResultsViewHidden])
+		return NSZeroRect;
+	
+	return proposedEffectiveRect;
 }
 
 @end

@@ -16,7 +16,7 @@
 @class SMMessageThreadViewController;
 @class SMInstrumentPanelViewController;
 
-@interface SMAppController : NSObject <NSToolbarDelegate>
+@interface SMAppController : NSObject <NSToolbarDelegate, NSSplitViewDelegate>
 
 @property (weak, nonatomic) IBOutlet NSView *view;
 
