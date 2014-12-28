@@ -101,7 +101,7 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	[view addConstraint:constraint];
 }
 
-- (void)buttonClicked:(id)sender {
+- (void)setCollapsedView {
 	NSView *view = [self view];
 	
 	if(!_collapsed)
@@ -113,19 +113,39 @@ static const NSUInteger HEADER_HEIGHT = 36;
 		_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT];
 		
 		[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
-
+		
 		_collapsed = YES;
 	}
-	else
+}
+
+- (void)unsetCollapsedView {
+	NSView *view = [self view];
+	
+	if(_collapsed)
 	{
 		[view removeConstraint:_heightConstraint];
 		
 		_heightConstraint = nil;
 		
 		_collapsed = NO;
-
+		
 		[_progressIndicator setHidden:NO];
 	}
+}
+
+- (void)toggleCollapsedView {
+	if(!_collapsed)
+	{
+		[self setCollapsedView];
+	}
+	else
+	{
+		[self unsetCollapsedView];
+	}
+}
+
+- (void)buttonClicked:(id)sender {
+	[self toggleCollapsedView];
 }
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {

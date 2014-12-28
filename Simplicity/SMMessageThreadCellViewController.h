@@ -21,4 +21,7 @@
 
 - (void)enableCollapse;
 
+- (void)setCollapsedView;
+- (void)unsetCollapsedView;
+
 @end

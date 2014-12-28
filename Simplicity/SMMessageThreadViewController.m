@@ -119,6 +119,11 @@
 	[_messageThreadView setDocumentView:_contentView];
 
 	[self setViewConstraints];
+
+	for(NSInteger i = 1; i < _cells.count; i++) {
+		ThreadCell *cell = _cells[i];
+		[cell.viewController setCollapsedView];
+	}
 }
 
 - (void)updateMessageThread {
