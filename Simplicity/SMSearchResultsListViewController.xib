@@ -16,19 +16,19 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="202" height="373"/>
             <subviews>
-                <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xWT-bz-Ncf">
-                    <rect key="frame" x="-18" y="111" width="2" height="18"/>
+                <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xWT-bz-Ncf">
+                    <rect key="frame" x="0.0" y="0.0" width="202" height="373"/>
                     <clipView key="contentView" misplaced="YES" id="4Br-5T-O5l">
                         <rect key="frame" x="1" y="0.0" width="238" height="134"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="tWe-W7-RJA" viewBased="YES" id="60q-Gj-Hc3">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="P0J-k6-aBo" viewBased="YES" id="60q-Gj-Hc3">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn editable="NO" width="40" minWidth="40" maxWidth="1000" id="yKP-Qu-Nh5">
+                                    <tableColumn editable="NO" width="197" minWidth="40" maxWidth="1000" id="yKP-Qu-Nh5">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Search results">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -53,16 +53,22 @@
                         <rect key="frame" x="1" y="119" width="223" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="SRg-eT-VYZ">
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="SRg-eT-VYZ">
                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <tableHeaderView key="headerView" id="tWe-W7-RJA">
+                    <tableHeaderView key="headerView" id="P0J-k6-aBo">
                         <rect key="frame" x="0.0" y="0.0" width="10000" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
             </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="xWT-bz-Ncf" secondAttribute="bottom" id="8eY-dj-QMu"/>
+                <constraint firstItem="xWT-bz-Ncf" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="I59-F8-bIO"/>
+                <constraint firstAttribute="trailing" secondItem="xWT-bz-Ncf" secondAttribute="trailing" id="Vh9-mU-ywS"/>
+                <constraint firstItem="xWT-bz-Ncf" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="cex-lg-8lW"/>
+            </constraints>
             <point key="canvasLocation" x="220" y="179.5"/>
         </customView>
     </objects>

@@ -360,10 +360,10 @@
 		005B086C17D4F5D000341051 /* Control */ = {
 			isa = PBXGroup;
 			children = (
-				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
-				00FE6DF21A4E6C0600D2194F /* SMInstrumentPanelViewController.m */,
 				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
 				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
+				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
+				00FE6DF21A4E6C0600D2194F /* SMInstrumentPanelViewController.m */,
 				00DC84941967A70E00577667 /* SMMailboxController.h */,
 				00DC84951967A70E00577667 /* SMMailboxController.m */,
 				0097426C195686F900620145 /* SMMailboxViewController.h */,
