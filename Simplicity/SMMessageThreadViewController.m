@@ -120,9 +120,23 @@
 
 	[self setViewConstraints];
 
-	for(NSInteger i = 1; i < _cells.count; i++) {
-		ThreadCell *cell = _cells[i];
-		[cell.viewController setCollapsedView];
+	if(_currentMessageThread.unseen) {
+		for(NSInteger i = 0; i < _cells.count; i++) {
+			ThreadCell *cell = _cells[i];
+			
+			if(cell.message.unseen)
+				[cell.viewController unsetCollapsedView];
+			else
+				[cell.viewController setCollapsedView];
+		}
+	} else {
+		ThreadCell *firstCell = _cells[0];
+		[firstCell.viewController unsetCollapsedView];
+		
+		for(NSInteger i = 1; i < _cells.count; i++) {
+			ThreadCell *cell = _cells[i];
+			[cell.viewController setCollapsedView];
+		}
 	}
 }
 
