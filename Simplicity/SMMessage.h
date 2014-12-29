@@ -20,6 +20,7 @@
 @property (readonly) uint32_t uid;
 @property (readonly) NSString *htmlBodyRendering;
 @property (readonly) NSString *remoteFolder;
+@property (readonly) Boolean unseen;
 
 @property (assign) NSData *data;
 
@@ -35,8 +36,6 @@
 - (void)fetchInlineAttachments;
 
 - (void)updateImapMessage:(MCOIMAPMessage*)m;
-
-- (MCOIMAPMessage*)getImapMessage;
 
 - (NSString*)localizedDate;
 

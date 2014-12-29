@@ -82,8 +82,14 @@
 
 //	NSLog(@"%s: from '%@', subject '%@'", __FUNCTION__, [message from], [message subject]);
 	
-	[ view.fromTextField setStringValue:[message from] ];
-	[ view.subjectTextField setStringValue:[message subject] ];
+	[view.fromTextField setStringValue:[message from]];
+	[view.subjectTextField setStringValue:[message subject]];
+
+	NSFont *font = [view.subjectTextField font];
+	
+	font = messageThread.unseen? [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSFontBoldTrait] : [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSFontBoldTrait];
+
+	[view.subjectTextField setFont:font];
 
 	[view.dateTextField setStringValue:[message localizedDate]];
 	

@@ -146,15 +146,19 @@
 	
 	// update the messages list
 	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage remoteFolder:remoteFolder];
-	
+
 	[ message setUpdated:YES];
 	
 	[ _messageCollection.messages insertObject:message atIndex:messageIndex ];
-	
+
 	// update the date sorted messages list
 	NSUInteger messageIndexByDate = [_messageCollection.messagesByDate indexOfObject:message inSortedRange:NSMakeRange(0, [_messageCollection.messagesByDate count]) options:NSBinarySearchingInsertionIndex usingComparator:[comparators messagesComparatorByDate]];
 	
 	[ _messageCollection.messagesByDate insertObject:message atIndex:messageIndexByDate ];
+
+	// update thread attributes
+	if(message.unseen)
+		_unseen = YES;
 }
 
 - (Boolean)endUpdate:(Boolean)removeVanishedMessages {
@@ -194,9 +198,15 @@
 	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	
+	_unseen = NO;
+
 	// clear update marks for future updates
-	for(SMMessage *message in _messageCollection.messages)
+	for(SMMessage *message in _messageCollection.messages) {
+		if(message.unseen)
+			_unseen = YES;
+
 		[message setUpdated:NO];
+	}
 
 	if([_messageCollection count] > 0) {
 		SMMessage *newFirstMessage = [_messageCollection.messagesByDate firstObject];
@@ -204,7 +214,6 @@
 	} else {
 		return YES;
 	}
-	
 }
 
 - (void)cancelUpdate {

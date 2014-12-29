@@ -14,12 +14,14 @@
 
 @interface SMMessageThread : NSObject
 
+@property (readonly) uint64_t threadId;
+@property (readonly) NSInteger messagesCount;
+@property (readonly) Boolean unseen;
+
 - (id)initWithThreadId:(uint64_t)threadId;
 
-- (uint64_t)threadId;
 - (SMMessage*)latestMessage;
 
-- (NSInteger)messagesCount;
 - (NSArray*)messagesSortedByDate;
 - (SMMessage*)getMessage:(uint32_t)uid;
 

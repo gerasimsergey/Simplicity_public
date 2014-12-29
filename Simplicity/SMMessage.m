@@ -224,7 +224,22 @@
 		NSLog(@"%s: IMAP message is set", __FUNCTION__);
 
 		_imapMessage = m;
+	} else if(_imapMessage.originalFlags != m.originalFlags) {
+		// TODO: be careful there because in future new flags should combine with the local flags
+		
+		NSLog(@"%s: IMAP message uid %u original flags have changed", __FUNCTION__, _imapMessage.uid);
+
+		_imapMessage = m;
 	}
+}
+
+- (Boolean)unseen {
+	if(_imapMessage == nil) {
+		NSLog(@"%s: IMAP message is set", __FUNCTION__);
+		return YES;
+	}
+	
+	return (_imapMessage.originalFlags & MCOMessageFlagSeen) == 0;
 }
 
 - (void)fetchInlineAttachments {
