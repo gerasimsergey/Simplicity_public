@@ -29,7 +29,7 @@
 
 - (SMMessageThread*)messageThreadById:(uint64_t)threadId localFolder:(NSString*)folder;
 - (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index localFolder:(NSString*)folder;
-- (NSUInteger)getMessageThreadIndex:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder;
+- (NSUInteger)getMessageThreadIndexByDate:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder;
 
 - (void)setMessageData:(NSData*)data uid:(uint32_t)uid localFolder:(NSString*)localFolder threadId:(uint64_t)threadId;
 - (BOOL)messageHasData:(uint32_t)uid localFolder:(NSString*)localFolder threadId:(uint64_t)threadId;

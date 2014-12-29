@@ -109,7 +109,7 @@
 	if(preserveSelection && _selectedMessageThread != nil) {
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 		
-		NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndex:_selectedMessageThread localFolder:currentFolder.name];
+		NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
 		if(threadIndex != NSNotFound)
 			threadIndexSet = [NSIndexSet indexSetWithIndex:threadIndex];

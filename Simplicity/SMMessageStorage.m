@@ -69,7 +69,7 @@
 	return [_foldersMessageThreadsMap objectForKey:folder];
 }
 
-- (NSUInteger)getMessageThreadIndex:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder {
+- (NSUInteger)getMessageThreadIndexByDate:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder {
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 		
@@ -137,7 +137,7 @@
 			
 			updateThread = YES;
 		} else {
-			oldMessageThreadIndex = [self getMessageThreadIndex:messageThread localFolder:localFolder];
+			oldMessageThreadIndex = [self getMessageThreadIndexByDate:messageThread localFolder:localFolder];
 
 			NSAssert(oldMessageThreadIndex != NSNotFound, @"message thread not found");
 			
@@ -174,19 +174,18 @@
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad thread collection");
 	
-	NSMutableSet *vanishedThreads = [[NSMutableSet alloc] init];
 	NSMutableSet *vanishedThreadIds = [[NSMutableSet alloc] init];
 
 	for(NSNumber *threadId in collection.messageThreads) {
 		SMMessageThread *messageThread = [collection.messageThreads objectForKey:threadId];
-		NSUInteger oldMessageThreadIndex = [self getMessageThreadIndex:messageThread localFolder:localFolder];
+		NSUInteger oldMessageThreadIndex = [self getMessageThreadIndexByDate:messageThread localFolder:localFolder];
 
 		if([messageThread endUpdate:removeVanishedMessages]) {
 			if([messageThread messagesCount] == 0) {
 				NSLog(@"%s: message thread %lld vanished", __func__, messageThread.threadId);
 
-				[vanishedThreads addObject:messageThread];
 				[vanishedThreadIds addObject:[NSNumber numberWithUnsignedLongLong:[messageThread threadId]]];
+				[collection.messageThreadsByDate removeObject:messageThread];
 			} else {
 				NSAssert(oldMessageThreadIndex != NSNotFound, @"message thread not found");
 				[self insertMessageThreadAtIndex:messageThread localFolder:localFolder oldIndex:oldMessageThreadIndex];
@@ -195,7 +194,6 @@
 	}
 
 	[collection.messageThreads removeObjectsForKeys:[vanishedThreadIds allObjects]];
-	[collection.messageThreadsByDate removeObjectsInArray:[vanishedThreads allObjects]];
 
 	NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count not equal to sorted threads count");
 }
