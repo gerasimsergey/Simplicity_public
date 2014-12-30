@@ -41,24 +41,35 @@
 	return messageThreadsCount;
 }
 
+- (void)changeSelection:(NSNumber*)row {
+	NSInteger selectedRow = [row integerValue];
+	NSAssert(selectedRow >= 0, @"bad row %ld", selectedRow);
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+	NSAssert(currentFolder != nil, @"bad corrent folder");
+	
+	_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
+	
+	if(_selectedMessageThread != nil) {
+		[[[appDelegate appController] messageThreadViewController] setMessageThread:_selectedMessageThread];
+	} else {
+		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+	}
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
 //	NSLog(@"%s, selected row %lu, app delegate %@", __FUNCTION__, selectedRow, [[ NSApplication sharedApplication ] delegate]);
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
+
 	if(selectedRow >= 0) {
-		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-		SMMessageListController *messageListController = [[appDelegate model] messageListController];
-		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
-		NSAssert(currentFolder != nil, @"bad corrent folder");
-
-		_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
-
-		if(_selectedMessageThread != nil) {
-			[[[appDelegate appController] messageThreadViewController] setMessageThread:_selectedMessageThread];
-		} else {
-			[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-		}
+		// delay the selection for a tiny bit to optimize fast cursor movement
+		// e.g. when the user uses an up/down arrow keys to navigate, skipping many messages between selections
+		[self performSelector:@selector(changeSelection:) withObject:[NSNumber numberWithInteger:selectedRow] afterDelay:0.3];
 	}
 }
 
