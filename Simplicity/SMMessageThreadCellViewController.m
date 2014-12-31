@@ -13,6 +13,7 @@
 static const NSUInteger HEADER_HEIGHT = 36;
 
 @implementation SMMessageThreadCellViewController {
+	NSButton *_infoButton;
 	NSProgressIndicator *_progressIndicator;
 	NSLayoutConstraint *_heightConstraint;
 	CGFloat _messageViewHeight;
@@ -30,6 +31,19 @@ static const NSUInteger HEADER_HEIGHT = 36;
 		NSBox *view = [[NSBox alloc] init];
 		view.translatesAutoresizingMaskIntoConstraints = NO;
 		[view setTitlePosition:NSNoTitle];
+
+		// init info button
+		
+		_infoButton = [[NSButton alloc] init];
+		_infoButton.translatesAutoresizingMaskIntoConstraints = NO;
+		_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
+		_infoButton.target = self;
+		_infoButton.action = @selector(buttonClicked:);
+		
+		[_infoButton setTransparent:YES];
+		[_infoButton setEnabled:NO];
+		
+		[view addSubview:_infoButton];
 
 		// init header button
 

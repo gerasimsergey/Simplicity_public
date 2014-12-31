@@ -27,6 +27,7 @@
 
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
+	Boolean _reloadMessageThreadSelectionNow;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -62,15 +63,23 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
-//	NSLog(@"%s, selected row %lu, app delegate %@", __FUNCTION__, selectedRow, [[ NSApplication sharedApplication ] delegate]);
+	NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 
 	if(selectedRow >= 0) {
-		// delay the selection for a tiny bit to optimize fast cursor movement
-		// e.g. when the user uses an up/down arrow keys to navigate, skipping many messages between selections
-		[self performSelector:@selector(changeSelection:) withObject:[NSNumber numberWithInteger:selectedRow] afterDelay:0.3];
+		NSNumber *selectedRowNumber = [NSNumber numberWithInteger:selectedRow];
+		
+		if(_reloadMessageThreadSelectionNow) {
+			[self changeSelection:selectedRowNumber];
+		} else {
+			// delay the selection for a tiny bit to optimize fast cursor movements
+			// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
+			[self performSelector:@selector(changeSelection:) withObject:selectedRowNumber afterDelay:0.3];
+		}
 	}
+
+	_reloadMessageThreadSelectionNow = NO;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -107,30 +116,41 @@
 	return view;
 }
 
+- (void)tableViewSelectionIsChanging:(NSNotification *)notification {
+	// for mouse events, react quickly
+	_reloadMessageThreadSelectionNow = YES;
+}
+
 - (void)reloadMessageList:(Boolean)preserveSelection {
-	if(!preserveSelection)
+	if(!preserveSelection) {
 		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+		_reloadMessageThreadSelectionNow = YES;
+	}
 
 	[_messageListTableView reloadData];
 
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	SMMessageListController *messageListController = [[appDelegate model] messageListController];
-	NSIndexSet *threadIndexSet = [NSIndexSet indexSet];
-
 	if(preserveSelection && _selectedMessageThread != nil) {
+		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+		SMMessageListController *messageListController = [[appDelegate model] messageListController];
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 		
 		NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
-		if(threadIndex != NSNotFound)
+		NSIndexSet *threadIndexSet = [NSIndexSet indexSet];
+
+		if(threadIndex != NSNotFound) {
 			threadIndexSet = [NSIndexSet indexSetWithIndex:threadIndex];
-		else
+		} else {
 			_selectedMessageThread = nil;
+		}
+
+		if(![[_messageListTableView selectedRowIndexes] isEqualToIndexSet:threadIndexSet]) {
+			[_messageListTableView selectRowIndexes:threadIndexSet byExtendingSelection:NO];
+			_reloadMessageThreadSelectionNow = YES;
+		}
 	} else {
 		_selectedMessageThread = nil;
 	}
-
-	[_messageListTableView selectRowIndexes:threadIndexSet byExtendingSelection:NO];
 }
 
 - (IBAction)updateMessages:(id)sender {
