@@ -63,7 +63,7 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
-	NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
+	//NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 
