@@ -12,9 +12,6 @@
 
 @interface SMMessageThreadCellViewController : NSViewController
 
-@property NSView *messageView;
-@property NSButton *headerButton;
-
 @property SMMessageViewController *messageViewController;
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;

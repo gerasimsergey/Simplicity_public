@@ -63,22 +63,21 @@
 - (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message {
 	SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] init];
 	
-	SMMessageViewController *messageViewController = [messageThreadCellViewController messageViewController];
-	
-	NSAssert(messageViewController, @"message view controller not found");
-	
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	SMMessageListController *messageListController = [[appDelegate model] messageListController];
-	
 	NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
 	
-	if(htmlMessageBodyText) {
+	if(htmlMessageBodyText != nil) {
 		[message fetchInlineAttachments];
 		
 		[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
 	} else {
+		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+		SMMessageListController *messageListController = [[appDelegate model] messageListController];
+
 		[messageListController fetchMessageBodyUrgently:[message uid] remoteFolder:[message remoteFolder] threadId:[_currentMessageThread threadId]];
 	}
+	
+	SMMessageViewController *messageViewController = [messageThreadCellViewController messageViewController];
+	NSAssert(messageViewController, @"message view controller not found");
 	
 	[messageViewController setMessageDetails:message];
 

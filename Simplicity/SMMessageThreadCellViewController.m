@@ -13,6 +13,8 @@
 static const NSUInteger HEADER_HEIGHT = 36;
 
 @implementation SMMessageThreadCellViewController {
+	NSView *_messageView;
+	NSButton *_headerButton;
 	NSButton *_infoButton;
 	NSProgressIndicator *_progressIndicator;
 	NSLayoutConstraint *_heightConstraint;
