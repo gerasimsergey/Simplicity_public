@@ -19,11 +19,14 @@
 	NSTextField *_subject;
 	NSTextField *_fromAddress;
 	NSTextField *_date;
+	NSButton *_infoButton;
 	NSTextField *_toLabel;
 	NSTokenField *_toAddresses;
 	NSTextField *_ccLabel;
 	NSTokenField *_ccAddresses;
 	Boolean _addressListsFramesValid;
+	Boolean _fullDetailsInitialized;
+	Boolean _fullDetailsShown;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -60,6 +63,30 @@
 	return label;
 }
 
+- (void)updateFullDetails {
+	if(!_fullDetailsInitialized)
+		return;
+
+	if(_currentMessage == nil)
+		return;
+
+	//NSLog(@"%s: updating address lists for message UID %u", __func__, _currentMessage.uid);
+	
+	NSMutableArray *newToArray = [NSMutableArray arrayWithArray:[_toAddresses objectValue]];
+	
+	for(MCOAddress *a in [_currentMessage.header to])
+		[newToArray addObject:[SMMessage parseAddress:a]];
+	
+	[_toAddresses setObjectValue:newToArray];
+	
+	NSMutableArray *newCcArray = [NSMutableArray arrayWithArray:[_ccAddresses objectValue]];
+	
+	for(MCOAddress *a in [_currentMessage.header cc])
+		[newCcArray addObject:[SMMessage parseAddress:a]];
+	
+	[_ccAddresses setObjectValue:newCcArray];
+}
+
 - (void)setMessageDetails:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
@@ -80,23 +107,8 @@
 			updateAddressLists = YES;
 	}
 
-	if(updateAddressLists) {
-		//NSLog(@"%s: updating address lists for message UID %u", __func__, message.uid);
-
-		NSMutableArray *newToArray = [NSMutableArray arrayWithArray:[_toAddresses objectValue]];
-
-		for(MCOAddress *a in [message.header to])
-			[newToArray addObject:[SMMessage parseAddress:a]];
-		
-		[_toAddresses setObjectValue:newToArray];
-
-		NSMutableArray *newCcArray = [NSMutableArray arrayWithArray:[_ccAddresses objectValue]];
-		
-		for(MCOAddress *a in [message.header cc])
-			[newCcArray addObject:[SMMessage parseAddress:a]];
-		
-		[_ccAddresses setObjectValue:newCcArray];
-	}
+	if(updateAddressLists)
+		[self updateFullDetails];
 }
 
 #define V_MARGIN 10
@@ -123,6 +135,24 @@
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
+	// init info button
+	
+	_infoButton = [[NSButton alloc] init];
+	_infoButton.translatesAutoresizingMaskIntoConstraints = NO;
+	_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
+	_infoButton.target = self;
+	_infoButton.image = [NSImage imageNamed:NSImageNameInfo];
+	_infoButton.bordered = NO;
+	_infoButton.action = @selector(toggleFullDetails:);
+	
+	[view addSubview:_infoButton];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired-2];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
+
 	// init date label
 	
 	_date = [self createLabel:@"" bold:NO];
@@ -132,7 +162,7 @@
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultLow];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired-2];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired-2];
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
@@ -151,9 +181,16 @@
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP] priority:NSLayoutPriorityDefaultLow];
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+}
+
+- (void)initFullDetails {
+	if(_fullDetailsInitialized)
+		return;
+	
+	NSView *view = [self view];
 
 	// init 'to' label
-
+	
 	_toLabel = [self createLabel:@"To:" bold:NO];
 	_toLabel.textColor = [NSColor blackColor];
 	
@@ -162,35 +199,35 @@
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityDefaultLow];
-
+	
 	// init 'to' address list
-
+	
 	_toAddresses = [[SMTokenField alloc] init];
 	_toAddresses.delegate = self; // TODO: reference loop here?
 	_toAddresses.tokenStyle = NSPlainTextTokenStyle;
 	_toAddresses.translatesAutoresizingMaskIntoConstraints = NO;
 	[_toAddresses setBordered:NO];
 	[_toAddresses setDrawsBackground:NO];
-
+	
 	[view addSubview:_toAddresses];
-
+	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-
+	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultLow];
-
+	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width]];
 	
 	// init 'cc' label
 	
 	_ccLabel = [self createLabel:@"Cc:" bold:NO];
 	_ccLabel.textColor = [NSColor blackColor];
-
+	
 	[view addSubview:_ccLabel];
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
-
+	
 	// init 'cc' address list
 	
 	_ccAddresses = [[SMTokenField alloc] init];
@@ -207,6 +244,8 @@
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF] priority:NSLayoutPriorityDefaultLow];
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _ccLabel.frame.size.width]];
+
+	_fullDetailsInitialized = YES;
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
@@ -352,6 +391,11 @@
 		
 		_addressListsFramesValid = YES;
 	}
+}
+
+- (void)toggleFullDetails:(id)sender {
+	[self initFullDetails];
+	[self updateFullDetails];
 }
 
 @end
