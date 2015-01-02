@@ -206,11 +206,8 @@
 		NSLog(@"%s: message thread id %llu is empty", __func__, _currentMessageThread.threadId);
 
 		[_cells removeAllObjects];
-
-		for(NSView *subview in _contentView.subviews)
-			[subview removeFromSuperview];
-
 		[_contentView removeConstraints:[_contentView constraints]];
+		[_contentView setSubviews:[NSArray array]];
 	}
 }
 
