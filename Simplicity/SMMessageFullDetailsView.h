@@ -8,10 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SMMessageDetailsViewController;
+@class SMMessageFullDetailsViewController;
 
-@interface SMMessageDetailsView : NSView
+@interface SMMessageFullDetailsView : NSView
 
-- (void)setViewController:(SMMessageDetailsViewController*)controller;
+- (void)setViewController:(SMMessageFullDetailsViewController*)controller;
 
 @end

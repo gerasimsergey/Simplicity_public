@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
-#import "SMMessageDetailsViewController.h"
-#import "SMMessageDetailsView.h"
+#import "SMMessageFullDetailsViewController.h"
+#import "SMMessageFullDetailsView.h"
 
-@implementation SMMessageDetailsView {
-	SMMessageDetailsViewController *__weak _controller;
+@implementation SMMessageFullDetailsView {
+	SMMessageFullDetailsViewController *__weak _controller;
 }
 
-- (void)setViewController:(SMMessageDetailsViewController*)controller {
+- (void)setViewController:(SMMessageFullDetailsViewController*)controller {
 	_controller = controller;
 }
 

@@ -8,9 +8,8 @@
 
 #import <MailCore/MailCore.h>
 
-#import "SMTokenField.h"
 #import "SMMessageDetailsViewController.h"
-#import "SMMessageDetailsView.h"
+#import "SMMessageFullDetailsViewController.h"
 #import "SMMessage.h"
 
 @implementation SMMessageDetailsViewController {
@@ -20,33 +19,25 @@
 	NSTextField *_fromAddress;
 	NSTextField *_date;
 	NSButton *_infoButton;
-	NSTextField *_toLabel;
-	NSTokenField *_toAddresses;
-	NSTextField *_ccLabel;
-	NSTokenField *_ccAddresses;
-	Boolean _addressListsFramesValid;
-	Boolean _fullDetailsInitialized;
 	Boolean _fullDetailsShown;
-	NSMutableArray *_fullDetailsConstraints;
+	
+	SMMessageFullDetailsViewController *_fullDetailsViewController;
+	NSLayoutConstraint *_bottomConstraint;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		_addressListsFramesValid = NO;
-		_fullDetailsConstraints = [[NSMutableArray alloc] init];
-
-		SMMessageDetailsView *view = [[SMMessageDetailsView alloc] init];
+		NSView *view = [[NSView alloc] init];
 		view.translatesAutoresizingMaskIntoConstraints = NO;
-		[view setViewController:self];
 		[self setView:view];
 		[self createSubviews];
 	}
 	
 	return self;
 }
-		
+
 - (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
 	NSTextField *label = [[NSTextField alloc] init];
 	
@@ -65,32 +56,6 @@
 	return label;
 }
 
-- (void)updateFullDetails {
-	if(!_fullDetailsInitialized)
-		return;
-
-	if(_currentMessage == nil)
-		return;
-
-	NSArray *toAddressArray = [_currentMessage.header to];
-	NSMutableArray *newToArray = [[NSMutableArray alloc] initWithCapacity:toAddressArray.count];
-	
-	for(NSUInteger i = 0; i < toAddressArray.count; i++)
-		newToArray[i] = [SMMessage parseAddress:toAddressArray[i]];
-
-	[_toAddresses setObjectValue:newToArray];
-	
-	NSArray *ccAddressArray = [_currentMessage.header cc];
-	NSMutableArray *newCcArray = [[NSMutableArray alloc] initWithCapacity:ccAddressArray.count];
-	
-	for(NSUInteger i = 0; i < ccAddressArray.count; i++)
-		newCcArray[i] = [SMMessage parseAddress:ccAddressArray[i]];
-
-	[_ccAddresses setObjectValue:newCcArray];
-	
-	_addressListsFramesValid = NO;
-}
-
 - (void)setMessageDetails:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
@@ -105,15 +70,20 @@
 
 		updateAddressLists = YES;
 	} else {
-		NSArray *currentToAddressList = [_toAddresses objectValue];
+/*TODO
+ NSArray *currentToAddressList = [_toAddresses objectValue];
 
 		if(currentToAddressList == nil || currentToAddressList.count == 0)
 			updateAddressLists = YES;
+*/
+		updateAddressLists = YES;
 	}
 
+/*TODO
 	if(updateAddressLists) {
-		[self updateFullDetails];
+		[_fullDetailsViewController setMessageDetails:message];
 	}
+ */
 }
 
 #define V_MARGIN 10
@@ -186,101 +156,47 @@
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP] priority:NSLayoutPriorityDefaultLow];
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+
+	_bottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN];
+	
+	[self addConstraint:view constraint:_bottomConstraint priority:NSLayoutPriorityRequired];
 }
 
 - (void)showFullDetails {
-	NSAssert(_fullDetailsConstraints.count == 0, @"old constraints exist");
+	if(_fullDetailsShown)
+		return;
+
+	if(_fullDetailsViewController == nil)
+		_fullDetailsViewController = [[SMMessageFullDetailsViewController alloc] init];
 	
+	if(_currentMessage != nil)
+		[_fullDetailsViewController setMessageDetails:_currentMessage];
+
 	NSView *view = [self view];
+	NSAssert(view != nil, @"no view");
 
-	// init 'to' label
+	NSView *subview = [_fullDetailsViewController view];
+	NSAssert(subview != nil, @"no full details view");
 	
-	if(_toLabel == nil) {
-		_toLabel = [self createLabel:@"To:" bold:NO];
-		_toLabel.textColor = [NSColor blackColor];
-	}
-	
-	[view addSubview:_toLabel];
-	
-	NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN];
-	[self addConstraint:view constraint:constraint priority:NSLayoutPriorityDefaultLow];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	// init 'to' address list
-	
-	if(_toAddresses == nil) {
-		_toAddresses = [[SMTokenField alloc] init];
-		_toAddresses.delegate = self; // TODO: reference loop here?
-		_toAddresses.tokenStyle = NSPlainTextTokenStyle;
-		_toAddresses.translatesAutoresizingMaskIntoConstraints = NO;
-		[_toAddresses setBordered:NO];
-		[_toAddresses setDrawsBackground:NO];
-	}
-	
-	[view addSubview:_toAddresses];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
+	[view addSubview:subview];
 
-	constraint = [NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP];
-	[self addConstraint:view constraint:constraint priority:NSLayoutPriorityDefaultLow];
-	[_fullDetailsConstraints addObject:constraint];
+	[view removeConstraint:_bottomConstraint];
 	
-	constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _toLabel.frame.size.width];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	// init 'cc' label
-	
-	if(_ccLabel == nil) {
-		_ccLabel = [self createLabel:@"Cc:" bold:NO];
-		_ccLabel.textColor = [NSColor blackColor];
-	}
-	
-	[view addSubview:_ccLabel];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	// init 'cc' address list
-	
-	if(_ccAddresses == nil) {
-		_ccAddresses = [[SMTokenField alloc] init];
-		_ccAddresses.delegate = self; // TODO: reference loop here?
-		_ccAddresses.tokenStyle = NSPlainTextTokenStyle;
-		_ccAddresses.translatesAutoresizingMaskIntoConstraints = NO;
-		[_ccAddresses setBordered:NO];
-		[_ccAddresses setDrawsBackground:NO];
-	}
-	
-	[view addSubview:_ccAddresses];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:_ccLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF];
-	[self addConstraint:view constraint:constraint priority:NSLayoutPriorityDefaultLow];
-	[_fullDetailsConstraints addObject:constraint];
-	
-	constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:H_MARGIN + _ccLabel.frame.size.width];
-	[view addConstraint:constraint];
-	[_fullDetailsConstraints addObject:constraint];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultHigh];
 
-	_fullDetailsInitialized = YES;
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultHigh];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultHigh];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN] priority:NSLayoutPriorityDefaultHigh];
+	
+	_fullDetailsShown = YES;
 }
 
 - (void)hideFullDetails {
+/*
 	[[self view] removeConstraints:_fullDetailsConstraints];
 	[_fullDetailsConstraints removeAllObjects];
 
@@ -288,153 +204,12 @@
 	[_toAddresses removeFromSuperview];
 	[_ccLabel removeFromSuperview];
 	[_ccAddresses removeFromSuperview];
+*/
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
 	constraint.priority = priority;
 	[view addConstraint:constraint];
-}
-
-- (NSSize)intrinsicContentViewSize {
-	if(_fullDetailsShown) {
-		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + [_toAddresses intrinsicContentSize].height + V_GAP_HALF + [_ccAddresses intrinsicContentSize].height + V_GAP);
-	} else {
-		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN);
-	}
-}
-
-- (void)invalidateIntrinsicContentViewSize {
-	[[self view] setNeedsUpdateConstraints:YES];
-}
-
-#pragma mark - NSTokenFieldDelegate
-
-// ---------------------------------------------------------------------------
-//	styleForRepresentedObject:representedObject
-//
-//	Make sure our tokens are rounded.
-//	The delegate should return:
-//		NSDefaultTokenStyle, NSPlainTextTokenStyle or NSRoundedTokenStyle.
-// ---------------------------------------------------------------------------
-- (NSTokenStyle)tokenField:(NSTokenField *)tokenField styleForRepresentedObject:(id)representedObject
-{
-//	NSLog(@"%s", __func__);
-	return NSRoundedTokenStyle;
-}
-
-// ---------------------------------------------------------------------------
-//	hasMenuForRepresentedObject:representedObject
-//
-//	Make sure our tokens have a menu. By default tokens have no menus.
-// ---------------------------------------------------------------------------
-- (BOOL)tokenField:(NSTokenField *)tokenField hasMenuForRepresentedObject:(id)representedObject
-{
-//	NSLog(@"%s", __func__);
-	return NO;
-}
-
-// ---------------------------------------------------------------------------
-//	menuForRepresentedObject:representedObject
-//
-//	User clicked on a token, return the menu we want to represent for our token.
-//	By default tokens have no menus.
-// ---------------------------------------------------------------------------
-- (NSMenu *)tokenField:(NSTokenField *)tokenField menuForRepresentedObject:(id)representedObject
-{
-	NSLog(@"%s", __func__);
-	return nil;
-}
-
-// ---------------------------------------------------------------------------
-//	shouldAddObjects:tokens:index
-//
-//	Delegate method to decide whether the given token list should be allowed,
-//	we can selectively add/remove any token we want.
-//
-//	The delegate can return the array unchanged or return a modified array of tokens.
-//	To reject the add completely, return an empty array.  Returning nil causes an error.
-// ---------------------------------------------------------------------------
-- (NSArray *)tokenField:(NSTokenField *)tokenField shouldAddObjects:(NSArray *)tokens atIndex:(NSUInteger)index
-{
-	NSLog(@"%s", __func__);
-	return nil;
-/*
-	NSMutableArray *newArray = [NSMutableArray arrayWithArray:tokens];
-	
-	id aToken;
-	for (aToken in newArray)
-	{
-		if ([[aToken description] isEqualToString:self.tokenTitleToAdd])
-		{
-			MyToken *token = [[MyToken alloc] init];
-			token.name = [aToken description];
-			[newArray replaceObjectAtIndex:index withObject:token];
-			break;
-		}
-	}
-	
-	return newArray;
-*/
-}
-
-// ---------------------------------------------------------------------------
-//	completionsForSubstring:substring:tokenIndex:selectedIndex
-//
-//	Called 1st, and again every time a completion delay finishes.
-//
-//	substring =		the partial string that to be completed.
-//	tokenIndex =	the index of the token being edited.
-//	selectedIndex = allows you to return by-reference an index in the array
-//					specifying which of the completions should be initially selected.
-// ---------------------------------------------------------------------------
-- (NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *)substring indexOfToken:(NSInteger)tokenIndex
-	indexOfSelectedItem:(NSInteger *)selectedIndex
-{
-	NSLog(@"%s", __func__);
-	return nil;
-}
-
-// ---------------------------------------------------------------------------
-//	representedObjectForEditingString:editingString
-//
-//	Called 2nd, after you choose a choice from the menu list and press return.
-//
-//	The represented object must implement the NSCoding protocol.
-//	If your application uses some object other than an NSString for their represented objects,
-//	you should return a new instance of that object from this method.
-//
-// ---------------------------------------------------------------------------
-- (id)tokenField:(NSTokenField *)tokenField representedObjectForEditingString:(NSString *)editingString
-{
-	NSLog(@"%s", __func__);
-	return @"Wilma";
-}
-
-// ---------------------------------------------------------------------------
-//	displayStringForRepresentedObject:representedObject
-//
-//	Called 3rd, once the token is ready to be displayed.
-//
-//	If you return nil or do not implement this method, then representedObject
-//	is displayed as the string. The represented object must implement the NSCoding protocol.
-// ---------------------------------------------------------------------------
-- (NSString *)tokenField:(NSTokenField *)tokenField displayStringForRepresentedObject:(id)representedObject
-{
-//	NSLog(@"%s", __func__);
-	return representedObject;
-}
-
-- (void)viewDidAppear {
-	if(!_addressListsFramesValid) {
-		// this is critical because the frame height for each SMTokenField must be
-		// recalculated after its width is known, which happens when it is drawn
-		// for the first time
-		
-		[_toAddresses invalidateIntrinsicContentSize];
-		[_ccAddresses invalidateIntrinsicContentSize];
-		
-		_addressListsFramesValid = YES;
-	}
 }
 
 - (void)toggleFullDetails:(id)sender {
@@ -444,12 +219,25 @@
 		[self showFullDetails];
 	}
 	
-	[self updateFullDetails];
+/*TODO	[self updateFullDetails]; */
 
 	// this must be done to keep the proper details panel height
 	[[self view] invalidateIntrinsicContentSize];
+	[[self view] setNeedsDisplay:YES];
 
 	_fullDetailsShown = !_fullDetailsShown;
+}
+
+- (NSSize)intrinsicContentViewSize {
+	if(_fullDetailsShown) {
+		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + _fullDetailsViewController.view.intrinsicContentSize.height + V_GAP);
+	} else {
+		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN);
+	}
+}
+
+- (void)invalidateIntrinsicContentViewSize {
+	[[self view] setNeedsUpdateConstraints:YES];
 }
 
 @end
