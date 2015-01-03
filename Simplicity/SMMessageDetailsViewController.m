@@ -216,8 +216,6 @@
 	} else {
 		[self showFullDetails];
 	}
-	
-/*TODO	[self updateFullDetails]; */
 
 	// this must be done to keep the proper details panel height
 	[[self view] invalidateIntrinsicContentSize];
