@@ -18,7 +18,8 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	NSProgressIndicator *_progressIndicator;
 	NSLayoutConstraint *_heightConstraint;
 	CGFloat _messageViewHeight;
-	BOOL _collapsed;
+	Boolean _collapsed;
+	Boolean _messageTextIsSet;
 }
 
 - (id)initCollapsed:(Boolean)collapsed {
@@ -69,21 +70,6 @@ static const NSUInteger HEADER_HEIGHT = 36;
 		 
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
 
-		// init progress indicator
-
-		_progressIndicator = [[NSProgressIndicator alloc] init];
-		_progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-		
-		[_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
-		[_progressIndicator setDisplayedWhenStopped:NO];
-		[_progressIndicator startAnimation:self];
-		
-		[view addSubview:_progressIndicator];
-		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
-		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
-
 		// commit the main view
 		
 		[self setView:view];
@@ -122,6 +108,25 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	_collapsed = YES;
 }
 
+- (void)initProgressIndicator {
+	NSAssert(_progressIndicator == nil, @"progress indicator already created");
+
+	_progressIndicator = [[NSProgressIndicator alloc] init];
+	_progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+	[_progressIndicator setDisplayedWhenStopped:NO];
+	[_progressIndicator startAnimation:self];
+	
+	NSView *view = [self view];
+
+	[view addSubview:_progressIndicator];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+}
+
 - (void)uncollapse {
 	if(!_collapsed)
 		return;
@@ -129,13 +134,18 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	[[_messageViewController messageBodyViewController] uncollapse];
 
 	if(_heightConstraint != nil) {
-		NSView *view = [self view];
+		[[self view] removeConstraint:_heightConstraint];
 
-		[view removeConstraint:_heightConstraint];
 		_heightConstraint = nil;
 	}
 	
-	[_progressIndicator setHidden:NO];
+	if(!_messageTextIsSet) {
+		if(_progressIndicator == nil) {
+			[self initProgressIndicator];
+		} else {
+			[_progressIndicator setHidden:NO];
+		}
+	}
 
 	_collapsed = NO;
 }
@@ -158,6 +168,8 @@ static const NSUInteger HEADER_HEIGHT = 36;
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
 	[_messageViewController setMessageViewText:htmlText uid:uid folder:folder];
 	[_progressIndicator stopAnimation:self];
+
+	_messageTextIsSet = YES;
 }
 
 @end
