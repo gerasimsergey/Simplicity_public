@@ -17,6 +17,9 @@
 	NSTokenField *_toAddresses;
 	NSTextField *_ccLabel;
 	NSTokenField *_ccAddresses;
+	NSLayoutConstraint *_toBottomConstraint;
+	NSMutableArray *_ccConstraints;
+	Boolean _ccCreated;
 	Boolean _addressListsFramesValid;
 }
 
@@ -71,33 +74,57 @@
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:_toLabel.frame.size.width]];
 	
-	// init 'cc' label
+	_toBottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+
+	[view addConstraint:_toBottomConstraint];
+}
+
+- (void)createCc {
+	if(_ccCreated)
+		return;
 	
-	_ccLabel = [SMMessageDetailsViewController createLabel:@"Cc:" bold:NO];
-	_ccLabel.textColor = [NSColor blackColor];
+	NSView *view = [self view];
+
+	if(_ccLabel == nil) {
+		NSAssert(_ccAddresses == nil, @"cc addresses already created");
+		NSAssert(_ccConstraints == nil, @"cc constraints already created");
+
+		// init 'cc' label
+		
+		_ccLabel = [SMMessageDetailsViewController createLabel:@"Cc:" bold:NO];
+		_ccLabel.textColor = [NSColor blackColor];
+		
+		_ccConstraints = [NSMutableArray array];
+
+		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+		
+		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
+
+		// init 'cc' address list
+		
+		_ccAddresses = [[SMTokenField alloc] init];
+		_ccAddresses.delegate = self; // TODO: reference loop here?
+		_ccAddresses.tokenStyle = NSPlainTextTokenStyle;
+		_ccAddresses.translatesAutoresizingMaskIntoConstraints = NO;
+		[_ccAddresses setBordered:NO];
+		[_ccAddresses setDrawsBackground:NO];
+		
+		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:_ccLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+
+		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
+		
+		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:_ccLabel.frame.size.width]];
+
+		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+	}
 	
+	[view removeConstraint:_toBottomConstraint];
+
 	[view addSubview:_ccLabel];
-	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
-	
-	// init 'cc' address list
-	
-	_ccAddresses = [[SMTokenField alloc] init];
-	_ccAddresses.delegate = self; // TODO: reference loop here?
-	_ccAddresses.tokenStyle = NSPlainTextTokenStyle;
-	_ccAddresses.translatesAutoresizingMaskIntoConstraints = NO;
-	[_ccAddresses setBordered:NO];
-	[_ccAddresses setDrawsBackground:NO];
-	
 	[view addSubview:_ccAddresses];
+	[view addConstraints:_ccConstraints];
 	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_ccLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toAddresses attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
-	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:_ccLabel.frame.size.width]];
+	_ccCreated = YES;
 }
 
 - (void)setMessageDetails:(SMMessage*)message {
@@ -110,12 +137,17 @@
 	[_toAddresses setObjectValue:newToArray];
 	
 	NSArray *ccAddressArray = [message.header cc];
-	NSMutableArray *newCcArray = [[NSMutableArray alloc] initWithCapacity:ccAddressArray.count];
 	
-	for(NSUInteger i = 0; i < ccAddressArray.count; i++)
-		newCcArray[i] = [SMMessage parseAddress:ccAddressArray[i]];
-	
-	[_ccAddresses setObjectValue:newCcArray];
+	if(ccAddressArray.count > 0) {
+		[self createCc];
+		
+		NSMutableArray *newCcArray = [[NSMutableArray alloc] initWithCapacity:ccAddressArray.count];
+		
+		for(NSUInteger i = 0; i < ccAddressArray.count; i++)
+			newCcArray[i] = [SMMessage parseAddress:ccAddressArray[i]];
+		
+		[_ccAddresses setObjectValue:newCcArray];
+	}
 	
 	_addressListsFramesValid = NO;
 }
@@ -134,7 +166,11 @@
 }
 
 - (NSSize)intrinsicContentViewSize {
-	return NSMakeSize(-1, [_toAddresses intrinsicContentSize].height + V_GAP_HALF + [_ccAddresses intrinsicContentSize].height);
+	if(_ccAddresses != nil) {
+		return NSMakeSize(-1, [_toAddresses intrinsicContentSize].height + V_GAP_HALF + [_ccAddresses intrinsicContentSize].height);
+	} else {
+		return NSMakeSize(-1, [_toAddresses intrinsicContentSize].height);
+	}
 }
 
 - (void)invalidateIntrinsicContentViewSize {
