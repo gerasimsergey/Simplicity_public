@@ -14,11 +14,13 @@
 
 @property SMMessageViewController *messageViewController;
 
+- (id)initCollapsed:(Boolean)collapsed;
+
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
 
-- (void)enableCollapse;
+- (void)enableCollapse:(Boolean)enable;
 
-- (void)setCollapsedView;
-- (void)unsetCollapsedView;
+- (void)collapse;
+- (void)uncollapse;
 
 @end

@@ -39,8 +39,10 @@
 @implementation SMMessageBodyViewController {
 	unsigned long long _nextIdentifier;
 	WebView *_view;
+	NSString *_htmlText;
 	uint32_t _uid;
 	NSString *_folder;
+	Boolean _uncollapsed;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -65,13 +67,29 @@
 	return self;
 }
 
+- (void)loadHTML {
+	NSAssert(_uncollapsed, @"view is collapsed");
+
+	[[_view mainFrame] loadHTMLString:_htmlText baseURL:nil];
+}
+
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
 	[_view stopLoading:self];
 	
+	_htmlText = htmlText;
 	_uid = uid;
 	_folder = folder;
 	
-	[[_view mainFrame] loadHTMLString:htmlText baseURL:nil];
+	if(_uncollapsed) {
+		[self loadHTML];
+	}
+}
+
+- (void)uncollapse {
+	if(!_uncollapsed) {
+		_uncollapsed = YES;
+		[self loadHTML];
+	}
 }
 
 - (id)webView:(WebView *)sender identifierForInitialRequest:(NSURLRequest *)request fromDataSource:(WebDataSource *)dataSource {

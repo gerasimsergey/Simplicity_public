@@ -12,6 +12,8 @@
 
 @interface SMMessageBodyViewController : NSViewController
 
+- (void)uncollapse;
+
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
 
 @end

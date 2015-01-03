@@ -21,12 +21,10 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	BOOL _collapsed;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)initCollapsed:(Boolean)collapsed {
+	self = [super init];
 	
 	if(self) {
-		_collapsed = false;
-
 		// init main view
 		
 		NSBox *view = [[NSBox alloc] init];
@@ -85,17 +83,23 @@ static const NSUInteger HEADER_HEIGHT = 36;
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
 		
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
-		
-		// finally, commit the main view
+
+		// commit the main view
 		
 		[self setView:view];
+
+		// now set the view constraints depending on the desired states
+
+		_collapsed = !collapsed;
+
+		[self toggleCollapse];
 	}
 	
 	return self;
 }
 
-- (void)enableCollapse {
-	[_headerButton setEnabled:YES];
+- (void)enableCollapse:(Boolean)enable {
+	[_headerButton setEnabled:enable];
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
@@ -103,51 +107,52 @@ static const NSUInteger HEADER_HEIGHT = 36;
 	[view addConstraint:constraint];
 }
 
-- (void)setCollapsedView {
-	NSView *view = [self view];
-	
-	if(!_collapsed)
-	{
-		[_progressIndicator setHidden:YES];
-		
-		NSAssert(_heightConstraint == nil, @"height constraint already exists");
-		
-		_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT];
-		
-		[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
-		
-		_collapsed = YES;
-	}
-}
-
-- (void)unsetCollapsedView {
-	NSView *view = [self view];
-	
+- (void)collapse {
 	if(_collapsed)
-	{
-		[view removeConstraint:_heightConstraint];
-		
-		_heightConstraint = nil;
-		
-		_collapsed = NO;
-		
-		[_progressIndicator setHidden:NO];
-	}
+		return;
+
+	NSView *view = [self view];
+	
+	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT];
+	
+	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
+	
+	[_progressIndicator setHidden:YES];
+	
+	_collapsed = YES;
 }
 
-- (void)toggleCollapsedView {
+- (void)uncollapse {
+	if(!_collapsed)
+		return;
+	
+	[[_messageViewController messageBodyViewController] uncollapse];
+
+	if(_heightConstraint != nil) {
+		NSView *view = [self view];
+
+		[view removeConstraint:_heightConstraint];
+		_heightConstraint = nil;
+	}
+	
+	[_progressIndicator setHidden:NO];
+
+	_collapsed = NO;
+}
+
+- (void)toggleCollapse {
 	if(!_collapsed)
 	{
-		[self setCollapsedView];
+		[self collapse];
 	}
 	else
 	{
-		[self unsetCollapsedView];
+		[self uncollapse];
 	}
 }
 
 - (void)buttonClicked:(id)sender {
-	[self toggleCollapsedView];
+	[self toggleCollapse];
 }
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {

@@ -60,8 +60,8 @@
 	return self;
 }
 
-- (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message {
-	SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] init];
+- (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message collapsed:(Boolean)collapsed {
+	SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] initCollapsed:collapsed];
 	
 	NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
 	
@@ -103,40 +103,22 @@
 		_cells = [NSMutableArray arrayWithCapacity:messages.count];
 
 		for(NSInteger i = 0; i < messages.count; i++) {
-			SMMessageThreadCellViewController *messageThreadCellViewController = [self createMessageThreadCell:messages[i]];
-			
-			if(messages.count > 1)
-				[messageThreadCellViewController enableCollapse];
+			SMMessage *message = messages[i];
+			Boolean collapsed = (messages.count == 1? NO : (_currentMessageThread.unseen? !message.unseen : i > 0));
+			SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:messages[i] collapsed:collapsed];
 
-			[_contentView addSubview:[messageThreadCellViewController view]];
+			[viewController enableCollapse:(messages.count > 1)];
 
-			_cells[i] = [[ThreadCell alloc] initWithMessage:messages[i] viewController:messageThreadCellViewController];
+			[_contentView addSubview:[viewController view]];
+
+			_cells[i] = [[ThreadCell alloc] initWithMessage:messages[i] viewController:viewController];
 		}
 		
 	}
-	
+
 	[_messageThreadView setDocumentView:_contentView];
 
 	[self setViewConstraints];
-
-	if(_currentMessageThread.unseen) {
-		for(NSInteger i = 0; i < _cells.count; i++) {
-			ThreadCell *cell = _cells[i];
-			
-			if(cell.message.unseen)
-				[cell.viewController unsetCollapsedView];
-			else
-				[cell.viewController setCollapsedView];
-		}
-	} else {
-		ThreadCell *firstCell = _cells[0];
-		[firstCell.viewController unsetCollapsedView];
-		
-		for(NSInteger i = 1; i < _cells.count; i++) {
-			ThreadCell *cell = _cells[i];
-			[cell.viewController setCollapsedView];
-		}
-	}
 }
 
 - (void)updateMessageThread {
@@ -184,10 +166,9 @@
 			SMMessage *newMessage = newMessages[i];
 			
 			if(j >= _cells.count || ((ThreadCell*)_cells[j]).message != newMessage) {
-				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage];
+				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage collapsed:NO];
 				
-				if(newMessages.count > 1)
-					[viewController enableCollapse];
+				[viewController enableCollapse:(newMessages.count > 1)];
 				
 				[_contentView addSubview:[viewController view]];
 				
