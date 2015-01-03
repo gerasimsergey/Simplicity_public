@@ -116,8 +116,12 @@
 		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:_ccLabel.frame.size.width]];
 
 		[_ccConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_ccAddresses attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+	} else {
+		NSAssert(_ccAddresses != nil, @"cc addresses not created");
+		NSAssert(_ccConstraints != nil, @"cc constraints not created");
 	}
 	
+	NSAssert(_toBottomConstraint != nil, @"bottom constaint not created");
 	[view removeConstraint:_toBottomConstraint];
 
 	[view addSubview:_ccLabel];
