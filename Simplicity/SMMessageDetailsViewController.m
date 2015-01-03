@@ -22,6 +22,7 @@
 	Boolean _fullDetailsShown;
 	
 	SMMessageFullDetailsViewController *_fullDetailsViewController;
+	NSMutableArray *_fullDetailsViewConstraints;
 	NSLayoutConstraint *_bottomConstraint;
 }
 
@@ -38,7 +39,7 @@
 	return self;
 }
 
-- (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
++ (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
 	NSTextField *label = [[NSTextField alloc] init];
 	
 	[label setStringValue:text];
@@ -98,7 +99,7 @@
 
 	// init from address label
 	
-	_fromAddress = [self createLabel:@"" bold:YES];
+	_fromAddress = [SMMessageDetailsViewController createLabel:@"" bold:YES];
 	_fromAddress.textColor = [NSColor blueColor];
 
 	[_fromAddress.cell setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -130,7 +131,7 @@
 
 	// init date label
 	
-	_date = [self createLabel:@"" bold:NO];
+	_date = [SMMessageDetailsViewController createLabel:@"" bold:NO];
 	_date.textColor = [NSColor grayColor];
 	
 	[view addSubview:_date];
@@ -143,7 +144,7 @@
 
 	// init subject
 	
-	_subject = [self createLabel:@"" bold:NO];
+	_subject = [SMMessageDetailsViewController createLabel:@"" bold:NO];
 	_subject.textColor = [NSColor blackColor];
 
 	[_subject.cell setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -161,7 +162,7 @@
 
 	_bottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN];
 	
-	[self addConstraint:view constraint:_bottomConstraint priority:NSLayoutPriorityRequired];
+	[view addConstraint:_bottomConstraint];
 }
 
 - (void)showFullDetails {
@@ -182,29 +183,42 @@
 	
 	[view addSubview:subview];
 
+	NSAssert(_bottomConstraint != nil, @"no bottom constraint");
 	[view removeConstraint:_bottomConstraint];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN] priority:NSLayoutPriorityDefaultHigh];
+	if(_fullDetailsViewConstraints == nil) {
+		_fullDetailsViewConstraints = [NSMutableArray array];
+		
+		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
+		
+		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN]];
+		
+		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
+		
+		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN]];
+	}
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultHigh];
-
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP] priority:NSLayoutPriorityDefaultHigh];
-	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN] priority:NSLayoutPriorityDefaultHigh];
+	[view addConstraints:_fullDetailsViewConstraints];
 	
 	_fullDetailsShown = YES;
 }
 
 - (void)hideFullDetails {
-/*
-	[[self view] removeConstraints:_fullDetailsConstraints];
-	[_fullDetailsConstraints removeAllObjects];
+	if(!_fullDetailsShown)
+		return;
 
-	[_toLabel removeFromSuperview];
-	[_toAddresses removeFromSuperview];
-	[_ccLabel removeFromSuperview];
-	[_ccAddresses removeFromSuperview];
-*/
+	NSView *view = [self view];
+	NSAssert(view != nil, @"no view");
+
+	NSAssert(_fullDetailsViewConstraints != nil, @"no full details view constraint");
+	[view removeConstraints:_fullDetailsViewConstraints];
+
+	NSAssert(_fullDetailsViewController != nil, @"no full details view controller");
+	[[_fullDetailsViewController view] removeFromSuperview];
+	
+	[view addConstraint:_bottomConstraint];
+	
+	_fullDetailsShown = NO;
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {
@@ -223,14 +237,11 @@
 
 	// this must be done to keep the proper details panel height
 	[[self view] invalidateIntrinsicContentSize];
-	[[self view] setNeedsDisplay:YES];
-
-	_fullDetailsShown = !_fullDetailsShown;
 }
 
 - (NSSize)intrinsicContentViewSize {
 	if(_fullDetailsShown) {
-		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN + _fullDetailsViewController.view.intrinsicContentSize.height + V_GAP);
+		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_GAP + _fullDetailsViewController.view.intrinsicContentSize.height + V_MARGIN);
 	} else {
 		return NSMakeSize(-1, V_MARGIN + _fromAddress.frame.size.height + V_MARGIN);
 	}

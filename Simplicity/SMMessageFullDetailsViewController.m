@@ -8,6 +8,7 @@
 
 #import "SMTokenField.h"
 #import "SMMessage.h"
+#import "SMMessageDetailsViewController.h"
 #import "SMMessageFullDetailsView.h"
 #import "SMMessageFullDetailsViewController.h"
 
@@ -36,24 +37,6 @@
 	return self;
 }
 
-- (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
-	NSTextField *label = [[NSTextField alloc] init];
-	
-	[label setStringValue:text];
-	[label setBordered:YES];
-	[label setBezeled:NO];
-	[label setDrawsBackground:NO];
-	[label setEditable:NO];
-	[label setSelectable:NO];
-	[label setFrameSize:[label fittingSize]];
-	[label setTranslatesAutoresizingMaskIntoConstraints:NO];
-	
-	const NSUInteger fontSize = 12;
-	[label setFont:(bold? [NSFont boldSystemFontOfSize:fontSize] : [NSFont systemFontOfSize:fontSize])];
-	
-	return label;
-}
-
 #define V_GAP 10
 #define V_GAP_HALF (V_GAP/2)
 
@@ -62,7 +45,7 @@
 	
 	// init 'to' label
 	
-	_toLabel = [self createLabel:@"To:" bold:NO];
+	_toLabel = [SMMessageDetailsViewController createLabel:@"To:" bold:NO];
 	_toLabel.textColor = [NSColor blackColor];
 	
 	[view addSubview:_toLabel];
@@ -90,7 +73,7 @@
 	
 	// init 'cc' label
 	
-	_ccLabel = [self createLabel:@"Cc:" bold:NO];
+	_ccLabel = [SMMessageDetailsViewController createLabel:@"Cc:" bold:NO];
 	_ccLabel.textColor = [NSColor blackColor];
 	
 	[view addSubview:_ccLabel];
