@@ -60,31 +60,15 @@
 - (void)setMessageDetails:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
-	Boolean updateAddressLists = NO;
-
 	if(_currentMessage != message) {
 		_currentMessage = message;
 		
 		[_fromAddress setStringValue:[_currentMessage from]];
 		[_subject setStringValue:[_currentMessage subject]];
 		[_date setStringValue:[_currentMessage localizedDate]];
-
-		updateAddressLists = YES;
-	} else {
-/*TODO
- NSArray *currentToAddressList = [_toAddresses objectValue];
-
-		if(currentToAddressList == nil || currentToAddressList.count == 0)
-			updateAddressLists = YES;
-*/
-		updateAddressLists = YES;
 	}
 
-/*TODO
-	if(updateAddressLists) {
-		[_fullDetailsViewController setMessageDetails:message];
-	}
- */
+	[_fullDetailsViewController setMessageDetails:message];
 }
 
 #define V_MARGIN 10
