@@ -7,10 +7,9 @@
 //
 
 #import "SMMessageViewController.h"
+#import "SMMessageDetailsViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMMessageThreadCellViewController.h"
-
-static const NSUInteger HEADER_HEIGHT = 36;
 
 @implementation SMMessageThreadCellViewController {
 	NSView *_messageView;
@@ -45,7 +44,7 @@ static const NSUInteger HEADER_HEIGHT = 36;
 
 		[view addSubview:_headerButton];
 
-		[self addConstraint:_headerButton constraint:[NSLayoutConstraint constraintWithItem:_headerButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT] priority:NSLayoutPriorityRequired];
+		[self addConstraint:_headerButton constraint:[NSLayoutConstraint constraintWithItem:_headerButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]] priority:NSLayoutPriorityRequired];
 		
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_headerButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 		
@@ -99,7 +98,7 @@ static const NSUInteger HEADER_HEIGHT = 36;
 
 	NSView *view = [self view];
 	
-	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:HEADER_HEIGHT];
+	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
 	
 	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
 	

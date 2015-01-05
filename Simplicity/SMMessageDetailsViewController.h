@@ -12,6 +12,7 @@
 
 @interface SMMessageDetailsViewController : NSViewController
 
++ (NSUInteger)headerHeight;
 + (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold;
 
 - (void)setMessageDetails:(SMMessage*)message;

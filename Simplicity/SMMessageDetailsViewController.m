@@ -39,6 +39,10 @@
 	return self;
 }
 
++ (NSUInteger)headerHeight {
+	return 36;
+}
+
 + (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
 	NSTextField *label = [[NSTextField alloc] init];
 	
@@ -101,7 +105,7 @@
 	_infoButton.translatesAutoresizingMaskIntoConstraints = NO;
 	_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
 	_infoButton.target = self;
-	_infoButton.image = [NSImage imageNamed:NSImageNameInfo];
+	_infoButton.image = [NSImage imageNamed:@"info-icon.png"];
 	[_infoButton.cell setImageScaling:NSImageScaleProportionallyDown];
 	_infoButton.bordered = NO;
 	_infoButton.action = @selector(toggleFullDetails:);
@@ -110,9 +114,11 @@
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired-2];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/1.6]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
 
 	// init date label
 	
