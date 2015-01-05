@@ -102,6 +102,7 @@
 	_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
 	_infoButton.target = self;
 	_infoButton.image = [NSImage imageNamed:NSImageNameInfo];
+	[_infoButton.cell setImageScaling:NSImageScaleProportionallyDown];
 	_infoButton.bordered = NO;
 	_infoButton.action = @selector(toggleFullDetails:);
 	
@@ -122,7 +123,7 @@
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultLow];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired-2];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP] priority:NSLayoutPriorityRequired-2];
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
