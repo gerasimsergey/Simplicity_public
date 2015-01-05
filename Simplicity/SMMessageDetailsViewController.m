@@ -12,10 +12,13 @@
 #import "SMMessageFullDetailsViewController.h"
 #import "SMMessage.h"
 
+static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
+
 @implementation SMMessageDetailsViewController {
 	SMMessage *_currentMessage;
-	NSTextField *_subject;
+	NSButton *_starButton;
 	NSTextField *_fromAddress;
+	NSTextField *_subject;
 	NSTextField *_date;
 	NSButton *_infoButton;
 	Boolean _fullDetailsShown;
@@ -73,6 +76,10 @@
 		[_date setStringValue:[_currentMessage localizedDate]];
 	}
 
+	if(message.flagged) {
+		_starButton.image = [NSImage imageNamed:@"star-yellow-icon.png"];
+	}
+
 	[_fullDetailsViewController setMessageDetails:message];
 }
 
@@ -86,6 +93,25 @@
 - (void)createSubviews {
 	NSView *view = [self view];
 
+	// init star button
+
+	_starButton = [[NSButton alloc] init];
+	_starButton.translatesAutoresizingMaskIntoConstraints = NO;
+	_starButton.bezelStyle = NSShadowlessSquareBezelStyle;
+	_starButton.target = self;
+	_starButton.image = [NSImage imageNamed:@"star-gray-icon.png"];
+	[_starButton.cell setImageScaling:NSImageScaleProportionallyDown];
+	_starButton.bordered = NO;
+	_starButton.action = @selector(toggleFullDetails:);
+
+	[view addSubview:_starButton];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_starButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/HEADER_ICON_HEIGHT_RATIO]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_starButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_starButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_starButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN] priority:NSLayoutPriorityRequired];
+	
 	// init from address label
 	
 	_fromAddress = [SMMessageDetailsViewController createLabel:@"" bold:YES];
@@ -96,9 +122,11 @@
 
 	[view addSubview:_fromAddress];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN] priority:NSLayoutPriorityRequired];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_starButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP] priority:NSLayoutPriorityRequired];
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_starButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 
 	// init date label
 	
@@ -221,7 +249,7 @@
 		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 		[_uncollapsedHeaderConstraints.lastObject setPriority:NSLayoutPriorityRequired];
 
-		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/1.6]];
+		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/HEADER_ICON_HEIGHT_RATIO]];
 
 		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
 

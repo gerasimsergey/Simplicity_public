@@ -21,6 +21,7 @@
 @property (readonly) NSString *htmlBodyRendering;
 @property (readonly) NSString *remoteFolder;
 @property (readonly) Boolean unseen;
+@property (readonly) Boolean flagged;
 
 @property (assign) NSData *data;
 

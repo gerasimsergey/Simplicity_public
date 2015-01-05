@@ -235,11 +235,20 @@
 
 - (Boolean)unseen {
 	if(_imapMessage == nil) {
-		NSLog(@"%s: IMAP message is set", __FUNCTION__);
-		return YES;
+		NSLog(@"%s: IMAP message is not set", __FUNCTION__);
+		return NO;
 	}
 	
 	return (_imapMessage.originalFlags & MCOMessageFlagSeen) == 0;
+}
+
+- (Boolean)flagged {
+	if(_imapMessage == nil) {
+		NSLog(@"%s: IMAP message is not set", __FUNCTION__);
+		return NO;
+	}
+	
+	return (_imapMessage.originalFlags & MCOMessageFlagFlagged) != 0;
 }
 
 - (void)fetchInlineAttachments {
