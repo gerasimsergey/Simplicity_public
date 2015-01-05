@@ -95,8 +95,11 @@
 - (void)collapse {
 	if(_collapsed)
 		return;
+	
+	[_messageViewController collapseHeader];
 
 	NSView *view = [self view];
+	NSAssert(view != nil, @"view is nil");
 	
 	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
 	
@@ -129,6 +132,8 @@
 - (void)uncollapse {
 	if(!_collapsed)
 		return;
+
+	[_messageViewController uncollapseHeader];
 	
 	[[_messageViewController messageBodyViewController] uncollapse];
 

@@ -15,6 +15,9 @@
 + (NSUInteger)headerHeight;
 + (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold;
 
+- (void)collapseHeader;
+- (void)uncollapseHeader;
+
 - (void)setMessageDetails:(SMMessage*)message;
 
 @end

@@ -14,16 +14,17 @@
 
 @implementation SMMessageDetailsViewController {
 	SMMessage *_currentMessage;
-
 	NSTextField *_subject;
 	NSTextField *_fromAddress;
 	NSTextField *_date;
 	NSButton *_infoButton;
 	Boolean _fullDetailsShown;
-	
 	SMMessageFullDetailsViewController *_fullDetailsViewController;
 	NSMutableArray *_fullDetailsViewConstraints;
 	NSLayoutConstraint *_bottomConstraint;
+	Boolean _fullHeaderShown;
+	NSMutableArray *_uncollapsedHeaderConstraints;
+	NSLayoutConstraint *_collapsedHeaderConstraint;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -99,27 +100,6 @@
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
-	// init info button
-	
-	_infoButton = [[NSButton alloc] init];
-	_infoButton.translatesAutoresizingMaskIntoConstraints = NO;
-	_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
-	_infoButton.target = self;
-	_infoButton.image = [NSImage imageNamed:@"info-icon.png"];
-	[_infoButton.cell setImageScaling:NSImageScaleProportionallyDown];
-	_infoButton.bordered = NO;
-	_infoButton.action = @selector(toggleFullDetails:);
-	
-	[view addSubview:_infoButton];
-
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityRequired-2];
-	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
-
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/1.6]];
-
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
-
 	// init date label
 	
 	_date = [SMMessageDetailsViewController createLabel:@"" bold:NO];
@@ -129,9 +109,12 @@
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultLow];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP] priority:NSLayoutPriorityRequired-2];
-	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+	
+	_collapsedHeaderConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP];
+	_collapsedHeaderConstraint.priority = NSLayoutPriorityRequired-2;
+	
+	[view addConstraint:_collapsedHeaderConstraint];
 
 	// init subject
 	
@@ -210,6 +193,64 @@
 	[view addConstraint:_bottomConstraint];
 	
 	_fullDetailsShown = NO;
+}
+
+- (void)uncollapseHeader {
+	if(_fullHeaderShown)
+		return;
+
+	NSView *view = [self view];
+	NSAssert(view != nil, @"no view");
+
+	if(_infoButton == nil) {
+		_infoButton = [[NSButton alloc] init];
+		_infoButton.translatesAutoresizingMaskIntoConstraints = NO;
+		_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
+		_infoButton.target = self;
+		_infoButton.image = [NSImage imageNamed:@"info-icon.png"];
+		[_infoButton.cell setImageScaling:NSImageScaleProportionallyDown];
+		_infoButton.bordered = NO;
+		_infoButton.action = @selector(toggleFullDetails:);
+
+		NSAssert(_uncollapsedHeaderConstraints == nil, @"_uncollapsedHeaderConstraints already created");
+		_uncollapsedHeaderConstraints = [NSMutableArray array];
+
+		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN]];
+		[_uncollapsedHeaderConstraints.lastObject setPriority:NSLayoutPriorityRequired-2];
+
+		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+		[_uncollapsedHeaderConstraints.lastObject setPriority:NSLayoutPriorityRequired];
+
+		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/1.6]];
+
+		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_infoButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+
+		[_uncollapsedHeaderConstraints addObject:[NSLayoutConstraint constraintWithItem:_infoButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP]];
+		[_uncollapsedHeaderConstraints.lastObject setPriority:NSLayoutPriorityRequired-2];
+	}
+
+	NSAssert(_collapsedHeaderConstraint != nil, @"_collapsedHeaderConstraint is nil");
+	[view removeConstraint:_collapsedHeaderConstraint];
+
+	[view addSubview:_infoButton];
+	[view addConstraints:_uncollapsedHeaderConstraints];
+
+	_fullHeaderShown = YES;
+}
+
+- (void)collapseHeader {
+	if(!_fullHeaderShown)
+		return;
+	
+	NSView *view = [self view];
+	NSAssert(view != nil, @"no view");
+	
+	[view removeConstraints:_uncollapsedHeaderConstraints];
+	[_infoButton removeFromSuperview];
+
+	[view addConstraint:_collapsedHeaderConstraint];
+	
+	_fullHeaderShown = NO;
 }
 
 - (void)addConstraint:(NSView*)view constraint:(NSLayoutConstraint*)constraint priority:(NSLayoutPriority)priority {

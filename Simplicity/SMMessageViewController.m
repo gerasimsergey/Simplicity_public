@@ -78,4 +78,12 @@
 	[_messageDetailsViewController setMessageDetails:message];
 }
 
+- (void)collapseHeader {
+	[_messageDetailsViewController collapseHeader];
+}
+
+- (void)uncollapseHeader {
+	[_messageDetailsViewController uncollapseHeader];
+}
+
 @end
