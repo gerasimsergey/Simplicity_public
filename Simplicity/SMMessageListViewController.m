@@ -21,13 +21,22 @@
 #import "SMMessageThread.h"
 #import "SMMessageStorage.h"
 
-@interface SMMessageListViewController()
-@property (weak) IBOutlet NSTableView *messageListTableView;
-@end
-
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
 	Boolean _reloadMessageThreadSelectionNow;
+	NSImage *_blueCircleImage;
+	NSImage *_yellowStarImage;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	
+	if(self) {
+		_blueCircleImage = [NSImage imageNamed:@"circle-blue.png"];
+		_yellowStarImage = [NSImage imageNamed:@"star-yellow-icon.png"];
+	}
+
+	return self;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -98,21 +107,31 @@
 	NSAssert([messageThread messagesCount], @"no messages in the thread");
 	SMMessage *message = [messageThread messagesSortedByDate][0];
 	
-	SMMessageListCellView *view = [ tableView makeViewWithIdentifier:@"MessageCell" owner:self ];
+	SMMessageListCellView *view = [tableView makeViewWithIdentifier:@"MessageCell" owner:self];
+	NSAssert(view != nil, @"view is nil");
+
+	[view initFields];
 
 //	NSLog(@"%s: from '%@', subject '%@'", __FUNCTION__, [message from], [message subject]);
 	
 	[view.fromTextField setStringValue:[message from]];
 	[view.subjectTextField setStringValue:[message subject]];
-
-	NSFont *font = [view.subjectTextField font];
-	
-	font = messageThread.unseen? [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSFontBoldTrait] : [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSFontBoldTrait];
-
-	[view.subjectTextField setFont:font];
-
 	[view.dateTextField setStringValue:[message localizedDate]];
-	
+
+	if(messageThread.unseen) {
+		[view.unseenImage setImage:_blueCircleImage];
+		[view.unseenImage setHidden:NO];
+	} else {
+		[view.unseenImage setHidden:YES];
+	}
+
+	if(messageThread.flagged) {
+		[view.starImage setImage:_yellowStarImage];
+		[view.starImage setHidden:NO];
+	} else {
+		[view.starImage setHidden:YES];
+	}
+
 	return view;
 }
 

@@ -77,7 +77,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="18" id="JjZ-Gf-iYl"/>
                                                         </constraints>
-                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Subject" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="165">
+                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Subject" usesSingleLineMode="YES" id="165">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -126,7 +126,9 @@
                                                 <connections>
                                                     <outlet property="dateTextField" destination="BTp-sC-DoL" id="XZN-4J-VP5"/>
                                                     <outlet property="fromTextField" destination="160" id="163"/>
+                                                    <outlet property="starImage" destination="4FB-rA-suJ" id="FWz-wm-iyu"/>
                                                     <outlet property="subjectTextField" destination="164" id="166"/>
+                                                    <outlet property="unseenImage" destination="WUA-NN-aMr" id="b2H-xX-tFZ"/>
                                                 </connections>
                                             </tableCellView>
                                         </prototypeCellViews>
@@ -187,8 +189,6 @@
             </constraints>
             <point key="canvasLocation" x="395.5" y="173.5"/>
         </customView>
-        <customObject id="73" customClass="SMMessageListViewController"/>
-        <customObject id="101" customClass="SMMessageListCellView"/>
     </objects>
     <resources>
         <image name="circle-blue" width="256" height="256"/>

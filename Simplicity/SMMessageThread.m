@@ -159,6 +159,9 @@
 	// update thread attributes
 	if(message.unseen)
 		_unseen = YES;
+
+	if(message.flagged)
+		_flagged = YES;
 }
 
 - (Boolean)endUpdate:(Boolean)removeVanishedMessages {
@@ -199,11 +202,15 @@
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	
 	_unseen = NO;
+	_flagged = NO;
 
 	// clear update marks for future updates
 	for(SMMessage *message in _messageCollection.messages) {
 		if(message.unseen)
 			_unseen = YES;
+
+		if(message.flagged)
+			_flagged = YES;
 
 		[message setUpdated:NO];
 	}

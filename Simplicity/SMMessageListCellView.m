@@ -8,16 +8,21 @@
 
 #import "SMMessageListCellView.h"
 
-@implementation SMMessageListCellView
+@implementation SMMessageListCellView {
+	Boolean _fieldsInitialized;
+}
 
-- (id)initWithFrame:(NSRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
-    }
-    
-    return self;
+- (void)initFields {
+	if(_fieldsInitialized)
+		return;
+	
+	NSFont *font = [_fromTextField font];
+	
+	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSFontBoldTrait];
+	
+	[_fromTextField setFont:font];
+	
+	_fieldsInitialized = true;
 }
 
 @end
