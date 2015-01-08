@@ -23,5 +23,6 @@
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
 - (void)setMessageDetails:(SMMessage*)message;
+- (void)updateMessageDetails;
 
 @end

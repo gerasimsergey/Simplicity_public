@@ -77,10 +77,21 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	}
 
 	if(message.flagged) {
-		_starButton.image = [NSImage imageNamed:@"star-yellow-icon.png"];
+		_starButton.image = [NSImage imageNamed:@"star-yellow-icon.png"]; // TODO: use image registry
 	}
 
 	[_fullDetailsViewController setMessageDetails:message];
+}
+
+- (void)updateMessageDetails {
+	NSAssert(_currentMessage != nil, @"nil message");
+	
+	// TODO: optimize for case when no changes occurred
+	if(_currentMessage.flagged) {
+		_starButton.image = [NSImage imageNamed:@"star-yellow-icon.png"]; // TODO: use image registry
+	} else {
+		_starButton.image = [NSImage imageNamed:@"star-gray-icon.png"]; // TODO: use image registry
+	}
 }
 
 #define V_MARGIN 10

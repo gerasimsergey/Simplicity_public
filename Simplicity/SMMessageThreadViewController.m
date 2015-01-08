@@ -141,8 +141,14 @@
 				}
 			}
 			
-			if(equal)
+			if(equal) {
+				for(NSInteger i = 0; i < _cells.count; i++) {
+					ThreadCell *cell = _cells[i];
+					[cell.viewController.messageViewController updateMessageDetails];
+				}
+
 				return;
+			}
 		}
 		
 		NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, _cells.count, _currentMessageThread.messagesCount);
@@ -159,7 +165,7 @@
 			}
 		}
 		
-		// add new messages
+		// add new messages and update existing
 		NSMutableArray *updatedCells = [NSMutableArray arrayWithCapacity:newMessages.count];
 		
 		for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
@@ -174,7 +180,11 @@
 				
 				updatedCells[i] = [[ThreadCell alloc] initWithMessage:newMessage viewController:viewController];
 			} else {
-				updatedCells[i] = _cells[j++];
+				ThreadCell *cell = _cells[j++];
+
+				[cell.viewController.messageViewController updateMessageDetails];
+
+				updatedCells[i] = cell;
 			}
 		}
 		

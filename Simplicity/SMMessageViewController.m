@@ -78,6 +78,10 @@
 	[_messageDetailsViewController setMessageDetails:message];
 }
 
+- (void)updateMessageDetails {
+	[_messageDetailsViewController updateMessageDetails];
+}
+
 - (void)collapseHeader {
 	[_messageDetailsViewController collapseHeader];
 }

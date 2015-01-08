@@ -19,5 +19,6 @@
 - (void)uncollapseHeader;
 
 - (void)setMessageDetails:(SMMessage*)message;
+- (void)updateMessageDetails;
 
 @end
