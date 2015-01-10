@@ -23,7 +23,7 @@
 
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
-	Boolean _reloadMessageThreadSelectionNow;
+	Boolean _delayReloadMessageSelection;
 	NSImage *_blueCircleImage;
 	NSImage *_yellowStarImage;
 }
@@ -51,7 +51,7 @@
 	return messageThreadsCount;
 }
 
-- (void)changeSelection:(NSNumber*)row {
+- (void)changeSelection:(NSNumber*)row delayed:(Boolean)delayed {
 	NSInteger selectedRow = [row integerValue];
 	NSAssert(selectedRow >= 0, @"bad row %ld", selectedRow);
 
@@ -69,26 +69,26 @@
 	}
 }
 
+- (void)changeSelectionDelayed:(NSNumber*)row {
+	[self changeSelection:row delayed:YES];
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
 	//NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
-
 	if(selectedRow >= 0) {
 		NSNumber *selectedRowNumber = [NSNumber numberWithInteger:selectedRow];
 		
-		if(_reloadMessageThreadSelectionNow) {
-			[self changeSelection:selectedRowNumber];
+		if(!_delayReloadMessageSelection) {
+			[self changeSelection:selectedRowNumber delayed:NO];
 		} else {
 			// delay the selection for a tiny bit to optimize fast cursor movements
 			// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
-			[self performSelector:@selector(changeSelection:) withObject:selectedRowNumber afterDelay:0.3];
+			[self performSelector:@selector(changeSelectionDelayed:) withObject:selectedRowNumber afterDelay:0.3];
 		}
 	}
-
-	_reloadMessageThreadSelectionNow = NO;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -136,14 +136,16 @@
 }
 
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification {
+	// cancel scheduled message list update coming from keyboard
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+
 	// for mouse events, react quickly
-	_reloadMessageThreadSelectionNow = YES;
+	_delayReloadMessageSelection = NO;
 }
 
 - (void)reloadMessageList:(Boolean)preserveSelection {
 	if(!preserveSelection) {
 		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-		_reloadMessageThreadSelectionNow = YES;
 	}
 
 	[_messageListTableView reloadData];
@@ -163,10 +165,8 @@
 			_selectedMessageThread = nil;
 		}
 
-		if(![[_messageListTableView selectedRowIndexes] isEqualToIndexSet:threadIndexSet]) {
+		if(![[_messageListTableView selectedRowIndexes] isEqualToIndexSet:threadIndexSet])
 			[_messageListTableView selectRowIndexes:threadIndexSet byExtendingSelection:NO];
-			_reloadMessageThreadSelectionNow = YES;
-		}
 	} else {
 		_selectedMessageThread = nil;
 	}
