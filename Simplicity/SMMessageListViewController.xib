@@ -31,13 +31,13 @@
                         <action selector="updateMessages:" target="-2" id="hMJ-1V-yTM"/>
                     </connections>
                 </button>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                <scrollView autohidesScrollers="YES" horizontalLineScroll="49" horizontalPageScroll="10" verticalLineScroll="49" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="0.0" y="20" width="215" height="251"/>
                     <clipView key="contentView" drawsBackground="NO" id="HA8-Z9-Dlo">
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="54" rowSizeStyle="automatic" viewBased="YES" id="4">
+                            <tableView appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="47" rowSizeStyle="automatic" viewBased="YES" id="4">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -58,11 +58,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="MessageCell" id="32" customClass="SMMessageListCellView">
-                                                <rect key="frame" x="1" y="1" width="210" height="54"/>
+                                                <rect key="frame" x="1" y="1" width="210" height="47"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField autoresizesSubviews="NO" horizontalHuggingPriority="248" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="160">
-                                                        <rect key="frame" x="17" y="29" width="158" height="22"/>
+                                                        <rect key="frame" x="17" y="22" width="158" height="22"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="Ev7-eg-biG"/>
                                                         </constraints>
@@ -73,7 +73,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="164">
-                                                        <rect key="frame" x="17" y="7" width="195" height="18"/>
+                                                        <rect key="frame" x="17" y="4" width="195" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="18" id="JjZ-Gf-iYl"/>
                                                         </constraints>
@@ -84,7 +84,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="BTp-sC-DoL">
-                                                        <rect key="frame" x="179" y="33" width="33" height="22"/>
+                                                        <rect key="frame" x="179" y="26" width="33" height="22"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="right" title="Date" usesSingleLineMode="YES" id="6AZ-7v-HGf">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" red="0.30655570652173914" green="0.30655570652173914" blue="0.30655570652173914" alpha="1" colorSpace="calibratedRGB"/>
@@ -92,7 +92,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WUA-NN-aMr">
-                                                        <rect key="frame" x="3" y="35" width="12" height="12"/>
+                                                        <rect key="frame" x="3" y="28" width="12" height="12"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="12" id="LiG-Ow-gau"/>
                                                             <constraint firstAttribute="width" constant="12" id="nFH-pY-YCa"/>
@@ -100,7 +100,7 @@
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="circle-blue" id="cIK-TO-Bpr"/>
                                                     </imageView>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4FB-rA-suJ">
-                                                        <rect key="frame" x="0.0" y="7" width="18" height="18"/>
+                                                        <rect key="frame" x="0.0" y="4" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="18" id="Zda-pl-9tp"/>
                                                             <constraint firstAttribute="width" constant="18" id="ukI-Em-NPM"/>
@@ -114,11 +114,11 @@
                                                     <constraint firstItem="4FB-rA-suJ" firstAttribute="leading" secondItem="32" secondAttribute="leading" id="Dt9-oo-3wQ"/>
                                                     <constraint firstItem="BTp-sC-DoL" firstAttribute="top" secondItem="32" secondAttribute="top" constant="-1" id="EeY-CT-9H2"/>
                                                     <constraint firstItem="WUA-NN-aMr" firstAttribute="leading" secondItem="32" secondAttribute="leading" constant="3" id="H8H-8I-daO"/>
-                                                    <constraint firstItem="164" firstAttribute="top" secondItem="BTp-sC-DoL" secondAttribute="bottom" constant="8" symbolic="YES" id="R73-US-hFc"/>
+                                                    <constraint firstItem="164" firstAttribute="top" secondItem="BTp-sC-DoL" secondAttribute="bottom" constant="4" id="R73-US-hFc"/>
                                                     <constraint firstItem="160" firstAttribute="leading" secondItem="WUA-NN-aMr" secondAttribute="trailing" constant="4" id="boL-kG-Zah"/>
-                                                    <constraint firstItem="164" firstAttribute="top" secondItem="160" secondAttribute="bottom" constant="4" id="gpW-df-S5v"/>
+                                                    <constraint firstItem="164" firstAttribute="top" secondItem="160" secondAttribute="bottom" id="gpW-df-S5v"/>
                                                     <constraint firstAttribute="trailing" secondItem="164" secondAttribute="trailing" id="kYr-aG-M6O"/>
-                                                    <constraint firstItem="4FB-rA-suJ" firstAttribute="top" secondItem="WUA-NN-aMr" secondAttribute="bottom" constant="10" id="nPF-r7-bhM"/>
+                                                    <constraint firstItem="4FB-rA-suJ" firstAttribute="top" secondItem="WUA-NN-aMr" secondAttribute="bottom" constant="6" id="nPF-r7-bhM"/>
                                                     <constraint firstItem="160" firstAttribute="top" secondItem="32" secondAttribute="top" constant="3" id="pEu-Zu-EPr"/>
                                                     <constraint firstItem="BTp-sC-DoL" firstAttribute="trailing" secondItem="164" secondAttribute="trailing" id="q6e-dl-THm"/>
                                                     <constraint firstItem="160" firstAttribute="leading" secondItem="164" secondAttribute="leading" id="u2l-Yi-9m7"/>
