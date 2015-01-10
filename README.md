@@ -18,4 +18,5 @@ Features
 - Highlighting search patterns in the found messages;
 - Undo/redo for as many mail operations as possible;
 - Small local message database;
-- Configurable key shortcuts.
+- Configurable key shortcuts;
+- Configurable color schemes.
