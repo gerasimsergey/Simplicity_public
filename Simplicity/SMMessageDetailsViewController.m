@@ -17,7 +17,11 @@
 static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 
 @implementation SMMessageDetailsViewController {
+	// current message control objects
 	SMMessage *_currentMessage;
+	SMMessageFullDetailsViewController *_fullDetailsViewController;
+	
+	// UI elements
 	NSButton *_starButton;
 	NSTextField *_fromAddress;
 	NSTextField *_subject;
@@ -25,12 +29,14 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	NSTextField *_date;
 	NSButton *_infoButton;
 	Boolean _fullDetailsShown;
-	SMMessageFullDetailsViewController *_fullDetailsViewController;
 	NSMutableArray *_fullDetailsViewConstraints;
 	NSLayoutConstraint *_bottomConstraint;
 	Boolean _fullHeaderShown;
 	NSMutableArray *_uncollapsedHeaderConstraints;
 	NSLayoutConstraint *_collapsedHeaderConstraint;
+	NSMutableArray *_hasAttachmentsConstraints;
+	NSMutableArray *_doesntHaveAttachmentsConstraints;
+	Boolean _attachmentButtonShown;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -96,9 +102,9 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	}
 
 	if(_currentMessage.hasAttachments) {
-		[_attachmentButton setHidden:NO];
+		[self showAttachmentButton];
 	} else {
-		[_attachmentButton setHidden:YES];
+		[self hideAttachmentButton];
 	}
 
 	NSFont *font = [_subject font];
@@ -188,40 +194,99 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
-	// init attachment image
+	// init attachment constraints
 	
-	// init attachment icon
-	
-	_attachmentButton = [[NSButton alloc] init];
-	_attachmentButton.translatesAutoresizingMaskIntoConstraints = NO;
-	_attachmentButton.bezelStyle = NSShadowlessSquareBezelStyle;
-	_attachmentButton.target = self;
-	_attachmentButton.image = appDelegate.imageRegistry.attachmentImage;
-	[_attachmentButton.cell setImageScaling:NSImageScaleProportionallyDown];
-	_attachmentButton.bordered = NO;
+	_doesntHaveAttachmentsConstraints = [NSMutableArray array];
 
-// TODO: show popup menu asking the user to save/download the attachments
-//	_attachmentButton.action = @selector(toggleFullDetails:);
-	
-	[view addSubview:_attachmentButton];
-	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_attachmentButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/HEADER_ICON_HEIGHT_RATIO]];
+	[_doesntHaveAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_GAP]];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_attachmentButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_attachmentButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
-
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_GAP] priority:NSLayoutPriorityDefaultLow];
-
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_date attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_attachmentButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP] priority:NSLayoutPriorityRequired];
+	[_doesntHaveAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP] priority:NSLayoutPriorityDefaultLow];
-
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_attachmentButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
+	[_doesntHaveAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
 	
+	[_doesntHaveAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
+	
+	[view addConstraints:_doesntHaveAttachmentsConstraints];
+
 	// init bottom constraint
 
 	_bottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN];
 	
 	[view addConstraint:_bottomConstraint];
+}
+
+- (void)showAttachmentButton {
+	if(_attachmentButtonShown)
+		return;
+	
+	NSView *view = [self view];
+
+	if(_attachmentButton == nil) {
+		NSAssert(_hasAttachmentsConstraints == nil, @"_hasAttachmentsConstraints != nil");
+
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
+		_attachmentButton = [[NSButton alloc] init];
+		_attachmentButton.translatesAutoresizingMaskIntoConstraints = NO;
+		_attachmentButton.bezelStyle = NSShadowlessSquareBezelStyle;
+		_attachmentButton.target = self;
+		_attachmentButton.image = appDelegate.imageRegistry.attachmentImage;
+		[_attachmentButton.cell setImageScaling:NSImageScaleProportionallyDown];
+		_attachmentButton.bordered = NO;
+		
+		// TODO: show popup menu asking the user to save/download the attachments
+		//	_attachmentButton.action = @selector(toggleFullDetails:);
+		
+		_hasAttachmentsConstraints = [NSMutableArray array];
+		
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_attachmentButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/HEADER_ICON_HEIGHT_RATIO]];
+		
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_attachmentButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_attachmentButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+		
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_GAP]];
+		
+		[_hasAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
+		
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_date attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_attachmentButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP]];
+
+		[_hasAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityRequired];
+
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+
+		[_hasAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
+
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_attachmentButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+		
+		[_hasAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityRequired];
+	}
+
+	NSAssert(_doesntHaveAttachmentsConstraints != nil, @"_doesntHaveAttachmentsConstraints == nil");
+	[view removeConstraints:_doesntHaveAttachmentsConstraints];
+	
+	NSAssert(_attachmentButton != nil, @"_attachmentButton == nil");
+	[view addSubview:_attachmentButton];
+
+	NSAssert(_hasAttachmentsConstraints != nil, @"_hasAttachmentsConstraints == nil");
+	[view addConstraints:_hasAttachmentsConstraints];
+
+	_attachmentButtonShown = YES;
+}
+
+- (void)hideAttachmentButton {
+	if(!_attachmentButtonShown)
+		return;
+	
+	NSView *view = [self view];
+	
+	NSAssert(_hasAttachmentsConstraints != nil, @"_hasAttachmentsConstraints == nil");
+	[view removeConstraints:_hasAttachmentsConstraints];
+	
+	NSAssert(_attachmentButton != nil, @"_attachmentButton == nil");
+	[_attachmentButton removeFromSuperview];
+	
+	[view addConstraints:_doesntHaveAttachmentsConstraints];
+	
+	_attachmentButtonShown = NO;
 }
 
 - (void)showFullDetails {
