@@ -134,6 +134,7 @@
                                                     <constraint firstAttribute="trailing" secondItem="BTp-sC-DoL" secondAttribute="trailing" id="x4M-xg-TK9"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="attachmentImage" destination="oxo-5I-gnK" id="RMn-B1-0Lh"/>
                                                     <outlet property="dateTextField" destination="BTp-sC-DoL" id="XZN-4J-VP5"/>
                                                     <outlet property="fromTextField" destination="160" id="163"/>
                                                     <outlet property="starImage" destination="4FB-rA-suJ" id="FWz-wm-iyu"/>

@@ -53,7 +53,7 @@
 		[_messageThreadView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 		
 		_cells = [NSMutableArray new];
-		
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageBodyFetched:) name:@"MessageBodyFetched" object:nil];
 	}
 	

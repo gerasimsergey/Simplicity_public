@@ -22,6 +22,7 @@
 @property (readonly) NSString *remoteFolder;
 @property (readonly) Boolean unseen;
 @property (readonly) Boolean flagged;
+@property (readonly) Boolean hasAttachments;
 
 @property (assign) NSData *data;
 

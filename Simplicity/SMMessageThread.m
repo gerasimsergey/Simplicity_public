@@ -162,6 +162,9 @@
 
 	if(message.flagged)
 		_flagged = YES;
+	
+	if(message.hasAttachments)
+		_hasAttachments = YES;
 }
 
 - (Boolean)endUpdate:(Boolean)removeVanishedMessages {
@@ -203,6 +206,7 @@
 	
 	_unseen = NO;
 	_flagged = NO;
+	_hasAttachments = NO;
 
 	// clear update marks for future updates
 	for(SMMessage *message in _messageCollection.messages) {
@@ -211,6 +215,9 @@
 
 		if(message.flagged)
 			_flagged = YES;
+		
+		if(message.hasAttachments)
+			_hasAttachments = YES;
 
 		[message setUpdated:NO];
 	}

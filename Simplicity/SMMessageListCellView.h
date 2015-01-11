@@ -15,6 +15,7 @@
 @property (weak) IBOutlet NSTextField *dateTextField;
 @property (weak) IBOutlet NSImageView *unseenImage;
 @property (weak) IBOutlet NSImageView *starImage;
+@property (weak) IBOutlet NSImageView *attachmentImage;
 
 - (void)initFields;
 

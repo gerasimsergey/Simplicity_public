@@ -251,6 +251,15 @@
 	return (_imapMessage.originalFlags & MCOMessageFlagFlagged) != 0;
 }
 
+- (Boolean)hasAttachments {
+	if(_imapMessage == nil) {
+		NSLog(@"%s: IMAP message is not set", __FUNCTION__);
+		return NO;
+	}
+	
+	return _msgParser != nil && _msgParser.attachments != nil && _msgParser.attachments.count > 0;
+}
+
 - (void)fetchInlineAttachments {
 	NSAssert(_data, @"bad _data");
 	NSAssert(_msgParser, @"bad _msgParser");

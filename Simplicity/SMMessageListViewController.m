@@ -31,7 +31,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageThreadUpdated:) name:@"MessageThreadUpdated" object:nil];
 	}
 
 	return self;
@@ -130,6 +130,12 @@
 		[view.starImage setHidden:YES];
 	}
 
+	if(messageThread.hasAttachments) {
+		[view.attachmentImage setHidden:NO];
+	} else {
+		[view.attachmentImage setHidden:YES];
+	}
+	
 	return view;
 }
 
@@ -205,6 +211,28 @@
 
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	[[[appDelegate appController] messageThreadViewController] updateMessageThread];
+}
+
+- (void)messageThreadUpdated:(NSNotification *)notification {
+	NSDictionary *messageInfo = [notification userInfo];
+	
+	uint64_t threadId = [[messageInfo objectForKey:@"ThreadId"] unsignedLongLongValue];
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+	
+	if(currentFolder != nil) {
+		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadById:threadId localFolder:currentFolder.name];
+		
+		if(messageThread != nil) {
+			NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:messageThread localFolder:currentFolder.name];
+			
+			if(threadIndex != NSNotFound) {
+				[_messageListTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+			}
+		}
+	}
 }
 
 @end
