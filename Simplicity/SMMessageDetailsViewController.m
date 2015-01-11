@@ -70,8 +70,6 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 - (void)setMessageDetails:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-
 	if(_currentMessage != message) {
 		_currentMessage = message;
 		
@@ -80,9 +78,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		[_date setStringValue:[_currentMessage localizedDate]];
 	}
 
-	if(message.flagged) {
-		_starButton.image = appDelegate.imageRegistry.yellowStarImage;
-	}
+	[self updateMessageDetails];
 
 	[_fullDetailsViewController setMessageDetails:message];
 }
@@ -97,6 +93,12 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	} else {
 		_starButton.image = appDelegate.imageRegistry.grayStarImage;
 	}
+
+	NSFont *font = [_subject font];
+	
+	font = _currentMessage.unseen? [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSFontBoldTrait] : [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSFontBoldTrait];
+	
+	[_subject setFont:font];
 }
 
 #define V_MARGIN 10
