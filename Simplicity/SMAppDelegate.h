@@ -11,6 +11,7 @@
 #import "SMSimplicityContainer.h"
 
 @class SMAppController;
+@class SMImageRegistry;
 
 @interface SMAppDelegate : NSObject <NSApplicationDelegate>
 
@@ -18,6 +19,7 @@
 
 @property SMAppController *appController;
 @property SMSimplicityContainer *model;
+@property SMImageRegistry *imageRegistry;
 
 @property (assign) IBOutlet NSWindow *window;
 

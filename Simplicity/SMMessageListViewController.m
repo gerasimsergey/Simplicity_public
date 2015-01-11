@@ -8,6 +8,7 @@
 
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
+#import "SMImageRegistry.h"
 #import "SMMessageViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMMessageListController.h"
@@ -24,16 +25,13 @@
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
 	Boolean _delayReloadMessageSelection;
-	NSImage *_blueCircleImage;
-	NSImage *_yellowStarImage;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		_blueCircleImage = [NSImage imageNamed:@"circle-blue.png"];
-		_yellowStarImage = [NSImage imageNamed:@"star-yellow-icon.png"];
+		
 	}
 
 	return self;
@@ -119,14 +117,14 @@
 	[view.dateTextField setStringValue:[message localizedDate]];
 
 	if(messageThread.unseen) {
-		[view.unseenImage setImage:_blueCircleImage];
+		[view.unseenImage setImage:appDelegate.imageRegistry.blueCircleImage];
 		[view.unseenImage setHidden:NO];
 	} else {
 		[view.unseenImage setHidden:YES];
 	}
 
 	if(messageThread.flagged) {
-		[view.starImage setImage:_yellowStarImage];
+		[view.starImage setImage:appDelegate.imageRegistry.yellowStarImage];
 		[view.starImage setHidden:NO];
 	} else {
 		[view.starImage setHidden:YES];

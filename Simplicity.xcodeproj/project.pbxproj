@@ -44,6 +44,7 @@
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
 		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
 		009742721957C78E00620145 /* SMMailbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 009742711957C78E00620145 /* SMMailbox.m */; };
+		0099CE841A62332400AEA789 /* SMImageRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0099CE831A62332400AEA789 /* SMImageRegistry.m */; };
 		009C7BA01A5BB558002EA2DF /* circle-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 009C7B9F1A5BB558002EA2DF /* circle-blue.png */; };
 		00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */; };
 		00A25BBC17E3540000D0FCB1 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 00A25BBB17E3540000D0FCB1 /* TODO */; };
@@ -205,6 +206,8 @@
 		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
 		009742701957C78E00620145 /* SMMailbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailbox.h; sourceTree = "<group>"; };
 		009742711957C78E00620145 /* SMMailbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailbox.m; sourceTree = "<group>"; };
+		0099CE821A62332400AEA789 /* SMImageRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMImageRegistry.h; sourceTree = "<group>"; };
+		0099CE831A62332400AEA789 /* SMImageRegistry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMImageRegistry.m; sourceTree = "<group>"; };
 		009C7B9F1A5BB558002EA2DF /* circle-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circle-blue.png"; sourceTree = "<group>"; };
 		00A25BB517DF7ECD00D0FCB1 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = ../../../../../../../usr/lib/libxml2.dylib; sourceTree = "<group>"; };
 		00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListController.h; sourceTree = "<group>"; };
@@ -410,6 +413,8 @@
 				008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */,
 				0040B0F7196A5331004E55CC /* SMFolderCellView.h */,
 				0040B0F8196A5331004E55CC /* SMFolderCellView.m */,
+				0099CE821A62332400AEA789 /* SMImageRegistry.h */,
+				0099CE831A62332400AEA789 /* SMImageRegistry.m */,
 				00F96C0B19343D8000CA5836 /* SMMessageFullDetailsView.h */,
 				00F96C0C19343D8000CA5836 /* SMMessageFullDetailsView.m */,
 				0002A0B617D224C600EA4AFF /* SMMessageListCellView.h */,
@@ -596,6 +601,7 @@
 				00EB7E87199C70FA00CA2B1B /* SMMessageThread.m in Sources */,
 				00FC3C7E19AADF68002DAF9C /* SMMessageThreadCellViewController.m in Sources */,
 				0002A09E17D1B1E000EA4AFF /* main.m in Sources */,
+				0099CE841A62332400AEA789 /* SMImageRegistry.m in Sources */,
 				001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */,
 				00036D7F1A205FCB0085C266 /* SMLocalFolderRegistry.m in Sources */,
 				0040B0F9196A5331004E55CC /* SMFolderCellView.m in Sources */,

@@ -8,6 +8,8 @@
 
 #import <MailCore/MailCore.h>
 
+#import "SMAppDelegate.h"
+#import "SMImageRegistry.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageFullDetailsViewController.h"
 #import "SMMessage.h"
@@ -68,6 +70,8 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 - (void)setMessageDetails:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
 	if(_currentMessage != message) {
 		_currentMessage = message;
 		
@@ -77,7 +81,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	}
 
 	if(message.flagged) {
-		_starButton.image = [NSImage imageNamed:@"star-yellow-icon.png"]; // TODO: use image registry
+		_starButton.image = appDelegate.imageRegistry.yellowStarImage;
 	}
 
 	[_fullDetailsViewController setMessageDetails:message];
@@ -86,11 +90,12 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 - (void)updateMessageDetails {
 	NSAssert(_currentMessage != nil, @"nil message");
 	
-	// TODO: optimize for case when no changes occurred
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
 	if(_currentMessage.flagged) {
-		_starButton.image = [NSImage imageNamed:@"star-yellow-icon.png"]; // TODO: use image registry
+		_starButton.image = appDelegate.imageRegistry.yellowStarImage;
 	} else {
-		_starButton.image = [NSImage imageNamed:@"star-gray-icon.png"]; // TODO: use image registry
+		_starButton.image = appDelegate.imageRegistry.grayStarImage;
 	}
 }
 
@@ -102,6 +107,8 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 #define V_GAP_HALF (V_GAP/2)
 
 - (void)createSubviews {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
 	NSView *view = [self view];
 
 	// init star button
@@ -110,7 +117,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	_starButton.translatesAutoresizingMaskIntoConstraints = NO;
 	_starButton.bezelStyle = NSShadowlessSquareBezelStyle;
 	_starButton.target = self;
-	_starButton.image = [NSImage imageNamed:@"star-gray-icon.png"];
+	_starButton.image = appDelegate.imageRegistry.grayStarImage;
 	[_starButton.cell setImageScaling:NSImageScaleProportionallyDown];
 	_starButton.bordered = NO;
 	_starButton.action = @selector(toggleFullDetails:);
@@ -238,6 +245,8 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	if(_fullHeaderShown)
 		return;
 
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
 	NSView *view = [self view];
 	NSAssert(view != nil, @"no view");
 
@@ -246,7 +255,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		_infoButton.translatesAutoresizingMaskIntoConstraints = NO;
 		_infoButton.bezelStyle = NSShadowlessSquareBezelStyle;
 		_infoButton.target = self;
-		_infoButton.image = [NSImage imageNamed:@"info-icon.png"];
+		_infoButton.image = appDelegate.imageRegistry.infoImage;
 		[_infoButton.cell setImageScaling:NSImageScaleProportionallyDown];
 		_infoButton.bordered = NO;
 		_infoButton.action = @selector(toggleFullDetails:);

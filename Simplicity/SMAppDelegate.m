@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMImageRegistry.h"
 #import "SMAppDelegate.h"
 
 @implementation SMAppDelegate
@@ -13,6 +14,7 @@
 - (id)init {
 	self = [ super init ];
 	if(self) {
+		_imageRegistry = [ SMImageRegistry new ];
 		_model = [ SMSimplicityContainer new ];
 	}
 	
@@ -25,7 +27,7 @@
 {
 	// Insert code here to initialize your application
 	NSLog(@"%s: app delegate %@, app controller %@", __FUNCTION__, self, [ self appController ]);
-	
+
 	[ _model startSession ];
 }
 
