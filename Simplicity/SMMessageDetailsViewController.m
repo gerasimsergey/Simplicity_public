@@ -21,6 +21,8 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	NSButton *_starButton;
 	NSTextField *_fromAddress;
 	NSTextField *_subject;
+//	NSImageView *_attachmentImage;
+	NSButton *_attachmentImage;
 	NSTextField *_date;
 	NSButton *_infoButton;
 	Boolean _fullDetailsShown;
@@ -155,11 +157,12 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	
 	[view addSubview:_date];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_MARGIN] priority:NSLayoutPriorityDefaultLow];
-
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 	
+	// init header collapsing
+
 	_collapsedHeaderConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_date attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP];
+
 	_collapsedHeaderConstraint.priority = NSLayoutPriorityRequired-2;
 	
 	[view addConstraint:_collapsedHeaderConstraint];
@@ -176,11 +179,42 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W] priority:NSLayoutPriorityDefaultHigh];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP] priority:NSLayoutPriorityDefaultLow];
-
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+
+	// init attachment image
+	
+	// init attachment icon
+	
+/*	_attachmentImage = [[NSImageView alloc] init];
+	_attachmentImage.image = appDelegate.imageRegistry.attachmentImage;
+	[_attachmentImage setImageScaling:NSImageScaleProportionallyDown];
+*/
+	_attachmentImage = [[NSButton alloc] init];
+	_attachmentImage.translatesAutoresizingMaskIntoConstraints = NO;
+	_attachmentImage.bezelStyle = NSShadowlessSquareBezelStyle;
+	_attachmentImage.target = self;
+	_attachmentImage.image = appDelegate.imageRegistry.attachmentImage;
+	[_attachmentImage.cell setImageScaling:NSImageScaleProportionallyDown];
+	_attachmentImage.bordered = NO;
+	_attachmentImage.action = @selector(toggleFullDetails:);
+	
+	[view addSubview:_attachmentImage];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_attachmentImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/HEADER_ICON_HEIGHT_RATIO]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_attachmentImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_attachmentImage attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentImage attribute:NSLayoutAttributeLeft multiplier:1.0 constant:H_GAP] priority:NSLayoutPriorityDefaultLow];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_date attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_attachmentImage attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP] priority:NSLayoutPriorityRequired];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentImage attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP] priority:NSLayoutPriorityDefaultLow];
+
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_attachmentImage attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
+	
+	// init bottom constraint
 
 	_bottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN];
 	
