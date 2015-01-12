@@ -26,11 +26,11 @@
 	NSDate *_dateDB;
 	NSString *_fromDB;
 	NSString *_subjectDB;
-	
 	MCOIMAPMessage *_imapMessage;
 	MCOMessageParser *_msgParser;
 	NSAttributedString *_htmlMessageBody;
 	NSData *_data;
+	Boolean _hasAttachments;
 }
 
 @synthesize htmlBodyRendering = _htmlBodyRendering;
@@ -202,6 +202,7 @@
 	if(!_data) {
 		_data = data;
 		_msgParser = [MCOMessageParser messageParserWithData:data];
+		_hasAttachments = _msgParser.attachments.count > 0;
 		
 		NSAssert(_msgParser, @"cannot create message parser");
 	} else {
@@ -249,15 +250,6 @@
 	}
 	
 	return (_imapMessage.originalFlags & MCOMessageFlagFlagged) != 0;
-}
-
-- (Boolean)hasAttachments {
-	if(_imapMessage == nil) {
-		NSLog(@"%s: IMAP message is not set", __FUNCTION__);
-		return NO;
-	}
-	
-	return _msgParser != nil && _msgParser.attachments != nil && _msgParser.attachments.count > 0;
 }
 
 - (void)fetchInlineAttachments {
