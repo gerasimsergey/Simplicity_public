@@ -227,12 +227,12 @@
 		if(messageThread != nil) {
 			uint32_t uid = [[messageInfo objectForKey:@"UID"] unsignedIntValue];
 
-			[messageThread updateThreadAttributesFromMessageUID:uid];
-
-			NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:messageThread localFolder:currentFolder.name];
-			
-			if(threadIndex != NSNotFound) {
-				[_messageListTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+			if([messageThread updateThreadAttributesFromMessageUID:uid]) {
+				NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:messageThread localFolder:currentFolder.name];
+				
+				if(threadIndex != NSNotFound) {
+					[_messageListTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+				}
 			}
 		}
 	}

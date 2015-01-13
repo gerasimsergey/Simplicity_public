@@ -35,7 +35,7 @@
 - (void)cancelUpdate;
 
 - (void)setMessageData:(NSData*)data uid:(uint32_t)uid;
-- (BOOL)messageHasData:(uint32_t)uid;
-- (void)updateThreadAttributesFromMessageUID:(uint32_t)uid;
+- (Boolean)messageHasData:(uint32_t)uid;
+- (Boolean)updateThreadAttributesFromMessageUID:(uint32_t)uid;
 
 @end
