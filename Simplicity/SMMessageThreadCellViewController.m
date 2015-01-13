@@ -29,6 +29,10 @@
 		
 		NSBox *view = [[NSBox alloc] init];
 		view.translatesAutoresizingMaskIntoConstraints = NO;
+		[view setBoxType:NSBoxCustom];
+		[view setBorderColor:[NSColor lightGrayColor]];
+		[view setBorderType:NSLineBorder];
+		[view setCornerRadius:2];
 		[view setTitlePosition:NSNoTitle];
 
 		// init header button
@@ -83,6 +87,25 @@
 	return self;
 }
 
+- (void)initProgressIndicator {
+	NSAssert(_progressIndicator == nil, @"progress indicator already created");
+	
+	_progressIndicator = [[NSProgressIndicator alloc] init];
+	_progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
+	[_progressIndicator setDisplayedWhenStopped:NO];
+	[_progressIndicator startAnimation:self];
+	
+	NSView *view = [self view];
+	
+	[view addSubview:_progressIndicator];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+	
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+}
+
 - (void)enableCollapse:(Boolean)enable {
 	[_headerButton setEnabled:enable];
 }
@@ -98,9 +121,11 @@
 	
 	[_messageViewController collapseHeader];
 
-	NSView *view = [self view];
+	NSBox *view = (NSBox*)[self view];
 	NSAssert(view != nil, @"view is nil");
 	
+	[view setFillColor:[NSColor colorWithCalibratedRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
+
 	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
 	
 	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
@@ -110,29 +135,15 @@
 	_collapsed = YES;
 }
 
-- (void)initProgressIndicator {
-	NSAssert(_progressIndicator == nil, @"progress indicator already created");
-
-	_progressIndicator = [[NSProgressIndicator alloc] init];
-	_progressIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
-	[_progressIndicator setDisplayedWhenStopped:NO];
-	[_progressIndicator startAnimation:self];
-	
-	NSView *view = [self view];
-
-	[view addSubview:_progressIndicator];
-	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
-	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
-}
-
 - (void)uncollapse {
 	if(!_collapsed)
 		return;
 
+	NSBox *view = (NSBox*)[self view];
+	NSAssert(view != nil, @"view is nil");
+	
+	[view setFillColor:[NSColor whiteColor]];
+	
 	[_messageViewController uncollapseHeader];
 	
 	[[_messageViewController messageBodyViewController] uncollapse];
