@@ -80,6 +80,19 @@
 	return [[_messageCollection messagesByDate] array];
 }
 
+- (void)updateThreadAttributesFromMessageUID:(uint32_t)uid {
+	SMMessage *message = [self getMessage:uid];
+	
+	if(message != nil) {
+		NSAssert(message.uid == uid, @"bad message found");
+		
+		if(message.hasAttachments)
+			_hasAttachments = YES;
+	} else {
+		NSLog(@"%s: message for uid %u not found in current threadId %llu", __FUNCTION__, uid, _threadId);
+	}
+}
+
 - (void)setMessageData:(NSData*)data uid:(uint32_t)uid {
 	SMMessage *message = [self getMessage:uid];
 		

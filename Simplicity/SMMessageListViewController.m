@@ -29,9 +29,9 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-	
+
 	if(self) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageThreadUpdated:) name:@"MessageThreadUpdated" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageBodyFetched:) name:@"MessageBodyFetched" object:nil];
 	}
 
 	return self;
@@ -213,19 +213,22 @@
 	[[[appDelegate appController] messageThreadViewController] updateMessageThread];
 }
 
-- (void)messageThreadUpdated:(NSNotification *)notification {
+- (void)messageBodyFetched:(NSNotification *)notification {
 	NSDictionary *messageInfo = [notification userInfo];
 	
-	uint64_t threadId = [[messageInfo objectForKey:@"ThreadId"] unsignedLongLongValue];
-
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 	
 	if(currentFolder != nil) {
+		uint64_t threadId = [[messageInfo objectForKey:@"ThreadId"] unsignedLongLongValue];
 		SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadById:threadId localFolder:currentFolder.name];
 		
 		if(messageThread != nil) {
+			uint32_t uid = [[messageInfo objectForKey:@"UID"] unsignedIntValue];
+
+			[messageThread updateThreadAttributesFromMessageUID:uid];
+
 			NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:messageThread localFolder:currentFolder.name];
 			
 			if(threadIndex != NSNotFound) {
