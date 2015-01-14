@@ -37,7 +37,7 @@
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="47" rowSizeStyle="automatic" viewBased="YES" id="4">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="47" rowSizeStyle="automatic" viewBased="YES" id="4">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -135,6 +135,9 @@
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="attachmentImage" destination="oxo-5I-gnK" id="RMn-B1-0Lh"/>
+                                                    <outlet property="attachmentImageBottomContraint" destination="SMR-bD-zZT" id="m2W-I0-DOe"/>
+                                                    <outlet property="attachmentImageLeftContraint" destination="LaT-yg-u4W" id="6Nb-iT-3ye"/>
+                                                    <outlet property="attachmentImageRightContraint" destination="DIr-8x-mXs" id="kH5-7a-llp"/>
                                                     <outlet property="dateTextField" destination="BTp-sC-DoL" id="XZN-4J-VP5"/>
                                                     <outlet property="fromTextField" destination="160" id="163"/>
                                                     <outlet property="starImage" destination="4FB-rA-suJ" id="FWz-wm-iyu"/>

@@ -16,6 +16,10 @@
 @property (weak) IBOutlet NSImageView *unseenImage;
 @property (weak) IBOutlet NSImageView *starImage;
 @property (weak) IBOutlet NSImageView *attachmentImage;
+@property (weak) IBOutlet NSLayoutConstraint *attachmentImageLeftContraint;
+@property (weak) IBOutlet NSLayoutConstraint *attachmentImageRightContraint;
+@property (weak) IBOutlet NSLayoutConstraint *attachmentImageTopContraint;
+@property (weak) IBOutlet NSLayoutConstraint *attachmentImageBottomContraint;
 
 - (void)initFields;
 
