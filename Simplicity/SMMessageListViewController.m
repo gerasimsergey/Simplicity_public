@@ -131,9 +131,9 @@
 	}
 
 	if(messageThread.hasAttachments) {
-		[view.attachmentImage setHidden:NO];
+		[view showAttachmentImage];
 	} else {
-		[view.attachmentImage setHidden:YES];
+		[view hideAttachmentImage];
 	}
 	
 	return view;

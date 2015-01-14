@@ -15,12 +15,15 @@
 @property (weak) IBOutlet NSTextField *dateTextField;
 @property (weak) IBOutlet NSImageView *unseenImage;
 @property (weak) IBOutlet NSImageView *starImage;
-@property (weak) IBOutlet NSImageView *attachmentImage;
-@property (weak) IBOutlet NSLayoutConstraint *attachmentImageLeftContraint;
-@property (weak) IBOutlet NSLayoutConstraint *attachmentImageRightContraint;
-@property (weak) IBOutlet NSLayoutConstraint *attachmentImageTopContraint;
-@property (weak) IBOutlet NSLayoutConstraint *attachmentImageBottomContraint;
+
+@property IBOutlet NSImageView *attachmentImage;
+@property IBOutlet NSLayoutConstraint *attachmentImageLeftContraint;
+@property IBOutlet NSLayoutConstraint *attachmentImageRightContraint;
+@property IBOutlet NSLayoutConstraint *attachmentImageBottomContraint;
 
 - (void)initFields;
+
+- (void)showAttachmentImage;
+- (void)hideAttachmentImage;
 
 @end
