@@ -12,6 +12,7 @@
 #import "SMMessageThreadViewController.h"
 #import "SMMessageViewController.h"
 #import "SMMessageListController.h"
+#import "SMFlippedView.h"
 #import "SMAppDelegate.h"
 
 @interface ThreadCell : NSObject
@@ -94,7 +95,7 @@
 
 	[_cells removeAllObjects];
 
-	_contentView = [[NSView alloc] initWithFrame:[_messageThreadView frame]];
+	_contentView = [[SMFlippedView alloc] initWithFrame:[_messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	if(_currentMessageThread != nil) {
