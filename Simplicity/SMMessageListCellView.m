@@ -31,14 +31,14 @@
 	if(!_attachmentImageHidden)
 		return;
 
+	[self removeConstraint:_attachmentImageHiddenConstraint];
+	
 	[self addSubview:_attachmentImage];
 
 	[self addConstraint:_attachmentImageLeftContraint];
 	[self addConstraint:_attachmentImageRightContraint];
 	[self addConstraint:_attachmentImageBottomContraint];
 
-	[self removeConstraint:_attachmentImageHiddenConstraint];
-	
 	_attachmentImageHidden = NO;
 }
 
