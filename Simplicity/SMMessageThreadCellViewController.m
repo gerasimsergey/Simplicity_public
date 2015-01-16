@@ -57,7 +57,7 @@
 		
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_headerButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 
-		// init message view
+		// init message details view
 		
 		_messageDetailsViewController = [[SMMessageDetailsViewController alloc] init];
 		
@@ -72,6 +72,8 @@
 		
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 		
+		// init message body view
+
 		_messageBodyViewController = [[SMMessageBodyViewController alloc] init];
 		
 		NSView *messageBodyView = [_messageBodyViewController view];
@@ -135,16 +137,20 @@
 	if(_collapsed)
 		return;
 	
-	[_messageDetailsViewController collapseHeader];
+	[_messageDetailsViewController collapse];
 
 	NSBox *view = (NSBox*)[self view];
 	NSAssert(view != nil, @"view is nil");
 	
 	[view setFillColor:[NSColor colorWithCalibratedRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
 
-	_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
+	if(_heightConstraint == nil) {
+		_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
+		
+		_heightConstraint.priority = NSLayoutPriorityRequired;
+	}
 	
-	[self addConstraint:view constraint:_heightConstraint priority:NSLayoutPriorityRequired];
+	[view addConstraint:_heightConstraint];
 	
 	[_progressIndicator setHidden:YES];
 	
@@ -160,13 +166,11 @@
 	
 	[view setFillColor:[NSColor whiteColor]];
 	
-	[_messageDetailsViewController uncollapseHeader];	
+	[_messageDetailsViewController uncollapse];
 	[_messageBodyViewController uncollapse];
 
 	if(_heightConstraint != nil) {
 		[[self view] removeConstraint:_heightConstraint];
-
-		_heightConstraint = nil;
 	}
 	
 	if(!_messageTextIsSet) {

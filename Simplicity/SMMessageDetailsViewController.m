@@ -345,7 +345,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	_fullDetailsShown = NO;
 }
 
-- (void)uncollapseHeader {
+- (void)uncollapse {
 	if(_fullHeaderShown)
 		return;
 
@@ -390,7 +390,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	_fullHeaderShown = YES;
 }
 
-- (void)collapseHeader {
+- (void)collapse {
 	if(!_fullHeaderShown)
 		return;
 	
