@@ -8,15 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SMMessageViewController;
+@class SMMessageBodyViewController;
 
 @interface SMMessageThreadCellViewController : NSViewController
 
-@property SMMessageViewController *messageViewController;
+@property (readonly) SMMessageBodyViewController *messageBodyViewController;
 
 - (id)initCollapsed:(Boolean)collapsed;
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
+- (void)setMessageDetails:(SMMessage*)message;
+- (void)updateMessageDetails;
 
 - (void)enableCollapse:(Boolean)enable;
 

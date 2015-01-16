@@ -16,7 +16,6 @@
 		0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0B417D1BB0100EA4AFF /* SMAppController.m */; };
 		0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */; };
 		00036D7F1A205FCB0085C266 /* SMLocalFolderRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */; };
-		00172FEB198B39BA00DB975E /* SMMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FE9198B39BA00DB975E /* SMMessageViewController.m */; };
 		00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */; };
 		00172FF5198D5C6100DB975E /* SMMessageThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */; };
 		001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */ = {isa = PBXBuildFile; fileRef = 001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */; };
@@ -165,8 +164,6 @@
 		0002A0B717D224C600EA4AFF /* SMMessageListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListCellView.m; sourceTree = "<group>"; };
 		00036D7D1A205FCB0085C266 /* SMLocalFolderRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLocalFolderRegistry.h; sourceTree = "<group>"; };
 		00036D7E1A205FCB0085C266 /* SMLocalFolderRegistry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLocalFolderRegistry.m; sourceTree = "<group>"; };
-		00172FE8198B39BA00DB975E /* SMMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageViewController.h; sourceTree = "<group>"; };
-		00172FE9198B39BA00DB975E /* SMMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageViewController.m; sourceTree = "<group>"; };
 		00172FED198B3BB700DB975E /* SMMessageBodyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageBodyViewController.h; sourceTree = "<group>"; };
 		00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageBodyViewController.m; sourceTree = "<group>"; };
 		00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadViewController.h; sourceTree = "<group>"; };
@@ -401,8 +398,6 @@
 				00FC3C7D19AADF68002DAF9C /* SMMessageThreadCellViewController.m */,
 				00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */,
 				00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */,
-				00172FE8198B39BA00DB975E /* SMMessageViewController.h */,
-				00172FE9198B39BA00DB975E /* SMMessageViewController.m */,
 				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
 				0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */,
 				003858FE1A4D024500D4FD70 /* SMSearchResultsListViewController.h */,
@@ -618,7 +613,6 @@
 				00C75609195921AA006ED86B /* SMFolder.m in Sources */,
 				0097426E195686F900620145 /* SMMailboxViewController.m in Sources */,
 				0002A0A517D1B1E000EA4AFF /* SMAppDelegate.m in Sources */,
-				00172FEB198B39BA00DB975E /* SMMessageViewController.m in Sources */,
 				00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */,
 				007A73621A57A95500A4D694 /* SMMessageFullDetailsViewController.m in Sources */,
 				00FE6DF41A4E6C0600D2194F /* SMInstrumentPanelViewController.m in Sources */,

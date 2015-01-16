@@ -6,12 +6,13 @@
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
-#import "SMMessageViewController.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMMessageThreadCellViewController.h"
 
 @implementation SMMessageThreadCellViewController {
+	SMMessageDetailsViewController *_messageDetailsViewController;
+
 	NSView *_messageView;
 	NSButton *_headerButton;
 	NSProgressIndicator *_progressIndicator;
@@ -58,20 +59,35 @@
 
 		// init message view
 		
-		_messageViewController = [[SMMessageViewController alloc] init];
-
-		_messageView = [_messageViewController view];
-		_messageView.translatesAutoresizingMaskIntoConstraints = NO;
-
-		[view addSubview:_messageView];
-
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
+		_messageDetailsViewController = [[SMMessageDetailsViewController alloc] init];
 		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		NSView *messageDetailsView = [ _messageDetailsViewController view ];
+		NSAssert(messageDetailsView, @"messageDetailsView");
 		
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
-		 
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_messageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		[view addSubview:messageDetailsView];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
+		
+		_messageBodyViewController = [[SMMessageBodyViewController alloc] init];
+		
+		NSView *messageBodyView = [_messageBodyViewController view];
+		NSAssert(messageBodyView, @"messageBodyView");
+		
+		[view addSubview:messageBodyView];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultHigh];
+		
+		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:300] priority:NSLayoutPriorityDefaultLow];
 
 		// commit the main view
 		
@@ -101,9 +117,9 @@
 	
 	[view addSubview:_progressIndicator];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:[_messageBodyViewController view] attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[[_messageViewController messageBodyViewController] view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_progressIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:[_messageBodyViewController view] attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0] priority:NSLayoutPriorityDefaultLow-1];
 }
 
 - (void)enableCollapse:(Boolean)enable {
@@ -119,7 +135,7 @@
 	if(_collapsed)
 		return;
 	
-	[_messageViewController collapseHeader];
+	[_messageDetailsViewController collapseHeader];
 
 	NSBox *view = (NSBox*)[self view];
 	NSAssert(view != nil, @"view is nil");
@@ -144,9 +160,8 @@
 	
 	[view setFillColor:[NSColor whiteColor]];
 	
-	[_messageViewController uncollapseHeader];
-	
-	[[_messageViewController messageBodyViewController] uncollapse];
+	[_messageDetailsViewController uncollapseHeader];	
+	[_messageBodyViewController uncollapse];
 
 	if(_heightConstraint != nil) {
 		[[self view] removeConstraint:_heightConstraint];
@@ -181,10 +196,23 @@
 }
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
-	[_messageViewController setMessageViewText:htmlText uid:uid folder:folder];
+	NSView *messageBodyView = [_messageBodyViewController view];
+	NSAssert(messageBodyView, @"messageBodyView");
+	
+	[_messageBodyViewController setMessageViewText:htmlText uid:uid folder:folder];
+
 	[_progressIndicator stopAnimation:self];
 
 	_messageTextIsSet = YES;
 }
+
+- (void)setMessageDetails:(SMMessage*)message {
+	[_messageDetailsViewController setMessageDetails:message];
+}
+
+- (void)updateMessageDetails {
+	[_messageDetailsViewController updateMessageDetails];
+}
+
 
 @end

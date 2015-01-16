@@ -10,7 +10,7 @@
 #import "SMMessageThread.h"
 #import "SMMessageThreadCellViewController.h"
 #import "SMMessageThreadViewController.h"
-#import "SMMessageViewController.h"
+#import "SMMessageBodyViewController.h"
 #import "SMMessageListController.h"
 #import "SMFlippedView.h"
 #import "SMAppDelegate.h"
@@ -77,10 +77,7 @@
 		[messageListController fetchMessageBodyUrgently:[message uid] remoteFolder:[message remoteFolder] threadId:[_currentMessageThread threadId]];
 	}
 	
-	SMMessageViewController *messageViewController = [messageThreadCellViewController messageViewController];
-	NSAssert(messageViewController, @"message view controller not found");
-	
-	[messageViewController setMessageDetails:message];
+	[messageThreadCellViewController setMessageDetails:message];
 
 	return messageThreadCellViewController;
 }
@@ -145,7 +142,7 @@
 			if(equal) {
 				for(NSInteger i = 0; i < _cells.count; i++) {
 					ThreadCell *cell = _cells[i];
-					[cell.viewController.messageViewController updateMessageDetails];
+					[cell.viewController updateMessageDetails];
 				}
 
 				return;
@@ -183,7 +180,7 @@
 			} else {
 				ThreadCell *cell = _cells[j++];
 
-				[cell.viewController.messageViewController updateMessageDetails];
+				[cell.viewController updateMessageDetails];
 
 				updatedCells[i] = cell;
 			}
@@ -276,7 +273,7 @@
 			[message fetchInlineAttachments];
 
 			[cell.viewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
-			[[cell.viewController messageViewController] setMessageDetails:message];
+			[cell.viewController setMessageDetails:message];
 			
 			return;
 		}
