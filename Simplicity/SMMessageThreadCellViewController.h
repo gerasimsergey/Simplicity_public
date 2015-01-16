@@ -12,8 +12,6 @@
 
 @interface SMMessageThreadCellViewController : NSViewController
 
-@property (readonly) SMMessageBodyViewController *messageBodyViewController;
-
 - (id)initCollapsed:(Boolean)collapsed;
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
