@@ -147,10 +147,6 @@
 }
 
 - (void)reloadMessageList:(Boolean)preserveSelection {
-	if(!preserveSelection) {
-		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-	}
-
 	[_messageListTableView reloadData];
 
 	if(preserveSelection && _selectedMessageThread != nil) {
@@ -160,19 +156,16 @@
 		
 		NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
-		NSIndexSet *threadIndexSet = [NSIndexSet indexSet];
-
 		if(threadIndex != NSNotFound) {
-			threadIndexSet = [NSIndexSet indexSetWithIndex:threadIndex];
-		} else {
-			_selectedMessageThread = nil;
-		}
+			[_messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] byExtendingSelection:NO];
 
-		if(![[_messageListTableView selectedRowIndexes] isEqualToIndexSet:threadIndexSet])
-			[_messageListTableView selectRowIndexes:threadIndexSet byExtendingSelection:NO];
-	} else {
-		_selectedMessageThread = nil;
+			return;
+		}
 	}
+
+	[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+
+	_selectedMessageThread = nil;
 }
 
 - (IBAction)updateMessages:(id)sender {
