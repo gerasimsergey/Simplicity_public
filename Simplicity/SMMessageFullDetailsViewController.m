@@ -13,6 +13,8 @@
 #import "SMMessageFullDetailsViewController.h"
 
 @implementation SMMessageFullDetailsViewController {
+	NSTextField *_fromLabel;
+	NSTokenField *_fromAddress;
 	NSTextField *_toLabel;
 	NSTokenField *_toAddresses;
 	NSTextField *_ccLabel;
@@ -45,9 +47,37 @@
 
 - (void)createSubviews {
 	NSView *view = [self view];
+
+	// init 'from' label
 	
+	_fromLabel = [SMMessageDetailsViewController createLabel:@"From:" bold:NO];
+	_fromLabel.textColor = [NSColor blackColor];
+	
+	[view addSubview:_fromLabel];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_fromLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+	
+	// init 'from' address
+	
+	_fromAddress = [[SMTokenField alloc] init];
+	_fromAddress.delegate = self; // TODO: reference loop here?
+	_fromAddress.tokenStyle = NSPlainTextTokenStyle;
+	_fromAddress.translatesAutoresizingMaskIntoConstraints = NO;
+	[_fromAddress setBordered:NO];
+	[_fromAddress setDrawsBackground:NO];
+	
+	[view addSubview:_fromAddress];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_fromAddress attribute:NSLayoutAttributeWidth multiplier:1.0 constant:_fromLabel.frame.size.width]];
+
 	// init 'to' label
-	
+
 	_toLabel = [SMMessageDetailsViewController createLabel:@"To:" bold:NO];
 	_toLabel.textColor = [NSColor blackColor];
 	
@@ -55,7 +85,7 @@
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
 	
 	// init 'to' address list
 	
@@ -70,7 +100,7 @@
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:_toLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 	
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP_HALF]];
 	
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_toAddresses attribute:NSLayoutAttributeWidth multiplier:1.0 constant:_toLabel.frame.size.width]];
 	
@@ -132,6 +162,11 @@
 }
 
 - (void)setMessageDetails:(SMMessage*)message {
+	NSMutableArray *newFromArray = [[NSMutableArray alloc] initWithCapacity:1];
+	newFromArray[0] = [SMMessage parseAddress:[message.header from]];
+	
+	[_fromAddress setObjectValue:newFromArray];
+	
 	NSArray *toAddressArray = [message.header to];
 	NSMutableArray *newToArray = [[NSMutableArray alloc] initWithCapacity:toAddressArray.count];
 	
