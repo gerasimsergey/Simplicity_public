@@ -150,11 +150,14 @@
 	[_messageListTableView reloadData];
 
 	if(preserveSelection && _selectedMessageThread != nil) {
-		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 		
-		NSUInteger threadIndex = [[[appDelegate model] messageStorage] getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
+		NSAssert(currentFolder != nil, @"no current folder");
+
+		SMMessageStorage *messageStorage = [[appDelegate model] messageStorage];
+		NSUInteger threadIndex = [messageStorage getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
 		if(threadIndex != NSNotFound) {
 			[_messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] byExtendingSelection:NO];
