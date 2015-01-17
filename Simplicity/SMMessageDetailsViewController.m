@@ -394,6 +394,8 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	if(!_fullHeaderShown)
 		return;
 	
+	[self hideFullDetails];
+	
 	NSView *view = [self view];
 	NSAssert(view != nil, @"no view");
 	
