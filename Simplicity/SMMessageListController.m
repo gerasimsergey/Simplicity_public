@@ -120,12 +120,19 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 
 	MCOIMAPSession *session = [_model session];
 
-	[[_model messageStorage] updateIMAPMessages:imapMessages localFolder:[_currentFolder name] remoteFolder:remoteFolder session:session];
+	SMMessageStorageUpdateResult updateResult = [[_model messageStorage] updateIMAPMessages:imapMessages localFolder:[_currentFolder name] remoteFolder:remoteFolder session:session];
+
+	if(updateResult == SMMesssageStorageUpdateResultNone) {
+		// no updates, so no need to reload the message list
+		return;
+	}
+	
+	// TODO: special case for flags changed in some cells only
+	
+	//NSLog(@"%s: some messages updated, the list will be reloaded", __func__);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
-
-//	NSLog(@"%s: reloading message list", __func__);
 
 	Boolean preserveSelection = YES;
 	[[appController messageListViewController] reloadMessageList:preserveSelection];
@@ -173,7 +180,10 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMAppController *appController = [appDelegate appController];
 		
-		[[appController messageListViewController] messageHeadersSyncFinished];
+		NSNumber *hasUpdatesNumber = [[notification userInfo] objectForKey:@"HasUpdates"];
+		Boolean hasUpdates = [hasUpdatesNumber boolValue];
+
+		[[appController messageListViewController] messageHeadersSyncFinished:hasUpdates];
 	}
 }
 

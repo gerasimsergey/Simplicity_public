@@ -23,7 +23,7 @@
 
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
-	Boolean _delayReloadMessageSelection;
+	Boolean _immediateSelection;
 	Boolean _mouseSelectionInProcess;
 }
 
@@ -49,46 +49,44 @@
 	return messageThreadsCount;
 }
 
-- (void)changeSelection:(NSNumber*)row delayed:(Boolean)delayed {
-	NSInteger selectedRow = [row integerValue];
-	NSAssert(selectedRow >= 0, @"bad row %ld", selectedRow);
+- (void)changeSelectedMessageThread {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	SMMessageListController *messageListController = [[appDelegate model] messageListController];
-	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
-	NSAssert(currentFolder != nil, @"bad corrent folder");
-	
-	_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
-	
-	if(_selectedMessageThread != nil) {
-		[[[appDelegate appController] messageThreadViewController] setMessageThread:_selectedMessageThread];
-	} else {
-		[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-	}
-}
-
-- (void)changeSelectionDelayed:(NSNumber*)row {
-	[self changeSelection:row delayed:YES];
+	[[[appDelegate appController] messageThreadViewController] setMessageThread:_selectedMessageThread];
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
-	_mouseSelectionInProcess = NO;
+	// cancel any previous thread change request, if any
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
 	//NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
 
 	if(selectedRow >= 0) {
-		NSNumber *selectedRowNumber = [NSNumber numberWithInteger:selectedRow];
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMMessageListController *messageListController = [[appDelegate model] messageListController];
+		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+		NSAssert(currentFolder != nil, @"bad corrent folder");
 		
-		if(!_delayReloadMessageSelection) {
-			[self changeSelection:selectedRowNumber delayed:NO];
+		_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
+		
+		if(_selectedMessageThread != nil) {
+			if(_immediateSelection) {
+				[self changeSelectedMessageThread];
+			} else {
+				// delay the selection for a tiny bit to optimize fast cursor movements
+				// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
+				// cancel scheduled message list update coming from keyboard
+				[self performSelector:@selector(changeSelectedMessageThread) withObject:nil afterDelay:0.3];
+			}
 		} else {
-			// delay the selection for a tiny bit to optimize fast cursor movements
-			// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
-			[self performSelector:@selector(changeSelectionDelayed:) withObject:selectedRowNumber afterDelay:0.3];
+			[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 		}
 	}
+	
+	_mouseSelectionInProcess = NO;
+	_immediateSelection = NO;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -112,7 +110,7 @@
 
 	[view initFields];
 
-//	NSLog(@"%s: from '%@', subject '%@'", __FUNCTION__, [message from], [message subject]);
+	//NSLog(@"%s: from '%@', subject '%@', unseen %u", __FUNCTION__, [message from], [message subject], messageThread.unseen);
 	
 	[view.fromTextField setStringValue:[message from]];
 	[view.subjectTextField setStringValue:[message subject]];
@@ -148,7 +146,7 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 	// for mouse events, react quickly
-	_delayReloadMessageSelection = NO;
+	_immediateSelection = YES;
 	_mouseSelectionInProcess = YES;
 }
 
@@ -159,8 +157,16 @@
 	if(_mouseSelectionInProcess)
 		return;
 
+	// this is an explicit request to reload the message list
+	// therefore mark the selection change as immediate, so the user
+	// will momentarily see the results
+	_immediateSelection = YES;
+
+	// now actually rebuild the message list table
 	[_messageListTableView reloadData];
 
+	// after all is done, fix the currently selected
+	// message cell, if needed
 	if(preserveSelection && _selectedMessageThread != nil) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
@@ -172,14 +178,12 @@
 		NSUInteger threadIndex = [messageStorage getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
 		if(threadIndex != NSNotFound) {
-			NSLog(@"%s: threadIndex %lu", __func__, threadIndex);
 			[_messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] byExtendingSelection:NO];
 
 			return;
 		}
 	}
 
-	//NSLog(@"%s: no threadIndex", __func__);
 	[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 
 	_selectedMessageThread = nil;
@@ -211,17 +215,17 @@
 	}
 }
 
-- (void)messageHeadersSyncFinished {
+- (void)messageHeadersSyncFinished:(Boolean)hasUpdates {
 	[_updatingMessagesProgressIndicator stopAnimation:self];
 	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
 
-	NSLog(@"%s", __func__);
-
-	const Boolean preserveSelection = YES;
-	[self reloadMessageList:preserveSelection];
-
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	[[[appDelegate appController] messageThreadViewController] updateMessageThread];
+	if(hasUpdates) {
+		const Boolean preserveSelection = YES;
+		[self reloadMessageList:preserveSelection];
+		
+		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+		[[[appDelegate appController] messageThreadViewController] updateMessageThread];
+	}
 }
 
 - (void)messageBodyFetched:(NSNotification *)notification {

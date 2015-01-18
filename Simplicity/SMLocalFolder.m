@@ -197,17 +197,18 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		finishFetch = NO;
 	}
 	
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
 	if(finishFetch) {
-		[[[appDelegate model] messageStorage] endUpdate:_name removeVanishedMessages:YES];
+		SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_name removeVanishedMessages:YES];
+		Boolean hasUpdates = (updateResult != SMMesssageStorageUpdateResultNone);
 
 		[_fetchMessageHeadersOp cancel];
 		_fetchMessageHeadersOp = nil;
 		
 		[self fetchMessageBodies:_name];
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObject:_name forKey:@"LocalFolderName"]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", [NSNumber numberWithBool:hasUpdates], @"HasUpdates", nil]];
 		
 		return;
 	}

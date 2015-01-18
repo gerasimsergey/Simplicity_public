@@ -55,7 +55,7 @@
 	NSAssert(folder, @"bad folder");
 	
 	if(folder == _lastFolder) {
-		NSLog(@"%s: selected folder didn't change", __func__);
+		//NSLog(@"%s: selected folder didn't change", __func__);
 		return;
 	}
 	

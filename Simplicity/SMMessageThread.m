@@ -144,7 +144,18 @@
 	return message;
 }
 
-- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session {
+- (void)updateThreadFlagsFromMessage:(SMMessage*)message {
+	if(message.unseen)
+		_unseen = YES;
+	
+	if(message.flagged)
+		_flagged = YES;
+	
+	if(message.hasAttachments)
+		_hasAttachments = YES;
+}
+
+- (SMThreadUpdateResult)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session {
 	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication ] delegate];
 	SMMessageComparators *comparators = [[[appDelegate model] messageStorage] comparators];
 
@@ -157,10 +168,18 @@
 		
 		if([message uid] == [imapMessage uid]) {
 			// TODO: can date be changed?
-			[message updateImapMessage:imapMessage];
+			Boolean hasUpdates = [message updateImapMessage:imapMessage];
+			
 			[message setUpdated:YES];
 			
-			return;
+			if(hasUpdates) {
+				[self updateThreadFlagsFromMessage:message];
+
+				return SMThreadUpdateResultFlagsChanged;
+			} else {
+				return SMThreadUpdateResultNone;
+			}
+			
 		}
 	}
 	
@@ -176,18 +195,12 @@
 	
 	[ _messageCollection.messagesByDate insertObject:message atIndex:messageIndexByDate ];
 
-	// update thread attributes
-	if(message.unseen)
-		_unseen = YES;
-
-	if(message.flagged)
-		_flagged = YES;
+	[self updateThreadFlagsFromMessage:message];
 	
-	if(message.hasAttachments)
-		_hasAttachments = YES;
+	return SMThreadUpdateResultStructureChanged;
 }
 
-- (Boolean)endUpdate:(Boolean)removeVanishedMessages {
+- (SMThreadUpdateResult)endUpdate:(Boolean)removeVanishedMessages {
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 	NSAssert(_messageCollection.messagesByDate.count > 0, @"empty message thread");
 	
@@ -230,23 +243,19 @@
 
 	// clear update marks for future updates
 	for(SMMessage *message in _messageCollection.messages) {
-		if(message.unseen)
-			_unseen = YES;
-
-		if(message.flagged)
-			_flagged = YES;
-		
-		if(message.hasAttachments)
-			_hasAttachments = YES;
+		[self updateThreadFlagsFromMessage:message];
 
 		[message setUpdated:NO];
 	}
 
 	if([_messageCollection count] > 0) {
 		SMMessage *newFirstMessage = [_messageCollection.messagesByDate firstObject];
-		return firstMessage.date != newFirstMessage.date;
+		if(firstMessage.date != newFirstMessage.date)
+			return SMThreadUpdateResultStructureChanged;
+		
+		return SMThreadUpdateResultStructureChanged; // TODO
 	} else {
-		return YES;
+		return SMThreadUpdateResultStructureChanged; // TODO
 	}
 }
 

@@ -37,7 +37,7 @@
 - (BOOL)hasData;
 - (void)fetchInlineAttachments;
 
-- (void)updateImapMessage:(MCOIMAPMessage*)m;
+- (Boolean)updateImapMessage:(MCOIMAPMessage*)m;
 
 - (NSString*)localizedDate;
 

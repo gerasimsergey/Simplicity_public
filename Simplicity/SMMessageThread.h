@@ -27,10 +27,14 @@
 - (NSArray*)messagesSortedByDate;
 - (SMMessage*)getMessage:(uint32_t)uid;
 
-- (void)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
+typedef NS_ENUM(NSInteger, SMThreadUpdateResult) {
+	SMThreadUpdateResultNone,
+	SMThreadUpdateResultFlagsChanged,
+	SMThreadUpdateResultStructureChanged
+};
 
-// returns whether or not the update operation affected
-- (Boolean)endUpdate:(Boolean)removeVanishedMessages;
+- (SMThreadUpdateResult)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
+- (SMThreadUpdateResult)endUpdate:(Boolean)removeVanishedMessages;
 
 - (void)cancelUpdate;
 

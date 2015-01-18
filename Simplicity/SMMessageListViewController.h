@@ -20,6 +20,6 @@
 - (IBAction)loadMoreMessages:(id)sender;
 
 - (void)reloadMessageList:(Boolean)preserveSelection;
-- (void)messageHeadersSyncFinished;
+- (void)messageHeadersSyncFinished:(Boolean)hasUpdates;
 
 @end

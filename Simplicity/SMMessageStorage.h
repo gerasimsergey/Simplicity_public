@@ -23,9 +23,15 @@
 
 - (NSInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder;
 
+typedef NS_ENUM(NSInteger, SMMessageStorageUpdateResult) {
+	SMMesssageStorageUpdateResultNone,
+	SMMesssageStorageUpdateResultFlagsChanged,
+	SMMesssageStorageUpdateResultStructureChanged
+};
+
 - (void)startUpdate:(NSString*)folder;
-- (void)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
-- (void)endUpdate:(NSString*)folder removeVanishedMessages:(Boolean)removeVanishedMessages;
+- (SMMessageStorageUpdateResult)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session;
+- (SMMessageStorageUpdateResult)endUpdate:(NSString*)folder removeVanishedMessages:(Boolean)removeVanishedMessages;
 
 - (SMMessageThread*)messageThreadById:(uint64_t)threadId localFolder:(NSString*)folder;
 - (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index localFolder:(NSString*)folder;
