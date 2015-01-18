@@ -29,9 +29,7 @@
 @property SMMessageThreadViewController *messageThreadViewController;
 @property SMInstrumentPanelViewController *instrumentPanelViewController;
 
-- (void)updateMessageListView;
 - (void)updateMailboxFolderListView;
-
 - (void)toggleSearchResultsView;
 
 @end

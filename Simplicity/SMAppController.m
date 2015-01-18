@@ -176,11 +176,6 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	[self toggleSearchResultsView];
 }
 
-- (void)updateMessageListView {
-	Boolean preserveSelection = YES;
-	[ _messageListViewController reloadMessageList:preserveSelection ];
-}
-
 - (void)updateMailboxFolderListView {
 	[ _mailboxViewController updateFolderListView ];
 }

@@ -24,6 +24,7 @@
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
 	Boolean _delayReloadMessageSelection;
+	Boolean _mouseSelectionInProcess;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -71,6 +72,8 @@
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
+	_mouseSelectionInProcess = NO;
+
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
 	//NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
@@ -139,14 +142,23 @@
 }
 
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification {
+	//NSLog(@"%s", __func__);
+
 	// cancel scheduled message list update coming from keyboard
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 	// for mouse events, react quickly
 	_delayReloadMessageSelection = NO;
+	_mouseSelectionInProcess = YES;
 }
 
 - (void)reloadMessageList:(Boolean)preserveSelection {
+	// if there's a mouse selection is in process, we shouldn't reload the list
+	// otherwise it would cancel the current mouse selection which
+	// in turn would impact the user experience
+	if(_mouseSelectionInProcess)
+		return;
+
 	[_messageListTableView reloadData];
 
 	if(preserveSelection && _selectedMessageThread != nil) {
@@ -160,12 +172,14 @@
 		NSUInteger threadIndex = [messageStorage getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
 		if(threadIndex != NSNotFound) {
+			NSLog(@"%s: threadIndex %lu", __func__, threadIndex);
 			[_messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] byExtendingSelection:NO];
 
 			return;
 		}
 	}
 
+	//NSLog(@"%s: no threadIndex", __func__);
 	[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 
 	_selectedMessageThread = nil;
@@ -200,6 +214,8 @@
 - (void)messageHeadersSyncFinished {
 	[_updatingMessagesProgressIndicator stopAnimation:self];
 	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
+
+	NSLog(@"%s", __func__);
 
 	const Boolean preserveSelection = YES;
 	[self reloadMessageList:preserveSelection];
