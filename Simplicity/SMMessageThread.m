@@ -258,24 +258,27 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
 
+	const ThreadFlags oldThreadFlags = _threadFlags;
 	_threadFlags = ThreadFlagsNone;
 
-	// clear update marks for future updates
 	for(SMMessage *message in _messageCollection.messages) {
 		[self updateThreadFlagsFromMessage:message];
 
+		// clear messages update marks for future updates
 		[message setUpdated:NO];
 	}
 
-	if([_messageCollection count] > 0) {
-		SMMessage *newFirstMessage = [_messageCollection.messagesByDate firstObject];
-		if(firstMessage.date != newFirstMessage.date)
-			return SMThreadUpdateResultStructureChanged;
+	if([_messageCollection count] == 0)
+		return SMThreadUpdateResultStructureChanged;
+
+	SMMessage *newFirstMessage = [_messageCollection.messagesByDate firstObject];
+	if(firstMessage.date != newFirstMessage.date)
+		return SMThreadUpdateResultStructureChanged;
 		
-		return SMThreadUpdateResultStructureChanged; // TODO
-	} else {
-		return SMThreadUpdateResultStructureChanged; // TODO
-	}
+	if(oldThreadFlags != _threadFlags)
+		return SMThreadUpdateResultFlagsChanged;
+		
+	return SMThreadUpdateResultNone;
 }
 
 - (void)cancelUpdate {
