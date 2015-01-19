@@ -25,6 +25,7 @@
 	SMMessageThread *_selectedMessageThread;
 	Boolean _immediateSelection;
 	Boolean _mouseSelectionInProcess;
+	Boolean _reloadDeferred;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -55,9 +56,16 @@
 	[[[appDelegate appController] messageThreadViewController] setMessageThread:_selectedMessageThread];
 }
 
+- (void)delayChangeSelectedMessageThread {
+	[self performSelector:@selector(changeSelectedMessageThread) withObject:nil afterDelay:0.3];
+}
+
+- (void)cancelChangeSelectedMessageThread {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(changeSelectedMessageThread) object:nil];
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
-	// cancel any previous thread change request, if any
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+	[self cancelChangeSelectedMessageThread];
 
 	NSInteger selectedRow = [ _messageListTableView selectedRow ];
 	
@@ -78,7 +86,7 @@
 				// delay the selection for a tiny bit to optimize fast cursor movements
 				// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
 				// cancel scheduled message list update coming from keyboard
-				[self performSelector:@selector(changeSelectedMessageThread) withObject:nil afterDelay:0.3];
+				[self delayChangeSelectedMessageThread];
 			}
 		} else {
 			[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
@@ -87,6 +95,12 @@
 	
 	_mouseSelectionInProcess = NO;
 	_immediateSelection = NO;
+
+	if(_reloadDeferred) {
+		[self performSelector:@selector(reloadMessageList:) withObject:[NSNumber numberWithBool:YES] afterDelay:0];
+
+		_reloadDeferred = NO;
+	}
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -143,19 +157,28 @@
 	//NSLog(@"%s", __func__);
 
 	// cancel scheduled message list update coming from keyboard
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+	[self cancelChangeSelectedMessageThread];
 
 	// for mouse events, react quickly
 	_immediateSelection = YES;
 	_mouseSelectionInProcess = YES;
 }
 
+- (void)reloadMessageListDelayed:(NSNumber*)preserveSelection {
+	[self reloadMessageList:[preserveSelection boolValue]];
+}
+
 - (void)reloadMessageList:(Boolean)preserveSelection {
 	// if there's a mouse selection is in process, we shouldn't reload the list
 	// otherwise it would cancel the current mouse selection which
 	// in turn would impact the user experience
-	if(_mouseSelectionInProcess)
+	if(_mouseSelectionInProcess) {
+		// mark this reload as deferred
+		// so later, when the mouse selection is finally made,
+		// the table will be explicitly reloaded
+		_reloadDeferred = YES;
 		return;
+	}
 
 	// this is an explicit request to reload the message list
 	// therefore mark the selection change as immediate, so the user
