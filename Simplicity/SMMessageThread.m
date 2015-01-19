@@ -39,8 +39,16 @@
 
 @end
 
+typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
+	ThreadFlagsNone           = 0,
+	ThreadFlagsUnseen         = 1 << 0,
+	ThreadFlagsFlagged        = 1 << 1,
+	ThreadFlagsHasAttachment  = 1 << 2,
+};
+
 @implementation SMMessageThread {
 	uint64_t _threadId;
+	ThreadFlags _threadFlags;
 	MessageCollection *_messageCollection;
 }
 
@@ -48,6 +56,7 @@
 	self = [super init];
 	if(self) {
 		_threadId = threadId;
+		_threadFlags = ThreadFlagsNone;
 		_messageCollection = [MessageCollection new];
 	}
 	return self;
@@ -55,6 +64,18 @@
 
 - (uint64_t)threadId {
 	return _threadId;
+}
+
+- (Boolean)unseen {
+	return _threadFlags & ThreadFlagsUnseen;
+}
+
+- (Boolean)flagged {
+	return _threadFlags & ThreadFlagsFlagged;
+}
+
+- (Boolean)hasAttachments {
+	return _threadFlags & ThreadFlagsHasAttachment;
 }
 
 - (SMMessage*)latestMessage {
@@ -88,8 +109,8 @@
 	if(message != nil) {
 		NSAssert(message.uid == uid, @"bad message found");
 		
-		if(message.hasAttachments && !_hasAttachments) {
-			_hasAttachments = YES;
+		if(message.hasAttachments && ![self hasAttachments]) {
+			_threadFlags |= ThreadFlagsHasAttachment;
 			attributesChanged = YES;
 		}
 		
@@ -146,13 +167,13 @@
 
 - (void)updateThreadFlagsFromMessage:(SMMessage*)message {
 	if(message.unseen)
-		_unseen = YES;
-	
+		_threadFlags |= ThreadFlagsUnseen;
+
 	if(message.flagged)
-		_flagged = YES;
+		_threadFlags |= ThreadFlagsFlagged;
 	
 	if(message.hasAttachments)
-		_hasAttachments = YES;
+		_threadFlags |= ThreadFlagsHasAttachment;
 }
 
 - (SMThreadUpdateResult)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session {
@@ -236,10 +257,8 @@
 	}
 	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
-	
-	_unseen = NO;
-	_flagged = NO;
-	_hasAttachments = NO;
+
+	_threadFlags = ThreadFlagsNone;
 
 	// clear update marks for future updates
 	for(SMMessage *message in _messageCollection.messages) {
