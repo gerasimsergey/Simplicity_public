@@ -199,8 +199,8 @@
 		// test adding objects to the attachment panel
 
 		NSArrayController *arrayController = _attachmentsViewController.arrayController;
-		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Image.jpg", @"FileName", nil]];
-		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Document.pdf", @"FileName", nil]];
+		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Image.jpg", @"fileName", nil]];
+		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Document.pdf", @"fileName", nil]];
 	}
 	
 	[view setFillColor:[NSColor whiteColor]];
