@@ -448,10 +448,10 @@
 			children = (
 				0002A0A617D1B1E000EA4AFF /* MainMenu.xib */,
 				00DEA1631A6F6B8C009FD438 /* SMAttachmentItemView.xib */,
+				00DEA1521A6F656C009FD438 /* SMAttachmentsViewController.xib */,
 				00FE6DF31A4E6C0600D2194F /* SMInstrumentPanelViewController.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
-				00DEA1521A6F656C009FD438 /* SMAttachmentsViewController.xib */,
 				003859001A4D024500D4FD70 /* SMSearchResultsListViewController.xib */,
 				00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */,
 			);
