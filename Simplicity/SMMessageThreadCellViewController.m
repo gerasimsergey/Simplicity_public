@@ -195,6 +195,12 @@
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+
+		// test adding objects to the attachment panel
+
+		NSArrayController *arrayController = _attachmentsViewController.arrayController;
+		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Image.jpg", @"FileName", nil]];
+		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Document.pdf", @"FileName", nil]];
 	}
 	
 	[view setFillColor:[NSColor whiteColor]];
