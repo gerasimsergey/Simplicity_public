@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SMAttachmentsPanelViewContoller">
+            <connections>
+                <outlet property="arrayController" destination="Izj-D3-6j2" id="Xtk-Ml-rEb"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="314" height="180"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="e1u-xW-E2n">
+                    <rect key="frame" x="0.0" y="-6" width="314" height="217"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <clipView key="contentView" id="bBq-12-bQL">
+                        <rect key="frame" x="1" y="1" width="248" height="158"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView id="2kR-bc-RNR">
+                                <rect key="frame" x="0.0" y="0.0" width="248" height="158"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <connections>
+                                    <binding destination="Izj-D3-6j2" name="content" keyPath="arrangedObjects" id="yKx-Ax-tdA"/>
+                                    <outlet property="itemPrototype" destination="aUY-hk-i60" id="KVV-Rt-EMC"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                    </clipView>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="i5i-mp-ahc">
+                        <rect key="frame" x="1" y="144" width="233" height="15"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Cb7-7V-CJp">
+                        <rect key="frame" x="234" y="1" width="15" height="143"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+            </subviews>
+            <point key="canvasLocation" x="142" y="245"/>
+        </customView>
+        <collectionViewItem id="aUY-hk-i60">
+            <connections>
+                <outlet property="view" destination="zHc-ot-Prd" id="oZW-z5-vZ1"/>
+            </connections>
+        </collectionViewItem>
+        <view id="zHc-ot-Prd">
+            <rect key="frame" x="0.0" y="0.0" width="153" height="120"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" id="1Dy-RX-bzl">
+                    <rect key="frame" x="6" y="5" width="141" height="37"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="File Name" drawsBackground="YES" id="le4-P9-0BK">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="aUY-hk-i60" name="value" keyPath="representedObject.fileName" id="DCJ-uE-K5l"/>
+                    </connections>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="91.5" y="245"/>
+        </view>
+        <arrayController objectClassName="SMAttachmentItem" id="Izj-D3-6j2">
+            <declaredKeys>
+                <string>fileName</string>
+            </declaredKeys>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="attachmentItems" id="aQs-qW-EsA"/>
+            </connections>
+        </arrayController>
+        <userDefaultsController representsSharedInstance="YES" id="deg-k4-YQW"/>
+    </objects>
+</document>

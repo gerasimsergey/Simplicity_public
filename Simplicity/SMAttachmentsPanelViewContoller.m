@@ -1,14 +1,14 @@
 //
-//  SMAttachmentsViewController.m
+//  SMAttachmentsPanelViewContoller.m
 //  Simplicity
 //
-//  Created by Evgeny Baskakov on 1/20/15.
+//  Created by Evgeny Baskakov on 1/23/15.
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
-#import "SMAttachmentsViewController.h"
+#import "SMAttachmentsPanelViewContoller.h"
 
-@implementation SMAttachmentsViewController
+@implementation SMAttachmentsPanelViewContoller
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

@@ -8,13 +8,14 @@
 
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageBodyViewController.h"
-#import "SMAttachmentsViewController.h"
+#import "SMAttachmentItem.h"
+#import "SMAttachmentsPanelViewContoller.h"
 #import "SMMessageThreadCellViewController.h"
 
 @implementation SMMessageThreadCellViewController {
 	SMMessageDetailsViewController *_messageDetailsViewController;
 	SMMessageBodyViewController *_messageBodyViewController;
-	SMAttachmentsViewController *_attachmentsViewController;
+	SMAttachmentsPanelViewContoller *_attachmentsPanelViewContoller;
 
 	NSView *_messageView;
 	NSButton *_headerButton;
@@ -179,9 +180,9 @@
 			[self setMessageViewText:_htmlText uid:_uid folder:_folder];
 		}
 		
-		_attachmentsViewController = [[SMAttachmentsViewController alloc] initWithNibName:@"SMAttachmentsViewController" bundle:nil];
+		_attachmentsPanelViewContoller = [[SMAttachmentsPanelViewContoller alloc] initWithNibName:@"SMAttachmentsPanelViewContoller" bundle:nil];
 		
-		NSView *attachmentsView = [_attachmentsViewController view];
+		NSView *attachmentsView = [_attachmentsPanelViewContoller view];
 		NSAssert(attachmentsView, @"attachmentsView");
 		
 		attachmentsView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -198,9 +199,10 @@
 
 		// test adding objects to the attachment panel
 
-		NSArrayController *arrayController = _attachmentsViewController.arrayController;
-		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Image.jpg", @"fileName", nil]];
-		[arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Document.pdf", @"fileName", nil]];
+		NSArrayController *arrayController = _attachmentsPanelViewContoller.arrayController;
+
+		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Image.jpg"]];
+		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Document.pdf"]];
 	}
 	
 	[view setFillColor:[NSColor whiteColor]];

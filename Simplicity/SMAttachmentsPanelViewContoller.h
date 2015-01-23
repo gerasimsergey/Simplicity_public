@@ -1,14 +1,14 @@
 //
-//  SMAttachmentsViewController.h
+//  SMAttachmentsPanelViewContoller.h
 //  Simplicity
 //
-//  Created by Evgeny Baskakov on 1/20/15.
+//  Created by Evgeny Baskakov on 1/23/15.
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
 
-@interface SMAttachmentsViewController : NSViewController
+@interface SMAttachmentsPanelViewContoller : NSViewController
 
 @property IBOutlet NSArrayController *arrayController;
 
