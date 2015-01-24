@@ -18,7 +18,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1u-xW-E2n">
-                    <rect key="frame" x="0.0" y="-30" width="314" height="217"/>
+                    <rect key="frame" x="0.0" y="0.0" width="314" height="156"/>
                     <clipView key="contentView" id="bBq-12-bQL">
                         <rect key="frame" x="1" y="1" width="248" height="158"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -46,12 +46,12 @@
                 </scrollView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="e1u-xW-E2n" secondAttribute="bottom" constant="-30" id="a7T-bf-Xce"/>
+                <constraint firstAttribute="bottom" secondItem="e1u-xW-E2n" secondAttribute="bottom" id="a7T-bf-Xce"/>
                 <constraint firstItem="e1u-xW-E2n" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="f50-id-RSU"/>
-                <constraint firstItem="e1u-xW-E2n" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="-31" id="h6g-BV-Rh8"/>
+                <constraint firstItem="e1u-xW-E2n" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="h6g-BV-Rh8"/>
                 <constraint firstAttribute="trailing" secondItem="e1u-xW-E2n" secondAttribute="trailing" id="kn8-ys-8tI"/>
             </constraints>
-            <point key="canvasLocation" x="142" y="233"/>
+            <point key="canvasLocation" x="155" y="233"/>
         </customView>
         <collectionViewItem id="aUY-hk-i60" customClass="SMAttachmentsPanelItemView"/>
         <arrayController objectClassName="SMAttachmentItem" id="Izj-D3-6j2">
