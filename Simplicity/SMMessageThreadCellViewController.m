@@ -240,8 +240,6 @@
 }
 
 - (void)showAttachmentsPanel {
-	NSLog(@"%s", __func__);
-
 	if(_attachmentsPanelShown)
 		return;
 
@@ -285,8 +283,6 @@
 }
 
 - (void)hideAttachmentsPanel {
-	NSLog(@"%s", __func__);
-
 	if(!_attachmentsPanelShown)
 		return;
 
