@@ -185,8 +185,6 @@
 		NSView *attachmentsView = [_attachmentsPanelViewContoller view];
 		NSAssert(attachmentsView, @"attachmentsView");
 		
-		attachmentsView.translatesAutoresizingMaskIntoConstraints = NO;
-		
 		[view addSubview:attachmentsView];
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
