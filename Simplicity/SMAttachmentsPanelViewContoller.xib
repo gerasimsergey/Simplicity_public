@@ -47,30 +47,7 @@
             </subviews>
             <point key="canvasLocation" x="142" y="245"/>
         </customView>
-        <collectionViewItem id="aUY-hk-i60">
-            <connections>
-                <outlet property="view" destination="zHc-ot-Prd" id="oZW-z5-vZ1"/>
-            </connections>
-        </collectionViewItem>
-        <view id="zHc-ot-Prd">
-            <rect key="frame" x="0.0" y="0.0" width="153" height="120"/>
-            <autoresizingMask key="autoresizingMask"/>
-            <subviews>
-                <textField verticalHuggingPriority="750" id="1Dy-RX-bzl">
-                    <rect key="frame" x="6" y="5" width="141" height="37"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="File Name" drawsBackground="YES" id="le4-P9-0BK">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                    <connections>
-                        <binding destination="aUY-hk-i60" name="value" keyPath="representedObject.fileName" id="DCJ-uE-K5l"/>
-                    </connections>
-                </textField>
-            </subviews>
-            <point key="canvasLocation" x="91.5" y="245"/>
-        </view>
+        <collectionViewItem id="aUY-hk-i60" customClass="SMAttachmentsPanelItemView"/>
         <arrayController objectClassName="SMAttachmentItem" id="Izj-D3-6j2">
             <declaredKeys>
                 <string>fileName</string>
