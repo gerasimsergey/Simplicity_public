@@ -15,13 +15,15 @@
 @implementation SMMessageThreadCellViewController {
 	SMMessageDetailsViewController *_messageDetailsViewController;
 	SMMessageBodyViewController *_messageBodyViewController;
-	SMAttachmentsPanelViewController *_attachmentsPanelViewContoller;
+	SMAttachmentsPanelViewController *_attachmentsPanelViewController;
 
 	NSView *_messageView;
 	NSButton *_headerButton;
 	NSProgressIndicator *_progressIndicator;
 	NSLayoutConstraint *_heightConstraint;
 	NSLayoutConstraint *_messageDetailsBottomConstraint;
+	NSLayoutConstraint *_messageBodyBottomConstraint;
+	NSMutableArray *_attachmentsPanelViewConstraints;
 	CGFloat _messageViewHeight;
 	Boolean _collapsed;
 	NSString *_htmlText;
@@ -83,6 +85,8 @@
 	
 		_messageDetailsBottomConstraint = [NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
 		
+		[_messageDetailsViewController setEnclosingThreadCell:self];
+		
 		// commit the main view
 		
 		[self setView:view];
@@ -129,6 +133,8 @@
 	if(_collapsed)
 		return;
 	
+	[self hideAttachmentsPanel];
+
 	[_messageDetailsViewController collapse];
 
 	NSBox *view = (NSBox*)[self view];
@@ -171,8 +177,13 @@
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-		
+
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:300] priority:NSLayoutPriorityDefaultLow];
+		
+		NSAssert(_messageBodyBottomConstraint == nil, @"_messageBodyBottomConstraint already created");
+		_messageBodyBottomConstraint = [NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+
+		[view addConstraint:_messageBodyBottomConstraint];
 
 		if(_messageTextIsSet) {
 			// this means that the message html text was set before,
@@ -180,32 +191,6 @@
 			// so just load it now
 			[self setMessageViewText:_htmlText uid:_uid folder:_folder];
 		}
-		
-		_attachmentsPanelViewContoller = [[SMAttachmentsPanelViewController alloc] initWithNibName:@"SMAttachmentsPanelViewContoller" bundle:nil];
-
-		NSView *attachmentsView = [_attachmentsPanelViewContoller view];
-		NSAssert(attachmentsView, @"attachmentsView");
-		
-		[view addSubview:attachmentsView];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-		
-		[_messageDetailsViewController setEnclosingThreadCell:self];
-
-		// test adding objects to the attachment panel
-
-		NSArrayController *arrayController = _attachmentsPanelViewContoller.arrayController;
-
-		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Image.jpg"]];
-		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Document.pdf"]];
-		
-		[arrayController setSelectedObjects:[NSArray array]];
 	}
 	
 	[view setFillColor:[NSColor whiteColor]];
@@ -259,7 +244,44 @@
 
 	if(_attachmentsPanelShown)
 		return;
+
+	NSView *view = [self view];
+	NSAssert(view != nil, @"view is nil");
+
+	NSAssert(_messageBodyBottomConstraint != nil, @"_messageBodyBottomConstraint not created");
+	[view removeConstraint:_messageBodyBottomConstraint];
+	
+	if(_attachmentsPanelViewController == nil) {
+		_attachmentsPanelViewController = [[SMAttachmentsPanelViewController alloc] initWithNibName:@"SMAttachmentsPanelViewController" bundle:nil];
 		
+		NSView *attachmentsView = _attachmentsPanelViewController.view;
+		NSAssert(attachmentsView, @"attachmentsView");
+		
+		NSAssert(_attachmentsPanelViewConstraints == nil, @"_attachmentsPanelViewConstraints already created");
+		_attachmentsPanelViewConstraints = [NSMutableArray array];
+		
+		[_attachmentsPanelViewConstraints addObject:[NSLayoutConstraint constraintWithItem:_messageBodyViewController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+		
+		[_attachmentsPanelViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+		
+		[_attachmentsPanelViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+		
+		[_attachmentsPanelViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+		
+		// test adding objects to the attachment panel
+		
+		NSArrayController *arrayController = _attachmentsPanelViewController.arrayController;
+		
+		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Image.jpg"]];
+		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Document.pdf"]];
+		
+		[arrayController setSelectedObjects:[NSArray array]];
+	}
+
+	[view addSubview:_attachmentsPanelViewController.view];
+	[view addConstraints:_attachmentsPanelViewConstraints];
+
+	_attachmentsPanelShown = YES;
 }
 
 - (void)hideAttachmentsPanel {
@@ -267,6 +289,19 @@
 
 	if(!_attachmentsPanelShown)
 		return;
+
+	NSView *view = [self view];
+	NSAssert(view != nil, @"view is nil");
+
+	NSAssert(_attachmentsPanelViewConstraints != nil, @"_attachmentsPanelViewConstraints not created");
+	[view removeConstraints:_attachmentsPanelViewConstraints];
+
+	[_attachmentsPanelViewController.view removeFromSuperview];
+
+	NSAssert(_messageBodyBottomConstraint != nil, @"_messageBodyBottomConstraint not created");
+	[view addConstraint:_messageBodyBottomConstraint];
+
+	_attachmentsPanelShown = NO;
 }
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
