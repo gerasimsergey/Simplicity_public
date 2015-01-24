@@ -11,9 +11,9 @@
 @implementation SMAttachmentsPanelItemView
 
 - (void) awakeFromNib {
-	NSAssert([[self view] isKindOfClass:[NSBox class]], @"view is not an NSBox");
+	NSAssert([[[self view] subviews][0] isKindOfClass:[NSBox class]], @"view is not an NSBox");
 
-	NSBox *view = (NSBox*)[self view];
+	NSBox *view = [[self view] subviews][0];
 
 	[view setTitlePosition:NSNoTitle];
 	[view setBoxType:NSBoxCustom];
@@ -24,9 +24,9 @@
 - (void)setSelected:(BOOL)flag {
 	[super setSelected: flag];
  
-	NSAssert([[self view] isKindOfClass:[NSBox class]], @"view is not an NSBox");
+	NSAssert([[[self view] subviews][0] isKindOfClass:[NSBox class]], @"view is not an NSBox");
 
-	NSBox *view = (NSBox*)[self view];
+	NSBox *view = [[self view] subviews][0];
 	NSColor *fillColor = flag? [NSColor selectedControlColor] : [NSColor controlBackgroundColor];
  
 	[view setFillColor:fillColor];
