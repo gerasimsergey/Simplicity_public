@@ -18,9 +18,23 @@
 	[view setBorderType:NSLineBorder];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do view setup here.
+- (void)setSelected:(BOOL)flag {
+	[super setSelected: flag];
+ 
+	NSBox *view = (NSBox*) [self view];
+	NSColor *color;
+	NSColor *lineColor;
+ 
+	if (flag) {
+		color       = [NSColor selectedControlColor];
+		lineColor   = [NSColor blackColor];
+	} else {
+		color       = [NSColor controlBackgroundColor];
+		lineColor   = [NSColor controlBackgroundColor];
+	}
+ 
+	[view setBorderColor:lineColor];
+	[view setFillColor:color];
 }
 
 @end
