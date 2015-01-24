@@ -9,11 +9,14 @@
 #import <Cocoa/Cocoa.h>
 
 @class SMMessage;
+@class SMMessageThreadCellViewController;
 
 @interface SMMessageDetailsViewController : NSViewController
 
 + (NSUInteger)headerHeight;
 + (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold;
+
+- (void)setEnclosingThreadCell:(SMMessageThreadCellViewController*)receiver;
 
 - (void)collapse;
 - (void)uncollapse;

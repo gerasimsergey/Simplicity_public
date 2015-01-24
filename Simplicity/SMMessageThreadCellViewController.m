@@ -28,6 +28,7 @@
 	uint32_t _uid;
 	NSString *_folder;
 	Boolean _messageTextIsSet;
+	Boolean _attachmentsPanelShown;
 }
 
 - (id)initCollapsed:(Boolean)collapsed {
@@ -181,7 +182,7 @@
 		}
 		
 		_attachmentsPanelViewContoller = [[SMAttachmentsPanelViewController alloc] initWithNibName:@"SMAttachmentsPanelViewContoller" bundle:nil];
-		
+
 		NSView *attachmentsView = [_attachmentsPanelViewContoller view];
 		NSAssert(attachmentsView, @"attachmentsView");
 		
@@ -194,6 +195,8 @@
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
 		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+		
+		[_messageDetailsViewController setEnclosingThreadCell:self];
 
 		// test adding objects to the attachment panel
 
@@ -238,6 +241,32 @@
 
 - (void)buttonClicked:(id)sender {
 	[self toggleCollapse];
+}
+
+- (void)toggleAttachmentsPanel {
+	if(!_attachmentsPanelShown)
+	{
+		[self showAttachmentsPanel];
+	}
+	else
+	{
+		[self hideAttachmentsPanel];
+	}
+}
+
+- (void)showAttachmentsPanel {
+	NSLog(@"%s", __func__);
+
+	if(_attachmentsPanelShown)
+		return;
+		
+}
+
+- (void)hideAttachmentsPanel {
+	NSLog(@"%s", __func__);
+
+	if(!_attachmentsPanelShown)
+		return;
 }
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {

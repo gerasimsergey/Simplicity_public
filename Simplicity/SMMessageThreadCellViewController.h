@@ -23,4 +23,6 @@
 - (void)collapse;
 - (void)uncollapse;
 
+- (void)toggleAttachmentsPanel;
+
 @end

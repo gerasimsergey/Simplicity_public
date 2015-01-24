@@ -12,6 +12,7 @@
 #import "SMImageRegistry.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageFullDetailsViewController.h"
+#import "SMMessageThreadCellViewController.h"
 #import "SMMessage.h"
 
 static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
@@ -20,6 +21,10 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	// current message control objects
 	SMMessage *_currentMessage;
 	SMMessageFullDetailsViewController *_fullDetailsViewController;
+
+	// the thread cell that contains this message details view
+	// must be weak to avoid mutual dependency cycle
+	SMMessageThreadCellViewController __weak *_enclosingThreadCell;
 	
 	// UI elements
 	NSButton *_starButton;
@@ -72,6 +77,10 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	[label setFont:(bold? [NSFont boldSystemFontOfSize:fontSize] : [NSFont systemFontOfSize:fontSize])];
 
 	return label;
+}
+
+- (void)setEnclosingThreadCell:(SMMessageThreadCellViewController *)enclosingThreadCell {
+	_enclosingThreadCell = enclosingThreadCell;
 }
 
 - (void)setMessageDetails:(SMMessage*)message {
@@ -229,10 +238,11 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		_attachmentButton = [[NSButton alloc] init];
 		_attachmentButton.translatesAutoresizingMaskIntoConstraints = NO;
 		_attachmentButton.bezelStyle = NSShadowlessSquareBezelStyle;
-		_attachmentButton.target = self;
 		_attachmentButton.image = appDelegate.imageRegistry.attachmentImage;
 		[_attachmentButton.cell setImageScaling:NSImageScaleProportionallyDown];
 		_attachmentButton.bordered = NO;
+		_attachmentButton.target = self;
+		_attachmentButton.action = @selector(toggleAttachmentsPanel:);
 		
 		// TODO: show popup menu asking the user to save/download the attachments
 		//	_attachmentButton.action = @selector(toggleFullDetails:);
@@ -287,6 +297,10 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	[view addConstraints:_doesntHaveAttachmentsConstraints];
 	
 	_attachmentButtonShown = NO;
+}
+
+- (void)toggleAttachmentsPanel:(id)sender {
+	[_enclosingThreadCell toggleAttachmentsPanel];
 }
 
 - (void)showFullDetails {
