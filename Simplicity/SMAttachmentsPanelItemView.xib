@@ -13,7 +13,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <view id="1LG-Qz-wFn">
+        <view id="1LG-Qz-wFn" customClass="NSBox">
             <rect key="frame" x="0.0" y="0.0" width="153" height="120"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>

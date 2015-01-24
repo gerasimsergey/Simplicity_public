@@ -8,11 +8,15 @@
 
 #import "SMAttachmentsPanelItemView.h"
 
-@interface SMAttachmentsPanelItemView ()
-
-@end
-
 @implementation SMAttachmentsPanelItemView
+
+- (void) awakeFromNib {
+	NSBox *view = (NSBox*) [self view];
+	[view setTitlePosition:NSNoTitle];
+	[view setBoxType:NSBoxCustom];
+	[view setCornerRadius:8.0];
+	[view setBorderType:NSLineBorder];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
