@@ -30,6 +30,7 @@
                                 <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <connections>
                                     <binding destination="Izj-D3-6j2" name="content" keyPath="arrangedObjects" id="yKx-Ax-tdA"/>
+                                    <binding destination="Izj-D3-6j2" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="yKx-Ax-tdA" id="sVY-N3-jPU"/>
                                     <outlet property="itemPrototype" destination="aUY-hk-i60" id="KVV-Rt-EMC"/>
                                 </connections>
                             </collectionView>
