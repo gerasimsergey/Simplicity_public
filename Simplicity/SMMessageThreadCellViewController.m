@@ -201,6 +201,8 @@
 
 		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Image.jpg"]];
 		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Document.pdf"]];
+		
+		[arrayController setSelectedObjects:[NSArray array]];
 	}
 	
 	[view setFillColor:[NSColor whiteColor]];

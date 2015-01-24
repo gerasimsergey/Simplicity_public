@@ -11,30 +11,25 @@
 @implementation SMAttachmentsPanelItemView
 
 - (void) awakeFromNib {
-	NSBox *view = (NSBox*) [self view];
+	NSAssert([[self view] isKindOfClass:[NSBox class]], @"view is not an NSBox");
+
+	NSBox *view = (NSBox*)[self view];
+
 	[view setTitlePosition:NSNoTitle];
 	[view setBoxType:NSBoxCustom];
 	[view setCornerRadius:8.0];
-	[view setBorderType:NSLineBorder];
+	[view setBorderType:NSNoBorder];
 }
 
 - (void)setSelected:(BOOL)flag {
 	[super setSelected: flag];
  
-	NSBox *view = (NSBox*) [self view];
-	NSColor *color;
-	NSColor *lineColor;
+	NSAssert([[self view] isKindOfClass:[NSBox class]], @"view is not an NSBox");
+
+	NSBox *view = (NSBox*)[self view];
+	NSColor *fillColor = flag? [NSColor selectedControlColor] : [NSColor controlBackgroundColor];
  
-	if (flag) {
-		color       = [NSColor selectedControlColor];
-		lineColor   = [NSColor blackColor];
-	} else {
-		color       = [NSColor controlBackgroundColor];
-		lineColor   = [NSColor controlBackgroundColor];
-	}
- 
-	[view setBorderColor:lineColor];
-	[view setFillColor:color];
+	[view setFillColor:fillColor];
 }
 
 @end
