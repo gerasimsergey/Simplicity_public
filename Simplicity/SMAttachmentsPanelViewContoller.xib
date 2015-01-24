@@ -14,10 +14,10 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="1" width="314" height="156"/>
+            <rect key="frame" x="0.0" y="0.0" width="314" height="130"/>
             <subviews>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1u-xW-E2n">
-                    <rect key="frame" x="0.0" y="0.0" width="314" height="156"/>
+                    <rect key="frame" x="0.0" y="0.0" width="314" height="130"/>
                     <clipView key="contentView" id="bBq-12-bQL">
                         <rect key="frame" x="1" y="1" width="248" height="158"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -35,7 +35,7 @@
                         </subviews>
                     </clipView>
                     <constraints>
-                        <constraint firstAttribute="height" constant="156" id="pIT-2u-FVI"/>
+                        <constraint firstAttribute="height" constant="130" id="pIT-2u-FVI"/>
                     </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="i5i-mp-ahc">
                         <rect key="frame" x="1" y="144" width="233" height="15"/>
