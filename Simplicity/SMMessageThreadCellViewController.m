@@ -9,13 +9,13 @@
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMAttachmentItem.h"
-#import "SMAttachmentsPanelViewContoller.h"
+#import "SMAttachmentsPanelViewController.h"
 #import "SMMessageThreadCellViewController.h"
 
 @implementation SMMessageThreadCellViewController {
 	SMMessageDetailsViewController *_messageDetailsViewController;
 	SMMessageBodyViewController *_messageBodyViewController;
-	SMAttachmentsPanelViewContoller *_attachmentsPanelViewContoller;
+	SMAttachmentsPanelViewController *_attachmentsPanelViewContoller;
 
 	NSView *_messageView;
 	NSButton *_headerButton;
@@ -180,7 +180,7 @@
 			[self setMessageViewText:_htmlText uid:_uid folder:_folder];
 		}
 		
-		_attachmentsPanelViewContoller = [[SMAttachmentsPanelViewContoller alloc] initWithNibName:@"SMAttachmentsPanelViewContoller" bundle:nil];
+		_attachmentsPanelViewContoller = [[SMAttachmentsPanelViewController alloc] initWithNibName:@"SMAttachmentsPanelViewContoller" bundle:nil];
 		
 		NSView *attachmentsView = [_attachmentsPanelViewContoller view];
 		NSAssert(attachmentsView, @"attachmentsView");

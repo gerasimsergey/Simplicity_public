@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
-#import "SMAttachmentsPanelViewContoller.h"
+#import "SMAttachmentsPanelViewController.h"
 
-@implementation SMAttachmentsPanelViewContoller
+@implementation SMAttachmentsPanelViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SMAttachmentsPanelViewContoller : NSViewController<NSCollectionViewDelegate>
+@interface SMAttachmentsPanelViewController : NSViewController<NSCollectionViewDelegate>
 
 @property IBOutlet NSArrayController *arrayController;
 

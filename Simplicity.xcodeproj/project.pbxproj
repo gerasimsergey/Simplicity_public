@@ -50,8 +50,8 @@
 		0099CE861A623B2A00AEA789 /* attachment-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0099CE851A623B2A00AEA789 /* attachment-icon.png */; };
 		009C7BA01A5BB558002EA2DF /* circle-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 009C7B9F1A5BB558002EA2DF /* circle-blue.png */; };
 		00A085A01A7206FC00CC4E1C /* SMAttachmentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A0859F1A7206FC00CC4E1C /* SMAttachmentItem.m */; };
-		00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewContoller.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.m */; };
-		00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewContoller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.xib */; };
+		00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewController.m */; };
+		00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */; };
 		00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */; };
 		00A25BBC17E3540000D0FCB1 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 00A25BBB17E3540000D0FCB1 /* TODO */; };
 		00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */; };
@@ -221,9 +221,9 @@
 		009C7B9F1A5BB558002EA2DF /* circle-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circle-blue.png"; sourceTree = "<group>"; };
 		00A0859E1A7206FC00CC4E1C /* SMAttachmentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentItem.h; sourceTree = "<group>"; };
 		00A0859F1A7206FC00CC4E1C /* SMAttachmentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentItem.m; sourceTree = "<group>"; };
-		00A085AD1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentsPanelViewContoller.h; sourceTree = "<group>"; };
-		00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentsPanelViewContoller.m; sourceTree = "<group>"; };
-		00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMAttachmentsPanelViewContoller.xib; sourceTree = "<group>"; };
+		00A085AD1A72145300CC4E1C /* SMAttachmentsPanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentsPanelViewController.h; sourceTree = "<group>"; };
+		00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentsPanelViewController.m; sourceTree = "<group>"; };
+		00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMAttachmentsPanelViewController.xib; sourceTree = "<group>"; };
 		00A25BB517DF7ECD00D0FCB1 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = ../../../../../../../usr/lib/libxml2.dylib; sourceTree = "<group>"; };
 		00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListController.h; sourceTree = "<group>"; };
 		00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListController.m; sourceTree = "<group>"; };
@@ -393,8 +393,8 @@
 			children = (
 				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
 				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
-				00A085AD1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.h */,
-				00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.m */,
+				00A085AD1A72145300CC4E1C /* SMAttachmentsPanelViewController.h */,
+				00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewController.m */,
 				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
 				00FE6DF21A4E6C0600D2194F /* SMInstrumentPanelViewController.m */,
 				00DC84941967A70E00577667 /* SMMailboxController.h */,
@@ -453,7 +453,7 @@
 			children = (
 				0002A0A617D1B1E000EA4AFF /* MainMenu.xib */,
 				003DFF181A73681A003C26E2 /* SMAttachmentsPanelItemView.xib */,
-				00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewContoller.xib */,
+				00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */,
 				00FE6DF31A4E6C0600D2194F /* SMInstrumentPanelViewController.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
@@ -612,7 +612,7 @@
 				002556FE1A5A5C6600C864D0 /* star-gray-icon.png in Resources */,
 				002556FA1A5A3BF900C864D0 /* info-icon.png in Resources */,
 				003DFF1A1A73681A003C26E2 /* SMAttachmentsPanelItemView.xib in Resources */,
-				00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewContoller.xib in Resources */,
+				00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */,
 				00FE6DF51A4E6C0600D2194F /* SMInstrumentPanelViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,7 +658,7 @@
 				009742721957C78E00620145 /* SMMailbox.m in Sources */,
 				003859011A4D024500D4FD70 /* SMSearchResultsListViewController.m in Sources */,
 				0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */,
-				00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewContoller.m in Sources */,
+				00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewController.m in Sources */,
 				00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */,
 				008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */,
 			);
