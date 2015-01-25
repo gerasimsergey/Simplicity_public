@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SMAttachmentsPanelItemView">
             <connections>
+                <outlet property="box" destination="c9T-fl-rVx" id="mtl-kQ-s05"/>
                 <outlet property="fileNameField" destination="QcU-Jm-FxW" id="RSe-2u-5Xk"/>
                 <outlet property="view" destination="1LG-Qz-wFn" id="rM5-xW-8ld"/>
             </connections>
@@ -17,17 +18,22 @@
             <rect key="frame" x="0.0" y="0.0" width="153" height="151"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <box autoresizesSubviews="NO" title="Box" borderType="line" titlePosition="noTitle" id="c9T-fl-rVx">
-                    <rect key="frame" x="4" y="0.0" width="145" height="149"/>
+                <box autoresizesSubviews="NO" cornerRadius="8" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" id="c9T-fl-rVx">
+                    <rect key="frame" x="7" y="4" width="139" height="143"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <view key="contentView">
-                        <rect key="frame" x="1" y="1" width="143" height="147"/>
+                        <rect key="frame" x="0.0" y="0.0" width="139" height="143"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField verticalHuggingPriority="750" id="QcU-Jm-FxW">
-                                <rect key="frame" x="3" y="4" width="137" height="55"/>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="a8C-XX-hqV">
+                                <rect key="frame" x="34" y="56" width="75" height="85"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="charWrapping" truncatesLastVisibleLine="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="center" title="Very Long Long File Name Plus Extension" drawsBackground="YES" id="hmL-xQ-hW1">
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="Q1d-GG-4CZ"/>
+                            </imageView>
+                            <textField verticalHuggingPriority="750" id="QcU-Jm-FxW">
+                                <rect key="frame" x="1" y="1" width="137" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="charWrapping" truncatesLastVisibleLine="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="center" title="Very Long Long File Name Plus Extension" id="hmL-xQ-hW1">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -36,11 +42,6 @@
                                     <binding destination="-2" name="value" keyPath="representedObject.fileName" id="ZxW-ev-keW"/>
                                 </connections>
                             </textField>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="a8C-XX-hqV">
-                                <rect key="frame" x="34" y="60" width="75" height="85"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="Q1d-GG-4CZ"/>
-                            </imageView>
                         </subviews>
                     </view>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>

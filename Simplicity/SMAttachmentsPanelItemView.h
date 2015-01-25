@@ -10,6 +10,7 @@
 
 @interface SMAttachmentsPanelItemView : NSCollectionViewItem
 
+@property IBOutlet NSBox *box;
 @property IBOutlet NSTextField *fileNameField;
 
 @end
