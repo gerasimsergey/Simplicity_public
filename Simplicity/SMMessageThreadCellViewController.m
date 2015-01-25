@@ -240,8 +240,6 @@
 }
 
 - (void)showAttachmentsPanel {
-//	[NSAssert ]
-	
 	if(_attachmentsPanelShown)
 		return;
 
@@ -269,11 +267,17 @@
 		[_attachmentsPanelViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:attachmentsView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 		
 		// test adding objects to the attachment panel
+
+		NSAssert(_message.attachments.count > 0, @"message has no attachments, the panel should never be shown");
 		
 		NSArrayController *arrayController = _attachmentsPanelViewController.arrayController;
 		
-		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Image.jpg"]];
-		[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:@"Document.pdf"]];
+		for(NSUInteger i = 0; i < _message.attachments.count; i++) {
+			MCOAttachment *attachment = _message.attachments[i];
+			NSString *attachmentFileName = [attachment filename];
+			NSLog(@"%s: attachmentFileName '%@'", __func__, attachmentFileName);
+			[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:attachmentFileName]];
+		}
 		
 		[arrayController setSelectedObjects:[NSArray array]];
 	}
