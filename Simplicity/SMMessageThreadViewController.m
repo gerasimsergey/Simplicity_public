@@ -71,7 +71,7 @@
 	if(htmlMessageBodyText != nil) {
 		[message fetchInlineAttachments];
 		
-		[messageThreadCellViewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
+		[messageThreadCellViewController setMessageViewText:htmlMessageBodyText];
 	} else {
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
@@ -273,7 +273,7 @@
 			[message fetchInlineAttachments];
 
 			[cell.viewController setMessage:message];
-			[cell.viewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
+			[cell.viewController setMessageViewText:htmlMessageBodyText];
 			
 			return;
 		}

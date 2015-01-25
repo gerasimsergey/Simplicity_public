@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMMessage.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMAttachmentItem.h"
@@ -28,8 +29,6 @@
 	CGFloat _messageViewHeight;
 	Boolean _collapsed;
 	NSString *_htmlText;
-	uint32_t _uid;
-	NSString *_folder;
 	Boolean _messageTextIsSet;
 	Boolean _attachmentsPanelShown;
 }
@@ -190,7 +189,7 @@
 			// this means that the message html text was set before,
 			// when there was no body view
 			// so just load it now
-			[self setMessageViewText:_htmlText uid:_uid folder:_folder];
+			[self setMessageViewText:_htmlText];
 		}
 	}
 	
@@ -303,19 +302,17 @@
 	_attachmentsPanelShown = NO;
 }
 
-- (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
+- (void)setMessageViewText:(NSString*)htmlText {
 	if(_messageBodyViewController != nil) {
 		NSView *messageBodyView = [_messageBodyViewController view];
 		NSAssert(messageBodyView, @"messageBodyView");
 		
-		[_messageBodyViewController setMessageViewText:htmlText uid:uid folder:folder];
+		[_messageBodyViewController setMessageViewText:htmlText uid:_message.uid folder:[_message remoteFolder]];
 		
 		[_progressIndicator stopAnimation:self];
 	}
 
 	_htmlText = htmlText;
-	_uid = uid;
-	_folder = folder;
 
 	_messageTextIsSet = YES;
 }
