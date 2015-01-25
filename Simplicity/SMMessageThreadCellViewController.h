@@ -15,8 +15,8 @@
 - (id)initCollapsed:(Boolean)collapsed;
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
-- (void)setMessageDetails:(SMMessage*)message;
-- (void)updateMessageDetails;
+- (void)setMessage:(SMMessage*)message;
+- (void)updateMessage;
 
 - (void)enableCollapse:(Boolean)enable;
 

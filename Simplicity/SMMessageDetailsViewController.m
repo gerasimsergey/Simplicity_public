@@ -83,7 +83,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	_enclosingThreadCell = enclosingThreadCell;
 }
 
-- (void)setMessageDetails:(SMMessage*)message {
+- (void)setMessage:(SMMessage*)message {
 	NSAssert(message != nil, @"nil message");
 	
 	if(_currentMessage != message) {
@@ -94,12 +94,12 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		[_date setStringValue:[_currentMessage localizedDate]];
 	}
 
-	[self updateMessageDetails];
+	[self updateMessage];
 
-	[_fullDetailsViewController setMessageDetails:message];
+	[_fullDetailsViewController setMessage:message];
 }
 
-- (void)updateMessageDetails {
+- (void)updateMessage {
 	NSAssert(_currentMessage != nil, @"nil message");
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
@@ -311,7 +311,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		_fullDetailsViewController = [[SMMessageFullDetailsViewController alloc] init];
 	
 	if(_currentMessage != nil)
-		[_fullDetailsViewController setMessageDetails:_currentMessage];
+		[_fullDetailsViewController setMessage:_currentMessage];
 
 	NSView *view = [self view];
 	NSAssert(view != nil, @"no view");

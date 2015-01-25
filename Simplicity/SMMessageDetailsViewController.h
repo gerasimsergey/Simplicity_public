@@ -21,7 +21,7 @@
 - (void)collapse;
 - (void)uncollapse;
 
-- (void)setMessageDetails:(SMMessage*)message;
-- (void)updateMessageDetails;
+- (void)setMessage:(SMMessage*)message;
+- (void)updateMessage;
 
 @end

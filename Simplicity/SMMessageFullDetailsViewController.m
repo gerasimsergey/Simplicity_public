@@ -161,7 +161,7 @@
 	_ccCreated = YES;
 }
 
-- (void)setMessageDetails:(SMMessage*)message {
+- (void)setMessage:(SMMessage*)message {
 	NSString *fromAddress = [message from];
 	NSArray *newFromArray = [NSArray arrayWithObject:fromAddress];
 	

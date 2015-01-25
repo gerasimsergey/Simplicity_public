@@ -202,8 +202,9 @@
 	if(!_data) {
 		_data = data;
 		_msgParser = [MCOMessageParser messageParserWithData:data];
-		_hasAttachments = _msgParser.attachments.count > 0;
-		
+		_attachments = _msgParser.attachments;
+		_hasAttachments = _attachments.count > 0;
+
 		NSAssert(_msgParser, @"cannot create message parser");
 	} else {
 		NSAssert(_msgParser, @"no html parser");

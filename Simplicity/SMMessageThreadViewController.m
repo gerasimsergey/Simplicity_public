@@ -64,6 +64,8 @@
 - (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message collapsed:(Boolean)collapsed {
 	SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] initCollapsed:collapsed];
 	
+	[messageThreadCellViewController setMessage:message];
+	
 	NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
 	
 	if(htmlMessageBodyText != nil) {
@@ -77,8 +79,6 @@
 		[messageListController fetchMessageBodyUrgently:[message uid] remoteFolder:[message remoteFolder] threadId:[_currentMessageThread threadId]];
 	}
 	
-	[messageThreadCellViewController setMessageDetails:message];
-
 	return messageThreadCellViewController;
 }
 
@@ -142,7 +142,7 @@
 			if(equal) {
 				for(NSInteger i = 0; i < _cells.count; i++) {
 					ThreadCell *cell = _cells[i];
-					[cell.viewController updateMessageDetails];
+					[cell.viewController updateMessage];
 				}
 
 				return;
@@ -180,7 +180,7 @@
 			} else {
 				ThreadCell *cell = _cells[j++];
 
-				[cell.viewController updateMessageDetails];
+				[cell.viewController updateMessage];
 
 				updatedCells[i] = cell;
 			}
@@ -272,8 +272,8 @@
 			
 			[message fetchInlineAttachments];
 
+			[cell.viewController setMessage:message];
 			[cell.viewController setMessageViewText:htmlMessageBodyText uid:[message uid] folder:[message remoteFolder]];
-			[cell.viewController setMessageDetails:message];
 			
 			return;
 		}

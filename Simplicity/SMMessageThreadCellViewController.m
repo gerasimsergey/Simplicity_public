@@ -13,6 +13,7 @@
 #import "SMMessageThreadCellViewController.h"
 
 @implementation SMMessageThreadCellViewController {
+	SMMessage *_message;
 	SMMessageDetailsViewController *_messageDetailsViewController;
 	SMMessageBodyViewController *_messageBodyViewController;
 	SMAttachmentsPanelViewController *_attachmentsPanelViewController;
@@ -44,7 +45,7 @@
 		[view setBoxType:NSBoxCustom];
 		[view setBorderColor:[NSColor lightGrayColor]];
 		[view setBorderType:NSLineBorder];
-		[view setCornerRadius:2];
+		[view setCornerRadius:0];
 		[view setTitlePosition:NSNoTitle];
 
 		// init header button
@@ -84,7 +85,7 @@
 		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:messageDetailsView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] priority:NSLayoutPriorityRequired];
 	
 		_messageDetailsBottomConstraint = [NSLayoutConstraint constraintWithItem:messageDetailsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
-		
+
 		[_messageDetailsViewController setEnclosingThreadCell:self];
 		
 		// commit the main view
@@ -240,6 +241,8 @@
 }
 
 - (void)showAttachmentsPanel {
+//	[NSAssert ]
+	
 	if(_attachmentsPanelShown)
 		return;
 
@@ -317,12 +320,14 @@
 	_messageTextIsSet = YES;
 }
 
-- (void)setMessageDetails:(SMMessage*)message {
-	[_messageDetailsViewController setMessageDetails:message];
+- (void)setMessage:(SMMessage*)message {
+	_message = message;
+
+	[_messageDetailsViewController setMessage:message];
 }
 
-- (void)updateMessageDetails {
-	[_messageDetailsViewController updateMessageDetails];
+- (void)updateMessage {
+	[_messageDetailsViewController updateMessage];
 }
 
 
