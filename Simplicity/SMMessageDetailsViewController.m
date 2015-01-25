@@ -95,8 +95,6 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	}
 
 	[self updateMessage];
-
-	[_fullDetailsViewController setMessage:message];
 }
 
 - (void)updateMessage {
@@ -121,6 +119,8 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	font = _currentMessage.unseen? [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSFontBoldTrait] : [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSFontBoldTrait];
 	
 	[_subject setFont:font];
+	
+	[_fullDetailsViewController setMessage:_currentMessage];
 }
 
 #define V_MARGIN 10

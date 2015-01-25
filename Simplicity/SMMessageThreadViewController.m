@@ -66,12 +66,8 @@
 	
 	[messageThreadCellViewController setMessage:message];
 	
-	NSString *htmlMessageBodyText = [ message htmlBodyRendering ];
-	
-	if(htmlMessageBodyText != nil) {
+	if([messageThreadCellViewController loadMessageBody]) {
 		[message fetchInlineAttachments];
-		
-		[messageThreadCellViewController setMessageViewText:htmlMessageBodyText];
 	} else {
 		SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
@@ -267,13 +263,13 @@
 		SMMessage *message = cell.message;
 		
 		if(message.uid == uid) {
-			NSString *htmlMessageBodyText = [message htmlBodyRendering];
-			NSAssert(htmlMessageBodyText != nil, @"message uid %u (thread id %lld) fetched with no body!!!", uid, threadId);
-			
 			[message fetchInlineAttachments];
 
-			[cell.viewController setMessage:message];
-			[cell.viewController setMessageViewText:htmlMessageBodyText];
+			[cell.viewController updateMessage];
+
+			if(![cell.viewController loadMessageBody]) {
+				NSAssert(FALSE, @"message uid %u (thread id %lld) fetched with no body!!!", uid, threadId);
+			}
 			
 			return;
 		}

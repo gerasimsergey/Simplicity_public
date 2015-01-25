@@ -185,11 +185,11 @@
 
 		[view addConstraint:_messageBodyBottomConstraint];
 
-		if(_messageTextIsSet) {
+		if(_htmlText != nil) {
 			// this means that the message html text was set before,
 			// when there was no body view
-			// so just load it now
-			[self setMessageViewText:_htmlText];
+			// so show it now
+			[self showMessageBody];
 		}
 	}
 	
@@ -202,7 +202,7 @@
 		[[self view] removeConstraint:_heightConstraint];
 	}
 	
-	if(!_messageTextIsSet) {
+	if(_htmlText == nil) {
 		if(_progressIndicator == nil) {
 			[self initProgressIndicator];
 		} else {
@@ -302,22 +302,39 @@
 	_attachmentsPanelShown = NO;
 }
 
-- (void)setMessageViewText:(NSString*)htmlText {
-	if(_messageBodyViewController != nil) {
-		NSView *messageBodyView = [_messageBodyViewController view];
-		NSAssert(messageBodyView, @"messageBodyView");
+- (void)showMessageBody {
+	NSAssert(_messageBodyViewController != nil, @"not message body view controller");
 		
-		[_messageBodyViewController setMessageViewText:htmlText uid:_message.uid folder:[_message remoteFolder]];
-		
-		[_progressIndicator stopAnimation:self];
-	}
+	NSView *messageBodyView = [_messageBodyViewController view];
+	NSAssert(messageBodyView, @"messageBodyView");
+	
+	[_messageBodyViewController setMessageViewText:_htmlText uid:_message.uid folder:[_message remoteFolder]];
+	
+	[_progressIndicator stopAnimation:self];
+}
 
-	_htmlText = htmlText;
+- (Boolean)loadMessageBody {
+	NSAssert(_message != nil, @"no message set");
+
+	if(_htmlText != nil)
+		return TRUE;
+
+	_htmlText = [_message htmlBodyRendering];
+	
+	if(_htmlText == nil)
+		return FALSE;
+
+	if(_messageBodyViewController != nil)
+		[self showMessageBody];
 
 	_messageTextIsSet = YES;
+	
+	return TRUE;
 }
 
 - (void)setMessage:(SMMessage*)message {
+	NSAssert(_message == nil, @"message already set");
+
 	_message = message;
 
 	[_messageDetailsViewController setMessage:message];
@@ -326,6 +343,5 @@
 - (void)updateMessage {
 	[_messageDetailsViewController updateMessage];
 }
-
 
 @end

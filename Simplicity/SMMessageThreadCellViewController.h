@@ -14,9 +14,10 @@
 
 - (id)initCollapsed:(Boolean)collapsed;
 
-- (void)setMessageViewText:(NSString*)htmlText;
 - (void)setMessage:(SMMessage*)message;
 - (void)updateMessage;
+
+- (Boolean)loadMessageBody;
 
 - (void)enableCollapse:(Boolean)enable;
 
