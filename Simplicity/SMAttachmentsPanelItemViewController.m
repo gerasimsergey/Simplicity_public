@@ -33,6 +33,8 @@
 
 		NSString *filePath = [NSString pathWithComponents:@[@"/tmp", attachmentItem.fileName]];
 
+		// TODO: write to the message attachments folder
+		// TODO: write only if not written yet (compare checksum?)
 		// TODO: do it asynchronously
 		NSError *writeError = nil;
 		if(![attachmentItem.fileData writeToFile:filePath options:NSDataWritingAtomic error:&writeError]) {
@@ -41,6 +43,8 @@
 		}
 		
 		NSLog(@"%s: File written: %@", __func__, filePath);
+
+		[[NSWorkspace sharedWorkspace] openFile:filePath];
 	}
 }
 
