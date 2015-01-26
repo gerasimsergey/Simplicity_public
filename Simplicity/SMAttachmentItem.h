@@ -13,6 +13,7 @@
 @interface SMAttachmentItem : NSObject
 
 @property (nonatomic, readonly) NSString *fileName;
+@property (nonatomic, readonly) NSData *fileData;
 
 - (id)initWithMessage:(SMMessage*)message attachmentIndex:(NSUInteger)attachmentIndex;
 

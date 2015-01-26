@@ -30,6 +30,17 @@
 		SMAttachmentItem *attachmentItem = [self representedObject];
 
 		NSLog(@"%s: attachment item %@", __func__, attachmentItem.fileName);
+
+		NSString *filePath = [NSString pathWithComponents:@[@"/tmp", attachmentItem.fileName]];
+
+		// TODO: do it asynchronously
+		NSError *writeError = nil;
+		if(![attachmentItem.fileData writeToFile:filePath options:NSDataWritingAtomic error:&writeError]) {
+			NSLog(@"%s: Could not write file %@: %@", __func__, filePath, writeError);
+			return; // TODO: error popup?
+		}
+		
+		NSLog(@"%s: File written: %@", __func__, filePath);
 	}
 }
 

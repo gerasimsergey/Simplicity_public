@@ -38,4 +38,11 @@
 	return attachment.filename;
 }
 
+- (NSData*)fileData {
+	MCOAttachment *attachment = _message.attachments[_attachmentIndex];
+	NSAssert(attachment != nil, @"bad attachment");
+	
+	return attachment.data;
+}
+
 @end
