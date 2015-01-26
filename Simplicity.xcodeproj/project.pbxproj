@@ -393,6 +393,8 @@
 			children = (
 				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
 				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
+				003DFF161A73681A003C26E2 /* SMAttachmentsPanelItemView.h */,
+				003DFF171A73681A003C26E2 /* SMAttachmentsPanelItemView.m */,
 				00A085AD1A72145300CC4E1C /* SMAttachmentsPanelViewController.h */,
 				00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewController.m */,
 				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
@@ -426,8 +428,6 @@
 		005B086D17D4F62600341051 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				003DFF161A73681A003C26E2 /* SMAttachmentsPanelItemView.h */,
-				003DFF171A73681A003C26E2 /* SMAttachmentsPanelItemView.m */,
 				008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */,
 				008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */,
 				0039B8501A67948500C03C3C /* SMFlippedView.h */,

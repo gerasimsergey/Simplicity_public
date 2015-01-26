@@ -272,11 +272,8 @@
 		
 		NSArrayController *arrayController = _attachmentsPanelViewController.arrayController;
 		
-		for(NSUInteger i = 0; i < _message.attachments.count; i++) {
-			MCOAttachment *attachment = _message.attachments[i];
-			NSLog(@"%s: attachmentFileName '%@'", __func__, attachment.filename);
-			[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:attachment.filename]];
-		}
+		for(NSUInteger i = 0; i < _message.attachments.count; i++)
+			[arrayController addObject:[[SMAttachmentItem alloc] initWithMessage:_message attachmentIndex:i]];
 		
 		[arrayController setSelectedObjects:[NSArray array]];
 	}

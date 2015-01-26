@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class SMMessage;
+
 @interface SMAttachmentItem : NSObject
 
-@property NSString *fileName;
+@property (nonatomic, readonly) NSString *fileName;
 
-- (id)initWithFileName:(NSString*)fileName;
+- (id)initWithMessage:(SMMessage*)message attachmentIndex:(NSUInteger)attachmentIndex;
 
 @end

@@ -31,7 +31,7 @@
                                 </constraints>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="NSApplicationIcon" id="Q1d-GG-4CZ"/>
                             </imageView>
-                            <textField horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QcU-Jm-FxW">
+                            <textField horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="QcU-Jm-FxW">
                                 <rect key="frame" x="0.0" y="3" width="136" height="51"/>
                                 <textFieldCell key="cell" lineBreakMode="charWrapping" truncatesLastVisibleLine="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="center" title="Very Long Long File Name Plus Extension" id="hmL-xQ-hW1">
                                     <font key="font" metaFont="system"/>

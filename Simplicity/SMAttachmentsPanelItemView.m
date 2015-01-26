@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAttachmentItem.h"
 #import "SMAttachmentsPanelItemView.h"
 
 @implementation SMAttachmentsPanelItemView
@@ -22,9 +23,14 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
 	[super mouseDown:theEvent];
-	if([theEvent clickCount] == 2)
+	if([theEvent clickCount] == 2) {
 		NSLog(@"%s: double click", __func__);
 		//[NSApp sendAction:@selector(collectionItemViewDoubleClick:) to:nil from:[self object]];
+		
+		SMAttachmentItem *attachmentItem = [self representedObject];
+
+		NSLog(@"%s: attachment item %@", __func__, attachmentItem.fileName);
+	}
 }
 
 @end
