@@ -7,9 +7,9 @@
 //
 
 #import "SMAttachmentItem.h"
-#import "SMAttachmentsPanelItemView.h"
+#import "SMAttachmentsPanelItemViewController.h"
 
-@implementation SMAttachmentsPanelItemView
+@implementation SMAttachmentsPanelItemViewController
 
 - (void)setSelected:(BOOL)flag {
 	[super setSelected: flag];
