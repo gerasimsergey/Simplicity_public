@@ -274,9 +274,8 @@
 		
 		for(NSUInteger i = 0; i < _message.attachments.count; i++) {
 			MCOAttachment *attachment = _message.attachments[i];
-			NSString *attachmentFileName = [attachment filename];
-			NSLog(@"%s: attachmentFileName '%@'", __func__, attachmentFileName);
-			[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:attachmentFileName]];
+			NSLog(@"%s: attachmentFileName '%@'", __func__, attachment.filename);
+			[arrayController addObject:[[SMAttachmentItem alloc] initWithFileName:attachment.filename]];
 		}
 		
 		[arrayController setSelectedObjects:[NSArray array]];
