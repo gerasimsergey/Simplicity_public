@@ -23,6 +23,7 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
 	[super mouseDown:theEvent];
+
 	if([theEvent clickCount] == 2) {
 		NSLog(@"%s: double click", __func__);
 		//[NSApp sendAction:@selector(collectionItemViewDoubleClick:) to:nil from:[self object]];
