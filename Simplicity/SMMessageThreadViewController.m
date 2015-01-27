@@ -188,11 +188,13 @@
 		[_contentView removeConstraints:[_contentView constraints]];
 		[self setViewConstraints];
 	} else {
-		NSLog(@"%s: message thread id %llu is empty", __func__, _currentMessageThread.threadId);
+		//NSLog(@"%s: message thread id %llu is empty", __func__, _currentMessageThread.threadId);
 
 		[_cells removeAllObjects];
 		[_contentView removeConstraints:[_contentView constraints]];
 		[_contentView setSubviews:[NSArray array]];
+
+		_currentMessageThread = nil;
 	}
 }
 
