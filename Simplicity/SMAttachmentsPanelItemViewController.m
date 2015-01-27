@@ -9,7 +9,25 @@
 #import "SMAttachmentItem.h"
 #import "SMAttachmentsPanelItemViewController.h"
 
-@implementation SMAttachmentsPanelItemViewController
+@implementation SMAttachmentsPanelItemViewController {
+	NSTrackingArea *_trackingArea;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	
+	if(self) {
+		// nothing yet
+	}
+	
+	return self;
+}
+
+- (void)viewDidLoad {
+	_trackingArea = [[NSTrackingArea alloc] initWithRect:[_box frame] options:(NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow) owner:self userInfo:nil];
+	
+	[[self view] addTrackingArea:_trackingArea];
+}
 
 - (void)setSelected:(BOOL)flag {
 	[super setSelected: flag];
@@ -47,6 +65,18 @@
 
 		[[NSWorkspace sharedWorkspace] openFile:filePath];
 	}
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent {
+	NSLog(@"%s", __func__);
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+	NSLog(@"%s", __func__);
+}
+
+- (void)updateTrackingAreas {
+	NSLog(@"%s", __func__);
 }
 
 @end
