@@ -102,32 +102,79 @@
 }
 
 - (void)openAttachment {
-	SMAttachmentItem *attachmentItem = [self representedObject];
-	
-	NSLog(@"%s: attachment item %@", __func__, attachmentItem.fileName);
-	
-	NSString *filePath = [NSString pathWithComponents:@[@"/tmp", attachmentItem.fileName]];
-	
-	// TODO: write to the message attachments folder
-	// TODO: write only if not written yet (compare checksum?)
-	// TODO: do it asynchronously
-	NSError *writeError = nil;
-	if(![attachmentItem.fileData writeToFile:filePath options:NSDataWritingAtomic error:&writeError]) {
-		NSLog(@"%s: Could not write file %@: %@", __func__, filePath, writeError);
+	NSString *filePath = [self saveAttachmentToPath:@"/tmp"];
+
+	if(filePath == nil) {
+		NSLog(@"%s: cannot open attachment", __func__);
 		return; // TODO: error popup?
 	}
-	
-	NSLog(@"%s: File written: %@", __func__, filePath);
 	
 	[[NSWorkspace sharedWorkspace] openFile:filePath];
 }
 
 - (void)saveAttachment {
-	// TODO
+	SMAttachmentItem *attachmentItem = [self representedObject];
+
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+
+	// TODO: get the downloads folder from the user preferences
+	// TODO: use the last used directory
+	[savePanel setDirectoryURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
+	
+	// TODO: use a full-sized file panel
+	[savePanel beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow] completionHandler:^(NSInteger result){
+		if(result == NSFileHandlingPanelOKButton) {
+			[savePanel orderOut:self];
+			
+			NSURL *targetFileUrl = [savePanel URL];
+
+			if(![self writeAttachment:attachmentItem to:targetFileUrl]) {
+				return; // TODO: error popup
+			}
+			
+			[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[targetFileUrl]];
+		}
+	}];
 }
 
 - (void)saveAttachmentToDownloads {
-	// TODO
+	// TODO: get the downloads folder from the user preferences
+
+	NSString *filePath = [self saveAttachmentToPath:NSHomeDirectory()];
+	
+	if(filePath == nil) {
+		return; // TODO: error popup
+	}
+	
+	NSURL *fileUrl = [NSURL fileURLWithPath:filePath];
+
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileUrl]];
+}
+
+- (NSString*)saveAttachmentToPath:(NSString*)folderPath {
+	SMAttachmentItem *attachmentItem = [self representedObject];
+	
+	NSString *filePath = [NSString pathWithComponents:@[folderPath, attachmentItem.fileName]];
+	
+	if(![self writeAttachment:attachmentItem to:[NSURL fileURLWithPath:filePath]]) {
+		return nil; // TODO: error popup
+	}
+	
+	return filePath;
+}
+
+- (Boolean)writeAttachment:(SMAttachmentItem*)item to:(NSURL*)url {
+	// TODO: write to the message attachments folder
+	// TODO: write only if not written yet (compare checksum?)
+	// TODO: do it asynchronously
+	NSError *writeError = nil;
+	if(![item.fileData writeToURL:url options:NSDataWritingAtomic error:&writeError]) {
+		NSLog(@"%s: Could not write file %@: %@", __func__, url, writeError);
+		return FALSE;
+	}
+	
+	NSLog(@"%s: File written: %@", __func__, url);
+	return TRUE;
 }
 
 @end
