@@ -100,4 +100,25 @@
 	}
 }
 
+- (void)rightMouseDown:(NSEvent *)theEvent {
+	[super rightMouseDown:theEvent];
+	
+	NSView *view = [self view];
+
+	NSMenu *theMenu = [[NSMenu alloc] initWithTitle:@"Contextual Menu"];
+	
+	[theMenu insertItemWithTitle:@"Item 1" action:@selector(beep:) keyEquivalent:@"" atIndex:0];
+	[theMenu insertItemWithTitle:@"Item 2" action:@selector(beep:) keyEquivalent:@"" atIndex:1];
+	
+	[NSMenu popUpContextMenu:theMenu withEvent:theEvent forView:view];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent {
+	[super rightMouseUp:theEvent];
+}
+
+- (void)beep:(id)sender {
+	NSLog(@"%s", __func__);
+}
+
 @end
