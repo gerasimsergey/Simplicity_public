@@ -78,25 +78,8 @@
 	if([theEvent clickCount] == 2) {
 		NSLog(@"%s: double click", __func__);
 		//[NSApp sendAction:@selector(collectionItemViewDoubleClick:) to:nil from:[self object]];
-		
-		SMAttachmentItem *attachmentItem = [self representedObject];
 
-		NSLog(@"%s: attachment item %@", __func__, attachmentItem.fileName);
-
-		NSString *filePath = [NSString pathWithComponents:@[@"/tmp", attachmentItem.fileName]];
-
-		// TODO: write to the message attachments folder
-		// TODO: write only if not written yet (compare checksum?)
-		// TODO: do it asynchronously
-		NSError *writeError = nil;
-		if(![attachmentItem.fileData writeToFile:filePath options:NSDataWritingAtomic error:&writeError]) {
-			NSLog(@"%s: Could not write file %@: %@", __func__, filePath, writeError);
-			return; // TODO: error popup?
-		}
-		
-		NSLog(@"%s: File written: %@", __func__, filePath);
-
-		[[NSWorkspace sharedWorkspace] openFile:filePath];
+		[self openAttachment];
 	}
 }
 
@@ -107,9 +90,10 @@
 
 	NSMenu *theMenu = [[NSMenu alloc] initWithTitle:@"Contextual Menu"];
 	
-	[theMenu insertItemWithTitle:@"Item 1" action:@selector(beep:) keyEquivalent:@"" atIndex:0];
-	[theMenu insertItemWithTitle:@"Item 2" action:@selector(beep:) keyEquivalent:@"" atIndex:1];
-	
+	[theMenu insertItemWithTitle:@"Open Attachment" action:@selector(openAttachment) keyEquivalent:@"" atIndex:0];
+	[theMenu insertItemWithTitle:@"Save To Downloads" action:@selector(saveAttachmentToDownloads) keyEquivalent:@"" atIndex:1];
+	[theMenu insertItemWithTitle:@"Save To..." action:@selector(saveAttachment) keyEquivalent:@"" atIndex:2];
+
 	[NSMenu popUpContextMenu:theMenu withEvent:theEvent forView:view];
 }
 
@@ -117,8 +101,33 @@
 	[super rightMouseUp:theEvent];
 }
 
-- (void)beep:(id)sender {
-	NSLog(@"%s", __func__);
+- (void)openAttachment {
+	SMAttachmentItem *attachmentItem = [self representedObject];
+	
+	NSLog(@"%s: attachment item %@", __func__, attachmentItem.fileName);
+	
+	NSString *filePath = [NSString pathWithComponents:@[@"/tmp", attachmentItem.fileName]];
+	
+	// TODO: write to the message attachments folder
+	// TODO: write only if not written yet (compare checksum?)
+	// TODO: do it asynchronously
+	NSError *writeError = nil;
+	if(![attachmentItem.fileData writeToFile:filePath options:NSDataWritingAtomic error:&writeError]) {
+		NSLog(@"%s: Could not write file %@: %@", __func__, filePath, writeError);
+		return; // TODO: error popup?
+	}
+	
+	NSLog(@"%s: File written: %@", __func__, filePath);
+	
+	[[NSWorkspace sharedWorkspace] openFile:filePath];
+}
+
+- (void)saveAttachment {
+	// TODO
+}
+
+- (void)saveAttachmentToDownloads {
+	// TODO
 }
 
 @end
