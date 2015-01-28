@@ -24,9 +24,10 @@
 }
 
 - (void)viewDidLoad {
-	_trackingArea = [[NSTrackingArea alloc] initWithRect:[_box frame] options:(NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow) owner:self userInfo:nil];
+	_trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:(NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited) owner:self userInfo:nil];
 	
-	[[self view] addTrackingArea:_trackingArea];
+	[_dimBox addTrackingArea:_trackingArea];
+	
 }
 
 - (void)setSelected:(BOOL)flag {
@@ -68,15 +69,11 @@
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-	NSLog(@"%s", __func__);
+	[_dimBox setAlphaValue:1];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-	NSLog(@"%s", __func__);
-}
-
-- (void)updateTrackingAreas {
-	NSLog(@"%s", __func__);
+	[_dimBox setAlphaValue:0];
 }
 
 @end
