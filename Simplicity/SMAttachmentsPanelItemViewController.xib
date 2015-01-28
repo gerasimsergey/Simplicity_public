@@ -8,7 +8,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SMAttachmentsPanelItemViewController">
             <connections>
                 <outlet property="box" destination="c9T-fl-rVx" id="mtl-kQ-s05"/>
-                <outlet property="dimBox" destination="yL3-Vm-zEh" id="HrD-x5-Zdd"/>
                 <outlet property="fileNameField" destination="QcU-Jm-FxW" id="RSe-2u-5Xk"/>
                 <outlet property="view" destination="1LG-Qz-wFn" id="rM5-xW-8ld"/>
             </connections>
@@ -43,15 +42,6 @@
                                     <binding destination="-2" name="value" keyPath="representedObject.fileName" id="ZxW-ev-keW"/>
                                 </connections>
                             </textField>
-                            <box autoresizesSubviews="NO" fixedFrame="YES" alphaValue="0.0" cornerRadius="8" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-Vm-zEh" userLabel="Dim Box">
-                                <rect key="frame" x="0.0" y="0.0" width="136" height="134"/>
-                                <view key="contentView">
-                                    <rect key="frame" x="0.0" y="0.0" width="136" height="134"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                <color key="fillColor" red="0.24244860060000001" green="0.2347156131" blue="0.25477430559999997" alpha="1" colorSpace="calibratedRGB"/>
-                            </box>
                         </subviews>
                     </view>
                     <constraints>

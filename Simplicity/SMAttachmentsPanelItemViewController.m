@@ -11,6 +11,23 @@
 
 @implementation SMAttachmentsPanelItemViewController {
 	NSTrackingArea *_trackingArea;
+	Boolean _hasMouseOver;
+}
+
+- (NSColor*)selectedColor {
+	return [NSColor selectedControlColor];
+}
+
+- (NSColor*)unselectedColor {
+	return [NSColor windowBackgroundColor];
+}
+
+- (NSColor*)selectedColorWithMouseOver {
+	return [[NSColor grayColor] blendedColorWithFraction:0.5 ofColor:[self selectedColor]];
+}
+
+- (NSColor*)unselectedWithMouseOverColor {
+	return [NSColor grayColor];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -26,18 +43,33 @@
 - (void)viewDidLoad {
 	_trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:(NSTrackingInVisibleRect | NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited) owner:self userInfo:nil];
 	
-	[_dimBox addTrackingArea:_trackingArea];
-	
+	[_box addTrackingArea:_trackingArea];
 }
 
 - (void)setSelected:(BOOL)flag {
-	[super setSelected: flag];
+	[super setSelected:flag];
  
 	NSAssert(_box != nil, @"no box set");
 
-	NSColor *fillColor = flag? [NSColor selectedControlColor] : [NSColor controlBackgroundColor];
+	NSColor *fillColor = flag? (_hasMouseOver? [self selectedColorWithMouseOver] : [self selectedColor]) : (_hasMouseOver? [self unselectedWithMouseOverColor] : [self unselectedColor]);
  
 	[_box setFillColor:fillColor];
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent {
+	NSColor *fillColor = [self isSelected]? [self selectedColorWithMouseOver] : [self unselectedWithMouseOverColor];
+ 
+	[_box setFillColor:fillColor];
+	
+	_hasMouseOver = YES;
+}
+
+- (void)mouseExited:(NSEvent *)theEvent {
+	NSColor *fillColor = [self isSelected]? [self selectedColor] : [self unselectedColor];
+ 
+	[_box setFillColor:fillColor];
+	
+	_hasMouseOver = NO;
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -66,14 +98,6 @@
 
 		[[NSWorkspace sharedWorkspace] openFile:filePath];
 	}
-}
-
-- (void)mouseEntered:(NSEvent *)theEvent {
-	[_dimBox setAlphaValue:1];
-}
-
-- (void)mouseExited:(NSEvent *)theEvent {
-	[_dimBox setAlphaValue:0];
 }
 
 @end

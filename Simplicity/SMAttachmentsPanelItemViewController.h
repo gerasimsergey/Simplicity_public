@@ -8,12 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SMTrackingBox;
-
 @interface SMAttachmentsPanelItemViewController : NSCollectionViewItem
 
 @property IBOutlet NSBox *box;
-@property IBOutlet NSBox *dimBox;
 @property IBOutlet NSTextField *fileNameField;
 
 @end
