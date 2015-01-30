@@ -79,11 +79,9 @@
 }
 
 - (void)setMessageThread:(SMMessageThread*)messageThread {
-	NSAssert([messageThread messagesCount] > 0, @"no messages in message thread");
-	
 	if(_currentMessageThread == messageThread)
 		return;
-	
+
 	_currentMessageThread = messageThread;
 
 	[_cells removeAllObjects];
@@ -91,7 +89,11 @@
 	_contentView = [[SMFlippedView alloc] initWithFrame:[_messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
+	[_messageThreadView setDocumentView:_contentView];
+	
 	if(_currentMessageThread != nil) {
+		NSAssert(_currentMessageThread.messagesCount > 0, @"no messages in message thread");
+	
 		NSArray *messages = [_currentMessageThread messagesSortedByDate];
 
 		_cells = [NSMutableArray arrayWithCapacity:messages.count];
@@ -107,12 +109,9 @@
 
 			_cells[i] = [[ThreadCell alloc] initWithMessage:messages[i] viewController:viewController];
 		}
-		
+
+		[self setViewConstraints];
 	}
-
-	[_messageThreadView setDocumentView:_contentView];
-
-	[self setViewConstraints];
 }
 
 - (void)updateMessageThread {

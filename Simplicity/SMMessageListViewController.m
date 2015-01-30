@@ -23,6 +23,7 @@
 
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
+	NSMutableArray *_multipleSelectedMessageThreads;
 	Boolean _immediateSelection;
 	Boolean _mouseSelectionInProcess;
 	Boolean _reloadDeferred;
@@ -33,6 +34,8 @@
 
 	if(self) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageBodyFetched:) name:@"MessageBodyFetched" object:nil];
+		
+		_multipleSelectedMessageThreads = [NSMutableArray array];
 	}
 
 	return self;
@@ -67,38 +70,72 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
 	[self cancelChangeSelectedMessageThread];
 
-	NSInteger selectedRow = [ _messageListTableView selectedRow ];
-	
-	//NSLog(@"%s, selected row %lu (current thread id %lld)", __FUNCTION__, selectedRow, _selectedMessageThread != nil? _selectedMessageThread.threadId : -1);
+	NSIndexSet *selectedRows = [_messageListTableView selectedRowIndexes];
 
-	if(selectedRow >= 0) {
+	if(selectedRows.count <= 1) {
+		[_multipleSelectedMessageThreads removeAllObjects];
+
+		NSInteger selectedRow = [_messageListTableView selectedRow];
+		
+		if(selectedRow >= 0) {
+			SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+			SMMessageListController *messageListController = [[appDelegate model] messageListController];
+			SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+			NSAssert(currentFolder != nil, @"bad corrent folder");
+			
+			_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
+			
+			if(_selectedMessageThread != nil) {
+				if(_immediateSelection) {
+					[self changeSelectedMessageThread];
+				} else {
+					// delay the selection for a tiny bit to optimize fast cursor movements
+					// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
+					// cancel scheduled message list update coming from keyboard
+					[self delayChangeSelectedMessageThread];
+				}
+			} else {
+				[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+			}
+		}
+		
+		_mouseSelectionInProcess = NO;
+		_immediateSelection = NO;
+		
+		if(_reloadDeferred) {
+			[self performSelector:@selector(reloadMessageList:) withObject:[NSNumber numberWithBool:YES] afterDelay:0];
+			
+			_reloadDeferred = NO;
+		}
+	} else {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMMessageStorage *storage = [[appDelegate model] messageStorage];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 		NSAssert(currentFolder != nil, @"bad corrent folder");
 		
-		_selectedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
-		
-		if(_selectedMessageThread != nil) {
-			if(_immediateSelection) {
-				[self changeSelectedMessageThread];
+		// TODO: optimize later
+		[_multipleSelectedMessageThreads removeAllObjects];
+
+		NSUInteger selectedRow = [selectedRows firstIndex];
+		while(selectedRow != NSNotFound) {
+			SMMessageThread *messageThread = [storage messageThreadAtIndexByDate:selectedRow localFolder:[currentFolder name]];
+			if(messageThread != nil) {
+				[_multipleSelectedMessageThreads addObject:messageThread];
+				
+				//NSLog(@"%s: row %lu, subject %@", __func__, selectedRow, [[[messageThread messagesSortedByDate] firstObject] subject]);
 			} else {
-				// delay the selection for a tiny bit to optimize fast cursor movements
-				// e.g. when the user uses up/down arrow keys to navigate, skipping many messages between selections
-				// cancel scheduled message list update coming from keyboard
-				[self delayChangeSelectedMessageThread];
+				NSLog(@"%s: selected thread at row %lu not found", __func__, selectedRow);
 			}
-		} else {
-			[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+
+			selectedRow = [selectedRows indexGreaterThanIndex:selectedRow];
 		}
-	}
-	
-	_mouseSelectionInProcess = NO;
-	_immediateSelection = NO;
 
-	if(_reloadDeferred) {
-		[self performSelector:@selector(reloadMessageList:) withObject:[NSNumber numberWithBool:YES] afterDelay:0];
+		_selectedMessageThread = nil;
+		[self changeSelectedMessageThread];
 
+		_mouseSelectionInProcess = NO;
+		_immediateSelection = NO;
 		_reloadDeferred = NO;
 	}
 }
