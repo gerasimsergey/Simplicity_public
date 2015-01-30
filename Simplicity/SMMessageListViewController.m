@@ -227,20 +227,36 @@
 
 	// after all is done, fix the currently selected
 	// message cell, if needed
-	if(preserveSelection && _selectedMessageThread != nil) {
+	if(preserveSelection) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMMessageStorage *messageStorage = [[appDelegate model] messageStorage];
 		SMMessageListController *messageListController = [[appDelegate model] messageListController];
 		SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
-		
 		NSAssert(currentFolder != nil, @"no current folder");
-
-		SMMessageStorage *messageStorage = [[appDelegate model] messageStorage];
-		NSUInteger threadIndex = [messageStorage getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
 		
-		if(threadIndex != NSNotFound) {
-			[_messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] byExtendingSelection:NO];
+		if(_selectedMessageThread != nil) {
+			NSAssert(_multipleSelectedMessageThreads.count == 0, @"multiple messages selection not empty");
 
-			return;
+			NSUInteger threadIndex = [messageStorage getMessageThreadIndexByDate:_selectedMessageThread localFolder:currentFolder.name];
+			
+			if(threadIndex != NSNotFound) {
+				[_messageListTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:threadIndex] byExtendingSelection:NO];
+				return;
+			}
+		} else {
+			NSMutableIndexSet *threadIndexes = [NSMutableIndexSet indexSet];
+			
+			for(SMMessageThread *t in _multipleSelectedMessageThreads) {
+				NSUInteger threadIndex = [messageStorage getMessageThreadIndexByDate:t localFolder:currentFolder.name];
+				
+				if(threadIndex != NSNotFound)
+					[threadIndexes addIndex:threadIndex];
+			}
+
+			if(threadIndexes.count != 0) {
+				[_messageListTableView selectRowIndexes:threadIndexes byExtendingSelection:NO];
+				return;
+			}
 		}
 	}
 
