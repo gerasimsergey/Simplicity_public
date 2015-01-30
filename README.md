@@ -1,7 +1,7 @@
 Simplicity
 ==========
 
-Simplicity is a mail client for Mac.
+Simplicity is a mail client for OS X.
 
 It will replace the Mail.app on my Mac eventually.
 
