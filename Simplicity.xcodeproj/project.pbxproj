@@ -54,6 +54,7 @@
 		00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */; };
 		00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */; };
 		00A25BBC17E3540000D0FCB1 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 00A25BBB17E3540000D0FCB1 /* TODO */; };
+		00A681701A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */; };
 		00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 00B968D51A79F48F00C37B97 /* background_repeat.png */; };
 		00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */; };
 		00C75609195921AA006ED86B /* SMFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C75608195921AA006ED86B /* SMFolder.m */; };
@@ -229,6 +230,8 @@
 		00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListController.h; sourceTree = "<group>"; };
 		00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListController.m; sourceTree = "<group>"; };
 		00A25BBB17E3540000D0FCB1 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		00A6816E1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentsPanelView.h; sourceTree = "<group>"; };
+		00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentsPanelView.m; sourceTree = "<group>"; };
 		00B968D51A79F48F00C37B97 /* background_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_repeat.png; sourceTree = "<group>"; };
 		00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageDetailsViewController.h; sourceTree = "<group>"; };
 		00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageDetailsViewController.m; sourceTree = "<group>"; };
@@ -430,6 +433,8 @@
 		005B086D17D4F62600341051 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				00A6816E1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.h */,
+				00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */,
 				008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */,
 				008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */,
 				0039B8501A67948500C03C3C /* SMFlippedView.h */,
@@ -660,6 +665,7 @@
 				00ED318117F88DA700B04F5B /* SMAttachmentStorage.m in Sources */,
 				00ED318317F88DA700B04F5B /* SMMessageStorage.m in Sources */,
 				009742721957C78E00620145 /* SMMailbox.m in Sources */,
+				00A681701A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m in Sources */,
 				003859011A4D024500D4FD70 /* SMSearchResultsListViewController.m in Sources */,
 				0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */,
 				00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewController.m in Sources */,
