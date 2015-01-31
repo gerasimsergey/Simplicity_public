@@ -31,6 +31,12 @@
 	return self;
 }
 
+- (void)viewDidLoad {
+	NSColor *mailboxViewBackground = [NSColor colorWithPatternImage:[NSImage imageNamed:@"background_repeat.png"]];
+	
+	_folderListView.backgroundColor = mailboxViewBackground;
+}
+
 - (void)updateFolderListView {
 	NSInteger selectedRow = [ _folderListView selectedRow ];
 
