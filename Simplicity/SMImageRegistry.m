@@ -15,6 +15,7 @@
 	
 	if(self) {
 		_attachmentImage = [NSImage imageNamed:@"attachment-icon.png"];
+		_attachmentDocumentImage = [NSImage imageNamed:@"attachment-document.png"];
 		_blueCircleImage = [NSImage imageNamed:@"circle-blue.png"];
 		_yellowStarImage = [NSImage imageNamed:@"star-yellow-icon.png"];
 		_grayStarImage = [NSImage imageNamed:@"star-gray-icon.png"];

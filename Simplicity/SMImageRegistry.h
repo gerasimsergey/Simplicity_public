@@ -11,6 +11,7 @@
 @interface SMImageRegistry : NSObject
 
 @property (readonly, nonatomic) NSImage *attachmentImage;
+@property (readonly, nonatomic) NSImage *attachmentDocumentImage;
 @property (readonly, nonatomic) NSImage *blueCircleImage;
 @property (readonly, nonatomic) NSImage *yellowStarImage;
 @property (readonly, nonatomic) NSImage *grayStarImage;

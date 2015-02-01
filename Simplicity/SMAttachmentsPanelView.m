@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAppDelegate.h"
+#import "SMImageRegistry.h"
 #import "SMAttachmentsPanelView.h"
 
 @implementation SMAttachmentsPanelView
@@ -44,7 +46,10 @@
 
 - (NSImage *)draggingImageForItemsAtIndexes:(NSIndexSet *)indexes withEvent:(NSEvent *)event offset:(NSPointPointer)dragImageOffset {
 	NSLog(@"%s", __func__);
-	return nil;
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	NSImage *dragImage = appDelegate.imageRegistry.attachmentDocumentImage;
+	return dragImage; // TODO: scale to a size
 }
 
 @end
