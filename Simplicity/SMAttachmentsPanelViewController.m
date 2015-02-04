@@ -32,9 +32,9 @@
 
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilesPromisePboardType] owner:self];
 
-	NSMutableArray *fileExtensions = [NSMutableArray arrayWithCapacity:_attachmentItems.count];
+	NSMutableArray *fileExtensions = [NSMutableArray array];
 	
-	for(NSUInteger i = 0; i < _attachmentItems.count; i++) {
+	for(NSUInteger i = [indexes firstIndex]; i != NSNotFound; i = [indexes indexGreaterThanIndex:i]) {
 		SMAttachmentItem *item = _attachmentItems[i];
 		[fileExtensions addObject:[item.fileName pathExtension]];
 	}
@@ -72,15 +72,14 @@
 - (NSArray *)collectionView:(NSCollectionView *)collectionView namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropURL forDraggedItemsAtIndexes:(NSIndexSet *)indexes {
 	NSLog(@"%s: indexes %@, drop url %@", __func__, indexes, dropURL);
 
-	NSMutableArray *fileNames = [NSMutableArray arrayWithCapacity:_attachmentItems.count];
+	NSMutableArray *fileNames = [NSMutableArray array];
 
-	for(NSUInteger i = 0; i < _attachmentItems.count; i++) {
+	for(NSUInteger i = [indexes firstIndex]; i != NSNotFound; i = [indexes indexGreaterThanIndex:i]){
 		SMAttachmentItem *item = _attachmentItems[i];
 
 		// TODO: overwriting?
 		[item writeAttachmentTo:dropURL];
-		
-		fileNames[i] = item.fileName;
+		[fileNames addObject:item.fileName];
 	}
 
 	return fileNames;
