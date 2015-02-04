@@ -21,71 +21,55 @@
 }
 
 - (BOOL)collectionView:(NSCollectionView *)collectionView canDragItemsAtIndexes:(NSIndexSet *)indexes withEvent:(NSEvent *)event {
-	NSLog(@"Can Items at indexes : %@", indexes);
+	NSLog(@"%s: indexes %@", __func__, indexes);
+
 	return YES;
 }
 
 -(BOOL)collectionView:(NSCollectionView *)collectionView writeItemsAtIndexes:(NSIndexSet *)indexes toPasteboard:(NSPasteboard *)pasteboard {
-	NSLog(@"Write Items at indexes : %@", indexes);
-
-//	[pasteboard declareTypes:[NSArray arrayWithObject:NSURLPboardType] owner:nil];
-
-	NSString *filePath = @"/Users/evgeny_baskakov/ReleaseNotes_NEXTGEN_10_6_DEV_HUMAX4K_20150201_1807.html";
-	NSURL *fileURL = [NSURL URLWithString:filePath];
-//	[fileURL writeToPasteboard:pasteboard];
-
-/*
-	[pasteboard clearContents];
-	NSPasteboardItem *item = [[NSPasteboardItem alloc] init];
-	[item setString:filePath forType:NSPasteboardTypeString];
-	[pasteboard writeObjects:[NSArray arrayWithObject:item]];
-*/
-	
-//	[pasteboard setPropertyList:[NSArray arrayWithObject:filePath] forType:NSFilenamesPboardType];
-/*
-	NSMutableArray *urls = [NSMutableArray array];
-	[urls addObject:filePath];
-	
-	[pasteboard clearContents];
-	
-	[pasteboard writeObjects:urls];
-*/
+	NSLog(@"%s: indexes %@", __func__, indexes);
 
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilesPromisePboardType] owner:self];
-//	[pasteboard addTypes:@[@"my_drag_type_id"] owner:self];
-
-	[pasteboard setPropertyList:@[@"pdf"] forType:NSFilesPromisePboardType];
-//	[fileURL writeToPasteboard:pasteboard];
-
+	[pasteboard setPropertyList:@[@"cpp"] forType:NSFilesPromisePboardType];
 	
 	return YES;
 }
 
-- (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context {
-	NSLog(@"%s", __func__);
+ - (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context {
 	switch(context) {
 		case NSDraggingContextOutsideApplication:
 			return NSDragOperationCopy;
 			
 		case NSDraggingContextWithinApplication:
+			return NSDragOperationNone; // TODO: composing message with attachments
+			
 		default:
-			// TODO?
-			return NSDragOperationCopy;
+			return NSDragOperationNone;
 	}
 }
 
 - (BOOL)collectionView:(NSCollectionView *)collectionView acceptDrop:(id<NSDraggingInfo>)draggingInfo index:(NSInteger)index dropOperation:(NSCollectionViewDropOperation)dropOperation {
-	NSLog(@"Accept Drop");
-	return YES;
+	NSLog(@"%s", __func__);
+
+	return NO;
 }
 
 -(NSDragOperation)collectionView:(NSCollectionView *)collectionView validateDrop:(id<NSDraggingInfo>)draggingInfo proposedIndex:(NSInteger *)proposedDropIndex dropOperation:(NSCollectionViewDropOperation *)proposedDropOperation {
-	NSLog(@"%s", __func__);
-	return NSDragOperationCopy;
+	// do not recognize any drop to itself
+	// TODO: may need to add logic for messages being composed
+	return NSDragOperationNone;
 }
 
 - (NSArray *)collectionView:(NSCollectionView *)collectionView namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropURL forDraggedItemsAtIndexes:(NSIndexSet *)indexes {
-	NSLog(@"namesOfPromisedFilesDroppedAtDestination");
+	NSLog(@"%s: indexes %@, drop url %@", __func__, indexes, dropURL);
+
+	NSData *data = [NSData dataWithBytes:"abc" length:3];
+	NSError *writeError = nil;
+	if(![data writeToURL:[NSURL URLWithString:@"data.txt" relativeToURL:dropURL] options:NSDataWritingAtomic error:&writeError]) {
+		NSLog(@"%s: Could not write file: %@", __func__, writeError);
+		return [NSArray array];
+	}
+
 	return [NSArray arrayWithObject:@"my_file.txt"];
 }
 
