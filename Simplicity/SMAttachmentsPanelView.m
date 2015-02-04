@@ -12,18 +12,15 @@
 
 @implementation SMAttachmentsPanelView
 
-- (id)init {
-	self = [super init];
-	
-	if(self) {
-		NSLog(@"%s", __func__);
-	}
-	
-	return self;
+- (void)awakeFromNib {
+	NSLog(@"%s", __func__);
+
+	[self registerForDraggedTypes:@[NSFilesPromisePboardType]];
+	[self setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-	[self registerForDraggedTypes:@[@"my_drag_type_id"]];
+//	NSLog(@"%s", __func__);
 
 	[super drawRect:dirtyRect];
     
@@ -40,9 +37,9 @@
 	return YES;
 }
 
-- (void)setDraggingSourceOperationMask:(NSDragOperation)dragOperationMask forLocal:(BOOL)localDestination {
-	NSLog(@"%s", __func__);
-}
+//- (void)setDraggingSourceOperationMask:(NSDragOperation)dragOperationMask forLocal:(BOOL)localDestination {
+//	NSLog(@"%s", __func__);
+//}
 
 - (NSImage *)draggingImageForItemsAtIndexes:(NSIndexSet *)indexes withEvent:(NSEvent *)event offset:(NSPointPointer)dragImageOffset {
 	NSLog(@"%s", __func__);
