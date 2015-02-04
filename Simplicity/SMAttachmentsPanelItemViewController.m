@@ -127,8 +127,7 @@
 			[savePanel orderOut:self];
 			
 			NSURL *targetFileUrl = [savePanel URL];
-
-			if(![self writeAttachment:attachmentItem to:targetFileUrl]) {
+			if(![attachmentItem writeAttachmentTo:[targetFileUrl baseURL] withFileName:[targetFileUrl relativeString]]) {
 				return; // TODO: error popup
 			}
 			
@@ -156,25 +155,11 @@
 	
 	NSString *filePath = [NSString pathWithComponents:@[folderPath, attachmentItem.fileName]];
 	
-	if(![self writeAttachment:attachmentItem to:[NSURL fileURLWithPath:filePath]]) {
+	if(![attachmentItem writeAttachmentTo:[NSURL fileURLWithPath:filePath]]) {
 		return nil; // TODO: error popup
 	}
 	
 	return filePath;
-}
-
-- (Boolean)writeAttachment:(SMAttachmentItem*)item to:(NSURL*)url {
-	// TODO: write to the message attachments folder
-	// TODO: write only if not written yet (compare checksum?)
-	// TODO: do it asynchronously
-	NSError *writeError = nil;
-	if(![item.fileData writeToURL:url options:NSDataWritingAtomic error:&writeError]) {
-		NSLog(@"%s: Could not write file %@: %@", __func__, url, writeError);
-		return FALSE;
-	}
-	
-	NSLog(@"%s: File written: %@", __func__, url);
-	return TRUE;
 }
 
 @end

@@ -45,4 +45,24 @@
 	return attachment.data;
 }
 
+- (Boolean)writeAttachmentTo:(NSURL*)url {
+	return [self writeAttachmentTo:url withFileName:[self fileName]];
+}
+
+- (Boolean)writeAttachmentTo:(NSURL*)url withFileName:(NSString*)fileName {
+	// TODO: write to the message attachments folder
+	// TODO: write only if not written yet (compare checksum?)
+	// TODO: write asynchronously
+	NSData *fileData = [self fileData];
+	
+	NSError *writeError = nil;
+	if(![fileData writeToURL:[NSURL URLWithString:fileName relativeToURL:url] options:NSDataWritingAtomic error:&writeError]) {
+		NSLog(@"%s: Could not write file %@: %@", __func__, url, writeError);
+		return FALSE;
+	}
+	
+	NSLog(@"%s: File written: %@", __func__, url);
+	return TRUE;
+}
+
 @end

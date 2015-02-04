@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAttachmentItem.h"
 #import "SMAttachmentsPanelViewController.h"
 
 @implementation SMAttachmentsPanelViewController
@@ -30,7 +31,15 @@
 	NSLog(@"%s: indexes %@", __func__, indexes);
 
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilesPromisePboardType] owner:self];
-	[pasteboard setPropertyList:@[@"cpp"] forType:NSFilesPromisePboardType];
+
+	NSMutableArray *fileExtensions = [NSMutableArray arrayWithCapacity:_attachmentItems.count];
+	
+	for(NSUInteger i = 0; i < _attachmentItems.count; i++) {
+		SMAttachmentItem *item = _attachmentItems[i];
+		[fileExtensions addObject:[item.fileName pathExtension]];
+	}
+
+	[pasteboard setPropertyList:fileExtensions forType:NSFilesPromisePboardType];
 	
 	return YES;
 }
@@ -63,14 +72,18 @@
 - (NSArray *)collectionView:(NSCollectionView *)collectionView namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropURL forDraggedItemsAtIndexes:(NSIndexSet *)indexes {
 	NSLog(@"%s: indexes %@, drop url %@", __func__, indexes, dropURL);
 
-	NSData *data = [NSData dataWithBytes:"abc" length:3];
-	NSError *writeError = nil;
-	if(![data writeToURL:[NSURL URLWithString:@"data.txt" relativeToURL:dropURL] options:NSDataWritingAtomic error:&writeError]) {
-		NSLog(@"%s: Could not write file: %@", __func__, writeError);
-		return [NSArray array];
+	NSMutableArray *fileNames = [NSMutableArray arrayWithCapacity:_attachmentItems.count];
+
+	for(NSUInteger i = 0; i < _attachmentItems.count; i++) {
+		SMAttachmentItem *item = _attachmentItems[i];
+
+		// TODO: overwriting?
+		[item writeAttachmentTo:dropURL];
+		
+		fileNames[i] = item.fileName;
 	}
 
-	return [NSArray arrayWithObject:@"my_file.txt"];
+	return fileNames;
 }
 
 @end

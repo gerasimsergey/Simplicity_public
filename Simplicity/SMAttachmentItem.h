@@ -17,4 +17,7 @@
 
 - (id)initWithMessage:(SMMessage*)message attachmentIndex:(NSUInteger)attachmentIndex;
 
+- (Boolean)writeAttachmentTo:(NSURL*)url;
+- (Boolean)writeAttachmentTo:(NSURL*)url withFileName:(NSString*)fileName;
+
 @end
