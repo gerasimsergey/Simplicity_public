@@ -45,23 +45,26 @@
 	return attachment.data;
 }
 
-- (Boolean)writeAttachmentTo:(NSURL*)url {
-	return [self writeAttachmentTo:url withFileName:[self fileName]];
+- (Boolean)writeAttachmentTo:(NSURL*)baseUrl {
+	return [self writeAttachmentTo:baseUrl withFileName:[self fileName]];
 }
 
-- (Boolean)writeAttachmentTo:(NSURL*)url withFileName:(NSString*)fileName {
+- (Boolean)writeAttachmentTo:(NSURL*)baseUrl withFileName:(NSString*)fileName {
 	// TODO: write to the message attachments folder
 	// TODO: write only if not written yet (compare checksum?)
 	// TODO: write asynchronously
+	NSString *encodedFileName = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)fileName, NULL, (__bridge CFStringRef)@"!*'();:@&=+$,/?%#[] ", kCFStringEncodingUTF8);
+
+	NSURL *fullUrl = [NSURL URLWithString:encodedFileName relativeToURL:baseUrl];
 	NSData *fileData = [self fileData];
 	
 	NSError *writeError = nil;
-	if(![fileData writeToURL:[NSURL URLWithString:fileName relativeToURL:url] options:NSDataWritingAtomic error:&writeError]) {
-		NSLog(@"%s: Could not write file %@: %@", __func__, url, writeError);
+	if(![fileData writeToURL:fullUrl options:NSDataWritingAtomic error:&writeError]) {
+		NSLog(@"%s: Could not write file %@: %@", __func__, fullUrl, writeError);
 		return FALSE;
 	}
 	
-	NSLog(@"%s: File written: %@", __func__, url);
+	NSLog(@"%s: File written: %@", __func__, fullUrl);
 	return TRUE;
 }
 
