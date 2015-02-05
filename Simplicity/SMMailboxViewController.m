@@ -46,27 +46,18 @@
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
-	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
-	SMMailbox *mailbox = [[appDelegate model] mailbox];
-
-	NSInteger selectedRow = [ _folderListView selectedRow ];
-	
-	if(selectedRow < 0 || selectedRow >= [mailbox folders].count) {
-		NSLog(@"%s: selected row %ld is beyond folders list size %lu", __func__, selectedRow, mailbox.folders.count);
+	NSInteger selectedRow = [_folderListView selectedRow];
+	if(selectedRow < 0 || selectedRow >= [self totalFolderRowsCount])
 		return;
-	}
 
-	SMFolder *folder = mailbox.folders[selectedRow];
-
-	NSAssert(folder, @"bad folder");
+	SMFolder *folder = [self selectedFolder:selectedRow];
 	
-	if(folder == _lastFolder) {
-		//NSLog(@"%s: selected folder didn't change", __func__);
+	if(folder == nil || folder == _lastFolder)
 		return;
-	}
 	
 	NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
 	
+	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
 	SMSimplicityContainer *model = [appDelegate model];
 
 	[[model messageListController] changeFolder:folder.fullName];
@@ -83,29 +74,91 @@
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
+	return [self totalFolderRowsCount];
+}
+
+- (NSInteger)mainFoldersGroupOffset {
+	return 0;
+}
+
+- (NSInteger)favoriteFoldersGroupOffset {
+	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMMailbox *mailbox = [[appDelegate model] mailbox];
+
+	return 1 + mailbox.mainFolders.count;
+}
+
+- (NSInteger)allFoldersGroupOffset {
+	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	
-	return mailbox.folders.count;
+	return 1 + mailbox.mainFolders.count + 1 + mailbox.favoriteFolders.count;
+}
+
+- (NSInteger)totalFolderRowsCount {
+	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMMailbox *mailbox = [[appDelegate model] mailbox];
+	
+	return 1 + mailbox.mainFolders.count + 1 + mailbox.favoriteFolders.count + 1 + mailbox.folders.count;
+}
+
+- (SMFolder*)selectedFolder:(NSInteger)row {
+	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMMailbox *mailbox = [[appDelegate model] mailbox];
+	
+	const NSInteger mainFoldersGroupOffset = [self mainFoldersGroupOffset];
+	const NSInteger favoriteFoldersGroupOffset = [self favoriteFoldersGroupOffset];
+	const NSInteger allFoldersGroupOffset = [self allFoldersGroupOffset];
+	
+	if(row > mainFoldersGroupOffset && row < favoriteFoldersGroupOffset)
+		return mailbox.mainFolders[row - mainFoldersGroupOffset - 1];
+	else if(row > favoriteFoldersGroupOffset && row < allFoldersGroupOffset)
+		return mailbox.favoriteFolders[row - favoriteFoldersGroupOffset - 1];
+	else if(row > allFoldersGroupOffset)
+		return mailbox.folders[row - allFoldersGroupOffset - 1];
+	else
+		return nil;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
-	SMMailbox *mailbox = [[appDelegate model] mailbox];
+	NSInteger totalRowCount = [self totalFolderRowsCount];
+	NSAssert(row >= 0 && row < totalRowCount, @"row %ld is beyond folders array size %lu", row, totalRowCount);
 
-	SMFolderCellView *result = [tableView makeViewWithIdentifier:@"FolderCellView" owner:self];
-	
-	NSAssert(result != nil, @"cannot make folder text field");
-	NSAssert(row >= 0 && row < mailbox.folders.count, @"row %ld is beyond folders array size %lu", row, mailbox.folders.count);
-	
-	SMFolder *folder = mailbox.folders[row];
-	[result.textField setStringValue:folder.fullName];
+	const NSInteger mainFoldersGroupOffset = [self mainFoldersGroupOffset];
+	const NSInteger favoriteFoldersGroupOffset = [self favoriteFoldersGroupOffset];
+	const NSInteger allFoldersGroupOffset = [self allFoldersGroupOffset];
 
-	NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
+	NSTableCellView *result = nil;
 
-	SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
-	colorMark.color = folder.color;
+	if(row != mainFoldersGroupOffset && row != favoriteFoldersGroupOffset && row != allFoldersGroupOffset) {
+		result = [tableView makeViewWithIdentifier:@"FolderCellView" owner:self];
+		
+		SMFolder *folder = [self selectedFolder:row];
+		NSAssert(folder != nil, @"bad selected folder");
+		
+		[result.textField setStringValue:folder.fullName];
+		
+		NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
+		
+		SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
+		colorMark.color = folder.color;
+	} else {
+		result = [tableView makeViewWithIdentifier:@"FolderGroupCellView" owner:self];
+
+		const NSUInteger fontSize = 12;
+		[result.textField setFont:[NSFont boldSystemFontOfSize:fontSize]];
+
+		if(row == mainFoldersGroupOffset) {
+			[result.textField setStringValue:@"Main Folders"];
+		} else if(row == favoriteFoldersGroupOffset) {
+			[result.textField setStringValue:@"Favorite Folders"];
+		} else if(row == allFoldersGroupOffset) {
+			[result.textField setStringValue:@"All Folders"];
+		}
+	}
 	
+	NSAssert(result != nil, @"cannot make folder cell view");
+
 	return result;
 }
 

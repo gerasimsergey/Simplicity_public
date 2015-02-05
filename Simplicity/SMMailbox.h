@@ -13,8 +13,10 @@
 @interface SMMailbox : NSObject
 
 @property (readonly) SMFolder *rootFolder;
+@property (readonly) NSArray *mainFolders;
+@property (readonly) NSArray *favoriteFolders;
+@property (readonly) NSArray *folders;
 
 - (void)updateIMAPFolders:(NSArray *)folders;
-- (NSArray*)folders;
 
 @end

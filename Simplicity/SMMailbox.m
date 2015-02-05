@@ -14,6 +14,8 @@
 #import "SMFolder.h"
 
 @implementation SMMailbox {
+	NSMutableArray *_mainFolders;
+	NSMutableArray *_favoriteFolders;
 	NSMutableArray *_folders;
 }
 
@@ -22,6 +24,8 @@
 	
 	if(self) {
 		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT"];
+		_mainFolders = [NSMutableArray arrayWithObject:_rootFolder];
+		_favoriteFolders = [NSMutableArray arrayWithObject:_rootFolder];
 		_folders = [NSMutableArray arrayWithObject:_rootFolder];
 	}
 	
@@ -112,10 +116,6 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	[_folders removeAllObjects];
 
 	[self dfs:_rootFolder];
-}
-
-- (NSArray*)folders {
-	return _folders;
 }
 
 @end
