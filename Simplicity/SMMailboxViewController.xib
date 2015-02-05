@@ -42,7 +42,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="FolderCellView" id="ad8-Va-2mb">
-                                                <rect key="frame" x="1" y="1" width="195" height="17"/>
+                                                <rect key="frame" x="1" y="1" width="195" height="16"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" userLabel="Color Mark" customClass="SMColorCircle">
@@ -53,9 +53,9 @@
                                                         </constraints>
                                                     </customView>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9fg-dU-pW6">
-                                                        <rect key="frame" x="12" y="0.0" width="182" height="17"/>
+                                                        <rect key="frame" x="12" y="0.0" width="182" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" usesSingleLineMode="YES" id="KYg-7e-QCg">
-                                                            <font key="font" metaFont="system"/>
+                                                            <font key="font" metaFont="cellTitle"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -67,7 +67,7 @@
                                                     <constraint firstItem="9fg-dU-pW6" firstAttribute="leading" secondItem="bpM-hd-kan" secondAttribute="trailing" constant="1" id="OdJ-F7-vhP"/>
                                                     <constraint firstAttribute="bottom" secondItem="9fg-dU-pW6" secondAttribute="bottom" id="Ps9-hL-QCW"/>
                                                     <constraint firstItem="bpM-hd-kan" firstAttribute="leading" secondItem="ad8-Va-2mb" secondAttribute="leading" constant="-2" id="UFY-jP-a5V"/>
-                                                    <constraint firstAttribute="centerY" secondItem="bpM-hd-kan" secondAttribute="centerY" constant="-3" id="r9i-JJ-7Hi"/>
+                                                    <constraint firstAttribute="centerY" secondItem="bpM-hd-kan" secondAttribute="centerY" constant="-2.5" id="r9i-JJ-7Hi"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="bpM-hd-kan" id="xrQ-6k-0tt"/>
