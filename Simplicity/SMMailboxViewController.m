@@ -136,7 +136,7 @@
 		SMFolder *folder = [self selectedFolder:row];
 		NSAssert(folder != nil, @"bad selected folder");
 		
-		[result.textField setStringValue:folder.fullName];
+		[result.textField setStringValue:folder.displayName];
 		
 		NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
 		

@@ -23,7 +23,7 @@
 	self = [ super init ];
 	
 	if(self) {
-		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT"];
+		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" flags:MCOIMAPFolderFlagNone];
 		_mainFolders = [NSMutableArray array]; // TODO
 		_favoriteFolders = [NSMutableArray array]; // TODO
 		_folders = [NSMutableArray array]; // TODO
@@ -62,9 +62,10 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 			
 //			NSLog(@"Folder '%@', delimiter '%c', flags %ld", pathUtf8, folder.delimiter, folder.flags);
 			
-			[self addFolderToMailbox:pathUtf8 delimiter:folder.delimiter];
+			[self addFolderToMailbox:pathUtf8 delimiter:folder.delimiter flags:folder.flags];
 		}
 		
+		[self updateMainFolders];
 	} else {
 		NSAssert(nil, @"No folders in mailbox");
 	}
@@ -79,7 +80,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		[self dfs:subfolder];
 }
 
-- (void)addFolderToMailbox:(NSString*)folderFullName delimiter:(char)delimiter {
+- (void)addFolderToMailbox:(NSString*)folderFullName delimiter:(char)delimiter flags:(MCOIMAPFolderFlag)flags {
 	SMFolder *curFolder = _rootFolder;
 	
 	NSArray *tokens = [folderFullName componentsSeparatedByString:[NSString stringWithFormat:@"%c", delimiter]];
@@ -105,7 +106,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		
 		if(!found) {
 			for(; i < [tokens count]; i++)
-				curFolder = [curFolder addSubfolder:token fullName:currentFullName];
+				curFolder = [curFolder addSubfolder:token fullName:currentFullName flags:flags];
 			
 			break;
 		}
@@ -119,6 +120,33 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 
 	for(SMFolder *subfolder in _rootFolder.subfolders)
 		[self dfs:subfolder];
+}
+
+- (void)updateMainFolders {
+	[_mainFolders removeAllObjects];
+	
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagInbox orName:@"INBOX" as:@"INBOX"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagImportant orName:nil as:@"Important"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagSentMail orName:nil as:@"Sent"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagDrafts orName:nil as:@"Drafts"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagStarred orName:nil as:@"Starred"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagSpam orName:nil as:@"Spam"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagTrash orName:nil as:@"Trash"];
+}
+
+- (void)addMainFolderWithFlags:(MCOIMAPFolderFlag)flags orName:(NSString*)name as:(NSString*)displayName {
+	for(NSUInteger i = 0; i < _folders.count; i++) {
+		SMFolder *folder = _folders[i];
+		
+		if((folder.flags & flags) || (name != nil && [folder.fullName compare:name] == NSOrderedSame)) {
+			folder.displayName = displayName;
+
+			[_folders removeObjectAtIndex:i];
+			[_mainFolders addObject:folder];
+
+			break;
+		}
+	}
 }
 
 @end

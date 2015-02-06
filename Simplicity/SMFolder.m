@@ -11,6 +11,7 @@
 @implementation SMFolder {
 	NSString *_shortName;
 	NSString *_fullName;
+	NSString *_displayName;
 	NSMutableArray *_subfolders;
 }
 
@@ -22,13 +23,14 @@ static NSColor *randomColor() {
 	return color;
 }
 
-- (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName {
+- (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags {
 	self = [ super init ];
 	
 	if(self) {
 		_subfolders = [NSMutableArray new];
 		_shortName = shortName;
 		_fullName = fullName;
+		_flags = flags;
 		_color = randomColor();
 	}
 	
@@ -39,12 +41,20 @@ static NSColor *randomColor() {
 	return _subfolders;
 }
 
-- (SMFolder*)addSubfolder:(NSString*)shortName fullName:(NSString*)fullName {
-	SMFolder *folder = [[SMFolder alloc] initWithName:shortName fullName:fullName];
+- (SMFolder*)addSubfolder:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags {
+	SMFolder *folder = [[SMFolder alloc] initWithName:shortName fullName:fullName flags:flags];
 	
 	[_subfolders addObject:folder];
 	
 	return folder;
+}
+
+- (void)setDisplayName:(NSString *)displayName {
+	_displayName = displayName;
+}
+
+- (NSString *)displayName {
+	return _displayName != nil? _displayName : _fullName;
 }
 
 @end
