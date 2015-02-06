@@ -24,9 +24,9 @@
 	
 	if(self) {
 		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT"];
-		_mainFolders = [NSMutableArray arrayWithObject:_rootFolder];
-		_favoriteFolders = [NSMutableArray arrayWithObject:_rootFolder];
-		_folders = [NSMutableArray arrayWithObject:_rootFolder];
+		_mainFolders = [NSMutableArray array]; // TODO
+		_favoriteFolders = [NSMutableArray array]; // TODO
+		_folders = [NSMutableArray array]; // TODO
 	}
 	
 	return self;
@@ -114,8 +114,11 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	// build flat structure
 	// TODO: optimize?
 	[_folders removeAllObjects];
+	
+	NSAssert(_rootFolder.subfolders.count > 0, @"root folder is empty");
 
-	[self dfs:_rootFolder];
+	for(SMFolder *subfolder in _rootFolder.subfolders)
+		[self dfs:subfolder];
 }
 
 @end

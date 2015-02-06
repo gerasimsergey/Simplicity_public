@@ -177,7 +177,7 @@
 			updateResult = SMMesssageStorageUpdateResultStructureChanged;
 		}
 
-		NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count not equal to sorted threads count");
+		NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count %lu not equal to sorted threads count %lu", collection.messageThreads.count, collection.messageThreadsByDate.count);
 	}
 	
 	return updateResult;
@@ -218,7 +218,7 @@
 
 	[collection.messageThreads removeObjectsForKeys:[vanishedThreadIds allObjects]];
 
-	NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count not equal to sorted threads count");
+	NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count %lu not equal to sorted threads count %lu", collection.messageThreads.count, collection.messageThreadsByDate.count);
 	
 	return updateResult;
 }
