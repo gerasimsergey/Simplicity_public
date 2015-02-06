@@ -24,9 +24,9 @@
 	
 	if(self) {
 		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" flags:MCOIMAPFolderFlagNone];
-		_mainFolders = [NSMutableArray array]; // TODO
-		_favoriteFolders = [NSMutableArray array]; // TODO
-		_folders = [NSMutableArray array]; // TODO
+		_mainFolders = [NSMutableArray array];
+		_favoriteFolders = [NSMutableArray array];
+		_folders = [NSMutableArray array];
 	}
 	
 	return self;
@@ -66,6 +66,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		}
 		
 		[self updateMainFolders];
+		[self updateFavoriteFolders];
 	} else {
 		NSAssert(nil, @"No folders in mailbox");
 	}
@@ -144,6 +145,25 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 			[_folders removeObjectAtIndex:i];
 			[_mainFolders addObject:folder];
 
+			break;
+		}
+	}
+}
+
+- (void)updateFavoriteFolders {
+	[_favoriteFolders removeAllObjects];
+	
+	[self addFavoriteFolderWithName:@"Work/CVC/DVBS"];
+	[self addFavoriteFolderWithName:@"Work/Charter"];
+}
+
+- (void)addFavoriteFolderWithName:(NSString*)name {
+	for(NSUInteger i = 0; i < _folders.count; i++) {
+		SMFolder *folder = _folders[i];
+
+		if([folder.fullName compare:name] == NSOrderedSame) {
+			[_favoriteFolders addObject:folder];
+			
 			break;
 		}
 	}
