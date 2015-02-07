@@ -31,6 +31,7 @@ static NSColor *randomColor() {
 		_shortName = shortName;
 		_fullName = fullName;
 		_flags = flags;
+		_kind = SMFolderKindRegular;
 		_color = randomColor();
 	}
 	

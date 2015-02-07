@@ -126,21 +126,22 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 - (void)updateMainFolders {
 	[_mainFolders removeAllObjects];
 	
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagInbox orName:@"INBOX" as:@"INBOX"];
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagImportant orName:nil as:@"Important"];
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagSentMail orName:nil as:@"Sent"];
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagDrafts orName:nil as:@"Drafts"];
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagStarred orName:nil as:@"Starred"];
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagSpam orName:nil as:@"Spam"];
-	[self addMainFolderWithFlags:MCOIMAPFolderFlagTrash orName:nil as:@"Trash"];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagInbox orName:@"INBOX" as:@"INBOX" setKind:SMFolderKindInbox];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagImportant orName:nil as:@"Important" setKind:SMFolderKindImportant];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagSentMail orName:nil as:@"Sent" setKind:SMFolderKindSent];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagDrafts orName:nil as:@"Drafts" setKind:SMFolderKindDrafts];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagStarred orName:nil as:@"Starred" setKind:SMFolderKindStarred];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagSpam orName:nil as:@"Spam" setKind:SMFolderKindSpam];
+	[self addMainFolderWithFlags:MCOIMAPFolderFlagTrash orName:nil as:@"Trash" setKind:SMFolderKindTrash];
 }
 
-- (void)addMainFolderWithFlags:(MCOIMAPFolderFlag)flags orName:(NSString*)name as:(NSString*)displayName {
+- (void)addMainFolderWithFlags:(MCOIMAPFolderFlag)flags orName:(NSString*)name as:(NSString*)displayName setKind:(SMFolderKind)kind {
 	for(NSUInteger i = 0; i < _folders.count; i++) {
 		SMFolder *folder = _folders[i];
 		
 		if((folder.flags & flags) || (name != nil && [folder.fullName compare:name] == NSOrderedSame)) {
 			folder.displayName = displayName;
+			folder.kind = kind;
 
 			[_folders removeObjectAtIndex:i];
 			[_mainFolders addObject:folder];

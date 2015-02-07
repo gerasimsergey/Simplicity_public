@@ -10,6 +10,18 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, SMFolderKind) {
+	SMFolderKindRegular,
+	SMFolderKindInbox,
+	SMFolderKindImportant,
+	SMFolderKindSent,
+	SMFolderKindSpam,
+	SMFolderKindOutbox,
+	SMFolderKindStarred,
+	SMFolderKindDrafts,
+	SMFolderKindTrash,
+};
+
 @interface SMFolder : NSObject
 
 @property (readonly) NSString *shortName;
@@ -19,6 +31,7 @@
 @property (readonly) NSColor *color;
 
 @property NSString *displayName;
+@property SMFolderKind kind;
 
 - (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags;
 - (SMFolder*)addSubfolder:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags;

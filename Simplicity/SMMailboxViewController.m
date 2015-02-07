@@ -120,6 +120,29 @@
 		return nil;
 }
 
+- (NSImage*)mainFolderImage:(SMFolder*)folder {
+	switch(folder.kind) {
+		case SMFolderKindInbox:
+			return [NSImage imageNamed:@"inbox-white.png"];
+		case SMFolderKindImportant:
+			return [NSImage imageNamed:@"important-white.png"];
+		case SMFolderKindSent:
+			return [NSImage imageNamed:@"sent-white.png"];
+		case SMFolderKindSpam:
+			return [NSImage imageNamed:@"spam-white.png"];
+		case SMFolderKindOutbox:
+			return [NSImage imageNamed:@"outbox-white.png"];
+		case SMFolderKindStarred:
+			return [NSImage imageNamed:@"star-white.png"];
+		case SMFolderKindDrafts:
+			return [NSImage imageNamed:@"drafts-white.png"];
+		case SMFolderKindTrash:
+			return [NSImage imageNamed:@"trash-white.png"];
+		default:
+			return nil;
+	}
+}
+
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	NSInteger totalRowCount = [self totalFolderRowsCount];
 	NSAssert(row >= 0 && row < totalRowCount, @"row %ld is beyond folders array size %lu", row, totalRowCount);
@@ -130,7 +153,15 @@
 
 	NSTableCellView *result = nil;
 
-	if(row != mainFoldersGroupOffset && row != favoriteFoldersGroupOffset && row != allFoldersGroupOffset) {
+	if(row > mainFoldersGroupOffset && row < favoriteFoldersGroupOffset) {
+		result = [tableView makeViewWithIdentifier:@"MainFolderCellView" owner:self];
+		
+		SMFolder *folder = [self selectedFolder:row];
+		NSAssert(folder != nil, @"bad selected folder");
+		
+		[result.textField setStringValue:folder.displayName];
+		[result.imageView setImage:[self mainFolderImage:folder]];
+	} else if(row != mainFoldersGroupOffset && row != favoriteFoldersGroupOffset && row != allFoldersGroupOffset) {
 		result = [tableView makeViewWithIdentifier:@"FolderCellView" owner:self];
 		
 		SMFolder *folder = [self selectedFolder:row];
@@ -139,7 +170,7 @@
 		[result.textField setStringValue:folder.displayName];
 		
 		NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
-		
+
 		SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
 		colorMark.color = folder.color;
 	} else {

@@ -19,6 +19,14 @@
 		00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FEE198B3BB700DB975E /* SMMessageBodyViewController.m */; };
 		00172FF5198D5C6100DB975E /* SMMessageThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */; };
 		001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */ = {isa = PBXBuildFile; fileRef = 001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */; };
+		002057CF1A85D2DA00D5FE8A /* important-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057C81A85D2DA00D5FE8A /* important-white.png */; };
+		002057D01A85D2DA00D5FE8A /* star-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057C91A85D2DA00D5FE8A /* star-white.png */; };
+		002057D11A85D2DA00D5FE8A /* trash-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057CA1A85D2DA00D5FE8A /* trash-white.png */; };
+		002057D21A85D2DA00D5FE8A /* sent-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057CB1A85D2DA00D5FE8A /* sent-white.png */; };
+		002057D31A85D2DA00D5FE8A /* outbox-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057CC1A85D2DA00D5FE8A /* outbox-white.png */; };
+		002057D41A85D2DA00D5FE8A /* spam-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057CD1A85D2DA00D5FE8A /* spam-white.png */; };
+		002057D51A85D2DA00D5FE8A /* inbox-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057CE1A85D2DA00D5FE8A /* inbox-white.png */; };
+		002057D71A85D87500D5FE8A /* drafts-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 002057D61A85D87500D5FE8A /* drafts-white.png */; };
 		002556F11A5A2EC700C864D0 /* star-yellow-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 002556F01A5A2EC700C864D0 /* star-yellow-icon.png */; };
 		002556FA1A5A3BF900C864D0 /* info-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 002556F91A5A3BF900C864D0 /* info-icon.png */; };
 		002556FE1A5A5C6600C864D0 /* star-gray-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 002556FD1A5A5C6600C864D0 /* star-gray-icon.png */; };
@@ -178,6 +186,14 @@
 		00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadViewController.m; sourceTree = "<group>"; };
 		001A41CC199EFB5300AA3AE6 /* SMMessageComparators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageComparators.h; sourceTree = "<group>"; };
 		001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageComparators.m; sourceTree = "<group>"; };
+		002057C81A85D2DA00D5FE8A /* important-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "important-white.png"; sourceTree = "<group>"; };
+		002057C91A85D2DA00D5FE8A /* star-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star-white.png"; sourceTree = "<group>"; };
+		002057CA1A85D2DA00D5FE8A /* trash-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash-white.png"; sourceTree = "<group>"; };
+		002057CB1A85D2DA00D5FE8A /* sent-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sent-white.png"; sourceTree = "<group>"; };
+		002057CC1A85D2DA00D5FE8A /* outbox-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "outbox-white.png"; sourceTree = "<group>"; };
+		002057CD1A85D2DA00D5FE8A /* spam-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spam-white.png"; sourceTree = "<group>"; };
+		002057CE1A85D2DA00D5FE8A /* inbox-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "inbox-white.png"; sourceTree = "<group>"; };
+		002057D61A85D87500D5FE8A /* drafts-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drafts-white.png"; sourceTree = "<group>"; };
 		002556F01A5A2EC700C864D0 /* star-yellow-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star-yellow-icon.png"; sourceTree = "<group>"; };
 		002556F91A5A3BF900C864D0 /* info-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info-icon.png"; sourceTree = "<group>"; };
 		002556FD1A5A5C6600C864D0 /* star-gray-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star-gray-icon.png"; sourceTree = "<group>"; };
@@ -479,11 +495,19 @@
 				0099CE851A623B2A00AEA789 /* attachment-icon.png */,
 				00B968D51A79F48F00C37B97 /* background_repeat.png */,
 				009C7B9F1A5BB558002EA2DF /* circle-blue.png */,
+				002057D61A85D87500D5FE8A /* drafts-white.png */,
+				002057C81A85D2DA00D5FE8A /* important-white.png */,
+				002057CE1A85D2DA00D5FE8A /* inbox-white.png */,
 				002556F91A5A3BF900C864D0 /* info-icon.png */,
+				002057CC1A85D2DA00D5FE8A /* outbox-white.png */,
 				004F7FE91866A973004DEC3C /* search-icon.png */,
-				002556FD1A5A5C6600C864D0 /* star-gray-icon.png */,
-				002556F01A5A2EC700C864D0 /* star-yellow-icon.png */,
+				002057CB1A85D2DA00D5FE8A /* sent-white.png */,
 				006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */,
+				002057CD1A85D2DA00D5FE8A /* spam-white.png */,
+				002556FD1A5A5C6600C864D0 /* star-gray-icon.png */,
+				002057C91A85D2DA00D5FE8A /* star-white.png */,
+				002556F01A5A2EC700C864D0 /* star-yellow-icon.png */,
+				002057CA1A85D2DA00D5FE8A /* trash-white.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -608,12 +632,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				009C7BA01A5BB558002EA2DF /* circle-blue.png in Resources */,
+				002057D71A85D87500D5FE8A /* drafts-white.png in Resources */,
+				002057D21A85D2DA00D5FE8A /* sent-white.png in Resources */,
+				002057D01A85D2DA00D5FE8A /* star-white.png in Resources */,
 				0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */,
 				00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */,
 				00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */,
 				00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */,
 				0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */,
+				002057D31A85D2DA00D5FE8A /* outbox-white.png in Resources */,
 				0099CE861A623B2A00AEA789 /* attachment-icon.png in Resources */,
+				002057CF1A85D2DA00D5FE8A /* important-white.png in Resources */,
+				002057D11A85D2DA00D5FE8A /* trash-white.png in Resources */,
 				002556F11A5A2EC700C864D0 /* star-yellow-icon.png in Resources */,
 				0002A0A817D1B1E000EA4AFF /* MainMenu.xib in Resources */,
 				004F7FEA1866A973004DEC3C /* search-icon.png in Resources */,
@@ -622,8 +652,10 @@
 				003859021A4D024500D4FD70 /* SMSearchResultsListViewController.xib in Resources */,
 				00A25BBC17E3540000D0FCB1 /* TODO in Resources */,
 				006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */,
+				002057D51A85D2DA00D5FE8A /* inbox-white.png in Resources */,
 				002556FE1A5A5C6600C864D0 /* star-gray-icon.png in Resources */,
 				002556FA1A5A3BF900C864D0 /* info-icon.png in Resources */,
+				002057D41A85D2DA00D5FE8A /* spam-white.png in Resources */,
 				003DFF1A1A73681A003C26E2 /* SMAttachmentsPanelItemViewController.xib in Resources */,
 				00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */,
 				00FE6DF51A4E6C0600D2194F /* SMInstrumentPanelViewController.xib in Resources */,
