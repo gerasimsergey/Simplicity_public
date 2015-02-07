@@ -53,7 +53,7 @@
 	[_attachmentImage removeFromSuperview];
 	
 	if(_attachmentImageHiddenConstraint == nil) {
-		_attachmentImageHiddenConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_subjectTextField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0];
+		_attachmentImageHiddenConstraint = [NSLayoutConstraint constraintWithItem:_bookmarksView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_subjectTextField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0];
 	}
 
 	[self addConstraint:_attachmentImageHiddenConstraint];

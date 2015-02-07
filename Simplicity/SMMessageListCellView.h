@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class SMMessageBookmarksView;
+
 @interface SMMessageListCellView : NSTableCellView
 
 @property (weak) IBOutlet NSTextField *fromTextField;
@@ -15,6 +17,7 @@
 @property (weak) IBOutlet NSTextField *dateTextField;
 @property (weak) IBOutlet NSImageView *unseenImage;
 @property (weak) IBOutlet NSImageView *starImage;
+@property (weak) IBOutlet SMMessageBookmarksView *bookmarksView;
 
 @property IBOutlet NSImageView *attachmentImage;
 @property IBOutlet NSLayoutConstraint *attachmentImageLeftContraint;

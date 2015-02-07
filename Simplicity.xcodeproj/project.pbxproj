@@ -43,6 +43,7 @@
 		005B086017D4EFF500341051 /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; };
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
 		005B086417D4F07700341051 /* MailCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */; };
 		006A5DCA17F2F041004D6D78 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DC917F2F041004D6D78 /* WebKit.framework */; };
 		006A5DD517F5EC50004D6D78 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */; };
 		006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */; };
@@ -215,6 +216,8 @@
 		004F7FE91866A973004DEC3C /* search-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-icon.png"; path = "Simplicity/search-icon.png"; sourceTree = "<group>"; };
 		005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mailcore2.xcodeproj; path = "../mailcore2/build-mac/mailcore2.xcodeproj"; sourceTree = "<group>"; };
 		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		005F0D371A86BC980093E96D /* SMMessageBookmarksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageBookmarksView.h; sourceTree = "<group>"; };
+		005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageBookmarksView.m; sourceTree = "<group>"; };
 		006A5DC917F2F041004D6D78 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
 		006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
 		006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Simplicity.sqlite; sourceTree = "<group>"; };
@@ -451,6 +454,8 @@
 		005B086D17D4F62600341051 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				005F0D371A86BC980093E96D /* SMMessageBookmarksView.h */,
+				005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */,
 				00A6816E1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.h */,
 				00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */,
 				008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */,
@@ -684,6 +689,7 @@
 				00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */,
 				007A73621A57A95500A4D694 /* SMMessageFullDetailsViewController.m in Sources */,
 				00FE6DF41A4E6C0600D2194F /* SMInstrumentPanelViewController.m in Sources */,
+				005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */,
 				0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */,
 				00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */,
 				0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */,
