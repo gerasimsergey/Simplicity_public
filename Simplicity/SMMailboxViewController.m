@@ -16,6 +16,7 @@
 #import "SMSearchResultsListViewController.h"
 #import "SMColorCircle.h"
 #import "SMMailboxViewController.h"
+#import "SMFolderColorController.h"
 
 @implementation SMMailboxViewController {
 	SMFolder *__weak _lastFolder;
@@ -82,28 +83,28 @@
 }
 
 - (NSInteger)favoriteFoldersGroupOffset {
-	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 
 	return 1 + mailbox.mainFolders.count;
 }
 
 - (NSInteger)allFoldersGroupOffset {
-	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	
 	return 1 + mailbox.mainFolders.count + 1 + mailbox.favoriteFolders.count;
 }
 
 - (NSInteger)totalFolderRowsCount {
-	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	
 	return 1 + mailbox.mainFolders.count + 1 + mailbox.favoriteFolders.count + 1 + mailbox.folders.count;
 }
 
 - (SMFolder*)selectedFolder:(NSInteger)row {
-	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	
 	const NSInteger mainFoldersGroupOffset = [self mainFoldersGroupOffset];
@@ -172,7 +173,11 @@
 		NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
 
 		SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
-		colorMark.color = folder.color;
+
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMAppController *appController = [appDelegate appController];
+		
+		colorMark.color = [[appController folderColorController] colorForFolder:folder.fullName];
 	} else {
 		result = [tableView makeViewWithIdentifier:@"FolderGroupCellView" owner:self];
 

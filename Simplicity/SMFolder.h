@@ -28,7 +28,6 @@ typedef NS_ENUM(NSInteger, SMFolderKind) {
 @property (readonly) NSString *fullName;
 @property (readonly) NSArray *subfolders;
 @property (readonly) MCOIMAPFolderFlag flags;
-@property (readonly) NSColor *color;
 
 @property NSString *displayName;
 @property SMFolderKind kind;

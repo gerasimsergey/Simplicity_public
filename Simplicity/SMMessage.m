@@ -49,6 +49,7 @@
 		_subjectDB = [NSString stringWithUTF8String:(const char*)subject];
 		_createdFromDB = YES;
 		_remoteFolder = remoteFolder;
+		_labels = [NSArray array]; // TODO
 
 		[self setData:[NSData dataWithBytes:data length:dataLength]];
 	}
@@ -65,7 +66,10 @@
 		_imapMessage = m;
 		_createdFromDB = NO;
 		_remoteFolder = remoteFolder;
+		_labels = m.gmailLabels;
 
+		NSLog(@"%s: labels %@", __FUNCTION__, m.gmailLabels);
+		
 //		NSLog(@"%s: uid %u, object %@, date %@", __FUNCTION__, [ m uid ], m, [[m header] date]);
 	}
 

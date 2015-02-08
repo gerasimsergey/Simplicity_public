@@ -15,14 +15,6 @@
 	NSMutableArray *_subfolders;
 }
 
-static NSColor *randomColor() {
-	CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-	CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-	CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-	NSColor *color = [NSColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
-	return color;
-}
-
 - (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags {
 	self = [ super init ];
 	
@@ -32,7 +24,6 @@ static NSColor *randomColor() {
 		_fullName = fullName;
 		_flags = flags;
 		_kind = SMFolderKindRegular;
-		_color = randomColor();
 	}
 	
 	return self;

@@ -24,6 +24,7 @@
 @property (readonly) Boolean flagged;
 @property (readonly) Boolean hasAttachments;
 @property (readonly) NSArray *attachments;
+@property (readonly) NSArray *labels;
 
 @property (assign) NSData *data;
 

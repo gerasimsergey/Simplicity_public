@@ -15,6 +15,8 @@
 #import "SMMessageListCellView.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
+#import "SMFolderColorController.h"
+#import "SMMessageBookmarksView.h"
 #import "SMSimplicityContainer.h"
 #import "SMLocalFolder.h"
 #import "SMMessage.h"
@@ -187,6 +189,20 @@
 		[view hideAttachmentImage];
 	}
 	
+	NSMutableArray *bookmarkColors = [NSMutableArray array];
+	for(NSString *label in message.labels) {
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMAppController *appController = [appDelegate appController];
+		
+		if([label characterAtIndex:0] != '\\') {
+			NSColor *color = [[appController folderColorController] colorForFolder:label];
+ 
+			[bookmarkColors addObject:color];
+		}
+	}
+	
+	[view.bookmarksView setBookmarkColors:bookmarkColors];
+
 	return view;
 }
 
