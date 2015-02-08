@@ -69,7 +69,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" userLabel="Color Mark" customClass="SMColorCircle">
-                                                        <rect key="frame" x="-2" y="0.0" width="15" height="15"/>
+                                                        <rect key="frame" x="-1" y="2" width="15" height="15"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="15" id="3V2-Wu-xCq"/>
                                                             <constraint firstAttribute="height" constant="15" id="hAn-vb-ntw"/>
@@ -87,10 +87,10 @@
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="9fg-dU-pW6" secondAttribute="trailing" constant="3" id="IuF-VU-yNP"/>
                                                     <constraint firstItem="9fg-dU-pW6" firstAttribute="top" secondItem="ad8-Va-2mb" secondAttribute="top" id="M9H-yF-Hms"/>
-                                                    <constraint firstItem="9fg-dU-pW6" firstAttribute="leading" secondItem="bpM-hd-kan" secondAttribute="trailing" constant="1" id="OdJ-F7-vhP"/>
+                                                    <constraint firstItem="9fg-dU-pW6" firstAttribute="leading" secondItem="bpM-hd-kan" secondAttribute="trailing" id="OdJ-F7-vhP"/>
                                                     <constraint firstAttribute="bottom" secondItem="9fg-dU-pW6" secondAttribute="bottom" id="Ps9-hL-QCW"/>
-                                                    <constraint firstItem="bpM-hd-kan" firstAttribute="leading" secondItem="ad8-Va-2mb" secondAttribute="leading" constant="-2" id="UFY-jP-a5V"/>
-                                                    <constraint firstAttribute="centerY" secondItem="bpM-hd-kan" secondAttribute="centerY" constant="-0.5" id="r9i-JJ-7Hi"/>
+                                                    <constraint firstItem="bpM-hd-kan" firstAttribute="leading" secondItem="ad8-Va-2mb" secondAttribute="leading" constant="-1" id="UFY-jP-a5V"/>
+                                                    <constraint firstAttribute="centerY" secondItem="bpM-hd-kan" secondAttribute="centerY" constant="1.5" id="r9i-JJ-7Hi"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="bpM-hd-kan" id="xrQ-6k-0tt"/>

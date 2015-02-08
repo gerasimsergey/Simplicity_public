@@ -16,4 +16,7 @@
     // Drawing code here.
 }
 
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
+}
+
 @end
