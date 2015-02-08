@@ -8,15 +8,40 @@
 
 #import "SMMessageBookmarksView.h"
 
-@implementation SMMessageBookmarksView
+@implementation SMMessageBookmarksView {
+	NSArray *_bookmarkColors;
+}
+
+- (NSArray*)bookmarkColors {
+	return _bookmarkColors;
+}
+
+- (void)setBookmarkColors:(NSArray*)bookmarkColors {
+	
+	[self setNeedsDisplay:YES];
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    // Drawing code here.
-}
+	NSRect bounds = self.bounds;
+	CGFloat maxX = NSMaxX(bounds);
+	CGFloat minX = NSMinX(bounds);
+	CGFloat maxY = NSMaxY(bounds);
+	
+	NSBezierPath *result = [NSBezierPath bezierPath];
 
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
+	[result moveToPoint:NSMakePoint(maxX, maxY)];
+	[result lineToPoint:NSMakePoint(minX, maxY)];
+	[result lineToPoint:NSMakePoint(minX + 1, maxY - 7)];
+	[result lineToPoint:NSMakePoint(maxX, maxY - 7)];
+	[result closePath];	
+	
+	NSColor *color = [NSColor redColor];
+
+	NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[color highlightWithLevel:0.45] endingColor:color];
+	
+	[gradient drawInBezierPath:result angle:-90.00];
 }
 
 @end

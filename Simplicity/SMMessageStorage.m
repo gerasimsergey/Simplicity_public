@@ -86,12 +86,17 @@
 - (void)insertMessageThreadByDate:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder oldIndex:(NSUInteger)oldIndex {
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
-
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
 	NSComparator messageThreadComparator = [comparators messageThreadsComparatorByDate];
 
-	if(oldIndex != NSUIntegerMax)
+	if(oldIndex != NSUIntegerMax) {
+		NSAssert(collection.messageThreadsByDate.count == collection.messageThreads.count, @"message thread counts (sorted %lu, unsorted %lu) don't match", collection.messageThreadsByDate.count, collection.messageThreads.count);
+
+		SMMessageThread *oldMessageThread = sortedMessageThreads[oldIndex];
+		NSAssert(oldMessageThread == messageThread, @"bad message thread at index %lu (actual id %llu, expected id %llu)", oldIndex, oldMessageThread.threadId, messageThread.threadId);
+
 		[sortedMessageThreads removeObjectAtIndex:oldIndex];
+	}
 	
 	NSUInteger messageThreadIndexByDate = [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:NSBinarySearchingInsertionIndex usingComparator:messageThreadComparator];
 	

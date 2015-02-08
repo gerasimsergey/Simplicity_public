@@ -10,4 +10,6 @@
 
 @interface SMMessageBookmarksView : NSView
 
+@property NSArray *bookmarkColors;
+
 @end
