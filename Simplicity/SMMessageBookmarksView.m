@@ -26,25 +26,30 @@
     [super drawRect:dirtyRect];
 	
 	if(_bookmarkColors != nil && _bookmarkColors.count > 0) {
-		NSRect bounds = self.bounds;
-		CGFloat maxX = NSMaxX(bounds);
-		CGFloat minX = NSMinX(bounds);
-		CGFloat maxY = NSMaxY(bounds);
+		const NSRect bounds = self.bounds;
+		const CGFloat originY = NSMaxY(bounds);
+		const CGFloat step = 12;
 		
-		NSBezierPath *result = [NSBezierPath bezierPath];
-		
-		[result moveToPoint:NSMakePoint(maxX, maxY)];
-		[result lineToPoint:NSMakePoint(minX, maxY)];
-		[result lineToPoint:NSMakePoint(minX + 2, maxY - 5)];
-		[result lineToPoint:NSMakePoint(minX, maxY - 10)];
-		[result lineToPoint:NSMakePoint(maxX, maxY - 10)];
-		[result closePath];
-		
-		NSColor *color = _bookmarkColors[0];
-		
-		NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[color highlightWithLevel:0.45] endingColor:color];
-		
-		[gradient drawInBezierPath:result angle:-90.00];
+		for(NSUInteger i = 0, n = MIN(_bookmarkColors.count, 3); i < n; i++) {
+			CGFloat maxX = NSMaxX(bounds);
+			CGFloat minX = NSMinX(bounds);
+			CGFloat maxY = originY - step * i;
+			
+			NSBezierPath *result = [NSBezierPath bezierPath];
+			
+			[result moveToPoint:NSMakePoint(maxX, maxY)];
+			[result lineToPoint:NSMakePoint(minX, maxY)];
+			[result lineToPoint:NSMakePoint(minX + 2, maxY - 5)];
+			[result lineToPoint:NSMakePoint(minX, maxY - 10)];
+			[result lineToPoint:NSMakePoint(maxX, maxY - 10)];
+			[result closePath];
+			
+			NSColor *color = _bookmarkColors[i];
+			
+			NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[color highlightWithLevel:0.45] endingColor:color];
+			
+			[gradient drawInBezierPath:result angle:-90.00];
+		}
 	}
 }
 
