@@ -30,7 +30,7 @@
 		const CGFloat originY = NSMaxY(bounds);
 		const CGFloat step = 12;
 		
-		for(NSUInteger i = 0, n = MIN(_bookmarkColors.count, 3); i < n; i++) {
+		for(NSUInteger i = 0, n = MIN(_bookmarkColors.count, 4); i < n; i++) {
 			CGFloat maxX = NSMaxX(bounds);
 			CGFloat minX = NSMinX(bounds);
 			CGFloat maxY = originY - step * i;
