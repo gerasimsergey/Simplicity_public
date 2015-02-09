@@ -35,8 +35,9 @@
 		
 		[result moveToPoint:NSMakePoint(maxX, maxY)];
 		[result lineToPoint:NSMakePoint(minX, maxY)];
-		[result lineToPoint:NSMakePoint(minX + 1, maxY - 7)];
-		[result lineToPoint:NSMakePoint(maxX, maxY - 7)];
+		[result lineToPoint:NSMakePoint(minX + 2, maxY - 5)];
+		[result lineToPoint:NSMakePoint(minX, maxY - 10)];
+		[result lineToPoint:NSMakePoint(maxX, maxY - 10)];
 		[result closePath];
 		
 		NSColor *color = _bookmarkColors[0];

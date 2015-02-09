@@ -68,7 +68,7 @@
 		_remoteFolder = remoteFolder;
 		_labels = m.gmailLabels;
 
-		NSLog(@"%s: subject '%@', labels %@", __FUNCTION__, m.header.subject, m.gmailLabels);
+		NSLog(@"%s: thread id %llu, subject '%@', labels %@", __FUNCTION__, m.gmailThreadID, m.header.subject, m.gmailLabels);
 		
 //		NSLog(@"%s: uid %u, object %@, date %@", __FUNCTION__, [ m uid ], m, [[m header] date]);
 	}
