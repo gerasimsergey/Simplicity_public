@@ -19,15 +19,18 @@ static const NSUInteger INCREASE_MESSAGES_PER_FOLDER = 50;
 static const NSUInteger MESSAGE_HEADERS_TO_FETCH_AT_ONCE = 20;
 
 static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
+	MCOIMAPMessagesRequestKindUid |
+	MCOIMAPMessagesRequestKindFlags |
 	MCOIMAPMessagesRequestKindHeaders |
 	MCOIMAPMessagesRequestKindStructure |
-	MCOIMAPMessagesRequestKindFullHeaders    |
 	MCOIMAPMessagesRequestKindInternalDate |
+	MCOIMAPMessagesRequestKindFullHeaders |
 	MCOIMAPMessagesRequestKindHeaderSubject |
-	MCOIMAPMessagesRequestKindFlags |
 	MCOIMAPMessagesRequestKindGmailLabels |
 	MCOIMAPMessagesRequestKindGmailMessageID |
-	MCOIMAPMessagesRequestKindGmailThreadID
+	MCOIMAPMessagesRequestKindGmailThreadID |
+	MCOIMAPMessagesRequestKindExtraHeaders |
+	MCOIMAPMessagesRequestKindSize
 );
 
 @implementation SMLocalFolder {

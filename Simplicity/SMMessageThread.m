@@ -50,6 +50,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	uint64_t _threadId;
 	ThreadFlags _threadFlags;
 	MessageCollection *_messageCollection;
+	NSMutableOrderedSet *_labels;
 }
 
 - (id)initWithThreadId:(uint64_t)threadId {
@@ -58,6 +59,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 		_threadId = threadId;
 		_threadFlags = ThreadFlagsNone;
 		_messageCollection = [MessageCollection new];
+		_labels = [ NSMutableOrderedSet new ];
 	}
 	return self;
 }
@@ -261,11 +263,16 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	const ThreadFlags oldThreadFlags = _threadFlags;
 	_threadFlags = ThreadFlagsNone;
 
+	[_labels removeAllObjects];
+	
 	for(SMMessage *message in _messageCollection.messages) {
 		[self updateThreadFlagsFromMessage:message];
 
 		// clear messages update marks for future updates
 		[message setUpdated:NO];
+
+		//NSLog(@"Thread %llu, message labels %@", _threadId, message.labels);
+		[_labels addObjectsFromArray:message.labels];
 	}
 
 	if([_messageCollection count] == 0)

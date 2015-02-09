@@ -190,7 +190,7 @@
 	}
 	
 	NSMutableArray *bookmarkColors = [NSMutableArray array];
-	for(NSString *label in message.labels) {
+	for(NSString *label in messageThread.labels) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMAppController *appController = [appDelegate appController];
 		

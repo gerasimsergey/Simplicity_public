@@ -41,7 +41,7 @@
 	self = [ super init ];
 	
 	if(self) {
-		NSLog(@"%s: uid %u, date %@", __FUNCTION__, uid, date);
+		//NSLog(@"%s: uid %u, date %@", __FUNCTION__, uid, date);
 		
 		_uidDB = uid;
 		_dateDB = date;
@@ -68,7 +68,7 @@
 		_remoteFolder = remoteFolder;
 		_labels = m.gmailLabels;
 
-		NSLog(@"%s: labels %@", __FUNCTION__, m.gmailLabels);
+		NSLog(@"%s: subject '%@', labels %@", __FUNCTION__, m.header.subject, m.gmailLabels);
 		
 //		NSLog(@"%s: uid %u, object %@, date %@", __FUNCTION__, [ m uid ], m, [[m header] date]);
 	}
