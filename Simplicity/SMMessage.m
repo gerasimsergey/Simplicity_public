@@ -36,7 +36,7 @@
 @synthesize htmlBodyRendering = _htmlBodyRendering;
 
 // TODO: uids not properly used here - they may be changed between sessions!!!
-- (id)initWithRawValues:(int)uid date:(NSDate*)date from:(const unsigned char*)from subject:(const unsigned char*)subject data:(const void*)data dataLength:(int)dataLength remoteFolder:(NSString*)remoteFolder {
+- (id)initWithRawValues:(int)uid date:(NSDate*)date from:(const unsigned char*)from subject:(const unsigned char*)subject data:(const void*)data dataLength:(int)dataLength remoteFolder:(NSString*)remoteFolderName {
 
 	self = [ super init ];
 	
@@ -48,7 +48,7 @@
 		_fromDB = [NSString stringWithUTF8String:(const char*)from];
 		_subjectDB = [NSString stringWithUTF8String:(const char*)subject];
 		_createdFromDB = YES;
-		_remoteFolder = remoteFolder;
+		_remoteFolder = remoteFolderName;
 		_labels = [NSArray array]; // TODO
 
 		[self setData:[NSData dataWithBytes:data length:dataLength]];
@@ -57,7 +57,7 @@
 	return self;
 }
 
-- (id)initWithMCOIMAPMessage:(MCOIMAPMessage*)m remoteFolder:(NSString*)remoteFolder {
+- (id)initWithMCOIMAPMessage:(MCOIMAPMessage*)m remoteFolder:(NSString*)remoteFolderName {
 	NSAssert(m, @"imap message is nil");
 	
 	self = [ super init ];
@@ -65,7 +65,7 @@
 	if(self) {
 		_imapMessage = m;
 		_createdFromDB = NO;
-		_remoteFolder = remoteFolder;
+		_remoteFolder = remoteFolderName;
 		_labels = m.gmailLabels;
 
 		NSLog(@"%s: thread id %llu, subject '%@', labels %@", __FUNCTION__, m.gmailThreadID, m.header.subject, m.gmailLabels);

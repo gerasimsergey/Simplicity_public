@@ -10,7 +10,7 @@
 
 @interface SMLocalFolder : NSObject
 
-@property (readonly) NSString* name;
+@property (readonly) NSString *localName;
 
 @property (readonly) uint64_t totalMessagesCount;
 @property (readonly) uint64_t messageHeadersFetched;
@@ -27,10 +27,10 @@
 - (void)startLocalFolderSync;
 
 // loads the messages specified by their UIDs from the specific remote folder
-- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder;
+- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolderName;
 
 // fetches the body of the message specified by its UID
-- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent;
+- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolderName threadId:(uint64_t)threadId urgent:(BOOL)urgent;
 
 // tells whether there is message headers loading progress underway
 - (Boolean)messageHeadersAreBeingLoaded;

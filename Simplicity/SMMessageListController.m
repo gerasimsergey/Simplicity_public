@@ -69,7 +69,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 }
 
 - (void)changeFolder:(NSString*)folder {
-	if([_currentFolder.name isEqualToString:folder])
+	if([_currentFolder.localName isEqualToString:folder])
 		return;
 
 	[self changeFolderInternal:folder syncWithRemoteFolder:YES];
@@ -85,7 +85,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 - (void)clearCurrentFolderSelection {
 	NSString *emptyFolderName = @""; // TODO: create a descriptor for empty folder
 	
-	if([_currentFolder.name isEqualToString:emptyFolderName])
+	if([_currentFolder.localName isEqualToString:emptyFolderName])
 		return;
 	
 	[self changeFolderInternal:emptyFolderName syncWithRemoteFolder:NO];
@@ -103,10 +103,10 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[_currentFolder startLocalFolderSync];
 }
 
-- (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
+- (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderNameToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
 	[self changeFolderInternal:searchResultsLocalFolder syncWithRemoteFolder:NO];
 	
-	[_currentFolder loadSelectedMessages:searchResults remoteFolder:remoteFolderToSearch];
+	[_currentFolder loadSelectedMessages:searchResults remoteFolder:remoteFolderNameToSearch];
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -115,12 +115,12 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[[appController messageListViewController] reloadMessageList:preserveSelection];
 }
 
-- (void)updateMessageList:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolder {
+- (void)updateMessageList:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolderName {
 //	NSLog(@"%s: new messages count %lu", __FUNCTION__, (unsigned long)[imapMessages count]);
 
 	MCOIMAPSession *session = [_model session];
 
-	SMMessageStorageUpdateResult updateResult = [[_model messageStorage] updateIMAPMessages:imapMessages localFolder:[_currentFolder name] remoteFolder:remoteFolder session:session];
+	SMMessageStorageUpdateResult updateResult = [[_model messageStorage] updateIMAPMessages:imapMessages localFolder:[_currentFolder localName] remoteFolder:remoteFolderName session:session];
 
 	if(updateResult == SMMesssageStorageUpdateResultNone) {
 		// no updates, so no need to reload the message list
@@ -155,20 +155,20 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:delay_sec];
 }
 
-- (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId {
+- (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolderName threadId:(uint64_t)threadId {
 	//NSLog(@"%s: msg uid %u, remote folder %@, threadId %llu", __FUNCTION__, uid, remoteFolder, threadId);
 
-	[_currentFolder fetchMessageBody:uid remoteFolder:remoteFolder threadId:threadId urgent:YES];
+	[_currentFolder fetchMessageBody:uid remoteFolder:remoteFolderName threadId:threadId urgent:YES];
 }
 
 - (void)messageHeadersFetched:(NSNotification *)notification {
 	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
 
-	if([_currentFolder.name isEqualToString:localFolder]) {
+	if([_currentFolder.localName isEqualToString:localFolder]) {
 		NSArray *messages = [[notification userInfo] objectForKey:@"MessagesList"];
-		NSString *remoteFolder = [[notification userInfo] objectForKey:@"RemoteFolderName"];
+		NSString *remoteFolderName = [[notification userInfo] objectForKey:@"RemoteFolderName"];
 
-		[self updateMessageList:messages remoteFolder:remoteFolder];
+		[self updateMessageList:messages remoteFolder:remoteFolderName];
 		[self updateMessageThreadView];
 	}
 }
@@ -176,7 +176,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 - (void)messageHeadersSyncFinished:(NSNotification *)notification {
 	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
 
-	if([_currentFolder.name isEqualToString:localFolder]) {
+	if([_currentFolder.localName isEqualToString:localFolder]) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMAppController *appController = [appDelegate appController];
 		

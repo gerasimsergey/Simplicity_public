@@ -129,7 +129,7 @@
 	[self cancelUpdate:localFolder];
 }
 
-- (SMMessageStorageUpdateResult)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session {
+- (SMMessageStorageUpdateResult)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolderName session:(MCOIMAPSession*)session {
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 	
@@ -160,7 +160,7 @@
 			firstMessageDate = [firstMessage date];
 		}
 
-		SMThreadUpdateResult threadUpdateResult = [messageThread updateIMAPMessage:imapMessage remoteFolder:remoteFolder session:session];
+		SMThreadUpdateResult threadUpdateResult = [messageThread updateIMAPMessage:imapMessage remoteFolder:remoteFolderName session:session];
 		if(threadUpdateResult != SMThreadUpdateResultNone) {
 			if(updateResult == SMMesssageStorageUpdateResultNone) {
 				updateResult = (threadUpdateResult == SMThreadUpdateResultStructureChanged? SMMesssageStorageUpdateResultStructureChanged : SMMesssageStorageUpdateResultFlagsChanged);

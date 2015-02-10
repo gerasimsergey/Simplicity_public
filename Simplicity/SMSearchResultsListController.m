@@ -42,13 +42,13 @@
 	
 	NSAssert(session, @"session is nil");
 	
-	NSString *remoteFolder = nil;
+	NSString *remoteFolderName = nil;
 	NSString *searchResultsLocalFolder = nil;
 	SMSearchDescriptor *searchDescriptor = nil;
 	
 	if(existingLocalFolder == nil) {
 		// TODO: handle search in search results differently
-		remoteFolder = [[[[appDelegate model] messageListController] currentLocalFolder] name];
+		remoteFolderName = [[[[appDelegate model] messageListController] currentLocalFolder] localName];
 
 		// TODO: introduce search results descriptor to avoid this funny folder name
 		searchResultsLocalFolder = [NSString stringWithFormat:@"//search_results//%lu", _searchId++];
@@ -60,7 +60,7 @@
 			NSAssert(false, @"could not create local folder for search results");
 		}
 		
-		searchDescriptor = [[SMSearchDescriptor alloc] init:searchString localFolder:searchResultsLocalFolder remoteFolder:remoteFolder];
+		searchDescriptor = [[SMSearchDescriptor alloc] init:searchString localFolder:searchResultsLocalFolder remoteFolder:remoteFolderName];
 
 		[_searchResults setObject:searchDescriptor forKey:searchResultsLocalFolder];
 		[_searchResultsFolderNames addObject:searchResultsLocalFolder];
@@ -73,7 +73,7 @@
 		NSInteger index = [self getSearchIndex:searchResultsLocalFolder];
 		NSAssert(index >= 0, @"no index for existing search results folder");
 
-		remoteFolder = [searchDescriptor remoteFolder];
+		remoteFolderName = [searchDescriptor remoteFolder];
 		NSAssert(searchDescriptor != nil, @"no search descriptor found for exiting local folder");
 		
 		[searchDescriptor clearState];
@@ -83,18 +83,18 @@
 	
 	[_currentSearchOp cancel];
 
-	_currentSearchOp = [session searchOperationWithFolder:remoteFolder kind:MCOIMAPSearchKindContent searchString:searchString];
+	_currentSearchOp = [session searchOperationWithFolder:remoteFolderName kind:MCOIMAPSearchKindContent searchString:searchString];
 	
 	_currentSearchOp.urgent = YES;
 	
 	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
 		if(error == nil) {
 			if(searchResults.count > 0) {
-				NSLog(@"%s: %u messages found in remote folder %@, loading to local folder %@", __func__, [searchResults count], remoteFolder, searchResultsLocalFolder);
+				NSLog(@"%s: %u messages found in remote folder %@, loading to local folder %@", __func__, [searchResults count], remoteFolderName, searchResultsLocalFolder);
 				
 				searchDescriptor.messagesLoadingStarted = YES;
 				
-				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:remoteFolder searchResultsLocalFolder:searchResultsLocalFolder];
+				[[[appDelegate model] messageListController] loadSearchResults:searchResults remoteFolderToSearch:remoteFolderName searchResultsLocalFolder:searchResultsLocalFolder];
 				
 				[[[appDelegate appController] searchResultsListViewController] selectSearchResult:searchResultsLocalFolder];
 			} else {
@@ -103,7 +103,7 @@
 				[[[appDelegate model] searchResultsListController] searchHasFailed:searchResultsLocalFolder];
 			}
 		} else {
-			NSLog(@"%s: search in remote folder %@ failed, error %@", __func__, remoteFolder, error);
+			NSLog(@"%s: search in remote folder %@ failed, error %@", __func__, remoteFolderName, error);
 			
 			[[[appDelegate model] searchResultsListController] searchHasFailed:searchResultsLocalFolder];
 		}
@@ -172,7 +172,7 @@
 	Boolean preserveSelection = NO;
 	[[[appDelegate appController] messageListViewController] reloadMessageList:preserveSelection];
 
-	[self startNewSearch:searchDescriptor.searchPattern exitingLocalFolder:localFolder.name];
+	[self startNewSearch:searchDescriptor.searchPattern exitingLocalFolder:localFolder.localName];
 }
 
 - (void)stopSearch:(NSInteger)index {

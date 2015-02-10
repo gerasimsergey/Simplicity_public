@@ -46,7 +46,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	self = [ super init ];
 	
 	if(self) {
-		_name = localFolderName;
+		_localName = localFolderName;
 		_maxMessagesPerThisFolder = DEFAULT_MAX_MESSAGES_PER_FOLDER;
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
@@ -67,7 +67,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)startLocalFolderSync {
 	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil) {
-		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _name);
+		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _localName);
 		return;
 	}
 	
@@ -79,7 +79,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_messageHeadersFetched = 0;
 	
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	[[[appDelegate model] messageStorage] startUpdate:_name];
+	[[[appDelegate model] messageStorage] startUpdate:_localName];
 	
 	MCOIMAPSession *session = [[appDelegate model] session];
 	
@@ -87,7 +87,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	// TODO: handle session reopening/uids validation	
 	
-	_folderInfoOp = [session folderInfoOperation:_name];
+	_folderInfoOp = [session folderInfoOperation:_localName];
 	_folderInfoOp.urgent = YES;
 
 	[_folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
@@ -123,32 +123,32 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	return _folderInfoOp != nil || _fetchMessageHeadersOp != nil;
 }
 
-- (void)fetchMessageBodies:(NSString*)remoteFolder {
-	//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, remoteFolder);
+- (void)fetchMessageBodies:(NSString*)remoteFolderName {
+	//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, remoteFolderName);
 	
 	NSUInteger fetchCount = 0;
 	
 	for(MCOIMAPMessage *message in _fetchedMessageHeaders) {
-		if([self fetchMessageBody:[message uid] remoteFolder:remoteFolder threadId:[message gmailThreadID] urgent:NO])
+		if([self fetchMessageBody:[message uid] remoteFolder:remoteFolderName threadId:[message gmailThreadID] urgent:NO])
 			fetchCount++;
 	}
 	
 	[_fetchedMessageHeaders removeAllObjects];
 }
 
-- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolder threadId:(uint64_t)threadId urgent:(BOOL)urgent {
+- (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolderName threadId:(uint64_t)threadId urgent:(BOOL)urgent {
 	//	NSLog(@"%s: uid %u, remote folder %@, threadId %llu, urgent %s", __FUNCTION__, uid, remoteFolder, threadId, urgent? "YES" : "NO");
 
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 
-	if([[[appDelegate model] messageStorage] messageHasData:uid localFolder:_name threadId:threadId])
+	if([[[appDelegate model] messageStorage] messageHasData:uid localFolder:_localName threadId:threadId])
 		return NO;
 	
 	MCOIMAPSession *session = [[appDelegate model] session];
 	
 	NSAssert(session, @"session is nil");
 	
-	MCOIMAPFetchContentOperation *op = [session fetchMessageOperationWithFolder:remoteFolder uid:uid urgent:urgent];
+	MCOIMAPFetchContentOperation *op = [session fetchMessageOperationWithFolder:remoteFolderName uid:uid urgent:urgent];
 	
 	[_fetchMessageBodyOps setObject:op forKey:[NSNumber numberWithUnsignedInt:uid]];
 	
@@ -158,7 +158,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		//	NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
 		
 		if ([error code] != MCOErrorNone) {
-			NSLog(@"%s: Error downloading message body for uid %u, remote folder %@", __func__, uid, remoteFolder);
+			NSLog(@"%s: Error downloading message body for uid %u, remote folder %@", __func__, uid, remoteFolderName);
 
 			MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:[NSNumber numberWithUnsignedInt:uid]];
 
@@ -173,7 +173,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		
 		NSAssert(data != nil, @"data != nil");
 		
-		[[[appDelegate model] messageStorage] setMessageData:data uid:uid localFolder:_name threadId:threadId];
+		[[[appDelegate model] messageStorage] setMessageData:data uid:uid localFolder:_localName threadId:threadId];
 		
 		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
 		
@@ -203,15 +203,15 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
 	if(finishFetch) {
-		SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_name removeVanishedMessages:YES];
+		SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_localName removeVanishedMessages:YES];
 		Boolean hasUpdates = (updateResult != SMMesssageStorageUpdateResultNone);
 
 		[_fetchMessageHeadersOp cancel];
 		_fetchMessageHeadersOp = nil;
 		
-		[self fetchMessageBodies:_name];
+		[self fetchMessageBodies:_localName];
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", [NSNumber numberWithBool:hasUpdates], @"HasUpdates", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_localName, @"LocalFolderName", [NSNumber numberWithBool:hasUpdates], @"HasUpdates", nil]];
 		
 		return;
 	}
@@ -229,7 +229,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	NSAssert(_fetchMessageHeadersOp == nil, @"previous search op not cleared");
 	
-	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:_name requestKind:messageHeadersRequestKind numbers:regionToFetch];
+	_fetchMessageHeadersOp = [session fetchMessagesByNumberOperationWithFolder:_localName requestKind:messageHeadersRequestKind numbers:regionToFetch];
 	
 	_fetchMessageHeadersOp.urgent = YES;
 	
@@ -245,7 +245,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 			_messageHeadersFetched += [messages count];
 
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", _name, @"RemoteFolderName", messages, @"MessagesList", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_localName, @"LocalFolderName", _localName, @"RemoteFolderName", messages, @"MessagesList", nil]];
 			
 			[self syncFetchMessageHeaders];
 		} else {
@@ -254,14 +254,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}];	
 }
 
-- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolder {
+- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolderName {
 	_messageHeadersFetched = 0;
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
-	[[[appDelegate model] messageStorage] startUpdate:_name];
+	[[[appDelegate model] messageStorage] startUpdate:_localName];
 	
-	_selectedMessagesRemoteFolder = remoteFolder;
+	_selectedMessagesRemoteFolder = remoteFolderName;
 	_selectedMessageUIDsToLoad = messageUIDs;
 
 	_totalMessagesCount = _selectedMessageUIDsToLoad.count;
@@ -293,11 +293,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}
 	
 	if(finishFetch) {
-		[[[appDelegate model] messageStorage] endUpdate:_name removeVanishedMessages:NO];
+		[[[appDelegate model] messageStorage] endUpdate:_localName removeVanishedMessages:NO];
 		
 		[self fetchMessageBodies:_selectedMessagesRemoteFolder];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObject:_name forKey:@"LocalFolderName"]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObject:_localName forKey:@"LocalFolderName"]];
 
 		return;
 	}
@@ -340,7 +340,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			
 			_messageHeadersFetched += [messages count];
 			
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_name, @"LocalFolderName", _selectedMessagesRemoteFolder, @"RemoteFolderName", messages, @"MessagesList", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersFetched" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_localName, @"LocalFolderName", _selectedMessagesRemoteFolder, @"RemoteFolderName", messages, @"MessagesList", nil]];
 			
 			[self loadSelectedMessagesInternal];
 		} else {
@@ -382,7 +382,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[_fetchedMessageHeaders removeAllObjects];
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[[[appDelegate model] messageStorage] removeLocalFolder:_name];
+	[[[appDelegate model] messageStorage] removeLocalFolder:_localName];
 }
 
 @end

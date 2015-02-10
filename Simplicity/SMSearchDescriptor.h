@@ -18,7 +18,7 @@
 @property Boolean searchStopped;
 @property Boolean messagesLoadingStarted;
 
-- (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder;
+- (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolderName;
 
 - (void)clearState;
 

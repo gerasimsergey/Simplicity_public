@@ -10,13 +10,13 @@
 
 @implementation SMSearchDescriptor
 
-- (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolder {
+- (id)init:(NSString*)searchPattern localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolderName {
 	self = [super init];
 	
 	if(self) {
 		_searchPattern = searchPattern;
 		_localFolder = localFolder;
-		_remoteFolder = remoteFolder;
+		_remoteFolder = remoteFolderName;
 		_searchFailed = false;
 		_searchStopped = false;
 		_messagesLoadingStarted = false;

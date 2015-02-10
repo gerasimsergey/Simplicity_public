@@ -178,7 +178,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 		_threadFlags |= ThreadFlagsHasAttachment;
 }
 
-- (SMThreadUpdateResult)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolder session:(MCOIMAPSession*)session {
+- (SMThreadUpdateResult)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolderName session:(MCOIMAPSession*)session {
 	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication ] delegate];
 	SMMessageComparators *comparators = [[[appDelegate model] messageStorage] comparators];
 
@@ -207,7 +207,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	}
 	
 	// update the messages list
-	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage remoteFolder:remoteFolder];
+	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage remoteFolder:remoteFolderName];
 
 	[ message setUpdated:YES];
 	
