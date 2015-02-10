@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, SMFolderKind) {
 	SMFolderKindStarred,
 	SMFolderKindDrafts,
 	SMFolderKindTrash,
+	SMFolderKindAllMail,
 };
 
 @interface SMFolder : NSObject
