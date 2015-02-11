@@ -195,7 +195,7 @@
 	MessageThreadCollection *collection = [self messageThreadForFolder:localFolder];
 	NSAssert(collection, @"bad thread collection");
 	
-	NSMutableSet *vanishedThreadIds = [[NSMutableSet alloc] init];
+	NSMutableArray *vanishedThreads = [[NSMutableArray alloc] init];
 
 	for(NSNumber *threadId in collection.messageThreads) {
 		SMMessageThread *messageThread = [collection.messageThreads objectForKey:threadId];
@@ -204,23 +204,22 @@
 		SMThreadUpdateResult threadUpdateResult = [messageThread endUpdate:removeVanishedMessages];
 
 		if(threadUpdateResult == SMThreadUpdateResultStructureChanged) {
-			if([messageThread messagesCount] == 0) {
-				NSLog(@"%s: message thread %lld vanished", __func__, messageThread.threadId);
-
-				[vanishedThreadIds addObject:[NSNumber numberWithUnsignedLongLong:[messageThread threadId]]];
-				[collection.messageThreadsByDate removeObject:messageThread];
-			} else {
-				NSAssert(oldIndex != NSNotFound, @"message thread not found");
-				[self insertMessageThreadByDate:messageThread localFolder:localFolder oldIndex:oldIndex];
-			}
+			NSAssert(oldIndex != NSNotFound, @"message thread not found");
+			[self insertMessageThreadByDate:messageThread localFolder:localFolder oldIndex:oldIndex];
 			
 			updateResult = SMMesssageStorageUpdateResultStructureChanged;
 		} else if(threadUpdateResult == SMThreadUpdateResultFlagsChanged && updateResult == SMThreadUpdateResultNone) {
 			updateResult = SMMesssageStorageUpdateResultFlagsChanged;
 		}
+		
+		if(messageThread.messagesCount == 0)
+			[vanishedThreads addObject:messageThread];
 	}
 
-	[collection.messageThreads removeObjectsForKeys:[vanishedThreadIds allObjects]];
+	for(SMMessageThread *messageThread in vanishedThreads) {
+		[collection.messageThreadsByDate removeObject:messageThread];
+		[collection.messageThreads removeObjectForKey:[NSNumber numberWithUnsignedLongLong:messageThread.threadId]];
+	}
 
 	NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count %lu not equal to sorted threads count %lu", collection.messageThreads.count, collection.messageThreadsByDate.count);
 	

@@ -58,6 +58,15 @@
 		};
 		
 		_messageThreadsComparatorByDate = ^NSComparisonResult(id a, id b) {
+			if([a messagesCount] == 0) {
+				if([b messagesCount] == 0)
+					return NSOrderedSame;
+
+				return NSOrderedAscending;
+			} else if([b messagesCount] == 0) {
+				return NSOrderedDescending;
+			}
+
 			SMMessage *message1 = [a messagesSortedByDate].firstObject;
 			SMMessage *message2 = [b messagesSortedByDate].firstObject;
 			
