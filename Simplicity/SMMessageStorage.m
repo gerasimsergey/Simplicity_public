@@ -136,6 +136,8 @@
 	SMMessageStorageUpdateResult updateResult = SMMesssageStorageUpdateResultNone;
 	
 	for(MCOIMAPMessage *imapMessage in imapMessages) {
+		NSAssert(collection.messageThreads.count == collection.messageThreadsByDate.count, @"message threads count %lu not equal to sorted threads count %lu", collection.messageThreads.count, collection.messageThreadsByDate.count);
+
 		//NSLog(@"%s: looking for imap message with uid %u, gmailThreadId %llu", __FUNCTION__, [imapMessage uid], [imapMessage gmailThreadID]);
 
 		const uint64_t threadId = [imapMessage gmailThreadID];
