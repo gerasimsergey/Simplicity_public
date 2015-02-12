@@ -176,6 +176,8 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	
 	if(message.hasAttachments)
 		_threadFlags |= ThreadFlagsHasAttachment;
+
+	[_labels addObjectsFromArray:message.labels];
 }
 
 - (SMThreadUpdateResult)updateIMAPMessage:(MCOIMAPMessage*)imapMessage remoteFolder:(NSString*)remoteFolderName session:(MCOIMAPSession*)session {
@@ -209,14 +211,14 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	// update the messages list
 	SMMessage *message = [[SMMessage alloc] initWithMCOIMAPMessage:imapMessage remoteFolder:remoteFolderName];
 
-	[ message setUpdated:YES];
+	[message setUpdated:YES];
 	
-	[ _messageCollection.messages insertObject:message atIndex:messageIndex ];
+	[_messageCollection.messages insertObject:message atIndex:messageIndex];
 
 	// update the date sorted messages list
 	NSUInteger messageIndexByDate = [_messageCollection.messagesByDate indexOfObject:message inSortedRange:NSMakeRange(0, [_messageCollection.messagesByDate count]) options:NSBinarySearchingInsertionIndex usingComparator:[comparators messagesComparatorByDate]];
 	
-	[ _messageCollection.messagesByDate insertObject:message atIndex:messageIndexByDate ];
+	[_messageCollection.messagesByDate insertObject:message atIndex:messageIndexByDate];
 
 	[self updateThreadFlagsFromMessage:message];
 	
@@ -263,8 +265,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	const ThreadFlags oldThreadFlags = _threadFlags;
 	_threadFlags = ThreadFlagsNone;
 
-	[_labels removeAllObjects];
-	
+	NSMutableOrderedSet *newLabels = [NSMutableOrderedSet new];
 	for(SMMessage *message in _messageCollection.messages) {
 		[self updateThreadFlagsFromMessage:message];
 
@@ -272,7 +273,13 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 		[message setUpdated:NO];
 
 		//NSLog(@"Thread %llu, message labels %@", _threadId, message.labels);
-		[_labels addObjectsFromArray:message.labels];
+		[newLabels addObjectsFromArray:message.labels];
+	}
+	
+	Boolean labelsChanged = NO;
+	if(![_labels isEqualToOrderedSet:newLabels]) {
+		_labels = newLabels;
+		labelsChanged = YES;
 	}
 
 	if([_messageCollection count] == 0)
@@ -282,7 +289,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 	if(firstMessage.date != newFirstMessage.date)
 		return SMThreadUpdateResultStructureChanged;
 		
-	if(oldThreadFlags != _threadFlags)
+	if(oldThreadFlags != _threadFlags || labelsChanged)
 		return SMThreadUpdateResultFlagsChanged;
 		
 	return SMThreadUpdateResultNone;
