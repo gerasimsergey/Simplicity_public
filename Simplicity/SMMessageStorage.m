@@ -53,7 +53,7 @@
 }
 
 - (void)ensureLocalFolderExists:(NSString*)localFolder {
-	NSLog(@"%s: folder name '%@", __FUNCTION__, localFolder);
+	//NSLog(@"%s: folder name '%@", __FUNCTION__, localFolder);
 	
 	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:localFolder];
 	

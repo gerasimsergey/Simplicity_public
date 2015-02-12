@@ -18,7 +18,7 @@
 		_model = [ SMSimplicityContainer new ];
 	}
 	
-	NSLog(@"%s: app delegate initialized", __FUNCTION__);
+	//NSLog(@"%s: app delegate initialized", __FUNCTION__);
 	
 	return self;
 }
@@ -26,7 +26,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Insert code here to initialize your application
-	NSLog(@"%s: app delegate %@, app controller %@", __FUNCTION__, self, [ self appController ]);
+	//NSLog(@"%s: app delegate %@, app controller %@", __FUNCTION__, self, [ self appController ]);
 
 	[ _model startSession ];
 }

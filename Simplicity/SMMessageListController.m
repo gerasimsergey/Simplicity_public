@@ -50,7 +50,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 }
 
 - (void)changeFolderInternal:(NSString*)folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
-	NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
+	//NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
 
 	NSAssert(folderName != nil, @"no folder name");
 	

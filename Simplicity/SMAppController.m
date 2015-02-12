@@ -28,7 +28,7 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 }
 
 - (void)awakeFromNib {
-	NSLog(@"SMAppController: awakeFromNib: _messageListViewController %@", _messageListViewController);
+	//NSLog(@"SMAppController: awakeFromNib: _messageListViewController %@", _messageListViewController);
 	
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	appDelegate.appController = self;

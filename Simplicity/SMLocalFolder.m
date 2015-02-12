@@ -136,7 +136,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSEnumerator *enumerator = [_fetchedMessageHeaders keyEnumerator];
 	for(NSNumber *gmailMessageId = nil; gmailMessageId = [enumerator nextObject];) {
-		NSLog(@"fetched message id %@", gmailMessageId);
+		//NSLog(@"fetched message id %@", gmailMessageId);
 		MCOIMAPMessage *message = [_fetchedMessageHeaders objectForKey:gmailMessageId];
 
 		if([self fetchMessageBody:[message uid] remoteFolder:remoteFolderName threadId:[message gmailThreadID] urgent:NO])
@@ -148,7 +148,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	NSString *allMailFolder = [mailbox.allMailFolder fullName];
 
 	for(MCOIMAPMessage *message in _fetchedMessageHeadersFromAllMail) {
-		NSLog(@"[all mail] fetched message id %llu", message.gmailMessageID);
+		//NSLog(@"[all mail] fetched message id %llu", message.gmailMessageID);
 		if([self fetchMessageBody:[message uid] remoteFolder:allMailFolder threadId:[message gmailThreadID] urgent:NO])
 			fetchCount++;
 	}
