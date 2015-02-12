@@ -274,8 +274,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	MCOIMAPFetchMessagesOperation *op = [session fetchMessagesOperationWithFolder:allMailFolder requestKind:messageHeadersRequestKind uids:messageUIDs];
 	
-	op.urgent = YES;
-	
 	[op start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		// reschedule now to avoid any prev. scheduled operation to break the
 		// ongoing sync process
