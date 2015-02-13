@@ -157,6 +157,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			fetchCount++;
 	}
 
+	NSLog(@"%s: fetching %lu message bodies", __func__, fetchCount);
+
 	[_fetchedMessageHeaders removeAllObjects];
 	[_fetchedMessageHeadersFromAllMail removeAllObjects];
 }
