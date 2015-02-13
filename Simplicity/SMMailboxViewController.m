@@ -19,9 +19,7 @@
 #import "SMMailboxViewController.h"
 #import "SMFolderColorController.h"
 
-@implementation SMMailboxViewController {
-	SMFolder *__weak _lastFolder;
-}
+@implementation SMMailboxViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -54,7 +52,7 @@
 
 	SMFolder *folder = [self selectedFolder:selectedRow];
 	
-	if(folder == nil || folder == _lastFolder)
+	if(folder == nil || folder == _currentFolder)
 		return;
 	
 	//NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
@@ -66,7 +64,7 @@
 
 	[[model messageListController] changeFolder:folder.fullName];
 
-	_lastFolder = folder;
+	_currentFolder = folder;
 	
 	[[[appDelegate appController] searchResultsListViewController] clearSelection];
 }
@@ -74,7 +72,7 @@
 - (void)clearSelection {
 	[_folderListView deselectAll:self];
 
-	_lastFolder = nil;
+	_currentFolder = nil;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
