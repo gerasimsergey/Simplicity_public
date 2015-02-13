@@ -308,8 +308,7 @@
 }
 
 - (void)messageHeadersSyncFinished:(Boolean)hasUpdates {
-	[_updatingMessagesProgressIndicator stopAnimation:self];
-	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
+	[self stopProgressIndicators];
 
 	if(hasUpdates) {
 		const Boolean preserveSelection = YES;
@@ -343,6 +342,11 @@
 			}
 		}
 	}
+}
+
+- (void)stopProgressIndicators {
+	[_updatingMessagesProgressIndicator stopAnimation:self];
+	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
 }
 
 @end

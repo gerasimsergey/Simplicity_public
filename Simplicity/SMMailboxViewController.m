@@ -13,6 +13,7 @@
 #import "SMFolderCellView.h"
 #import "SMSimplicityContainer.h"
 #import "SMMessageListController.h"
+#import "SMMessageListViewController.h"
 #import "SMSearchResultsListViewController.h"
 #import "SMColorCircle.h"
 #import "SMMailboxViewController.h"
@@ -62,7 +63,8 @@
 	SMSimplicityContainer *model = [appDelegate model];
 
 	[[model messageListController] changeFolder:folder.fullName];
-	
+	[[[appDelegate appController] messageListViewController] stopProgressIndicators];
+
 	_lastFolder = folder;
 	
 	[[[appDelegate appController] searchResultsListViewController] clearSelection];
