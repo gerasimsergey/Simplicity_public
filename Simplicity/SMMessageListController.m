@@ -20,7 +20,7 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 
-static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
+static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 
 @interface SMMessageListController()
 - (void)startMessagesUpdate;

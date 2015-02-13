@@ -132,13 +132,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)fetchMessageBodies:(NSString*)remoteFolderName {
-	//	NSLog(@"%s: fetching message bodies for folder '%@'", __FUNCTION__, remoteFolderName);
+	NSLog(@"%s: fetching message bodies for folder '%@' (%lu messages in this folder, %lu messages in all mail)", __FUNCTION__, remoteFolderName, _fetchedMessageHeaders.count, _fetchedMessageHeadersFromAllMail.count);
 	
 	NSUInteger fetchCount = 0;
 	
 	NSEnumerator *enumerator = [_fetchedMessageHeaders keyEnumerator];
 	for(NSNumber *gmailMessageId = nil; gmailMessageId = [enumerator nextObject];) {
 		//NSLog(@"fetched message id %@", gmailMessageId);
+
 		MCOIMAPMessage *message = [_fetchedMessageHeaders objectForKey:gmailMessageId];
 
 		if([self fetchMessageBody:message.uid remoteFolder:remoteFolderName threadId:message.gmailThreadID urgent:NO])
@@ -151,6 +152,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	for(MCOIMAPMessage *message in _fetchedMessageHeadersFromAllMail) {
 		//NSLog(@"[all mail] fetched message id %llu", message.gmailMessageID);
+
 		if([self fetchMessageBody:message.uid remoteFolder:allMailFolder threadId:message.gmailThreadID urgent:NO])
 			fetchCount++;
 	}
@@ -303,7 +305,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 			[_fetchMessageThreadsHeadersOps removeObjectForKey:threadId];
 
-			NSLog(@"Fetched %lu new headers for thread %@ finished (%lu fetches left)", filteredMessages.count, threadId, _fetchMessageThreadsHeadersOps.count);
+			//NSLog(@"Fetched %lu new headers for thread %@ finished (%lu fetches left)", filteredMessages.count, threadId, _fetchMessageThreadsHeadersOps.count);
 
 			if(_searchMessageThreadsOps.count == 0 && _fetchMessageThreadsHeadersOps.count == 0)
 				[self finishHeadersSync];
@@ -314,12 +316,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	[_fetchMessageThreadsHeadersOps setObject:op forKey:threadId];
 
-	NSLog(@"Fetching headers for thread %@ started (%lu fetches active)", threadId, _fetchMessageThreadsHeadersOps.count);
+	//NSLog(@"Fetching headers for thread %@ started (%lu fetches active)", threadId, _fetchMessageThreadsHeadersOps.count);
 }
 
 - (void)finishHeadersSync {
-	NSLog(@"Message threads sync finished, starting fetching message bodies");
-	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_localName removeVanishedMessages:YES];
 	Boolean hasUpdates = (updateResult != SMMesssageStorageUpdateResultNone);
