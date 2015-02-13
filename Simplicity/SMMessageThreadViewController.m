@@ -165,7 +165,7 @@
 			SMMessage *newMessage = newMessages[i];
 			
 			if(j >= _cells.count || ((ThreadCell*)_cells[j]).message != newMessage) {
-				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage collapsed:NO];
+				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage collapsed:YES];
 				
 				[viewController enableCollapse:(newMessages.count > 1)];
 				
