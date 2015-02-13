@@ -238,8 +238,8 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 			SMMessage *message = [_messageCollection.messages objectAtIndex:i];
 			
 			if(![message updated]) {
-				NSLog(@"%s: uid %u - message vanished", __FUNCTION__, [message uid]);
-				
+				NSLog(@"%s: thread %llu, message with uid %u vanished", __FUNCTION__, _threadId, message.uid);
+
 				[notUpdatedMessageIndices addIndex:i];
 			}
 		}
@@ -258,6 +258,9 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 		}
 		
 		[_messageCollection.messagesByDate removeObjectsAtIndexes:notUpdatedMessageIndices];
+
+		if(_messageCollection.count == 0)
+			NSLog(@"%s: thread %llu - all messagesvanished", __FUNCTION__, _threadId);
 	}
 	
 	NSAssert([_messageCollection count] == [_messageCollection.messagesByDate count], @"message lists mismatch");
@@ -282,7 +285,7 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 		labelsChanged = YES;
 	}
 
-	if([_messageCollection count] == 0)
+	if(_messageCollection.count == 0)
 		return SMThreadUpdateResultStructureChanged;
 
 	SMMessage *newFirstMessage = [_messageCollection.messagesByDate firstObject];

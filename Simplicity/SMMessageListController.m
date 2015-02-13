@@ -38,7 +38,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	if(self) {
 		_model = model;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetched:) name:@"MessageHeadersFetched" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:@"MessagesUpdated" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersSyncFinished:) name:@"MessageHeadersSyncFinished" object:nil];
 	}
 
@@ -115,17 +115,14 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[[appController messageListViewController] reloadMessageList:preserveSelection];
 }
 
-- (void)updateMessageList:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolderName {
+- (void)updateMessageList {
 //	NSLog(@"%s: new messages count %lu", __FUNCTION__, (unsigned long)[imapMessages count]);
 
-	MCOIMAPSession *session = [_model session];
-
-	SMMessageStorageUpdateResult updateResult = [[_model messageStorage] updateIMAPMessages:imapMessages localFolder:[_currentFolder localName] remoteFolder:remoteFolderName session:session];
-
-	if(updateResult == SMMesssageStorageUpdateResultNone) {
+	//TODO:
+	//if(updateResult == SMMesssageStorageUpdateResultNone) {
 		// no updates, so no need to reload the message list
-		return;
-	}
+	//	return;
+	//}
 	
 	// TODO: special case for flags changed in some cells only
 	
@@ -161,14 +158,11 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 15;
 	[_currentFolder fetchMessageBody:uid remoteFolder:remoteFolderName threadId:threadId urgent:YES];
 }
 
-- (void)messageHeadersFetched:(NSNotification *)notification {
+- (void)messagesUpdated:(NSNotification *)notification {
 	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
 
 	if([_currentFolder.localName isEqualToString:localFolder]) {
-		NSArray *messages = [[notification userInfo] objectForKey:@"MessagesList"];
-		NSString *remoteFolderName = [[notification userInfo] objectForKey:@"RemoteFolderName"];
-
-		[self updateMessageList:messages remoteFolder:remoteFolderName];
+		[self updateMessageList];
 		[self updateMessageThreadView];
 	}
 }

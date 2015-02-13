@@ -29,7 +29,7 @@
 	if(self) {
 		_cellViews = [[NSMutableDictionary alloc] init];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageHeadersFetched:) name:@"MessageHeadersFetched" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:@"MessagesUpdated" object:nil];
 	}
 	
 	return self;
@@ -171,7 +171,7 @@
 	[_tableView deselectAll:self];
 }
 
-- (void)messageHeadersFetched:(NSNotification *)notification {
+- (void)messagesUpdated:(NSNotification *)notification {
 	NSString *localFolder = [[notification userInfo] objectForKey:@"LocalFolderName"];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
