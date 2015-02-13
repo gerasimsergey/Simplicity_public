@@ -16,7 +16,7 @@
 #import "SMFolder.h"
 #import "SMLocalFolder.h"
 
-static const NSUInteger DEFAULT_MAX_MESSAGES_PER_FOLDER = 300;
+static const NSUInteger DEFAULT_MAX_MESSAGES_PER_FOLDER = 100;
 static const NSUInteger INCREASE_MESSAGES_PER_FOLDER = 50;
 static const NSUInteger MESSAGE_HEADERS_TO_FETCH_AT_ONCE = 20;
 

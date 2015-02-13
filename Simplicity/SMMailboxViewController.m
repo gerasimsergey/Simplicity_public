@@ -57,13 +57,14 @@
 	if(folder == nil || folder == _lastFolder)
 		return;
 	
-	NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
+	//NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
 	
-	SMAppDelegate *appDelegate =  [[NSApplication sharedApplication] delegate];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMSimplicityContainer *model = [appDelegate model];
 
-	[[model messageListController] changeFolder:folder.fullName];
 	[[[appDelegate appController] messageListViewController] stopProgressIndicators];
+
+	[[model messageListController] changeFolder:folder.fullName];
 
 	_lastFolder = folder;
 	
