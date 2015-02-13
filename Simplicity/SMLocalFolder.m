@@ -211,16 +211,18 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)syncFetchMessageThreadsHeaders {
-	NSAssert(_fetchedMessageHeaders.count > 0, @"_fetchedMessageHeaders.count is 0");
-
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	MCOIMAPSession *session = [[appDelegate model] session];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	NSString *allMailFolder = [mailbox.allMailFolder fullName];
 	
 	[_searchMessageThreadsOps removeAllObjects];
-	
-	// TODO: cancel search ops on folder switch
+
+	if(_fetchedMessageHeaders.count == 0) {
+		[self finishHeadersSync];
+		return;
+	}
+
 	NSMutableSet *threadIds = [[NSMutableSet alloc] init];
 	NSEnumerator *enumerator = [_fetchedMessageHeaders keyEnumerator];
 	for(NSNumber *gmailMessageId = nil; gmailMessageId = [enumerator nextObject];) {
@@ -300,16 +302,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 			NSLog(@"Fetching headers for thread %@ finished (%lu fetches left)", threadId, _fetchMessageThreadsHeadersOps.count);
 
-			if(_searchMessageThreadsOps.count == 0 && _fetchMessageThreadsHeadersOps.count == 0) {
-				NSLog(@"Message threads sync finished, starting fetching message bodies");
-
-				SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_localName removeVanishedMessages:YES];
-				Boolean hasUpdates = (updateResult != SMMesssageStorageUpdateResultNone);
-				
-				[self fetchMessageBodies:_localName];
-				
-				[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_localName, @"LocalFolderName", [NSNumber numberWithBool:hasUpdates], @"HasUpdates", nil]];
-			}
+			if(_searchMessageThreadsOps.count == 0 && _fetchMessageThreadsHeadersOps.count == 0)
+				[self finishHeadersSync];
 		} else {
 			// TODO: retry?
 
@@ -320,6 +314,18 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[_fetchMessageThreadsHeadersOps setObject:op forKey:threadId];
 
 	NSLog(@"Fetching headers for thread %@ started (%lu fetches active)", threadId, _fetchMessageThreadsHeadersOps.count);
+}
+
+- (void)finishHeadersSync {
+	NSLog(@"Message threads sync finished, starting fetching message bodies");
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_localName removeVanishedMessages:YES];
+	Boolean hasUpdates = (updateResult != SMMesssageStorageUpdateResultNone);
+	
+	[self fetchMessageBodies:_localName];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"MessageHeadersSyncFinished" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_localName, @"LocalFolderName", [NSNumber numberWithBool:hasUpdates], @"HasUpdates", nil]];
 }
 
 - (void)syncFetchMessageHeaders {
@@ -490,14 +496,26 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	[_fetchMessageHeadersOp cancel];
 	_fetchMessageHeadersOp = nil;
+	
+	for(NSNumber *threadId in _searchMessageThreadsOps) {
+		MCOIMAPBaseOperation *op = [_searchMessageThreadsOps objectForKey:threadId];
+		[op cancel];
+	}
+	[_searchMessageThreadsOps removeAllObjects];
+	
+	for(NSNumber *threadId in _fetchMessageThreadsHeadersOps) {
+		MCOIMAPBaseOperation *op = [_fetchMessageThreadsHeadersOps objectForKey:threadId];
+		[op cancel];
+	}
+	[_fetchMessageThreadsHeadersOps removeAllObjects];
 }
 
 - (void)stopMessagesLoading:(Boolean)stopBodiesLoading {
 	[self stopMessageHeadersLoading];
 
 	if(stopBodiesLoading) {
-		for(id key in _fetchMessageBodyOps) {
-			NSNumber *uid = key;
+		for(NSNumber *uid in _fetchMessageBodyOps) {
+//			NSLog(@"uid %@", uid);
 			MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:uid];
 			
 			[op cancel];
@@ -511,6 +529,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[self stopMessagesLoading:YES];
 	
 	[_fetchedMessageHeaders removeAllObjects];
+	[_fetchedMessageHeadersFromAllMail removeAllObjects];
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] removeLocalFolder:_localName];
