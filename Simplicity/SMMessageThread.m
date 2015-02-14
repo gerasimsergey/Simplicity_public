@@ -303,4 +303,9 @@ typedef NS_OPTIONS(NSUInteger, ThreadFlags) {
 		[message setUpdated:NO];
 }
 
+- (void)markAsUpdated {
+	for(SMMessage *message in [_messageCollection messages])
+		[message setUpdated:YES];
+}
+
 @end

@@ -19,6 +19,7 @@
 static const NSUInteger DEFAULT_MAX_MESSAGES_PER_FOLDER = 100;
 static const NSUInteger INCREASE_MESSAGES_PER_FOLDER = 50;
 static const NSUInteger MESSAGE_HEADERS_TO_FETCH_AT_ONCE = 20;
+static const NSUInteger OPERATION_UPDATE_TIMEOUT_SEC = 30;
 
 static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMessagesRequestKind)(
 	MCOIMAPMessagesRequestKindUid |
@@ -73,8 +74,28 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[[[appDelegate model] messageListController] scheduleMessageListUpdate:NO];
 }
 
+- (void)cancelScheduledUpdateTimeout {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateTimeout) object:nil];
+}
+
+- (void)rescheduleUpdateTimeout {
+	[self cancelScheduledUpdateTimeout];
+
+	[self performSelector:@selector(updateTimeout) withObject:nil afterDelay:OPERATION_UPDATE_TIMEOUT_SEC];
+}
+
+- (void)updateTimeout {
+	NSLog(@"%s: operation timeout", __func__);
+
+	[self stopMessagesLoading:NO];
+	[self startLocalFolderSync];
+	[self rescheduleUpdateTimeout];
+}
+
 - (void)startLocalFolderSync {
-	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil) {
+	[self rescheduleMessageListUpdate];
+
+	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil || _fetchMessageThreadsHeadersOps.count > 0) {
 		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _localName);
 		return;
 	}
@@ -101,11 +122,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[_folderInfoOp start:^(NSError *error, MCOIMAPFolderInfo *info) {
 		_folderInfoOp = nil;
 
-		// reschedule must be done as soon as the first async op (folder info) is complete
-		// to avoid false sync stops on connectivity loss in the middle of another
-		// async operation
-		[self rescheduleMessageListUpdate];
-		
 		if(error == nil) {
 //			NSLog(@"UIDNEXT: %lu", (unsigned long) [info uidNext]);
 //			NSLog(@"UIDVALIDITY: %lu", (unsigned long) [info uidValidity]);
@@ -215,12 +231,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)syncFetchMessageThreadsHeaders {
+	NSLog(@"%s: searching for %lu threads", __func__, _fetchedMessageHeaders.count);
+
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	MCOIMAPSession *session = [[appDelegate model] session];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	NSString *allMailFolder = [mailbox.allMailFolder fullName];
 	
-	[_searchMessageThreadsOps removeAllObjects];
+	NSAssert(_searchMessageThreadsOps.count == 0, @"_searchMessageThreadsOps not empty");
 
 	if(_fetchedMessageHeaders.count == 0) {
 		[self finishHeadersSync];
@@ -242,25 +260,25 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		op.urgent = YES;
 		
 		[op start:^(NSError *error, MCOIndexSet *searchResults) {
-			if([_searchMessageThreadsOps objectForKey:threadId] == nil)
+			if([_searchMessageThreadsOps objectForKey:threadId] != op)
 				return;
 
-			[self rescheduleMessageListUpdate];
-
+			[self rescheduleUpdateTimeout];
+			
+			[_searchMessageThreadsOps removeObjectForKey:threadId];
+			
 			if(error == nil) {
-				[_searchMessageThreadsOps removeObjectForKey:threadId];
-
 				//NSLog(@"Search for message '%@' thread %llu finished (%lu searches left)", message.header.subject, message.gmailThreadID, _searchMessageThreadsOps.count);
 
 				if(searchResults.count > 0) {
 					//NSLog(@"%s: %u messages found in '%@', threadId %@", __func__, [searchResults count], allMailFolder, threadId);
 					
 					[self fetchMessageThreadsHeaders:threadId uids:searchResults];
-				} else {
-					NSLog(@"%s: nothing found in '%@' failed, threadId %@", __func__, allMailFolder, threadId);
 				}
 			} else {
 				NSLog(@"%s: search in '%@' for thread %@ failed, error %@", __func__, allMailFolder, threadId, error);
+
+				[self markMessageThreadAsUpdated:threadId];
 			}
 		}];
 		
@@ -268,6 +286,13 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 		//NSLog(@"Search for message '%@' thread %llu started (%lu searches active)", message.header.subject, message.gmailThreadID, _searchMessageThreadsOps.count);
 	}
+}
+
+- (void)markMessageThreadAsUpdated:(NSNumber*)threadId {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMessageStorage *storage = [[appDelegate model] messageStorage];
+
+	[storage markMessageThreadAsUpdated:[threadId unsignedLongLongValue] localFolder:_localName];
 }
 
 - (void)updateMessages:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolderName {
@@ -292,7 +317,12 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	MCOIMAPFetchMessagesOperation *op = [session fetchMessagesOperationWithFolder:allMailFolder requestKind:messageHeadersRequestKind uids:messageUIDs];
 	
 	[op start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
-		[self rescheduleMessageListUpdate];
+		if([_fetchMessageThreadsHeadersOps objectForKey:threadId] != op)
+			return;
+		
+		[self rescheduleUpdateTimeout];
+
+		[_fetchMessageThreadsHeadersOps removeObjectForKey:threadId];
 		
 		if(error == nil) {
 			NSMutableArray *filteredMessages = [NSMutableArray array];
@@ -304,16 +334,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			}
 
 			[self updateMessages:filteredMessages remoteFolder:allMailFolder];
-
-			[_fetchMessageThreadsHeadersOps removeObjectForKey:threadId];
-
-			//NSLog(@"Fetched %lu new headers for thread %@ finished (%lu fetches left)", filteredMessages.count, threadId, _fetchMessageThreadsHeadersOps.count);
-
-			if(_searchMessageThreadsOps.count == 0 && _fetchMessageThreadsHeadersOps.count == 0)
-				[self finishHeadersSync];
 		} else {
 			NSLog(@"Error fetching message headers for thread %@: %@", threadId, error);
+			
+			[self markMessageThreadAsUpdated:threadId];
 		}
+		
+		if(_searchMessageThreadsOps.count == 0 && _fetchMessageThreadsHeadersOps.count == 0)
+			[self finishHeadersSync];
 	}];
 
 	[_fetchMessageThreadsHeadersOps setObject:op forKey:threadId];
@@ -322,6 +350,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)finishHeadersSync {
+	[self cancelScheduledUpdateTimeout];
+
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMessageStorageUpdateResult updateResult = [[[appDelegate model] messageStorage] endUpdate:_localName removeVanishedMessages:YES];
 	Boolean hasUpdates = (updateResult != SMMesssageStorageUpdateResultNone);
@@ -373,8 +403,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_fetchMessageHeadersOp.urgent = YES;
 	
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
-		[self rescheduleMessageListUpdate];
-		
+		[self rescheduleUpdateTimeout];
+
 		_fetchMessageHeadersOp = nil;
 		
 		if(error == nil) {
@@ -492,6 +522,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)stopMessageHeadersLoading {
+	[self cancelScheduledUpdateTimeout];
+
 	[_folderInfoOp cancel];
 	_folderInfoOp = nil;
 	
