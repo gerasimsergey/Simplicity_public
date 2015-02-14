@@ -366,6 +366,12 @@
 	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
 }
 
+- (void)moveSelectedMessageThreadsToFolder:(NSString*)remoteFolderName {
+	// TODO
+	
+	NSLog(@"%s: to remote folder %@", __func__, remoteFolderName);
+}
+
 #pragma mark Messages drag and drop support
 
 - (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard {
@@ -392,56 +398,6 @@
 	// the message list view does not accept dropping
 
 	return NSDragOperationNone;
-}
-
-- (BOOL)tableView:(NSTableView*)tv
-	   acceptDrop:(id)info
-			  row:(NSInteger)row
-	dropOperation:(NSTableViewDropOperation)op
-{
-	NSLog(@"%s", __func__);
-	
-	NSData *data = [[info draggingPasteboard] dataForType:NSStringPboardType];
-	NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-
-/*	//REORDERING IN THE SAME TABLE VIEW BY DRAG & DROP
-	if (([info draggingSource] == self.targetTableView) & (tv == self.targetTableView))
-	{
-		NSArray *tArr = [self.targetDataArray objectsAtIndexes:rowIndexes];
-		[self.targetDataArray removeObjectsAtIndexes:rowIndexes];
-		if (row > self.targetDataArray.count)
-		{
-			[self.targetDataArray insertObject:[tArr objectAtIndex:0] atIndex:row-1];
-		}
-		else
-		{
-			[self.targetDataArray insertObject:[tArr objectAtIndex:0] atIndex:row];
-		}
-		[self.targetTableView reloadData];
-		[self.targetTableView deselectAll:nil];
-	}
-	
-	//DRAG AND DROP ACROSS THE TABLES
-	else if (([info draggingSource] == self.sourceTableView) & (tv == self.targetTableView))
-	{
-		NSArray *tArr = [self.sourceDataArray objectsAtIndexes:rowIndexes];
-		[self.sourceDataArray removeObjectsAtIndexes:rowIndexes];
-		[self.targetDataArray addObject:[tArr objectAtIndex:0]];
-		[self.sourceTableView reloadData];
-		[self.sourceTableView deselectAll:nil];
-		[self.targetTableView reloadData];
-	}
-	else if (([info draggingSource] == self.targetTableView) & (tv == self.sourceTableView))
-	{
-		NSArray *tArr = [self.targetDataArray objectsAtIndexes:rowIndexes];
-		[self.targetDataArray removeObjectsAtIndexes:rowIndexes];
-		[self.sourceDataArray addObject:[tArr objectAtIndex:0]];
-		[self.targetTableView reloadData];
-		[self.targetTableView deselectAll:nil];
-		[self.sourceTableView reloadData];
-	}
-*/
-	return YES;
 }
 
 @end

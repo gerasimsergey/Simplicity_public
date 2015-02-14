@@ -24,4 +24,6 @@
 
 - (void)stopProgressIndicators;
 
+- (void)moveSelectedMessageThreadsToFolder:(NSString*)remoteFolderName;
+
 @end
