@@ -22,4 +22,6 @@
 - (void)reloadMessageList:(Boolean)preserveSelection;
 - (void)messageHeadersSyncFinished:(Boolean)hasUpdates;
 
+- (void)stopProgressIndicators;
+
 @end

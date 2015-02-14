@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 
 @class SMMailbox;
+@class SMFolder;
 
 @interface SMMailboxViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (weak) IBOutlet NSTableView *folderListView;
+
+@property (weak, readonly) SMFolder *currentFolder;
 
 - (void)updateFolderListView;
 - (void)clearSelection;

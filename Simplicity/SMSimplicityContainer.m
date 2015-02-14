@@ -61,7 +61,7 @@
 		[self getIMAPServerCapabilities];
 	}
 	
-	NSLog(@"%s: model initialized", __FUNCTION__);
+	//NSLog(@"%s: model initialized", __FUNCTION__);
 		  
 	return self;
 }
@@ -74,7 +74,7 @@
 - (MCOIndexSet*)imapServerCapabilities {
 	MCOIndexSet *capabilities = _imapServerCapabilities;
 
-	NSLog(@"%s: IMAP server capabilities: %@", __FUNCTION__, capabilities);
+	//NSLog(@"%s: IMAP server capabilities: %@", __FUNCTION__, capabilities);
 	
 	return capabilities;
 }
@@ -92,7 +92,7 @@
 
 			[_capabilitiesOp start:opBlock];
 		} else {
-			NSLog(@"%s: capabilities: %@", __FUNCTION__, capabilities);
+			//NSLog(@"%s: capabilities: %@", __FUNCTION__, capabilities);
 			
 			_imapServerCapabilities = capabilities;
 			_capabilitiesOp = nil;

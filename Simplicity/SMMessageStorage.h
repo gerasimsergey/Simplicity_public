@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, SMMessageStorageUpdateResult) {
 
 - (void)startUpdate:(NSString*)folder;
 - (SMMessageStorageUpdateResult)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolderName session:(MCOIMAPSession*)session;
+- (void)markMessageThreadAsUpdated:(uint64_t)threadId localFolder:(NSString*)localFolder;
 - (SMMessageStorageUpdateResult)endUpdate:(NSString*)folder removeVanishedMessages:(Boolean)removeVanishedMessages;
 
 - (SMMessageThread*)messageThreadById:(uint64_t)threadId localFolder:(NSString*)folder;

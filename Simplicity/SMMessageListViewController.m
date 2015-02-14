@@ -15,10 +15,12 @@
 #import "SMMessageListCellView.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
+#import "SMMailboxViewController.h"
 #import "SMFolderColorController.h"
 #import "SMMessageBookmarksView.h"
 #import "SMSimplicityContainer.h"
 #import "SMLocalFolder.h"
+#import "SMFolder.h"
 #import "SMMessage.h"
 #import "SMMessageThread.h"
 #import "SMMessageStorage.h"
@@ -146,9 +148,10 @@
 //	NSLog(@"%s: tableView %@, datasource %@, delegate call: %@, row %ld", __FUNCTION__, tableView, [tableView dataSource], [tableColumn identifier], row);
 	
 	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
+	SMAppController *appController = [appDelegate appController];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
-	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
-	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row localFolder:[currentFolder localName]];
+	SMLocalFolder *currentLocalFolder = [messageListController currentLocalFolder];
+	SMMessageThread *messageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:row localFolder:[currentLocalFolder localName]];
 
 	if(messageThread == nil) {
 		NSLog(@"%s: row %ld, message thread is nil", __FUNCTION__, row);
@@ -190,6 +193,13 @@
 	}
 	
 	NSMutableArray *bookmarkColors = [NSMutableArray array];
+
+	SMFolder *currentFolder = [[appController mailboxViewController] currentFolder];
+	NSColor *mainColor = (currentFolder != nil && currentFolder.kind == SMFolderKindRegular)? [[appController folderColorController] colorForFolder:currentFolder.fullName] : nil;
+
+	if(mainColor != nil)
+	   [bookmarkColors addObject:mainColor];
+
 	for(NSString *label in messageThread.labels) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		SMAppController *appController = [appDelegate appController];
@@ -197,7 +207,8 @@
 		if([label characterAtIndex:0] != '\\') {
 			NSColor *color = [[appController folderColorController] colorForFolder:label];
  
-			[bookmarkColors addObject:color];
+			if(color != mainColor)
+				[bookmarkColors addObject:color];
 		}
 	}
 	
@@ -308,8 +319,7 @@
 }
 
 - (void)messageHeadersSyncFinished:(Boolean)hasUpdates {
-	[_updatingMessagesProgressIndicator stopAnimation:self];
-	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
+	[self stopProgressIndicators];
 
 	if(hasUpdates) {
 		const Boolean preserveSelection = YES;
@@ -343,6 +353,11 @@
 			}
 		}
 	}
+}
+
+- (void)stopProgressIndicators {
+	[_updatingMessagesProgressIndicator stopAnimation:self];
+	[_loadingMoreMessagesProgressIndicator stopAnimation:self];
 }
 
 @end
