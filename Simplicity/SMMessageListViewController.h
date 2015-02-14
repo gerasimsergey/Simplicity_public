@@ -10,13 +10,13 @@
 
 @interface SMMessageListViewController : NSViewController<NSTableViewDataSource, NSTableViewDelegate>
 
-@property IBOutlet NSButton *updateMessagesButton;
+@property IBOutlet NSButton *updateMessagesNowButton;
 @property IBOutlet NSButton *loadMoreMessagesButton;
 @property IBOutlet NSProgressIndicator *updatingMessagesProgressIndicator;
 @property IBOutlet NSProgressIndicator *loadingMoreMessagesProgressIndicator;
 @property IBOutlet NSTableView *messageListTableView;
 
-- (IBAction)updateMessages:(id)sender;
+- (IBAction)updateMessagesNow:(id)sender;
 - (IBAction)loadMoreMessages:(id)sender;
 
 - (void)reloadMessageList:(Boolean)preserveSelection;

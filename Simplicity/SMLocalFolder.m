@@ -541,6 +541,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		[op cancel];
 	}
 	[_fetchMessageThreadsHeadersOps removeAllObjects];
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMessageStorage *storage = [[appDelegate model] messageStorage];
+	
+	[storage cancelUpdate:_localName];
 }
 
 - (void)stopMessagesLoading:(Boolean)stopBodiesLoading {

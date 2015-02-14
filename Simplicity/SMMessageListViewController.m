@@ -292,10 +292,11 @@
 	_selectedMessageThread = nil;
 }
 
-- (IBAction)updateMessages:(id)sender {
+- (IBAction)updateMessagesNow:(id)sender {
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
+	[messageListController cancelMessageListUpdate];
 	[messageListController scheduleMessageListUpdate:YES];
 
 	[_updatingMessagesProgressIndicator setHidden:NO];

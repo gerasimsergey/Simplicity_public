@@ -103,6 +103,10 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 	[_currentFolder startLocalFolderSync];
 }
 
+- (void)cancelMessageListUpdate {
+	[_currentFolder stopMessagesLoading:NO];
+}
+
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderNameToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
 	[self changeFolderInternal:searchResultsLocalFolder syncWithRemoteFolder:NO];
 	

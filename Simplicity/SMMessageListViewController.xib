@@ -10,7 +10,7 @@
                 <outlet property="loadMoreMessagesButton" destination="L8V-cN-uTh" id="NV9-c7-Vqf"/>
                 <outlet property="loadingMoreMessagesProgressIndicator" destination="8Od-aj-dKF" id="wZH-rF-vez"/>
                 <outlet property="messageListTableView" destination="4" id="183"/>
-                <outlet property="updateMessagesButton" destination="Crp-Ot-AgV" id="Ibq-uc-faK"/>
+                <outlet property="updateMessagesNowButton" destination="Crp-Ot-AgV" id="Jy5-oy-UaK"/>
                 <outlet property="updatingMessagesProgressIndicator" destination="9e7-R3-3CM" id="OzG-ja-cvY"/>
                 <outlet property="view" destination="1" id="184"/>
             </connections>
@@ -28,7 +28,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updateMessages:" target="-2" id="hMJ-1V-yTM"/>
+                        <action selector="updateMessagesNow:" target="-2" id="dKY-hg-gSQ"/>
                     </connections>
                 </button>
                 <scrollView autohidesScrollers="YES" horizontalLineScroll="49" horizontalPageScroll="10" verticalLineScroll="49" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
