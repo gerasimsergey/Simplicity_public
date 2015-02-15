@@ -12,6 +12,8 @@
 #import "SMMessageStorage.h"
 #import "SMAppController.h"
 #import "SMMessageListController.h"
+#import "SMMessageThread.h"
+#import "SMMessage.h"
 #import "SMMailbox.h"
 #import "SMFolder.h"
 #import "SMLocalFolder.h"
@@ -497,7 +499,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	_fetchMessageHeadersOp = [session fetchMessagesOperationWithFolder:_selectedMessagesRemoteFolder requestKind:messageHeadersRequestKind uids:messageUIDsToLoadNow];
 	
 	_fetchMessageHeadersOp.urgent = YES;
-	
+
 	[_fetchMessageHeadersOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages) {
 		_fetchMessageHeadersOp = nil;
 		
@@ -569,13 +571,80 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[[[appDelegate model] messageStorage] removeLocalFolder:_localName];
 }
 
-- (void)moveMessageThreadsToRemoteFolder:(NSArray*)messageThreads remoteFolder:(NSString*)remoteFolderName {
+#pragma mark Messages movement to other remote folders
+
+- (void)moveMessageThreads:(NSArray*)messageThreads toRemoteFolder:(NSString*)remoteFolderName {
 	[self stopMessagesLoading:NO];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] removeMessageThreadsLocalFolder:_localName messageThreads:messageThreads];
+	
+	MCOIndexSet *messagesToMoveUids = [MCOIndexSet indexSet];
+	for(SMMessageThread *thread in messageThreads) {
+		NSArray *messages = [thread messagesSortedByDate];
+		
+		for(SMMessage *message in messages) {
+			// TODO: support movement for messages from multiple folders to the same remote one
+			if([message.remoteFolder isEqualToString:_localName]) {
+				[messagesToMoveUids addIndex:message.uid];
 
-	// TODO
+				NSNumber *uid = [NSNumber numberWithUnsignedInt:message.uid];
+
+				MCOIMAPFetchContentOperation *bodyFetchOp = [_fetchMessageBodyOps objectForKey:uid];
+				[bodyFetchOp cancel];
+
+				[_fetchMessageBodyOps removeObjectForKey:uid];
+			}
+		}
+	}
+	
+	NSAssert(messagesToMoveUids.count > 0, @"no message uids to move from %@ to %@", _localName, remoteFolderName);
+
+	MCOIMAPSession *session = [[appDelegate model] session];
+	NSAssert(session, @"session lost");
+
+	// TODO: support movement for messages from multiple folders to the same remote one
+	NSAssert(_syncedWithRemoteFolder, @"folder %@ is not synced with remote folder (TODO: to implement)", _localName);
+
+	MCOIMAPCopyMessagesOperation *op = [session copyMessagesOperationWithFolder:_localName uids:messagesToMoveUids destFolder:remoteFolderName];
+
+	op.urgent = YES;
+	
+	[op start:^(NSError *error, NSDictionary *uidMapping) {
+		if(error == nil) {
+			[self deleteMessages:messagesToMoveUids];
+		} else {
+			NSLog(@"%s: Error copying messages from %@ to %@: %@", __func__, _localName, remoteFolderName, error);
+		}
+	}];
+
+	// TODO: register the op for the folder (there may be multiple moving operations)
+}
+
+- (void)deleteMessages:(MCOIndexSet*)uids {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	MCOIMAPSession *session = [[appDelegate model] session];
+	NSAssert(session, @"session lost");
+
+	MCOIMAPOperation *op = [session storeFlagsOperationWithFolder:_localName uids:uids kind:MCOIMAPStoreFlagsRequestKindSet flags:MCOMessageFlagDeleted];
+
+	[op start:^(NSError * error) {
+		if(error == nil) {
+			NSLog(@"Updated flags!");
+		} else {
+			NSLog(@"Error updating flags:%@", error);
+		}
+
+		MCOIMAPOperation *deleteOp = [session expungeOperation:_localName];
+
+		[deleteOp start:^(NSError *error) {
+			if(error == nil) {
+				NSLog(@"Successfully expunged folder");
+			} else {
+				NSLog(@"Error expunging folder:%@", error);
+			}
+		}];
+	}];
 }
 
 @end

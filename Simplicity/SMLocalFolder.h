@@ -44,6 +44,6 @@
 
 // starts asynchronous process of moving the messages from the selected message threads
 // to the chosen folder
-- (void)moveMessageThreadsToRemoteFolder:(NSArray*)messageThreads remoteFolder:(NSString*)remoteFolderName;
+- (void)moveMessageThreads:(NSArray*)messageThreads toRemoteFolder:(NSString*)remoteFolderName;
 
 @end

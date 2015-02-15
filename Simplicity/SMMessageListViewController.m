@@ -27,6 +27,7 @@
 
 @implementation SMMessageListViewController {
 	SMMessageThread *_selectedMessageThread;
+	SMMessageThread *_draggedMessageThread;
 	NSMutableArray *_multipleSelectedMessageThreads;
 	Boolean _immediateSelection;
 	Boolean _mouseSelectionInProcess;
@@ -386,14 +387,23 @@
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
-	NSAssert(_selectedMessageThread != nil || _multipleSelectedMessageThreads.count > 0, @"no message threads selected");
+	NSAssert(_selectedMessageThread != nil || _multipleSelectedMessageThreads.count > 0 || _draggedMessageThread != nil, @"no message threads selected for dragging");
 
-	NSArray *messageThreadsToMove = _selectedMessageThread != nil? [NSArray arrayWithObject:_selectedMessageThread] : [NSArray arrayWithArray:_multipleSelectedMessageThreads];
+	NSArray *messageThreadsToMove = _selectedMessageThread != nil? [NSArray arrayWithObject:_selectedMessageThread] : _multipleSelectedMessageThreads.count > 0? [NSArray arrayWithArray:_multipleSelectedMessageThreads] : [NSArray arrayWithObject:_draggedMessageThread];
 	
 	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
 	NSAssert(currentFolder != nil, @"no current folder");
 
-	[currentFolder moveMessageThreadsToRemoteFolder:messageThreadsToMove remoteFolder:remoteFolderName];
+	[currentFolder moveMessageThreads:messageThreadsToMove toRemoteFolder:remoteFolderName];
+
+	_draggedMessageThread = nil;
+	_selectedMessageThread = nil;
+
+	[self changeSelectedMessageThread];
+	
+	_mouseSelectionInProcess = NO;
+	_immediateSelection = NO;
+	_reloadDeferred = NO;
 
 	[self reloadMessageList:NO];
 }
@@ -407,6 +417,18 @@
 		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
 		[pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 		[pboard setData:data forType:NSStringPboardType];
+
+		if(_selectedMessageThread == nil && _multipleSelectedMessageThreads.count == 0) {
+			NSAssert(rowIndexes.count == 1, @"multiple rows (%lu) are dragged without selection", rowIndexes.count);
+
+			SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+			SMMessageListController *messageListController = [[appDelegate model] messageListController];
+			SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+			NSAssert(currentFolder != nil, @"no current folder");
+
+			_draggedMessageThread = [[[appDelegate model] messageStorage] messageThreadAtIndexByDate:rowIndexes.firstIndex localFolder:[currentFolder localName]];
+		}
+		
 		return YES;
 	} else {
 		return NO;
