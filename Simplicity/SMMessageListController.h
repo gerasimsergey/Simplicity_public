@@ -21,6 +21,7 @@
 - (void)fetchMessageBodyUrgently:(uint32_t)uid remoteFolder:(NSString*)remoteFolderName threadId:(uint64_t)threadId;
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderNameToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder;
 - (void)scheduleMessageListUpdate:(Boolean)now;
+- (void)cancelScheduledMessageListUpdate;
 - (void)cancelMessageListUpdate;
 
 @end

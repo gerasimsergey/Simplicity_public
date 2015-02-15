@@ -76,6 +76,11 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[[[appDelegate model] messageListController] scheduleMessageListUpdate:NO];
 }
 
+- (void)cancelScheduledMessageListUpdate {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] messageListController] cancelScheduledMessageListUpdate];
+}
+
 - (void)cancelScheduledUpdateTimeout {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateTimeout) object:nil];
 }
@@ -575,6 +580,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)moveMessageThreads:(NSArray*)messageThreads toRemoteFolder:(NSString*)remoteFolderName {
 	[self stopMessagesLoading:NO];
+	[self cancelScheduledMessageListUpdate];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] removeMessageThreadsLocalFolder:_localName messageThreads:messageThreads];
@@ -630,18 +636,24 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 	[op start:^(NSError * error) {
 		if(error == nil) {
-			NSLog(@"Updated flags!");
+			NSLog(@"%s: Flags for folder %@ successfully updated", __func__, _localName);
 		} else {
-			NSLog(@"Error updating flags:%@", error);
+			NSLog(@"%s: Error updating flags for folder %@: %@", __func__, _localName, error);
+			
+			// TODO: try again!
 		}
 
 		MCOIMAPOperation *deleteOp = [session expungeOperation:_localName];
 
 		[deleteOp start:^(NSError *error) {
 			if(error == nil) {
-				NSLog(@"Successfully expunged folder");
+				NSLog(@"%s: Folder %@ successfully expunged", __func__, _localName);
+
+				[self startLocalFolderSync];
 			} else {
-				NSLog(@"Error expunging folder:%@", error);
+				NSLog(@"%s: Error expunging folder %@: %@", __func__, _localName, error);
+
+				// TODO: try again!
 			}
 		}];
 	}];

@@ -228,9 +228,6 @@
 			  row:(NSInteger)row
 	dropOperation:(NSTableViewDropOperation)op
 {
-	NSData *data = [[info draggingPasteboard] dataForType:NSStringPboardType];
-	NSIndexSet *rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-
 	SMFolder *targetFolder = [self selectedFolder:row];
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];

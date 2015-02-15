@@ -146,12 +146,16 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 	[[appController messageThreadViewController] updateMessageThread];
 }
 
+- (void)cancelScheduledMessageListUpdate {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startMessagesUpdate) object:nil];
+}
+
 - (void)scheduleMessageListUpdate:(Boolean)now {
+	[self cancelScheduledMessageListUpdate];
+	
 	NSTimeInterval delay_sec = now? 0 : MESSAGE_LIST_UPDATE_INTERVAL_SEC;
 	
 	//NSLog(@"%s: scheduling message list update after %lu sec", __func__, (unsigned long)delay_sec);
-
-	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 
 	[self performSelector:@selector(startMessagesUpdate) withObject:nil afterDelay:delay_sec];
 }
