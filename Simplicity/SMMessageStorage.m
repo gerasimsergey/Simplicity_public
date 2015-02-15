@@ -123,6 +123,16 @@
 */
 }
 
+- (void)removeMessageThreadsLocalFolder:(NSString*)localFolder messageThreads:(NSArray*)messageThreads {
+	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	NSAssert(collection, @"bad folder collection");
+
+	for(SMMessageThread *thread in messageThreads) {
+		[collection.messageThreads removeObjectForKey:[NSNumber numberWithUnsignedLongLong:thread.threadId]];
+		[collection.messageThreadsByDate removeObject:thread];
+	}
+}
+
 - (void)startUpdate:(NSString*)localFolder {
 	//	NSLog(@"%s: localFolder '%@'", __FUNCTION__, localFolder);
 	

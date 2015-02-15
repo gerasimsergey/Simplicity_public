@@ -524,6 +524,9 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 - (void)stopMessageHeadersLoading {
 	[self cancelScheduledUpdateTimeout];
 
+	[_fetchedMessageHeaders removeAllObjects];
+	[_fetchedMessageHeadersFromAllMail removeAllObjects];
+	
 	[_folderInfoOp cancel];
 	_folderInfoOp = nil;
 	
@@ -552,12 +555,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	[self stopMessageHeadersLoading];
 
 	if(stopBodiesLoading) {
-		for(NSNumber *uid in _fetchMessageBodyOps) {
-//			NSLog(@"uid %@", uid);
-			MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:uid];
-			
-			[op cancel];
-		}
+		for(NSNumber *uid in _fetchMessageBodyOps)
+			[[_fetchMessageBodyOps objectForKey:uid] cancel];
 		
 		[_fetchMessageBodyOps removeAllObjects];
 	}
@@ -566,11 +565,17 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 - (void)clear {
 	[self stopMessagesLoading:YES];
 	
-	[_fetchedMessageHeaders removeAllObjects];
-	[_fetchedMessageHeadersFromAllMail removeAllObjects];
-
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] removeLocalFolder:_localName];
+}
+
+- (void)moveMessageThreadsToRemoteFolder:(NSArray*)messageThreads remoteFolder:(NSString*)remoteFolderName {
+	[self stopMessagesLoading:NO];
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] messageStorage] removeMessageThreadsLocalFolder:_localName messageThreads:messageThreads];
+
+	// TODO
 }
 
 @end

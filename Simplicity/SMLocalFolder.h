@@ -42,4 +42,8 @@
 // then removes the local folder contents (does not affect the remote folder, if any)
 - (void)clear;
 
+// starts asynchronous process of moving the messages from the selected message threads
+// to the chosen folder
+- (void)moveMessageThreadsToRemoteFolder:(NSArray*)messageThreads remoteFolder:(NSString*)remoteFolderName;
+
 @end

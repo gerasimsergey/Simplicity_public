@@ -294,6 +294,8 @@
 
 	[_messageListTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 
+	[_multipleSelectedMessageThreads removeAllObjects];
+
 	_selectedMessageThread = nil;
 }
 
@@ -367,9 +369,33 @@
 }
 
 - (void)moveSelectedMessageThreadsToFolder:(NSString*)remoteFolderName {
-	// TODO
-	
 	NSLog(@"%s: to remote folder %@", __func__, remoteFolderName);
+	
+	// 1. stop current sync, disable further syncs
+	// 2. remote selected message threads from the list
+	// 3. clear currently selected message
+	// 4. start copy op
+	// 5. once copy done, start 'add delete flag' op
+	// 6. once flagging is done, start 'expunge folder' op
+	// 7. once expunge is done, enable and start sync
+	// err-1. if copy op fails, retry N times, then revert the changes made to the message list
+	// err-2. if flagging op fails, retry N times, then register the op and put it to background
+	// err-3. if expunge op fails, retry N times, then register the op and put it to background
+	// TODO: save transaction history in a registry on disk, so these ops could be retried even after app restart
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMessageListController *messageListController = [[appDelegate model] messageListController];
+
+	NSAssert(_selectedMessageThread != nil || _multipleSelectedMessageThreads.count > 0, @"no message threads selected");
+
+	NSArray *messageThreadsToMove = _selectedMessageThread != nil? [NSArray arrayWithObject:_selectedMessageThread] : [NSArray arrayWithArray:_multipleSelectedMessageThreads];
+	
+	SMLocalFolder *currentFolder = [messageListController currentLocalFolder];
+	NSAssert(currentFolder != nil, @"no current folder");
+
+	[currentFolder moveMessageThreadsToRemoteFolder:messageThreadsToMove remoteFolder:remoteFolderName];
+
+	[self reloadMessageList:NO];
 }
 
 #pragma mark Messages drag and drop support
@@ -377,15 +403,12 @@
 - (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard {
 	// only permit dragging messages from the message list
 
-	if(aTableView == _messageListTableView)
-	{
+	if(aTableView == _messageListTableView) {
 		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
 		[pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 		[pboard setData:data forType:NSStringPboardType];
 		return YES;
-	}
-	else
-	{
+	} else {
 		return NO;
 	}
 }
