@@ -31,24 +31,20 @@
 		const CGFloat step = 12;
 		
 		for(NSUInteger i = 0, n = MIN(_bookmarkColors.count, 4); i < n; i++) {
-			CGFloat maxX = NSMaxX(bounds);
 			CGFloat minX = NSMinX(bounds);
 			CGFloat maxY = originY - step * i;
+			CGFloat sz = step;
 			
-			NSBezierPath *result = [NSBezierPath bezierPath];
-			
-			[result moveToPoint:NSMakePoint(maxX, maxY)];
-			[result lineToPoint:NSMakePoint(minX, maxY)];
-			[result lineToPoint:NSMakePoint(minX + 2, maxY - 5)];
-			[result lineToPoint:NSMakePoint(minX, maxY - 10)];
-			[result lineToPoint:NSMakePoint(maxX, maxY - 10)];
-			[result closePath];
-			
+			NSRect circleBounds = NSMakeRect(minX, maxY - sz + 1, sz, sz);
 			NSColor *color = _bookmarkColors[i];
 			
+			CGFloat circleRadius = circleBounds.size.height / 2.5;
+			NSRect circleRect = NSMakeRect(NSMidX(circleBounds) - circleRadius, NSMidY(circleBounds) - circleRadius, circleRadius * 2, circleRadius * 2);
+			NSBezierPath *circlePath = [NSBezierPath bezierPathWithOvalInRect:circleRect];
 			NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[color highlightWithLevel:0.45] endingColor:color];
 			
-			[gradient drawInBezierPath:result angle:-90.00];
+			[gradient drawInBezierPath:circlePath angle:-90.00];
+
 		}
 	}
 }
