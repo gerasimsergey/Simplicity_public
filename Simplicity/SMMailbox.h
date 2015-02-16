@@ -20,4 +20,6 @@
 
 - (void)updateIMAPFolders:(NSArray *)folders;
 
+- (SMFolder*)getFolderByName:(NSString*)folderName;
+
 @end

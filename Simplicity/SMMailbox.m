@@ -174,4 +174,18 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	}
 }
 
+- (SMFolder*)getFolderByName:(NSString*)folderName {
+	for(SMFolder *f in _folders) {
+		if([f.fullName isEqualToString:folderName])
+			return f;
+	}
+
+	for(SMFolder *f in _mainFolders) {
+		if([f.fullName isEqualToString:folderName])
+			return f;
+	}
+	
+	return nil;
+}
+
 @end

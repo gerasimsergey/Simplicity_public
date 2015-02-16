@@ -159,8 +159,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSUInteger fetchCount = 0;
 	
-	NSEnumerator *enumerator = [_fetchedMessageHeaders keyEnumerator];
-	for(NSNumber *gmailMessageId = nil; gmailMessageId = [enumerator nextObject];) {
+	for(NSNumber *gmailMessageId in _fetchedMessageHeaders) {
 		//NSLog(@"fetched message id %@", gmailMessageId);
 
 		MCOIMAPMessage *message = [_fetchedMessageHeaders objectForKey:gmailMessageId];
@@ -253,8 +252,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}
 
 	NSMutableSet *threadIds = [[NSMutableSet alloc] init];
-	NSEnumerator *enumerator = [_fetchedMessageHeaders keyEnumerator];
-	for(NSNumber *gmailMessageId = nil; gmailMessageId = [enumerator nextObject];) {
+
+	for(NSNumber *gmailMessageId in _fetchedMessageHeaders) {
 		MCOIMAPMessage *message = [_fetchedMessageHeaders objectForKey:gmailMessageId];
 		NSNumber *threadId = [NSNumber numberWithUnsignedLongLong:message.gmailThreadID];
 		
@@ -618,6 +617,18 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	[op start:^(NSError *error, NSDictionary *uidMapping) {
 		if(error == nil) {
+			if(uidMapping != nil) {
+				SMFolder *targetFolder = [[[appDelegate model] mailbox] getFolderByName:remoteFolderName];
+				
+				if(targetFolder != nil && targetFolder.kind == SMFolderKindRegular) {
+					MCOIndexSet *uids = [MCOIndexSet indexSet];
+					for(NSNumber *srcUid in uidMapping)
+						[uids addIndex:[[uidMapping objectForKey:srcUid] unsignedLongLongValue]];
+	
+					[self addLabel:remoteFolderName toMessages:uids forRemoteFolder:remoteFolderName];
+				}
+			}
+ 
 			[self deleteMessages:messagesToMoveUids];
 		} else {
 			NSLog(@"%s: Error copying messages from %@ to %@: %@", __func__, _localName, remoteFolderName, error);
@@ -625,6 +636,26 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}];
 
 	// TODO: register the op for the folder (there may be multiple moving operations)
+	
+}
+
+- (void)addLabel:(NSString*)label toMessages:(MCOIndexSet*)uids forRemoteFolder:(NSString*)remoteFolderName {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
+	MCOIMAPSession *session = [[appDelegate model] session];
+	NSAssert(session, @"session lost");
+
+	MCOIMAPOperation *op = [session storeLabelsOperationWithFolder:remoteFolderName uids:uids kind:MCOIMAPStoreFlagsRequestKindAdd labels:[NSArray arrayWithObject:label]];
+	
+	[op start:^(NSError * error) {
+		if(error == nil) {
+			NSLog(@"%s: Label %@ for folder %@ successfully set", __func__, label, remoteFolderName);
+		} else {
+			NSLog(@"%s: Error setting label %@ for folder %@: %@", __func__, label, remoteFolderName, error);
+			
+			// TODO: try again!
+		}
+	}];
 }
 
 - (void)deleteMessages:(MCOIndexSet*)uids {

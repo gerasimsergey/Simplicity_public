@@ -217,10 +217,16 @@
 {
 	// permit drop only at folders, not between them
 
-	if(op == NSTableViewDropOn)
-		return NSDragOperationMove;
-	else
-		return NSDragOperationNone;
+	if(op == NSTableViewDropOn) {
+		SMFolder *folder = [self selectedFolder:row];
+
+		// TODO: set the current mailbox folder at the app startup
+
+		if(folder != nil && folder != _currentFolder)
+			return NSDragOperationMove;
+	}
+	
+	return NSDragOperationNone;
 }
 
 - (BOOL)tableView:(NSTableView*)tv
