@@ -242,14 +242,14 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	// Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default
 	// If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
 	// user chooses to revert to the default items this set will be used
-	return [NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, SearchDocToolbarItemIdentifier, nil];
+	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
 	// Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar
 	// does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed
 	// The set of allowed items is used to construct the customization palette
-	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, nil];
 }
 
 - (void) toolbarWillAddItem: (NSNotification *) notif {

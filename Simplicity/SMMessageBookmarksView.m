@@ -44,7 +44,6 @@
 			NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[color highlightWithLevel:0.45] endingColor:color];
 			
 			[gradient drawInBezierPath:circlePath angle:-90.00];
-
 		}
 	}
 }

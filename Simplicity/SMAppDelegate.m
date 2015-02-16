@@ -25,9 +25,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	// Insert code here to initialize your application
-	//NSLog(@"%s: app delegate %@, app controller %@", __FUNCTION__, self, [ self appController ]);
-
+	_window.titleVisibility = NSWindowTitleHidden;
+	
 	[ _model startSession ];
 }
 

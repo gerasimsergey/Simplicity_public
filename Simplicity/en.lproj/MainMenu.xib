@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
@@ -648,7 +648,7 @@
             </items>
         </menu>
         <window title="Simplicity" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="810" height="410"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
@@ -657,20 +657,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="810" height="410"/>
                 <autoresizingMask key="autoresizingMask"/>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="ED6517C5-1C8B-4899-9F7F-FA2B80694CE9" displayMode="iconOnly" sizeMode="small" id="brI-OO-hr2">
-                <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="Lmu-0x-jkn"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="Bkb-Vs-bn9"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="LJz-2L-q4X"/>
-                    <toolbarItem implicitItemIdentifier="0F709AD6-6801-4329-9E29-A133ECD0C241" label="Search" paletteLabel="Search" tag="-1" image="search-icon" id="M6Q-T4-DkB"/>
-                </allowedToolbarItems>
-                <defaultToolbarItems>
-                    <toolbarItem reference="Lmu-0x-jkn"/>
-                    <toolbarItem reference="LJz-2L-q4X"/>
-                    <toolbarItem reference="M6Q-T4-DkB"/>
-                </defaultToolbarItems>
+            <toolbar key="toolbar" implicitIdentifier="058529D3-368B-4916-B8D8-92AEADE5A22F" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="Set-cj-RY4">
+                <allowedToolbarItems/>
+                <defaultToolbarItems/>
                 <connections>
-                    <outlet property="delegate" destination="544" id="9fL-Fp-vfQ"/>
+                    <outlet property="delegate" destination="544" id="aO2-W2-6pj"/>
                 </connections>
             </toolbar>
             <point key="canvasLocation" x="250" y="362"/>
@@ -684,7 +675,7 @@
         <customObject id="544" customClass="SMAppController">
             <connections>
                 <outlet property="searchField" destination="w9B-OG-la5" id="Lof-qa-D7m"/>
-                <outlet property="toolbar" destination="brI-OO-hr2" id="9mI-DB-aU4"/>
+                <outlet property="toolbar" destination="Set-cj-RY4" id="Yot-05-tWm"/>
                 <outlet property="view" destination="372" id="OSt-G0-4ik"/>
             </connections>
         </customObject>
@@ -703,7 +694,4 @@
             </subviews>
         </customView>
     </objects>
-    <resources>
-        <image name="search-icon" width="100" height="100"/>
-    </resources>
 </document>
