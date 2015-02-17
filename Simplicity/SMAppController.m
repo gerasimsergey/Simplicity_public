@@ -17,8 +17,11 @@
 #import "SMMessageThreadViewController.h"
 #import "SMInstrumentPanelViewController.h"
 #import "SMFolderColorController.h"
+#import "SMMailbox.h"
+#import "SMFolder.h"
 
 static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
+static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 
 @implementation SMAppController {
 	NSButton *button1, *button2;
@@ -186,49 +189,35 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 }
 
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	// Required delegate method:  Given an item identifier, this method returns an item
-	// The toolbar will use this method to obtain toolbar items that can be displayed in the customization sheet, or in the toolbar itself
 	NSToolbarItem *toolbarItem = nil;
 	
-	if([itemIdent isEqual: SearchDocToolbarItemIdentifier]) {
-		// NSToolbarItem doens't normally autovalidate items that hold custom views, but we want this guy to be disabled when there is no text to search.
+	if([itemIdent isEqual:SearchDocToolbarItemIdentifier]) {
 		toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
-		
-/*
- NSMenu *submenu = nil;
-		NSMenuItem *submenuItem = nil, *menuFormRep = nil;
-*/
-		// Set up the standard properties
-		[toolbarItem setLabel: @"Search"];
-		[toolbarItem setPaletteLabel: @"Search"];
-		[toolbarItem setToolTip: @"Search Your Document"];
+
+		[toolbarItem setLabel:@"Search"];
+		[toolbarItem setPaletteLabel:@"Search"];
+		[toolbarItem setToolTip:@"Search for messages"];
 		
 		_searchField = [[NSSearchField alloc] initWithFrame:[_searchField frame]];
 		[_searchField.cell setSendsWholeSearchString:YES];
 
-		// Use a custom view, a text field, for the search item
 		[toolbarItem setView:_searchField];
 		[toolbarItem setMinSize:NSMakeSize(30, NSHeight([_searchField frame]))];
 		[toolbarItem setMaxSize:NSMakeSize(400,NSHeight([_searchField frame]))];
+	} else if([itemIdent isEqual:TrashToolbarItemIdentifier]) {
+		toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
 		
-		// By default, in text only mode, a custom items label will be shown as disabled text, but you can provide a
-		// custom menu of your own by using <item> setMenuFormRepresentation]
-/*
- submenu = [[[NSMenu alloc] init] autorelease];
-		submenuItem = [[[NSMenuItem alloc] initWithTitle: @"Search Panel" action: @selector(searchUsingSearchPanel:) keyEquivalent: @""] autorelease];
-		menuFormRep = [[[NSMenuItem alloc] init] autorelease];
-		[submenu addItem: submenuItem];
-		[submenuItem setTarget: self];
-		[menuFormRep setSubmenu: submenu];
-		[menuFormRep setTitle: [toolbarItem label]];
- 
-		// Normally, a menuFormRep with a submenu should just act like a pull down.  However, in 10.4 and later, the menuFormRep can have its own target / action.  If it does, on click and hold (or if the user clicks and drags down), the submenu will appear.  However, on just a click, the menuFormRep will fire its own action.
-		[menuFormRep setTarget: self];
-		[menuFormRep setAction: @selector(searchMenuFormRepresentationClicked:)];
-		
-		// Please note, from a user experience perspective, you wouldn't set up your search field and menuFormRep like we do here.  This is simply an example which shows you all of the features you could use.
-		[toolbarItem setMenuFormRepresentation: menuFormRep];
- */
+		[toolbarItem setPaletteLabel: @"Trash"];
+		[toolbarItem setToolTip: @"Put selected messages to trash"];
+
+		_trashButton = [[NSButton alloc] initWithFrame:[_trashButton frame]];
+		[_trashButton setImage:[NSImage imageNamed:@"trash-black.png"]];
+		[_trashButton.cell setImageScaling:NSImageScaleProportionallyDown];
+		_trashButton.bezelStyle = NSTexturedSquareBezelStyle;
+		_trashButton.target = self;
+		_trashButton.action = @selector(trashAction:);
+
+		[toolbarItem setView:_trashButton];
 	} else {
 		// itemIdent refered to a toolbar item that is not provide or supported by us or cocoa
 		// Returning nil will inform the toolbar this kind of item is not supported
@@ -242,14 +231,14 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	// Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default
 	// If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
 	// user chooses to revert to the default items this set will be used
-	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, nil];
+	return [NSArray arrayWithObjects:TrashToolbarItemIdentifier, SearchDocToolbarItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
 	// Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar
 	// does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed
 	// The set of allowed items is used to construct the customization palette
-	return [NSArray arrayWithObjects:SearchDocToolbarItemIdentifier, nil];
+	return [NSArray arrayWithObjects:TrashToolbarItemIdentifier, SearchDocToolbarItemIdentifier, nil];
 }
 
 - (void) toolbarWillAddItem: (NSNotification *) notif {
@@ -259,12 +248,19 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 	// to do it.  The notification object is the toolbar to which the item is being added.  The item being
 	// added is found by referencing the @"item" key in the userInfo
 	NSToolbarItem *addedItem = [[notif userInfo] objectForKey: @"item"];
-	
-	if([[addedItem itemIdentifier] isEqual: SearchDocToolbarItemIdentifier]) {
+
+	if([[addedItem itemIdentifier] isEqual:SearchDocToolbarItemIdentifier]) {
 		[addedItem setTarget: self];
 		[addedItem setAction: @selector(searchUsingToolbarSearchField:)];
 		
 		_activeSearchItem = addedItem;
+	} else if([[addedItem itemIdentifier] isEqual:TrashToolbarItemIdentifier]) {
+//      TODO
+//
+//		[addedItem setTarget: self];
+//		[addedItem setAction: @selector(:)];
+//
+//		_activeSearchItem = addedItem;
 	}
 }
 
@@ -319,6 +315,18 @@ static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
 		return NSZeroRect;
 	
 	return proposedEffectiveRect;
+}
+
+- (IBAction)trashAction:(id)sender {
+	NSLog(@"%s", __func__);
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMailbox *mailbox = [[appDelegate model] mailbox];
+
+	SMFolder *trashFolder = [mailbox trashFolder];
+	NSAssert(trashFolder != nil, @"no trash folder");
+	
+	[[[appDelegate appController] messageListViewController] moveSelectedMessageThreadsToFolder:trashFolder.fullName];
 }
 
 @end

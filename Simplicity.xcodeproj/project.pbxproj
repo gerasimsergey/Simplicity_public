@@ -53,6 +53,7 @@
 		0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */; };
 		0089D35F1A88084F00C189BB /* SMFolderColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0089D35E1A88084F00C189BB /* SMFolderColorController.m */; };
 		008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */; };
+		009217A51A92F007003A0348 /* trash-black.png in Resources */ = {isa = PBXBuildFile; fileRef = 009217A41A92F007003A0348 /* trash-black.png */; };
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
 		0097426E195686F900620145 /* SMMailboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0097426D195686F900620145 /* SMMailboxViewController.m */; };
 		009742721957C78E00620145 /* SMMailbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 009742711957C78E00620145 /* SMMailbox.m */; };
@@ -235,6 +236,7 @@
 		0089D35E1A88084F00C189BB /* SMFolderColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFolderColorController.m; sourceTree = "<group>"; };
 		008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMColorCircle.h; sourceTree = "<group>"; };
 		008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMColorCircle.m; sourceTree = "<group>"; };
+		009217A41A92F007003A0348 /* trash-black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash-black.png"; sourceTree = "<group>"; };
 		00974266195684DD00620145 /* SMMailboxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMailboxViewController.xib; sourceTree = "<group>"; };
 		0097426C195686F900620145 /* SMMailboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxViewController.h; sourceTree = "<group>"; };
 		0097426D195686F900620145 /* SMMailboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxViewController.m; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 				002556FD1A5A5C6600C864D0 /* star-gray-icon.png */,
 				002057C91A85D2DA00D5FE8A /* star-white.png */,
 				002556F01A5A2EC700C864D0 /* star-yellow-icon.png */,
+				009217A41A92F007003A0348 /* trash-black.png */,
 				002057CA1A85D2DA00D5FE8A /* trash-white.png */,
 			);
 			name = Resources;
@@ -644,6 +647,7 @@
 				009C7BA01A5BB558002EA2DF /* circle-blue.png in Resources */,
 				002057D71A85D87500D5FE8A /* drafts-white.png in Resources */,
 				002057D21A85D2DA00D5FE8A /* sent-white.png in Resources */,
+				009217A51A92F007003A0348 /* trash-black.png in Resources */,
 				002057D01A85D2DA00D5FE8A /* star-white.png in Resources */,
 				0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */,
 				00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */,

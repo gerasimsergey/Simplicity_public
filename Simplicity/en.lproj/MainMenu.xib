@@ -676,22 +676,37 @@
             <connections>
                 <outlet property="searchField" destination="w9B-OG-la5" id="Lof-qa-D7m"/>
                 <outlet property="toolbar" destination="Set-cj-RY4" id="Yot-05-tWm"/>
+                <outlet property="trashButton" destination="Q0Q-AH-U6l" id="LXG-FO-qVB"/>
                 <outlet property="view" destination="372" id="OSt-G0-4ik"/>
             </connections>
         </customObject>
         <customView id="aBI-Ag-RVt">
-            <rect key="frame" x="0.0" y="0.0" width="163" height="96"/>
+            <rect key="frame" x="0.0" y="0.0" width="400" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <searchField wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w9B-OG-la5">
-                    <rect key="frame" x="27" y="37" width="96" height="22"/>
+                    <rect key="frame" x="264" y="37" width="96" height="22"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="9v6-Rb-Gt2">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                 </searchField>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q0Q-AH-U6l">
+                    <rect key="frame" x="220" y="39" width="36" height="20"/>
+                    <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" image="NSTrashFull" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="HdO-M8-PfM">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="trashAction:" target="544" id="lht-aR-UES"/>
+                    </connections>
+                </button>
             </subviews>
+            <point key="canvasLocation" x="180" y="0.0"/>
         </customView>
     </objects>
+    <resources>
+        <image name="NSTrashFull" width="32" height="32"/>
+    </resources>
 </document>

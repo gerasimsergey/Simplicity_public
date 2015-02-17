@@ -22,7 +22,10 @@
 @property (weak, nonatomic) IBOutlet NSView *view;
 
 @property (nonatomic) IBOutlet NSToolbar *toolbar;
+@property (nonatomic) IBOutlet NSButton *trashButton;
 @property (nonatomic) IBOutlet NSTextField *searchField;
+
+- (IBAction)trashAction:(id)sender;
 
 @property SMMailboxViewController *mailboxViewController;
 @property SMSearchResultsListViewController *searchResultsListViewController;
