@@ -10,27 +10,8 @@
 #import "SMMessageComparators.h"
 #import "SMMessageStorage.h"
 #import "SMMessageThread.h"
+#import "SMMessageThreadCollection.h"
 #import "SMAppDelegate.h"
-
-@interface MessageThreadCollection : NSObject
-@property NSMutableDictionary *messageThreads;
-@property NSMutableOrderedSet *messageThreadsByDate;
-@end
-
-@implementation MessageThreadCollection
-
-- (id)init {
-	self = [ super init ];
-	
-	if(self) {
-		_messageThreads = [ NSMutableDictionary new ];
-		_messageThreadsByDate = [ NSMutableOrderedSet new ];
-	}
-	
-	return self;
-}
-
-@end
 
 @implementation SMMessageStorage {
 @private
@@ -55,22 +36,22 @@
 - (void)ensureLocalFolderExists:(NSString*)localFolder {
 	//NSLog(@"%s: folder name '%@", __FUNCTION__, localFolder);
 	
-	MessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:localFolder];
+	SMMessageThreadCollection *collection = [_foldersMessageThreadsMap objectForKey:localFolder];
 	
 	if(collection == nil)
-		[_foldersMessageThreadsMap setValue:[MessageThreadCollection new] forKey:localFolder];
+		[_foldersMessageThreadsMap setValue:[SMMessageThreadCollection new] forKey:localFolder];
 }
 
 - (void)removeLocalFolder:(NSString*)localFolder {
 	[_foldersMessageThreadsMap removeObjectForKey:localFolder];
 }
 
-- (MessageThreadCollection*)messageThreadCollectionForFolder:(NSString*)folder {
+- (SMMessageThreadCollection*)messageThreadCollectionForFolder:(NSString*)folder {
 	return [_foldersMessageThreadsMap objectForKey:folder];
 }
 
 - (NSUInteger)getMessageThreadIndexByDate:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 		
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
@@ -84,7 +65,7 @@
 }
 
 - (void)insertMessageThreadByDate:(SMMessageThread*)messageThread localFolder:(NSString*)localFolder oldIndex:(NSUInteger)oldIndex {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
 	NSComparator messageThreadComparator = [comparators messageThreadsComparatorByDate];
@@ -124,7 +105,7 @@
 }
 
 - (void)removeMessageThreadsLocalFolder:(NSString*)localFolder messageThreads:(NSArray*)messageThreads {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 
 	for(SMMessageThread *thread in messageThreads) {
@@ -140,7 +121,7 @@
 }
 
 - (SMMessageStorageUpdateResult)updateIMAPMessages:(NSArray*)imapMessages localFolder:(NSString*)localFolder remoteFolder:(NSString*)remoteFolderName session:(MCOIMAPSession*)session {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 	
 	SMMessageStorageUpdateResult updateResult = SMMesssageStorageUpdateResultNone;
@@ -204,7 +185,7 @@
 	
 	SMMessageStorageUpdateResult updateResult = SMMesssageStorageUpdateResultNone;
 	
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad thread collection");
 	
 	NSMutableArray *vanishedThreads = [[NSMutableArray alloc] init];
@@ -239,7 +220,7 @@
 }
 
 - (void)cancelUpdate:(NSString*)localFolder {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad thread collection");
 	
 	for(NSNumber *threadId in collection.messageThreads) {
@@ -249,7 +230,7 @@
 }
 
 - (void)markMessageThreadAsUpdated:(uint64_t)threadId localFolder:(NSString*)localFolder {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 
 	SMMessageThread *messageThread = [[collection messageThreads] objectForKey:[NSNumber numberWithUnsignedLongLong:threadId]];
@@ -257,7 +238,7 @@
 }
 
 - (void)setMessageData:(NSData*)data uid:(uint32_t)uid localFolder:(NSString*)localFolder threadId:(uint64_t)threadId {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 	
 	SMMessageThread *thread = [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
@@ -272,7 +253,7 @@
 }
 
 - (NSInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 
 	// usually this means that no folders loaded yet
 	if(collection == nil)
@@ -282,7 +263,7 @@
 }
 
 - (SMMessageThread*)messageThreadAtIndexByDate:(NSUInteger)index localFolder:(NSString*)folder {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:folder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:folder];
 	
 	NSAssert(collection, @"no thread collection found");
 	
@@ -295,7 +276,7 @@
 }
 
 - (SMMessageThread*)messageThreadById:(uint64_t)threadId localFolder:(NSString*)folder {
-	MessageThreadCollection *collection = [self messageThreadCollectionForFolder:folder];
+	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:folder];
 
 	if(collection == nil)
 		return nil;
