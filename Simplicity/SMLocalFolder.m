@@ -102,7 +102,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 - (void)startLocalFolderSync {
 	[self rescheduleMessageListUpdate];
 
-	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil || _fetchMessageThreadsHeadersOps.count > 0) {
+	if(_folderInfoOp != nil || _fetchMessageHeadersOp != nil || _searchMessageThreadsOps.count > 0 || _fetchMessageThreadsHeadersOps.count > 0) {
 		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _localName);
 		return;
 	}

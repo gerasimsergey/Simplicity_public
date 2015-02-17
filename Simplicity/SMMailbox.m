@@ -160,6 +160,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	
 	[self addFavoriteFolderWithName:@"Work/CVC/DVBS"];
 	[self addFavoriteFolderWithName:@"Work/Charter"];
+	[self addFavoriteFolderWithName:@"Private/Misc"];
 }
 
 - (void)addFavoriteFolderWithName:(NSString*)name {
