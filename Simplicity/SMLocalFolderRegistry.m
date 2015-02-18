@@ -12,43 +12,100 @@
 #import "SMLocalFolder.h"
 #import "SMLocalFolderRegistry.h"
 
+@interface FolderEntry : NSObject
+@property (readonly) SMLocalFolder *folder;
+@property (readonly) NSTimeInterval timestamp;
+- (id)initWithFolder:(SMLocalFolder*)folder;
+- (void)updateTimestamp;
+@end
+
+@implementation FolderEntry
+- (id)initWithFolder:(SMLocalFolder*)folder {
+	self = [super init];
+	if(self) {
+		_folder = folder;
+		_timestamp = [[NSDate date] timeIntervalSince1970];
+	}
+	return self;
+}
+- (void)updateTimestamp {
+	_timestamp = [[NSDate date] timeIntervalSince1970];
+}
+@end
+
 @implementation SMLocalFolderRegistry {
-	NSMutableDictionary *_folders;	
+	NSMutableDictionary *_folders;
+	NSMutableOrderedSet *_accessTimeSortedFolders;
+	NSComparator _accessTimeFolderComparator;
 }
 
 - (id)init {
-	self = [ super init ];
+	self = [super init];
 	
 	if(self) {
 		_folders = [NSMutableDictionary new];
+		_accessTimeSortedFolders = [NSMutableOrderedSet new];
+		_accessTimeFolderComparator = ^NSComparisonResult(id a, id b) {
+			FolderEntry *f1 = (FolderEntry*)a;
+			FolderEntry *f2 = (FolderEntry*)b;
+			
+			return f1.timestamp < f2.timestamp? NSOrderedAscending : (f1.timestamp > f2.timestamp? NSOrderedDescending : NSOrderedSame);
+		};
 	}
 	
 	return self;
 }
 
+- (void)updateFolderEntryAccessTime:(FolderEntry*)folderEntry {
+	[_accessTimeSortedFolders removeObjectAtIndex:[self getFolderEntryIndex:folderEntry]];
+	
+	[folderEntry updateTimestamp];
+
+	[_accessTimeSortedFolders insertObject:folderEntry atIndex:[self getFolderEntryIndex:folderEntry]];
+}
+
 - (SMLocalFolder*)getLocalFolder:(NSString*)folderName {
-	return [_folders objectForKey:folderName];
+	FolderEntry *folderEntry = [_folders objectForKey:folderName];
+	
+	[self updateFolderEntryAccessTime:folderEntry];
+	
+	return folderEntry.folder;
+}
+
+- (NSUInteger)getFolderEntryIndex:(FolderEntry*)folderEntry {
+	return [_accessTimeSortedFolders indexOfObject:folderEntry inSortedRange:NSMakeRange(0, _accessTimeSortedFolders.count) options:NSBinarySearchingInsertionIndex usingComparator:_accessTimeFolderComparator];
 }
 
 - (SMLocalFolder*)getOrCreateLocalFolder:localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
-	SMLocalFolder *folder = [_folders objectForKey:localFolderName];
+	FolderEntry *folderEntry = [_folders objectForKey:localFolderName];
 	
-	if(folder == nil) {
-		folder = [[SMLocalFolder alloc] initWithLocalFolderName:localFolderName syncWithRemoteFolder:syncWithRemoteFolder];
-		[_folders setValue:folder forKey:localFolderName];
+	if(folderEntry == nil) {
+		SMLocalFolder *folder = [[SMLocalFolder alloc] initWithLocalFolderName:localFolderName syncWithRemoteFolder:syncWithRemoteFolder];
+
+		folderEntry = [[FolderEntry alloc] initWithFolder:folder];
+
+		[folderEntry updateTimestamp];
+
+		[_folders setValue:folderEntry forKey:localFolderName];
+
+		[_accessTimeSortedFolders insertObject:folderEntry atIndex:[self getFolderEntryIndex:folderEntry]];
+	} else {
+		[self updateFolderEntryAccessTime:folderEntry];
 	}
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] ensureLocalFolderExists:localFolderName];
 	
-	return folder;
+	return folderEntry.folder;
 }
 
 - (void)removeLocalFolder:(NSString*)folderName {
-	SMLocalFolder *localFolder = [_folders objectForKey:folderName];
-	[localFolder stopMessagesLoading:YES];
+	FolderEntry *folderEntry = [_folders objectForKey:folderName];
+	[folderEntry.folder stopMessagesLoading:YES];
 
 	[_folders removeObjectForKey:folderName];
+
+	[_accessTimeSortedFolders removeObjectAtIndex:[self getFolderEntryIndex:folderEntry]];
 }
 
 @end

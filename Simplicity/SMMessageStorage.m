@@ -57,7 +57,7 @@
 	NSMutableOrderedSet *sortedMessageThreads = collection.messageThreadsByDate;
 	NSComparator messageThreadComparator = [comparators messageThreadsComparatorByDate];
 
-	if([collection.messageThreads objectForKey:[NSNumber numberWithLongLong:[messageThread threadId]]] != nil) {
+	if([collection.messageThreads objectForKey:[NSNumber numberWithUnsignedLongLong:[messageThread threadId]]] != nil) {
 		return [sortedMessageThreads indexOfObject:messageThread inSortedRange:NSMakeRange(0, sortedMessageThreads.count) options:0 usingComparator:messageThreadComparator];
 	} else {
 		return NSNotFound;
@@ -241,7 +241,7 @@
 	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 	
-	SMMessageThread *thread = [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
+	SMMessageThread *thread = [collection.messageThreads objectForKey:[NSNumber numberWithUnsignedLongLong:threadId]];
 	[thread setMessageData:data uid:uid];
 }
 
@@ -281,7 +281,7 @@
 	if(collection == nil)
 		return nil;
 
-	return [collection.messageThreads objectForKey:[NSNumber numberWithLongLong:threadId]];
+	return [collection.messageThreads objectForKey:[NSNumber numberWithUnsignedLongLong:threadId]];
 }
 
 @end
