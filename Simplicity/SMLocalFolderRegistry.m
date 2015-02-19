@@ -9,6 +9,7 @@
 #import "SMAppDelegate.h"
 #import "SMSimplicityContainer.h"
 #import "SMMessageStorage.h"
+#import "SMMessageListController.h"
 #import "SMLocalFolder.h"
 #import "SMLocalFolderRegistry.h"
 
@@ -33,9 +34,9 @@
 }
 @end
 
-static NSUInteger FOLDER_MEMORY_GREEN_ZONE_KB = 200 * 1024;
-static NSUInteger FOLDER_MEMORY_YELLOW_ZONE_KB = 400 * 1024;
-//static NSUInteger FOLDER_MEMORY_RED_ZONE_KB = 500 * 1024;
+static NSUInteger FOLDER_MEMORY_GREEN_ZONE_KB = 30 * 1024;
+static NSUInteger FOLDER_MEMORY_YELLOW_ZONE_KB = 50 * 1024;
+//static NSUInteger FOLDER_MEMORY_RED_ZONE_KB = 100 * 1024;
 
 @implementation SMLocalFolderRegistry {
 	NSMutableDictionary *_folders;
@@ -120,10 +121,16 @@ static NSUInteger FOLDER_MEMORY_YELLOW_ZONE_KB = 400 * 1024;
 	// TODO: use the red zone
 
 	if(foldersMemoryKb >= FOLDER_MEMORY_YELLOW_ZONE_KB) {
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMLocalFolder *currentLocalFolder = [[[appDelegate model] messageListController] currentLocalFolder];
+		
 		const uint64_t totalMemoryToReclaimKb = foldersMemoryKb - FOLDER_MEMORY_YELLOW_ZONE_KB;
 		uint64_t totalMemoryReclaimedKb = 0;
 
 		for(FolderEntry *folderEntry in _accessTimeSortedFolders) {
+			if([folderEntry.folder.localName isEqualToString:currentLocalFolder.localName])
+				continue;
+
 			const uint64_t folderMemoryBeforeKb = [folderEntry.folder getTotalMemoryKb];
 
 			NSAssert(totalMemoryReclaimedKb < totalMemoryToReclaimKb, @"totalMemoryReclaimedKb %llu, totalMemoryToReclaimKb %llu", totalMemoryReclaimedKb, totalMemoryToReclaimKb);

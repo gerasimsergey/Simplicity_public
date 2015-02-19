@@ -213,7 +213,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	opBlock = ^(NSError * error, NSData * data) {
 		//	NSLog(@"%s: msg uid %u", __FUNCTION__, uid);
 		
-		if ([error code] != MCOErrorNone) {
+		if (error != nil && [error code] != MCOErrorNone) {
 			NSLog(@"%s: Error downloading message body for uid %u, remote folder %@", __func__, uid, remoteFolderName);
 
 			MCOIMAPFetchContentOperation *op = [_fetchMessageBodyOps objectForKey:[NSNumber numberWithUnsignedInt:uid]];

@@ -199,18 +199,26 @@
 }
 
 - (void)setData:(NSData*)data {
-	if(!_data) {
-		_data = data;
-		_msgParser = [MCOMessageParser messageParserWithData:data];
-		_attachments = _msgParser.attachments;
-		_hasAttachments = _attachments.count > 0;
-
-		NSAssert(_msgParser, @"cannot create message parser");
+	if(data != nil) {
+		if(_data == nil) {
+			_data = data;
+			_msgParser = [MCOMessageParser messageParserWithData:data];
+			_attachments = _msgParser.attachments;
+			_hasAttachments = _attachments.count > 0;
+			
+			NSAssert(_msgParser, @"cannot create message parser");
+		}
 	} else {
 		_data = nil;
 		_msgParser = nil;
 		_attachments = nil;
-		_hasAttachments = 0;
+		_htmlBodyRendering = nil;
+
+		// do not reset the attachment count
+		// because it is important to show the attachments flag
+		// in the messages list
+
+		// TODO: figure out a nice way
 	}
 }
 
