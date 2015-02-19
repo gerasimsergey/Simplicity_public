@@ -46,4 +46,12 @@
 // to the chosen folder
 - (void)moveMessageThreads:(NSArray*)messageThreads toRemoteFolder:(NSString*)remoteFolderName;
 
+// frees the occupied memory until the requested amount is reclaimed
+// or there is nothing to reclaim within this folder
+- (void)reclaimMemory:(uint64_t)memoryToReclaimKb;
+
+// returns the memory amount occupied by messages within this folder
+// that can be reclaimed upon request
+- (uint64_t)getTotalMemoryKb;
+
 @end

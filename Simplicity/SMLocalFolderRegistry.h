@@ -15,5 +15,6 @@
 - (SMLocalFolder*)getLocalFolder:(NSString*)folderName;
 - (SMLocalFolder*)getOrCreateLocalFolder:folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 - (void)removeLocalFolder:(NSString*)folderName;
+- (void)keepFoldersMemoryLimit;
 
 @end

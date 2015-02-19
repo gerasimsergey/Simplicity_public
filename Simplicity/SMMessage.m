@@ -199,9 +199,6 @@
 }
 
 - (void)setData:(NSData*)data {
-	if(!_createdFromDB)
-		NSAssert(data, @"data == null");
-	
 	if(!_data) {
 		_data = data;
 		_msgParser = [MCOMessageParser messageParserWithData:data];
@@ -210,7 +207,10 @@
 
 		NSAssert(_msgParser, @"cannot create message parser");
 	} else {
-		NSAssert(_msgParser, @"no html parser");
+		_data = nil;
+		_msgParser = nil;
+		_attachments = nil;
+		_hasAttachments = 0;
 	}
 }
 

@@ -387,7 +387,10 @@
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMessageListController *messageListController = [[appDelegate model] messageListController];
 
-	NSAssert(_selectedMessageThread != nil || _multipleSelectedMessageThreads.count > 0 || _draggedMessageThread != nil, @"no message threads selected for dragging");
+	if(_selectedMessageThread == nil && _multipleSelectedMessageThreads.count == 0 && _draggedMessageThread == nil) {
+		NSLog(@"%s: no message threads selected for moving", __func__);
+		return;
+	}
 
 	NSArray *messageThreadsToMove = _selectedMessageThread != nil? [NSArray arrayWithObject:_selectedMessageThread] : _multipleSelectedMessageThreads.count > 0? [NSArray arrayWithArray:_multipleSelectedMessageThreads] : [NSArray arrayWithObject:_draggedMessageThread];
 	

@@ -16,6 +16,7 @@
 #import "SMMessage.h"
 #import "SMMailbox.h"
 #import "SMFolder.h"
+#import "SMLocalFolderRegistry.h"
 #import "SMLocalFolder.h"
 
 static const NSUInteger DEFAULT_MAX_MESSAGES_PER_FOLDER = 100;
@@ -48,6 +49,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	NSMutableArray *_fetchedMessageHeadersFromAllMail;
 	NSString *_selectedMessagesRemoteFolder;
 	MCOIndexSet *_selectedMessageUIDsToLoad;
+	uint64_t _totalMemory;
 }
 
 - (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
@@ -66,6 +68,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		_syncedWithRemoteFolder = syncWithRemoteFolder;
 		_selectedMessageUIDsToLoad = nil;
 		_selectedMessagesRemoteFolder = nil;
+		_totalMemory = 0;
 	}
 	
 	return self;
@@ -106,7 +109,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		NSLog(@"%s: previous op is still in progress for folder %@", __func__, _localName);
 		return;
 	}
-	
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] localFolderRegistry] keepFoldersMemoryLimit];
+
 	if(!_syncedWithRemoteFolder) {
 		[self loadSelectedMessagesInternal];
 		return;
@@ -114,7 +120,6 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	_messageHeadersFetched = 0;
 	
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	[[[appDelegate model] messageStorage] startUpdate:_localName];
 	
 	MCOIMAPSession *session = [[appDelegate model] session];
@@ -156,6 +161,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)fetchMessageBodies:(NSString*)remoteFolderName {
 	NSLog(@"%s: fetching message bodies for folder '%@' (%lu messages in this folder, %lu messages in all mail)", __FUNCTION__, remoteFolderName, _fetchedMessageHeaders.count, _fetchedMessageHeadersFromAllMail.count);
+
+	[self recalculateTotalMemorySize];
 	
 	NSUInteger fetchCount = 0;
 	
@@ -223,6 +230,8 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		NSAssert(data != nil, @"data != nil");
 		
 		[[[appDelegate model] messageStorage] setMessageData:data uid:uid localFolder:_localName threadId:threadId];
+		
+		_totalMemory += [data length];
 		
 		NSDictionary *messageInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:uid], [NSNumber numberWithUnsignedLongLong:threadId], nil] forKeys:[NSArray arrayWithObjects:@"UID", @"ThreadId", nil]];
 		
@@ -429,9 +438,10 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolderName {
-	_messageHeadersFetched = 0;
-
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] localFolderRegistry] keepFoldersMemoryLimit];
+
+	_messageHeadersFetched = 0;
 
 	[[[appDelegate model] messageStorage] startUpdate:_localName];
 	
@@ -688,6 +698,74 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			}
 		}];
 	}];
+}
+
+#pragma mark Memory management
+
+- (void)reclaimMemory:(uint64_t)memoryToReclaimKb {
+	if(memoryToReclaimKb == 0)
+		return;
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMessageStorage *storage = [[appDelegate model] messageStorage];
+	
+	uint64_t reclaimedMemory = 0;
+	NSUInteger reclaimedMessagesCount = 0;
+	Boolean stop = NO;
+
+	NSUInteger threadsCount = [storage messageThreadsCountInLocalFolder:_localName];
+	for(NSUInteger i = threadsCount; !stop && i > 0; i--) {
+		SMMessageThread *thread = [storage messageThreadAtIndexByDate:(i-1) localFolder:_localName];
+		NSArray *messages = [thread messagesSortedByDate];
+		
+		for(NSUInteger j = messages.count; j > 0; j--) {
+			SMMessage *message = messages[j-1];
+			NSData *data = message.data;
+			
+			if(data != nil) {
+				reclaimedMessagesCount++;
+				reclaimedMemory += data.length;
+
+				[message setData:nil];
+				
+				if(reclaimedMemory / 1024 >= memoryToReclaimKb) {
+					stop = YES;
+					break;
+				}
+			}
+		}
+	}
+	
+	NSAssert(_totalMemory >= reclaimedMemory, @"_totalMemory %llu < reclaimedMemory %llu", _totalMemory, reclaimedMemory);
+	
+	_totalMemory -= reclaimedMemory;
+
+	NSLog(@"%s: total reclaimed %llu Kb in %lu messages, %llu Kb left in folder %@", __func__, reclaimedMemory / 1024 ,reclaimedMessagesCount, _totalMemory / 1024, _localName);
+}
+
+- (void)recalculateTotalMemorySize {
+	_totalMemory = 0;
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMessageStorage *storage = [[appDelegate model] messageStorage];
+
+	NSUInteger threadsCount = [storage messageThreadsCountInLocalFolder:_localName];
+	for(NSUInteger i = 0; i < threadsCount; i++) {
+		SMMessageThread *thread = [storage messageThreadAtIndexByDate:i localFolder:_localName];
+
+		for(SMMessage *message in [thread messagesSortedByDate]) {
+			NSData *data = message.data;
+			
+			if(data != nil)
+				_totalMemory += data.length;
+		}
+	}
+
+	NSLog(@"%s: total memory %llu Kb in folder %@", __func__, _totalMemory / 1024, _localName);
+}
+
+- (uint64_t)getTotalMemoryKb {
+	return _totalMemory / 1024;
 }
 
 @end

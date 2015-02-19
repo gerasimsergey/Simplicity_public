@@ -33,6 +33,10 @@
 }
 @end
 
+static NSUInteger FOLDER_MEMORY_GREEN_ZONE_KB = 200 * 1024;
+static NSUInteger FOLDER_MEMORY_YELLOW_ZONE_KB = 400 * 1024;
+//static NSUInteger FOLDER_MEMORY_RED_ZONE_KB = 500 * 1024;
+
 @implementation SMLocalFolderRegistry {
 	NSMutableDictionary *_folders;
 	NSMutableOrderedSet *_accessTimeSortedFolders;
@@ -106,6 +110,42 @@
 	[_folders removeObjectForKey:folderName];
 
 	[_accessTimeSortedFolders removeObjectAtIndex:[self getFolderEntryIndex:folderEntry]];
+}
+
+- (void)keepFoldersMemoryLimit {
+	uint64_t foldersMemoryKb = 0;
+	for(FolderEntry *folderEntry in _accessTimeSortedFolders)
+		foldersMemoryKb += [folderEntry.folder getTotalMemoryKb];
+
+	// TODO: use the red zone
+
+	if(foldersMemoryKb >= FOLDER_MEMORY_YELLOW_ZONE_KB) {
+		const uint64_t totalMemoryToReclaimKb = foldersMemoryKb - FOLDER_MEMORY_YELLOW_ZONE_KB;
+		uint64_t totalMemoryReclaimedKb = 0;
+
+		for(FolderEntry *folderEntry in _accessTimeSortedFolders) {
+			const uint64_t folderMemoryBeforeKb = [folderEntry.folder getTotalMemoryKb];
+
+			NSAssert(totalMemoryReclaimedKb < totalMemoryToReclaimKb, @"totalMemoryReclaimedKb %llu, totalMemoryToReclaimKb %llu", totalMemoryReclaimedKb, totalMemoryToReclaimKb);
+
+			[folderEntry.folder reclaimMemory:(totalMemoryToReclaimKb - totalMemoryReclaimedKb)];
+
+			const uint64_t folderMemoryAfterKb = [folderEntry.folder getTotalMemoryKb];
+			
+			NSAssert(folderMemoryAfterKb <= folderMemoryBeforeKb, @"folder memory changed from %llu to %llu", folderMemoryBeforeKb, folderMemoryAfterKb);
+
+			const uint64_t totalFolderMemoryReclaimedKb = folderMemoryBeforeKb - folderMemoryAfterKb;
+
+			NSLog(@"%s: %llu Kb reclaimed for folder %@", __func__, totalFolderMemoryReclaimedKb, folderEntry.folder.localName);
+
+			totalMemoryReclaimedKb += totalFolderMemoryReclaimedKb;
+			
+			if(totalMemoryReclaimedKb >= totalMemoryToReclaimKb)
+				break;
+		}
+
+		NSLog(@"%s: total %llu Kb reclaimed (%llu Kb was requested to reclaim, %lu Kb is the green zone, %lu Kb is the yellow zone)", __func__, totalMemoryReclaimedKb, totalMemoryToReclaimKb, FOLDER_MEMORY_GREEN_ZONE_KB, FOLDER_MEMORY_YELLOW_ZONE_KB);
+	}
 }
 
 @end

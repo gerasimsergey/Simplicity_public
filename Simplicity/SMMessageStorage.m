@@ -252,7 +252,7 @@
 	return [thread messageHasData:uid];
 }
 
-- (NSInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder {
+- (NSUInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder {
 	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 
 	// usually this means that no folders loaded yet
