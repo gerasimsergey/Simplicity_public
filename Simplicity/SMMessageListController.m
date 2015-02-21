@@ -49,18 +49,24 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 	return _currentFolder;
 }
 
-- (void)changeFolderInternal:(NSString*)folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
+- (void)changeFolderInternal:(NSString*)folderName remoteFolder:(NSString*)remoteFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
 	//NSLog(@"%s: new folder '%@'", __FUNCTION__, folderName);
 
-	NSAssert(folderName != nil, @"no folder name");
-	
-	SMLocalFolder *folder = [[_model localFolderRegistry] getOrCreateLocalFolder:folderName syncWithRemoteFolder:syncWithRemoteFolder];
-	NSAssert(folder != nil, @"folder registry returned nil folder");
+	if(folderName != nil) {
+		SMLocalFolder *folder = [[_model localFolderRegistry] getLocalFolder:folderName];
+		
+		if(folder == nil)
+			folder = [[_model localFolderRegistry] createLocalFolder:folderName remoteFolder:remoteFolderName syncWithRemoteFolder:syncWithRemoteFolder];
+		
+		NSAssert(folder != nil, @"folder registry returned nil folder");
+
+		_currentFolder = folder;
+	} else {
+		_currentFolder = nil;
+	}
 
 	if([_currentFolder syncedWithRemoteFolder])
 		[_currentFolder stopMessagesLoading:NO];
-
-	_currentFolder = folder;
 	
 	[_folderInfoOp cancel];
 	_folderInfoOp = nil;
@@ -72,7 +78,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 	if([_currentFolder.localName isEqualToString:folder])
 		return;
 
-	[self changeFolderInternal:folder syncWithRemoteFolder:YES];
+	[self changeFolderInternal:folder remoteFolder:folder syncWithRemoteFolder:YES];
 	[self startMessagesUpdate];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
@@ -83,12 +89,10 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 }
 
 - (void)clearCurrentFolderSelection {
-	NSString *emptyFolderName = @""; // TODO: create a descriptor for empty folder
-	
-	if([_currentFolder.localName isEqualToString:emptyFolderName])
+	if(_currentFolder == nil)
 		return;
 	
-	[self changeFolderInternal:emptyFolderName syncWithRemoteFolder:NO];
+	[self changeFolderInternal:nil remoteFolder:nil syncWithRemoteFolder:NO];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
@@ -108,7 +112,7 @@ static NSUInteger MESSAGE_LIST_UPDATE_INTERVAL_SEC = 30;
 }
 
 - (void)loadSearchResults:(MCOIndexSet*)searchResults remoteFolderToSearch:(NSString*)remoteFolderNameToSearch searchResultsLocalFolder:(NSString*)searchResultsLocalFolder {
-	[self changeFolderInternal:searchResultsLocalFolder syncWithRemoteFolder:NO];
+	[self changeFolderInternal:searchResultsLocalFolder remoteFolder:remoteFolderNameToSearch syncWithRemoteFolder:NO];
 	
 	[_currentFolder loadSelectedMessages:searchResults remoteFolder:remoteFolderNameToSearch];
 

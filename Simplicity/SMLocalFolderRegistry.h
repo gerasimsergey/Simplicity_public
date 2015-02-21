@@ -12,8 +12,8 @@
 
 @interface SMLocalFolderRegistry : NSObject
 
+- (SMLocalFolder*)createLocalFolder:(NSString*)localFolderName remoteFolder:(NSString*)remoteFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 - (SMLocalFolder*)getLocalFolder:(NSString*)folderName;
-- (SMLocalFolder*)getOrCreateLocalFolder:folderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 - (void)removeLocalFolder:(NSString*)folderName;
 - (void)keepFoldersMemoryLimit;
 

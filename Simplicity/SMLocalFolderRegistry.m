@@ -69,10 +69,16 @@ static NSUInteger FOLDER_MEMORY_YELLOW_ZONE_KB = 50 * 1024;
 	[_accessTimeSortedFolders insertObject:folderEntry atIndex:[self getFolderEntryIndex:folderEntry]];
 }
 
-- (SMLocalFolder*)getLocalFolder:(NSString*)folderName {
-	FolderEntry *folderEntry = [_folders objectForKey:folderName];
+- (SMLocalFolder*)getLocalFolder:(NSString*)localFolderName {
+	FolderEntry *folderEntry = [_folders objectForKey:localFolderName];
+	
+	if(folderEntry == nil)
+		return nil;
 	
 	[self updateFolderEntryAccessTime:folderEntry];
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate model] messageStorage] ensureLocalFolderExists:localFolderName];
 	
 	return folderEntry.folder;
 }
@@ -81,22 +87,20 @@ static NSUInteger FOLDER_MEMORY_YELLOW_ZONE_KB = 50 * 1024;
 	return [_accessTimeSortedFolders indexOfObject:folderEntry inSortedRange:NSMakeRange(0, _accessTimeSortedFolders.count) options:NSBinarySearchingInsertionIndex usingComparator:_accessTimeFolderComparator];
 }
 
-- (SMLocalFolder*)getOrCreateLocalFolder:localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
+- (SMLocalFolder*)createLocalFolder:(NSString*)localFolderName remoteFolder:(NSString*)remoteFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
 	FolderEntry *folderEntry = [_folders objectForKey:localFolderName];
 	
-	if(folderEntry == nil) {
-		SMLocalFolder *folder = [[SMLocalFolder alloc] initWithLocalFolderName:localFolderName syncWithRemoteFolder:syncWithRemoteFolder];
+	NSAssert(folderEntry == nil, @"folder %@ already created", localFolderName);
+	
+	SMLocalFolder *folder = [[SMLocalFolder alloc] initWithLocalFolderName:localFolderName remoteFolderName:remoteFolderName syncWithRemoteFolder:syncWithRemoteFolder];
 
-		folderEntry = [[FolderEntry alloc] initWithFolder:folder];
+	folderEntry = [[FolderEntry alloc] initWithFolder:folder];
 
-		[folderEntry updateTimestamp];
+	[folderEntry updateTimestamp];
 
-		[_folders setValue:folderEntry forKey:localFolderName];
+	[_folders setValue:folderEntry forKey:localFolderName];
 
-		[_accessTimeSortedFolders insertObject:folderEntry atIndex:[self getFolderEntryIndex:folderEntry]];
-	} else {
-		[self updateFolderEntryAccessTime:folderEntry];
-	}
+	[_accessTimeSortedFolders insertObject:folderEntry atIndex:[self getFolderEntryIndex:folderEntry]];
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] ensureLocalFolderExists:localFolderName];

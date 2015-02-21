@@ -11,13 +11,13 @@
 @interface SMLocalFolder : NSObject
 
 @property (readonly) NSString *localName;
-
+@property (readonly) NSString *remoteFolderName;
 @property (readonly) uint64_t totalMessagesCount;
 @property (readonly) uint64_t messageHeadersFetched;
 @property (readonly) uint64_t maxMessagesPerThisFolder;
 @property (readonly) Boolean syncedWithRemoteFolder;
 
-- (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
+- (id)initWithLocalFolderName:(NSString*)localFolderName remoteFolderName:(NSString*)remoteFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder;
 
 // increases local folder capacity and forces update
 - (void)increaseLocalFolderCapacity;

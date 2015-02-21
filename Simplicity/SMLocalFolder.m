@@ -52,11 +52,12 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	uint64_t _totalMemory;
 }
 
-- (id)initWithLocalFolderName:(NSString*)localFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
+- (id)initWithLocalFolderName:(NSString*)localFolderName remoteFolderName:(NSString*)remoteFolderName syncWithRemoteFolder:(Boolean)syncWithRemoteFolder {
 	self = [ super init ];
 	
 	if(self) {
 		_localName = localFolderName;
+		_remoteFolderName = remoteFolderName;
 		_maxMessagesPerThisFolder = DEFAULT_MAX_MESSAGES_PER_FOLDER;
 		_totalMessagesCount = 0;
 		_messageHeadersFetched = 0;
@@ -435,7 +436,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 			_messageHeadersFetched += [messages count];
 
-			[self updateMessages:messages remoteFolder:_localName];
+			[self updateMessages:messages remoteFolder:_remoteFolderName];
 			
 			[self syncFetchMessageHeaders];
 		} else {
@@ -587,14 +588,14 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)clear {
 	[self stopMessagesLoading:YES];
-	
+
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[[appDelegate model] messageStorage] removeLocalFolder:_localName];
 }
 
 #pragma mark Messages movement to other remote folders
 
-- (void)moveMessageThreads:(NSArray*)messageThreads toRemoteFolder:(NSString*)remoteFolderName {
+- (void)moveMessageThreads:(NSArray*)messageThreads toRemoteFolder:(NSString*)destRemoteFolderName {
 	[self stopMessagesLoading:NO];
 	[self cancelScheduledMessageListUpdate];
 	
@@ -606,8 +607,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		NSArray *messages = [thread messagesSortedByDate];
 		
 		for(SMMessage *message in messages) {
-			// TODO: support movement for messages from multiple folders to the same remote one
-			if([message.remoteFolder isEqualToString:_localName]) {
+			if([message.remoteFolder isEqualToString:_remoteFolderName]) {
 				[messagesToMoveUids addIndex:message.uid];
 
 				NSNumber *uid = [NSNumber numberWithUnsignedInt:message.uid];
@@ -620,35 +620,32 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 		}
 	}
 	
-	NSAssert(messagesToMoveUids.count > 0, @"no message uids to move from %@ to %@", _localName, remoteFolderName);
+	NSAssert(messagesToMoveUids.count > 0, @"no message uids to move from %@ to %@", _remoteFolderName, destRemoteFolderName);
 
 	MCOIMAPSession *session = [[appDelegate model] session];
 	NSAssert(session, @"session lost");
 
-	// TODO: support movement for messages from multiple folders to the same remote one
-	NSAssert(_syncedWithRemoteFolder, @"folder %@ is not synced with remote folder (TODO: to implement)", _localName);
-
-	MCOIMAPCopyMessagesOperation *op = [session copyMessagesOperationWithFolder:_localName uids:messagesToMoveUids destFolder:remoteFolderName];
+	MCOIMAPCopyMessagesOperation *op = [session copyMessagesOperationWithFolder:_remoteFolderName uids:messagesToMoveUids destFolder:destRemoteFolderName];
 
 	op.urgent = YES;
 	
 	[op start:^(NSError *error, NSDictionary *uidMapping) {
 		if(error == nil) {
 			if(uidMapping != nil) {
-				SMFolder *targetFolder = [[[appDelegate model] mailbox] getFolderByName:remoteFolderName];
+				SMFolder *targetFolder = [[[appDelegate model] mailbox] getFolderByName:destRemoteFolderName];
 				
 				if(targetFolder != nil && targetFolder.kind == SMFolderKindRegular) {
 					MCOIndexSet *uids = [MCOIndexSet indexSet];
 					for(NSNumber *srcUid in uidMapping)
 						[uids addIndex:[[uidMapping objectForKey:srcUid] unsignedLongLongValue]];
 	
-					[self addLabel:remoteFolderName toMessages:uids forRemoteFolder:remoteFolderName];
+					[self addLabel:destRemoteFolderName toMessages:uids forRemoteFolder:destRemoteFolderName];
 				}
 			}
  
 			[self deleteMessages:messagesToMoveUids];
 		} else {
-			NSLog(@"%s: Error copying messages from %@ to %@: %@", __func__, _localName, remoteFolderName, error);
+			NSLog(@"%s: Error copying messages from %@ to %@: %@", __func__, _remoteFolderName, destRemoteFolderName, error);
 		}
 	}];
 
