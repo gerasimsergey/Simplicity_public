@@ -104,7 +104,7 @@
 */
 }
 
-- (void)removeMessageThreadsLocalFolder:(NSString*)localFolder messageThreads:(NSArray*)messageThreads {
+- (void)removeMessageThreads:(NSArray*)messageThreads fromLocalFolder:(NSString*)localFolder {
 	SMMessageThreadCollection *collection = [self messageThreadCollectionForFolder:localFolder];
 	NSAssert(collection, @"bad folder collection");
 

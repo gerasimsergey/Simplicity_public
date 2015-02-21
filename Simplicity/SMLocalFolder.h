@@ -26,8 +26,8 @@
 // with the remote folder with the same name
 - (void)startLocalFolderSync;
 
-// loads the messages specified by their UIDs from the specific remote folder
-- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs remoteFolder:(NSString*)remoteFolderName;
+// loads the messages specified by their UIDs from the remote folder
+- (void)loadSelectedMessages:(MCOIndexSet*)messageUIDs;
 
 // fetches the body of the message specified by its UID
 - (BOOL)fetchMessageBody:(uint32_t)uid remoteFolder:(NSString*)remoteFolderName threadId:(uint64_t)threadId urgent:(BOOL)urgent;
