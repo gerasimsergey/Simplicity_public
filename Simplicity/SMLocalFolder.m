@@ -255,6 +255,13 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(_searchMessageThreadsOps.count == 0, @"_searchMessageThreadsOps not empty");
 
+	if(allMailFolder == nil) {
+		NSLog(@"%s: no all mail folder!", __func__);
+
+		[self finishHeadersSync];
+		return;
+	}
+		
 	if(_fetchedMessageHeaders.count == 0) {
 		[self finishHeadersSync];
 		return;

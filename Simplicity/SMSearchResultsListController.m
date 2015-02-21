@@ -9,6 +9,8 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 #import "SMSearchDescriptor.h"
+#import "SMMailbox.h"
+#import "SMFolder.h"
 #import "SMLocalFolder.h"
 #import "SMLocalFolderRegistry.h"
 #import "SMMessageListController.h"
@@ -48,8 +50,18 @@
 	
 	if(existingLocalFolder == nil) {
 		// TODO: handle search in search results differently
-		remoteFolderName = [[[[appDelegate model] messageListController] currentLocalFolder] localName];
 
+		NSString *allMailFolder = [[[[appDelegate model] mailbox] allMailFolder] fullName];
+		if(allMailFolder != nil) {
+			NSLog(@"%s: searching in all mail", __func__);
+			remoteFolderName = allMailFolder;
+		} else {
+			NSAssert(nil, @"no all mail folder, revise this logic!");
+
+			// TODO: will require another logic for non-gmail accounts
+			remoteFolderName = [[[[appDelegate model] messageListController] currentLocalFolder] localName];
+		}
+		
 		// TODO: introduce search results descriptor to avoid this funny folder name
 		searchResultsLocalFolder = [NSString stringWithFormat:@"//search_results//%lu", _searchId++];
 		
@@ -83,8 +95,10 @@
 	
 	[_currentSearchOp cancel];
 
-	_currentSearchOp = [session searchOperationWithFolder:remoteFolderName kind:MCOIMAPSearchKindContent searchString:searchString];
-	
+//	_currentSearchOp = [session searchOperationWithFolder:remoteFolderName kind:MCOIMAPSearchKindContent searchString:searchString];
+	MCOIMAPSearchExpression *expression = [MCOIMAPSearchExpression searchGmailRaw:searchString];
+	_currentSearchOp = [session searchExpressionOperationWithFolder:remoteFolderName expression:expression];
+
 	_currentSearchOp.urgent = YES;
 	
 	[_currentSearchOp start:^(NSError *error, MCOIndexSet *searchResults) {
