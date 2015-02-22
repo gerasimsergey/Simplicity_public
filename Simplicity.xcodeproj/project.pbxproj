@@ -43,6 +43,8 @@
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
 		005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */; };
 		006709261A9997D600C0C9CC /* libMailCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085517D4EF3E00341051 /* libMailCore.a */; };
+		006709341A99A77600C0C9CC /* SMFindContentsPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 006709321A99A77600C0C9CC /* SMFindContentsPanelViewController.m */; };
+		006709351A99A77600C0C9CC /* SMFindContentsPanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 006709331A99A77600C0C9CC /* SMFindContentsPanelViewController.xib */; };
 		006A5DCA17F2F041004D6D78 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DC917F2F041004D6D78 /* WebKit.framework */; };
 		006A5DD517F5EC50004D6D78 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */; };
 		006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */; };
@@ -85,13 +87,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		00036D861A205FCC0085C266 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 27780C3A19CF9CD100C77E44;
-			remoteInfo = "mailcore ios";
-		};
 		00036D881A205FCC0085C266 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
@@ -195,6 +190,9 @@
 		005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageBookmarksView.m; sourceTree = "<group>"; };
 		006709271A99980D00C0C9CC /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		0067092E1A99989900C0C9CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		006709311A99A77600C0C9CC /* SMFindContentsPanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFindContentsPanelViewController.h; sourceTree = "<group>"; };
+		006709321A99A77600C0C9CC /* SMFindContentsPanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFindContentsPanelViewController.m; sourceTree = "<group>"; };
+		006709331A99A77600C0C9CC /* SMFindContentsPanelViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMFindContentsPanelViewController.xib; sourceTree = "<group>"; };
 		006A5DC917F2F041004D6D78 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
 		006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
 		006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Simplicity.sqlite; sourceTree = "<group>"; };
@@ -355,7 +353,6 @@
 				005B085517D4EF3E00341051 /* libMailCore.a */,
 				005B085917D4EF3E00341051 /* tests */,
 				005B085B17D4EF3E00341051 /* test-ios.app */,
-				00036D871A205FCC0085C266 /* MailCore.framework */,
 				00036D891A205FCC0085C266 /* unittest.xctest */,
 				008AB9E91A4A80CD00F91D86 /* unittestcpp */,
 			);
@@ -407,6 +404,8 @@
 				003DFF171A73681A003C26E2 /* SMAttachmentsPanelItemViewController.m */,
 				00A085AD1A72145300CC4E1C /* SMAttachmentsPanelViewController.h */,
 				00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewController.m */,
+				006709311A99A77600C0C9CC /* SMFindContentsPanelViewController.h */,
+				006709321A99A77600C0C9CC /* SMFindContentsPanelViewController.m */,
 				0089D35D1A88084F00C189BB /* SMFolderColorController.h */,
 				0089D35E1A88084F00C189BB /* SMFolderColorController.m */,
 				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
@@ -471,6 +470,7 @@
 				003DFF181A73681A003C26E2 /* SMAttachmentsPanelItemViewController.xib */,
 				00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */,
 				00FE6DF31A4E6C0600D2194F /* SMInstrumentPanelViewController.xib */,
+				006709331A99A77600C0C9CC /* SMFindContentsPanelViewController.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
 				003859001A4D024500D4FD70 /* SMSearchResultsListViewController.xib */,
@@ -559,13 +559,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		00036D871A205FCC0085C266 /* MailCore.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MailCore.framework;
-			remoteRef = 00036D861A205FCC0085C266 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		00036D891A205FCC0085C266 /* unittest.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -635,6 +628,7 @@
 				002556FA1A5A3BF900C864D0 /* info-icon.png in Resources */,
 				002057D41A85D2DA00D5FE8A /* spam-white.png in Resources */,
 				003DFF1A1A73681A003C26E2 /* SMAttachmentsPanelItemViewController.xib in Resources */,
+				006709351A99A77600C0C9CC /* SMFindContentsPanelViewController.xib in Resources */,
 				00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */,
 				00FE6DF51A4E6C0600D2194F /* SMInstrumentPanelViewController.xib in Resources */,
 			);
@@ -666,6 +660,7 @@
 				005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */,
 				0002A0B517D1BB0100EA4AFF /* SMAppController.m in Sources */,
 				00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */,
+				006709341A99A77600C0C9CC /* SMFindContentsPanelViewController.m in Sources */,
 				0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */,
 				00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */,
 				00A085A01A7206FC00CC4E1C /* SMAttachmentItem.m in Sources */,
