@@ -21,7 +21,7 @@
 - (void)ensureLocalFolderExists:(NSString*)localFolder;
 - (void)removeLocalFolder:(NSString*)localFolder;
 
-- (NSInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder;
+- (NSUInteger)messageThreadsCountInLocalFolder:(NSString*)localFolder;
 
 typedef NS_ENUM(NSInteger, SMMessageStorageUpdateResult) {
 	SMMesssageStorageUpdateResultNone,

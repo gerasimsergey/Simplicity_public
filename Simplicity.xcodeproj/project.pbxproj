@@ -40,10 +40,9 @@
 		00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00414ED71A16454F00068742 /* SMSearchResultsListCellView.m */; };
 		00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */; };
 		004F7FEA1866A973004DEC3C /* search-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 004F7FE91866A973004DEC3C /* search-icon.png */; };
-		005B086017D4EFF500341051 /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; };
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
-		005B086417D4F07700341051 /* MailCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 005B085D17D4EF3E00341051 /* MailCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */; };
+		006709261A9997D600C0C9CC /* libMailCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085517D4EF3E00341051 /* libMailCore.a */; };
 		006A5DCA17F2F041004D6D78 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DC917F2F041004D6D78 /* WebKit.framework */; };
 		006A5DD517F5EC50004D6D78 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */; };
 		006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */; };
@@ -107,13 +106,6 @@
 			remoteGlobalIDString = C64EA537169E772200778456;
 			remoteInfo = "static mailcore2 osx";
 		};
-		005B085617D4EF3E00341051 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C6BA2C191705F4E6003F0E9E;
-			remoteInfo = "static mailcore2 ios";
-		};
 		005B085817D4EF3E00341051 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
@@ -128,19 +120,12 @@
 			remoteGlobalIDString = C6A81B911706840C00882C15;
 			remoteInfo = "test-ios";
 		};
-		005B085C17D4EF3E00341051 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C6BD288D170BD71100A91AC1;
-			remoteInfo = "mailcore osx";
-		};
-		005B085E17D4EFD800341051 /* PBXContainerItemProxy */ = {
+		0067091A1A99952300C0C9CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C6BD288C170BD71100A91AC1;
-			remoteInfo = "mailcore osx";
+			remoteGlobalIDString = C64EA536169E772200778456;
+			remoteInfo = "static mailcore2 osx";
 		};
 		008AB9E81A4A80CD00F91D86 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -150,19 +135,6 @@
 			remoteInfo = unittestcpp;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		005B086317D4F05B00341051 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				005B086417D4F07700341051 /* MailCore.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0002A08E17D1B1E000EA4AFF /* Simplicity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Simplicity.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,6 +193,8 @@
 		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		005F0D371A86BC980093E96D /* SMMessageBookmarksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageBookmarksView.h; sourceTree = "<group>"; };
 		005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageBookmarksView.m; sourceTree = "<group>"; };
+		006709271A99980D00C0C9CC /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		0067092E1A99989900C0C9CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		006A5DC917F2F041004D6D78 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
 		006A5DD417F5EC50004D6D78 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
 		006A5DD617F6C4DC004D6D78 /* Simplicity.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Simplicity.sqlite; sourceTree = "<group>"; };
@@ -295,10 +269,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				006709261A9997D600C0C9CC /* libMailCore.a in Frameworks */,
 				006A5DD517F5EC50004D6D78 /* libsqlite3.dylib in Frameworks */,
 				006A5DCA17F2F041004D6D78 /* WebKit.framework in Frameworks */,
 				005B086217D4F00200341051 /* Security.framework in Frameworks */,
-				005B086017D4EFF500341051 /* MailCore.framework in Frameworks */,
 				0002A09217D1B1E000EA4AFF /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,6 +304,8 @@
 		0002A09017D1B1E000EA4AFF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0067092E1A99989900C0C9CC /* CFNetwork.framework */,
+				006709271A99980D00C0C9CC /* libstdc++.dylib */,
 				005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */,
 				005B086117D4F00200341051 /* Security.framework */,
 				0002A09117D1B1E000EA4AFF /* Cocoa.framework */,
@@ -377,10 +353,8 @@
 			isa = PBXGroup;
 			children = (
 				005B085517D4EF3E00341051 /* libMailCore.a */,
-				005B085717D4EF3E00341051 /* libMailCore-ios.a */,
 				005B085917D4EF3E00341051 /* tests */,
 				005B085B17D4EF3E00341051 /* test-ios.app */,
-				005B085D17D4EF3E00341051 /* MailCore.framework */,
 				00036D871A205FCC0085C266 /* MailCore.framework */,
 				00036D891A205FCC0085C266 /* unittest.xctest */,
 				008AB9E91A4A80CD00F91D86 /* unittestcpp */,
@@ -540,12 +514,11 @@
 				0002A08A17D1B1E000EA4AFF /* Sources */,
 				0002A08B17D1B1E000EA4AFF /* Frameworks */,
 				0002A08C17D1B1E000EA4AFF /* Resources */,
-				005B086317D4F05B00341051 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				005B085F17D4EFD800341051 /* PBXTargetDependency */,
+				0067091B1A99952300C0C9CC /* PBXTargetDependency */,
 			);
 			name = Simplicity;
 			productName = Simplicity;
@@ -607,13 +580,6 @@
 			remoteRef = 005B085417D4EF3E00341051 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		005B085717D4EF3E00341051 /* libMailCore-ios.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libMailCore-ios.a";
-			remoteRef = 005B085617D4EF3E00341051 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		005B085917D4EF3E00341051 /* tests */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
@@ -626,13 +592,6 @@
 			fileType = wrapper.application;
 			path = "test-ios.app";
 			remoteRef = 005B085A17D4EF3E00341051 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		005B085D17D4EF3E00341051 /* MailCore.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MailCore.framework;
-			remoteRef = 005B085C17D4EF3E00341051 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		008AB9E91A4A80CD00F91D86 /* unittestcpp */ = {
@@ -735,10 +694,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		005B085F17D4EFD800341051 /* PBXTargetDependency */ = {
+		0067091B1A99952300C0C9CC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "mailcore osx";
-			targetProxy = 005B085E17D4EFD800341051 /* PBXContainerItemProxy */;
+			name = "static mailcore2 osx";
+			targetProxy = 0067091A1A99952300C0C9CC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -837,6 +796,21 @@
 				GCC_PREFIX_HEADER = "Simplicity/Simplicity-Prefix.pch";
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = "Simplicity/Simplicity-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lctemplate",
+					"-letpan",
+					"-lxml2",
+					"-lsasl2",
+					"-liconv",
+					"-ltidy",
+					"-lz",
+					"-lc++",
+					"-stdlib=libc++",
+					"-ObjC",
+					"-lcrypto",
+					"-lssl",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = app;
@@ -853,6 +827,21 @@
 				GCC_PREFIX_HEADER = "Simplicity/Simplicity-Prefix.pch";
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = "Simplicity/Simplicity-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lctemplate",
+					"-letpan",
+					"-lxml2",
+					"-lsasl2",
+					"-liconv",
+					"-ltidy",
+					"-lz",
+					"-lc++",
+					"-stdlib=libc++",
+					"-ObjC",
+					"-lcrypto",
+					"-lssl",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = app;
