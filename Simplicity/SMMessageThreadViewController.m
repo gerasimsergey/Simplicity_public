@@ -51,8 +51,8 @@
 		[messageThreadView setBorderType:NSNoBorder];
 		[messageThreadView setHasVerticalScroller:YES];
 		[messageThreadView setHasHorizontalScroller:NO];
-		[messageThreadView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-		
+		[messageThreadView setTranslatesAutoresizingMaskIntoConstraints:NO];
+
 		[self setView:messageThreadView];
 		
 		_cells = [NSMutableArray new];

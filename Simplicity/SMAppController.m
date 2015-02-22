@@ -385,7 +385,7 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 		
 		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_messageThreadAndFindContentsPanelView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 		
-//		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_messageThreadViewController.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_messageThreadViewController.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 	}
 
 	[_messageThreadAndFindContentsPanelView addSubview:_findContentsPanelViewController.view];
