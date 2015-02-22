@@ -26,6 +26,7 @@
 @property (nonatomic) IBOutlet NSTextField *searchField;
 
 - (IBAction)trashAction:(id)sender;
+- (IBAction)toggleFindContentsPanelAction:(id)sender;
 
 @property SMMailboxViewController *mailboxViewController;
 @property SMSearchResultsListViewController *searchResultsListViewController;

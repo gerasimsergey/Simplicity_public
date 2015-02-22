@@ -12,7 +12,6 @@
 
 @interface SMMessageThreadViewController : NSViewController
 
-@property NSScrollView *messageThreadView;
 @property (readonly) SMMessageThread *currentMessageThread;
 
 - (void)setMessageThread:(SMMessageThread*)messageThread;

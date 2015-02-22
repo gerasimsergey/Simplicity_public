@@ -97,7 +97,7 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	
 	NSAssert(_messageThreadViewController, @"_messageThreadViewController");
 	
-	NSView *messageThreadView = [ _messageThreadViewController messageThreadView ];
+	NSView *messageThreadView = [ _messageThreadViewController view ];
 	
 	NSAssert(messageThreadView, @"messageThreadView");
 
@@ -354,9 +354,23 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 
 #pragma mark Find Contents panel management
 
+- (IBAction)toggleFindContentsPanelAction:(id)sender {
+	if(_findContentsPanelShown)
+	{
+		[self hideFindContentsPanel];
+	}
+	else
+	{
+		[self showFindContentsPanel];
+	}
+}
+
 - (void)showFindContentsPanel {
 	if(_findContentsPanelShown)
 		return;
+
+	NSAssert(_messageThreadViewTopContraint != nil, @"_messageThreadViewTopContraint == nil");
+	[_messageThreadAndFindContentsPanelView removeConstraint:_messageThreadViewTopContraint];
 	
 	if(_findContentsPanelViewController == nil) {
 		_findContentsPanelViewController = [[SMFindContentsPanelViewController alloc] initWithNibName:@"SMFindContentsPanelViewController" bundle:nil];
@@ -368,19 +382,17 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_messageThreadAndFindContentsPanelView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
 		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_messageThreadAndFindContentsPanelView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-	
+		
 		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_messageThreadAndFindContentsPanelView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 		
-		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_messageThreadViewController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+//		[_findContentsPanelConstraints addObject:[NSLayoutConstraint constraintWithItem:_findContentsPanelViewController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_messageThreadViewController.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 	}
-	
-	NSAssert(_findContentsPanelConstraints != nil, @"_findContentsPanelConstraints == nil");
 
-	[_messageThreadAndFindContentsPanelView removeConstraint:_messageThreadViewTopContraint];
-	
 	[_messageThreadAndFindContentsPanelView addSubview:_findContentsPanelViewController.view];
+
+	NSAssert(_findContentsPanelConstraints != nil, @"_findContentsPanelConstraints == nil");
 	[_messageThreadAndFindContentsPanelView addConstraints:_findContentsPanelConstraints];
-	
+
 	_findContentsPanelShown = YES;
 }
 

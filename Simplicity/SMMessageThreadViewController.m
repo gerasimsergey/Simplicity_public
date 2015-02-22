@@ -46,12 +46,14 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		_messageThreadView = [[NSScrollView alloc] init];
+		NSScrollView *messageThreadView = [[NSScrollView alloc] init];
 		
-		[_messageThreadView setBorderType:NSNoBorder];
-		[_messageThreadView setHasVerticalScroller:YES];
-		[_messageThreadView setHasHorizontalScroller:NO];
-		[_messageThreadView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+		[messageThreadView setBorderType:NSNoBorder];
+		[messageThreadView setHasVerticalScroller:YES];
+		[messageThreadView setHasHorizontalScroller:NO];
+		[messageThreadView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+		
+		[self setView:messageThreadView];
 		
 		_cells = [NSMutableArray new];
 
@@ -86,10 +88,12 @@
 
 	[_cells removeAllObjects];
 
-	_contentView = [[SMFlippedView alloc] initWithFrame:[_messageThreadView frame]];
+	NSScrollView *messageThreadView = (NSScrollView*)[self view];
+
+	_contentView = [[SMFlippedView alloc] initWithFrame:[messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	[_messageThreadView setDocumentView:_contentView];
+	[messageThreadView setDocumentView:_contentView];
 	
 	if(_currentMessageThread != nil) {
 		NSAssert(_currentMessageThread.messagesCount > 0, @"no messages in message thread");
