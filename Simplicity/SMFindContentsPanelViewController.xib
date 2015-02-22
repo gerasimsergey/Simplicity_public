@@ -18,6 +18,9 @@
             <subviews>
                 <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gDP-QU-xiS">
                     <rect key="frame" x="5" y="4" width="250" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="22" id="fR6-pv-RL5"/>
+                    </constraints>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" title="Find in text" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="SWO-x6-ba8">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -60,9 +63,11 @@
                 <constraint firstItem="fxh-1y-lXc" firstAttribute="leading" secondItem="gDP-QU-xiS" secondAttribute="trailing" constant="8" symbolic="YES" id="4S3-7k-6vJ"/>
                 <constraint firstItem="QOq-jk-Bxe" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="KlO-Ua-LSJ"/>
                 <constraint firstItem="fxh-1y-lXc" firstAttribute="baseline" secondItem="gDP-QU-xiS" secondAttribute="baseline" id="MB5-Rz-xYE"/>
+                <constraint firstAttribute="bottom" secondItem="gDP-QU-xiS" secondAttribute="bottom" constant="4" id="OYX-6A-OtE"/>
                 <constraint firstAttribute="trailing" secondItem="lXS-2i-rpF" secondAttribute="trailing" constant="5" id="aFu-bv-3UW"/>
                 <constraint firstItem="gDP-QU-xiS" firstAttribute="top" secondItem="lXS-2i-rpF" secondAttribute="top" id="aJm-Um-9aJ"/>
                 <constraint firstItem="lXS-2i-rpF" firstAttribute="baseline" secondItem="QOq-jk-Bxe" secondAttribute="baseline" id="eat-RC-Pqh"/>
+                <constraint firstItem="gDP-QU-xiS" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="5" id="ogZ-Nh-oqG"/>
                 <constraint firstItem="gDP-QU-xiS" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="5" id="rhD-Gb-rsj"/>
                 <constraint firstItem="QOq-jk-Bxe" firstAttribute="leading" secondItem="fxh-1y-lXc" secondAttribute="trailing" constant="8" symbolic="YES" id="zU7-45-sMl"/>
             </constraints>
