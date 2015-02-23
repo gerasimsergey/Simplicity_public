@@ -344,4 +344,10 @@
 	[_messageDetailsViewController updateMessage];
 }
 
+#pragma mark Finding contents
+
+- (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
+	[_messageBodyViewController findContents:stringToFind matchCase:matchCase forward:forward];
+}
+
 @end

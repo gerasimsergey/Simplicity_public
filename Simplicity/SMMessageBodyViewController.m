@@ -38,7 +38,6 @@
 
 @implementation SMMessageBodyViewController {
 	unsigned long long _nextIdentifier;
-	WebView *_view;
 	NSString *_htmlText;
 	uint32_t _uid;
 	NSString *_folder;
@@ -49,17 +48,17 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		_view = [[WebView alloc] init];
+		WebView *view = [[WebView alloc] init];
 		
-		_view.translatesAutoresizingMaskIntoConstraints = NO;
+		view.translatesAutoresizingMaskIntoConstraints = NO;
 		
-		[_view setPolicyDelegate:self];
-		[_view setResourceLoadDelegate:self];
-		[_view setMaintainsBackForwardList:NO];
-		[_view setCanDrawConcurrently:YES];
-		[_view setEditable:NO];
+		[view setPolicyDelegate:self];
+		[view setResourceLoadDelegate:self];
+		[view setMaintainsBackForwardList:NO];
+		[view setCanDrawConcurrently:YES];
+		[view setEditable:NO];
 		
-		[self setView:_view];
+		[self setView:view];
 		
 		_nextIdentifier = 0;
 	}
@@ -70,11 +69,13 @@
 - (void)loadHTML {
 	NSAssert(_uncollapsed, @"view is collapsed");
 
-	[[_view mainFrame] loadHTMLString:_htmlText baseURL:nil];
+	WebView *view = (WebView*)[self view];
+	[[view mainFrame] loadHTMLString:_htmlText baseURL:nil];
 }
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder {
-	[_view stopLoading:self];
+	WebView *view = (WebView*)[self view];
+	[view stopLoading:self];
 	
 	_htmlText = htmlText;
 	_uid = uid;
@@ -158,6 +159,12 @@
 	} else {
 		[listener use];
 	}
+}
+
+#pragma mark Finding contents
+
+- (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
+	NSLog(@"%s", __func__);
 }
 
 @end
