@@ -54,6 +54,7 @@
 		0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */; };
 		0089D35F1A88084F00C189BB /* SMFolderColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0089D35E1A88084F00C189BB /* SMFolderColorController.m */; };
 		008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */; };
+		00909E751A9ACDE300636C90 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 00909E741A9ACDE300636C90 /* SearchWebView.js */; };
 		009217A51A92F007003A0348 /* trash-black.png in Resources */ = {isa = PBXBuildFile; fileRef = 009217A41A92F007003A0348 /* trash-black.png */; };
 		009217AF1A930019003A0348 /* SMMessageThreadCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 009217AE1A930019003A0348 /* SMMessageThreadCollection.m */; };
 		00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00974266195684DD00620145 /* SMMailboxViewController.xib */; };
@@ -209,6 +210,7 @@
 		0089D35E1A88084F00C189BB /* SMFolderColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFolderColorController.m; sourceTree = "<group>"; };
 		008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMColorCircle.h; sourceTree = "<group>"; };
 		008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMColorCircle.m; sourceTree = "<group>"; };
+		00909E741A9ACDE300636C90 /* SearchWebView.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = SearchWebView.js; sourceTree = "<group>"; };
 		009217A41A92F007003A0348 /* trash-black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash-black.png"; sourceTree = "<group>"; };
 		009217AD1A930019003A0348 /* SMMessageThreadCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadCollection.h; sourceTree = "<group>"; };
 		009217AE1A930019003A0348 /* SMMessageThreadCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadCollection.m; sourceTree = "<group>"; };
@@ -482,6 +484,7 @@
 		00E9108017D30FB90028C679 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				00909E741A9ACDE300636C90 /* SearchWebView.js */,
 				00A681791A7DEDB800DAD2BD /* attachment-document.png */,
 				0099CE851A623B2A00AEA789 /* attachment-icon.png */,
 				00B968D51A79F48F00C37B97 /* background_repeat.png */,
@@ -609,6 +612,7 @@
 				0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */,
 				00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */,
 				00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */,
+				00909E751A9ACDE300636C90 /* SearchWebView.js in Resources */,
 				00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */,
 				0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */,
 				002057D31A85D2DA00D5FE8A /* outbox-white.png in Resources */,

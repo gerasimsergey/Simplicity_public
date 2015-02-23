@@ -165,6 +165,35 @@
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
 	NSLog(@"%s", __func__);
+
+	if(stringToFind.length > 0)
+		[self highlightAllOccurencesOfString:stringToFind];
+	else
+		[self removeAllHighlights];
+}
+
+- (NSInteger)highlightAllOccurencesOfString:(NSString*)str
+{
+	NSAssert(str.length > 0, @"passing empty string to search is prohibited");
+
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"SearchWebView" ofType:@"js"];
+	NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+
+	WebView *view = (WebView*)[self view];
+	[view stringByEvaluatingJavaScriptFromString:jsCode];
+	
+	NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurencesOfString('%@')",str];
+	[view stringByEvaluatingJavaScriptFromString:startSearch];
+	
+	NSString *result = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
+	return [result integerValue];
+}
+
+- (void)removeAllHighlights
+{
+	WebView *view = (WebView*)[self view];
+
+	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_RemoveAllHighlights()"];
 }
 
 @end
