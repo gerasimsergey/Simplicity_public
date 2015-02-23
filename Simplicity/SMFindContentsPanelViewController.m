@@ -23,11 +23,6 @@
 	return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do view setup here.
-}
-
 - (IBAction)findContentsSearchAction:(id)sender {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];

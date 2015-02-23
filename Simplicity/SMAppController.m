@@ -395,6 +395,11 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	NSAssert(_findContentsPanelConstraints != nil, @"_findContentsPanelConstraints == nil");
 	[_messageThreadAndFindContentsPanelView addConstraints:_findContentsPanelConstraints];
 
+	NSSearchField *searchField = _findContentsPanelViewController.searchField;
+	NSAssert(searchField != nil, @"searchField == nil");
+
+	[[searchField window] makeFirstResponder:searchField];
+
 	_findContentsPanelShown = YES;
 }
 
