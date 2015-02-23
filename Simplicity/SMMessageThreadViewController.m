@@ -304,7 +304,7 @@
 #pragma mark Finding messages contents
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
-	NSLog(@"%s: string '%@', match case %d, forward %d", __func__, stringToFind, matchCase, forward);
+//	NSLog(@"%s: string '%@', match case %d, forward %d", __func__, stringToFind, matchCase, forward);
 	
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");

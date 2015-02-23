@@ -42,6 +42,7 @@
 	uint32_t _uid;
 	NSString *_folder;
 	Boolean _uncollapsed;
+	NSString *_previousStringToFind;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -164,12 +165,23 @@
 #pragma mark Finding contents
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
-	NSLog(@"%s", __func__);
+//	NSLog(@"%s", __func__);
 
-	if(stringToFind.length > 0)
-		[self highlightAllOccurencesOfString:stringToFind];
-	else
+	NSAssert(stringToFind != nil, @"stringToFind == nil");
+
+	if(stringToFind.length == 0) {
 		[self removeAllHighlightedOccurencesOfString];
+		
+		_previousStringToFind = nil;
+	} else {
+		if(_previousStringToFind != nil && [_previousStringToFind isEqualToString:stringToFind]) {
+			[self markNextOccurenceOfFoundString];
+		} else {
+			[self highlightAllOccurencesOfString:stringToFind];
+			
+			_previousStringToFind = stringToFind;
+		}
+	}
 }
 
 - (NSInteger)highlightAllOccurencesOfString:(NSString*)str {
@@ -188,6 +200,12 @@
 	
 	NSString *result = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
 	return [result integerValue];
+}
+
+- (void)markNextOccurenceOfFoundString {
+	WebView *view = (WebView*)[self view];
+
+	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_MarkNextOccurenceOfFoundString()"];
 }
 
 - (void)removeAllHighlightedOccurencesOfString {
