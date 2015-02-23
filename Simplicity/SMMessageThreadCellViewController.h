@@ -27,5 +27,6 @@
 - (void)toggleAttachmentsPanel;
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward;
+- (void)removeFindContentsResults;
 
 @end

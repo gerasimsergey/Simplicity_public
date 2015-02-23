@@ -17,5 +17,6 @@
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward;
+- (void)removeFindContentsResults;
 
 @end

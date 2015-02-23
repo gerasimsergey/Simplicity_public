@@ -350,4 +350,8 @@
 	[_messageBodyViewController findContents:stringToFind matchCase:matchCase forward:forward];
 }
 
+- (void)removeFindContentsResults {
+	[_messageBodyViewController removeFindContentsResults];
+}
+
 @end

@@ -170,9 +170,7 @@
 	NSAssert(stringToFind != nil, @"stringToFind == nil");
 
 	if(stringToFind.length == 0) {
-		[self removeAllHighlightedOccurencesOfString];
-		
-		_previousStringToFind = nil;
+		[self removeFindContentsResults];
 	} else {
 		if(_previousStringToFind != nil && [_previousStringToFind isEqualToString:stringToFind]) {
 			[self markNextOccurenceOfFoundString];
@@ -182,6 +180,12 @@
 			_previousStringToFind = stringToFind;
 		}
 	}
+}
+
+- (void)removeFindContentsResults {
+	[self removeAllHighlightedOccurencesOfString];
+
+	_previousStringToFind = nil;
 }
 
 - (NSInteger)highlightAllOccurencesOfString:(NSString*)str {

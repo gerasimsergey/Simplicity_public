@@ -313,4 +313,12 @@
 	[cell.viewController findContents:stringToFind matchCase:matchCase forward:forward];
 }
 
+- (void)removeFindContentsResults {
+	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
+	NSAssert(_cells.count > 0, @"no cells");
+	
+	ThreadCell *cell = _cells[0];
+	[cell.viewController removeFindContentsResults];
+}
+
 @end

@@ -355,12 +355,9 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 #pragma mark Find Contents panel management
 
 - (IBAction)toggleFindContentsPanelAction:(id)sender {
-	if(_findContentsPanelShown)
-	{
+	if(_findContentsPanelShown) {
 		[self hideFindContentsPanel];
-	}
-	else
-	{
+	} else {
 		[self showFindContentsPanel];
 	}
 }
@@ -412,7 +409,9 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	
 	[_findContentsPanelViewController.view removeFromSuperview];
 	[_messageThreadAndFindContentsPanelView addConstraint:_messageThreadViewTopContraint];
-	
+
+	[_messageThreadViewController removeFindContentsResults];
+
 	_findContentsPanelShown = NO;
 }
 

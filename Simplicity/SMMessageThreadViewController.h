@@ -15,6 +15,8 @@
 @property (readonly) SMMessageThread *currentMessageThread;
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward;
+- (void)removeFindContentsResults;
+
 - (void)setMessageThread:(SMMessageThread*)messageThread;
 - (void)updateMessageThread;
 
