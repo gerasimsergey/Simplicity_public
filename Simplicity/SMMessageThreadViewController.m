@@ -14,6 +14,7 @@
 #import "SMMessageListController.h"
 #import "SMFlippedView.h"
 #import "SMAppDelegate.h"
+#import "SMAppController.h"
 
 @interface ThreadCell : NSObject
 @property SMMessageThreadCellViewController *viewController;
@@ -62,6 +63,8 @@
 	
 	return self;
 }
+
+#pragma mark Setting new message threads
 
 - (SMMessageThreadCellViewController*)createMessageThreadCell:(SMMessage*)message collapsed:(Boolean)collapsed {
 	SMMessageThreadCellViewController *messageThreadCellViewController = [[SMMessageThreadCellViewController alloc] initCollapsed:collapsed];
@@ -116,7 +119,14 @@
 
 		[self setViewConstraints];
 	}
+	
+	// on every message thread switch, we hide the find contents panel
+	// because it is presumably needed only when the user means to search the particular message thread
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[appDelegate appController] hideFindContentsPanel];
 }
+
+#pragma mark Building visual layout of message threads
 
 - (void)updateMessageThread {
 	if(_currentMessageThread == nil)
@@ -283,10 +293,18 @@
 	NSLog(@"%s: message uid %u doesn't belong to thread id %lld", __func__, uid, threadId);
 }
 
+#pragma mark Processing incoming notifications
+
 - (void)messageBodyFetched:(NSNotification *)notification {
 	NSDictionary *messageInfo = [notification userInfo];
 	
 	[self updateMessageView:[[messageInfo objectForKey:@"UID"] unsignedIntValue] threadId:[[messageInfo objectForKey:@"ThreadId"] unsignedLongLongValue]];
+}
+
+#pragma mark Finding messages contents
+
+- (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
+	NSLog(@"%s: string '%@', match case %d, forward %d", __func__, stringToFind, matchCase, forward);
 }
 
 @end

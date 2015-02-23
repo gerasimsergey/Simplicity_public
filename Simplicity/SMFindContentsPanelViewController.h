@@ -10,4 +10,12 @@
 
 @interface SMFindContentsPanelViewController : NSViewController
 
+@property IBOutlet NSSearchField *searchField;
+@property IBOutlet NSButton *matchCaseCheckbox;
+@property IBOutlet NSButton *doneButton;
+
+- (IBAction)findContentsSearchAction:(id)sender;
+- (IBAction)findNextAction:(id)sender;
+- (IBAction)findPrevAction:(id)sender;
+
 @end

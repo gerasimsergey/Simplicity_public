@@ -6,6 +6,9 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAppDelegate.h"
+#import "SMAppController.h"
+#import "SMMessageThreadViewController.h"
 #import "SMFindContentsPanelViewController.h"
 
 @implementation SMFindContentsPanelViewController
@@ -23,6 +26,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
+}
+
+- (IBAction)findContentsSearchAction:(id)sender {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+
+	[[appController messageThreadViewController] findContents:_searchField.stringValue matchCase:(_matchCaseCheckbox.state == NSOnState) forward:YES];
+}
+
+- (IBAction)findNextAction:(id)sender {
+	
+}
+
+- (IBAction)findPrevAction:(id)sender {
 }
 
 @end

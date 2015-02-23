@@ -38,4 +38,7 @@
 - (void)updateMailboxFolderListView;
 - (void)toggleSearchResultsView;
 
+- (void)showFindContentsPanel;
+- (void)hideFindContentsPanel;
+
 @end

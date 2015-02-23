@@ -369,6 +369,11 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	if(_findContentsPanelShown)
 		return;
 
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
+	if([[appDelegate appController] messageThreadViewController].currentMessageThread == nil)
+		return;
+
 	NSAssert(_messageThreadViewTopContraint != nil, @"_messageThreadViewTopContraint == nil");
 	[_messageThreadAndFindContentsPanelView removeConstraint:_messageThreadViewTopContraint];
 	
