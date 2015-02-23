@@ -169,11 +169,10 @@
 	if(stringToFind.length > 0)
 		[self highlightAllOccurencesOfString:stringToFind];
 	else
-		[self removeAllHighlights];
+		[self removeAllHighlightedOccurencesOfString];
 }
 
-- (NSInteger)highlightAllOccurencesOfString:(NSString*)str
-{
+- (NSInteger)highlightAllOccurencesOfString:(NSString*)str {
 	NSAssert(str.length > 0, @"passing empty string to search is prohibited");
 
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"SearchWebView" ofType:@"js"];
@@ -185,14 +184,13 @@
 	NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurencesOfString('%@')", str];
 	[view stringByEvaluatingJavaScriptFromString:startSearch];
 
-//	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_MarkNextOccurenceOfFoundString()"];
+	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_MarkNextOccurenceOfFoundString()"];
 	
 	NSString *result = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
 	return [result integerValue];
 }
 
-- (void)removeAllHighlights
-{
+- (void)removeAllHighlightedOccurencesOfString {
 	WebView *view = (WebView*)[self view];
 
 	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_RemoveAllHighlights()"];

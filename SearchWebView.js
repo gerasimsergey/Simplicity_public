@@ -85,7 +85,6 @@ function Simplicity_RemoveAllHighlightsForElement(element) {
 function Simplicity_HighlightAllOccurencesOfString(keyword) {
 	Simplicity_RemoveAllHighlights();
 	Simplicity_HighlightAllOccurencesOfStringForElement(document.body, keyword.toLowerCase());
-	Simplicity_MarkNextOccurenceOfFoundString();
 }
 
 // the main entry point to mark (with a different color) the next occurrence of the string found before
@@ -105,6 +104,16 @@ function Simplicity_MarkNextOccurenceOfFoundString() {
 	
 	span.style.backgroundColor = Simplicity_MarkColorBackground;
 	span.style.color = Simplicity_MarkColorText;
+}
+
+// the main entry point to remove the previously marked occurrence of the found string
+function Simplicity_RemoveMarkedOccurenceOfFoundString() {
+	if(Simplicity_MarkedResultIndex >= 0) {
+		span.style.backgroundColor = Simplicity_HighlightColorBackground;
+		span.style.color = Simplicity_HighlightColorText;
+	}
+	
+	Simplicity_MarkedResultIndex = -1;
 }
 
 // the main entry point to remove the highlights
