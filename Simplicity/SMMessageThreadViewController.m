@@ -321,4 +321,14 @@
 	[cell.viewController removeFindContentsResults];
 }
 
+- (void)keyDown:(NSEvent *)theEvent
+{
+	if([theEvent keyCode] == 53) { // esc
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		[[appDelegate appController] hideFindContentsPanel];
+	} else {
+		[super keyDown:theEvent];
+	}
+}
+
 @end

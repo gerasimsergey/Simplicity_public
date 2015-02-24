@@ -355,11 +355,7 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 #pragma mark Find Contents panel management
 
 - (IBAction)toggleFindContentsPanelAction:(id)sender {
-	if(_findContentsPanelShown) {
-		[self hideFindContentsPanel];
-	} else {
-		[self showFindContentsPanel];
-	}
+	[self showFindContentsPanel];
 }
 
 - (void)showFindContentsPanel {
