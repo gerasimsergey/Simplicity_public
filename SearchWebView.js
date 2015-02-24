@@ -104,6 +104,8 @@ function Simplicity_MarkNextOccurenceOfFoundString() {
 	
 	span.style.backgroundColor = Simplicity_MarkColorBackground;
 	span.style.color = Simplicity_MarkColorText;
+	
+	span.scrollIntoView();
 }
 
 // the main entry point to remove the previously marked occurrence of the found string
