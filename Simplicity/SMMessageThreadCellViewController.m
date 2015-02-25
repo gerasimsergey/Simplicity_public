@@ -346,12 +346,20 @@
 
 #pragma mark Finding contents
 
-- (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
-	[_messageBodyViewController findContents:stringToFind matchCase:matchCase forward:forward];
+- (NSUInteger)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase {
+	return [_messageBodyViewController highlightAllOccurrencesOfString:str matchCase:matchCase];
 }
 
-- (void)removeFindContentsResults {
-	[_messageBodyViewController removeFindContentsResults];
+- (void)markOccurrenceOfFoundString:(NSUInteger)index {
+	[_messageBodyViewController markOccurrenceOfFoundString:index];
+}
+
+- (void)removeMarkedOccurrenceOfFoundString {
+	[_messageBodyViewController removeMarkedOccurrenceOfFoundString];
+}
+
+- (void)removeAllHighlightedOccurrencesOfString {
+	[_messageBodyViewController removeAllHighlightedOccurrencesOfString];
 }
 
 @end

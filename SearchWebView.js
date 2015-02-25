@@ -21,7 +21,7 @@ var Simplicity_ElementNode = 1;
 var Simplicity_TextNode = 3;
 
 // helper function, recursively searches in elements and their child nodes
-function Simplicity_HighlightAllOccurencesOfStringForElement(element,keyword) {
+function Simplicity_HighlightAllOccurrencesOfStringForElement(element,keyword) {
 	if (element) {
 		if (element.nodeType == Simplicity_TextNode) {
 			while (true) {
@@ -49,7 +49,7 @@ function Simplicity_HighlightAllOccurencesOfStringForElement(element,keyword) {
 		} else if (element.nodeType == Simplicity_ElementNode) {
 			if (element.style.display != "none" && element.nodeName.toLowerCase() != 'select') {
 				for (var i=element.childNodes.length-1; i >= 0; i--) {
-					Simplicity_HighlightAllOccurencesOfStringForElement(element.childNodes[i],keyword);
+					Simplicity_HighlightAllOccurrencesOfStringForElement(element.childNodes[i],keyword);
 				}
 			}
 		}
@@ -91,36 +91,35 @@ function isScrolledIntoView(el) {
 }
 
 // the main entry point to start the search
-function Simplicity_HighlightAllOccurencesOfString(keyword) {
+function Simplicity_HighlightAllOccurrencesOfString(keyword) {
 	Simplicity_RemoveAllHighlights();
-	Simplicity_HighlightAllOccurencesOfStringForElement(document.body, keyword.toLowerCase());
+	Simplicity_HighlightAllOccurrencesOfStringForElement(document.body, keyword.toLowerCase());
 }
 
 // the main entry point to mark (with a different color) the next occurrence of the string found before
-function Simplicity_MarkNextOccurenceOfFoundString() {
-	if(Simplicity_MarkedResultIndex >= 0) {
-		var span = Simplicity_SearchResults[Simplicity_MarkedResultIndex--];
-		if(Simplicity_MarkedResultIndex < 0)
-			Simplicity_MarkedResultIndex = Simplicity_SearchResultCount-1;
-		
-		span.style.backgroundColor = Simplicity_HighlightColorBackground;
-		span.style.color = Simplicity_HighlightColorText;
-	} else {
-		Simplicity_MarkedResultIndex = Simplicity_SearchResultCount-1;
-	}
-	
-	var span = Simplicity_SearchResults[Simplicity_MarkedResultIndex];
-	
-	span.style.backgroundColor = Simplicity_MarkColorBackground;
-	span.style.color = Simplicity_MarkColorText;
+function Simplicity_MarkOccurrenceOfFoundString(index) {
+	Simplicity_RemoveMarkedOccurrenceOfFoundString();
 
-	if(!isScrolledIntoView(span))
-		span.scrollIntoView();
+	if(index >= 0 && index < Simplicity_SearchResultCount) {
+		var span = Simplicity_SearchResults[Simplicity_SearchResultCount - index - 1];
+		
+		span.style.backgroundColor = Simplicity_MarkColorBackground;
+		span.style.color = Simplicity_MarkColorText;
+		
+		if(!isScrolledIntoView(span))
+			span.scrollIntoView();
+
+		Simplicity_MarkedResultIndex = index;
+	}
 }
 
 // the main entry point to remove the previously marked occurrence of the found string
-function Simplicity_RemoveMarkedOccurenceOfFoundString() {
-	if(Simplicity_MarkedResultIndex >= 0) {
+function Simplicity_RemoveMarkedOccurrenceOfFoundString() {
+	var index = Simplicity_MarkedResultIndex;
+
+	if(index >= 0 && index < Simplicity_SearchResultCount) {
+		var span = Simplicity_SearchResults[Simplicity_SearchResultCount - index - 1];
+
 		span.style.backgroundColor = Simplicity_HighlightColorBackground;
 		span.style.color = Simplicity_HighlightColorText;
 	}

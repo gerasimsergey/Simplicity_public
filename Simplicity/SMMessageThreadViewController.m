@@ -19,6 +19,7 @@
 @interface ThreadCell : NSObject
 @property SMMessageThreadCellViewController *viewController;
 @property SMMessage *message;
+@property NSUInteger stringOccurrencesCount;
 - (id)initWithMessage:(SMMessage*)message viewController:(SMMessageThreadCellViewController*)viewController;
 @end
 
@@ -41,6 +42,10 @@
 @implementation SMMessageThreadViewController {
 	NSMutableArray *_cells;
 	NSView *_contentView;
+	NSString *_prevStringToFind;
+	Boolean _stringOccurrenceMarked;
+	NSUInteger _stringOccurrenceMarkedCellIndex;
+	NSUInteger _stringOccurrenceMarkedResultIndex;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -304,25 +309,84 @@
 #pragma mark Finding messages contents
 
 - (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
-//	NSLog(@"%s: string '%@', match case %d, forward %d", __func__, stringToFind, matchCase, forward);
-	
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");
+	
+	if((_prevStringToFind != nil && ![_prevStringToFind isEqualToString:stringToFind]) || !_stringOccurrenceMarked) {
+		_stringOccurrenceMarked = NO;
+		
+		for(NSUInteger i = 0; i < _cells.count; i++) {
+			ThreadCell *cell = _cells[i];
 
-	ThreadCell *cell = _cells[0];
-	[cell.viewController findContents:stringToFind matchCase:matchCase forward:forward];
+			NSUInteger count = [cell.viewController highlightAllOccurrencesOfString:stringToFind matchCase:matchCase];
+			cell.stringOccurrencesCount = count;
+
+			if(!_stringOccurrenceMarked) {
+				if(count > 0) {
+					_stringOccurrenceMarked = YES;
+					_stringOccurrenceMarkedCellIndex = i;
+					_stringOccurrenceMarkedResultIndex = 0;
+					
+					[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
+				}
+			}
+		}
+		
+		_prevStringToFind = stringToFind;
+	} else {
+		NSAssert(_stringOccurrenceMarked, @"string occurrence not marked");
+		NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
+
+		ThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
+
+		if(_stringOccurrenceMarkedResultIndex+1 < cell.stringOccurrencesCount) {
+			[cell.viewController markOccurrenceOfFoundString:(++_stringOccurrenceMarkedResultIndex)];
+		} else {
+			[cell.viewController removeMarkedOccurrenceOfFoundString];
+
+			_stringOccurrenceMarkedResultIndex = 0;
+
+			Boolean wrap = NO;
+			for(NSUInteger i = _stringOccurrenceMarkedCellIndex+1;; i++) {
+				if(i == _cells.count) {
+					if(wrap) {
+						_stringOccurrenceMarked = NO;
+						break;
+					} else {
+						wrap = YES;
+						i = 0;
+					}
+				}
+				
+				ThreadCell *cell = _cells[i];
+				
+				if(cell.stringOccurrencesCount > 0) {
+					_stringOccurrenceMarkedCellIndex = i;
+
+					[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
+					
+					break;
+				}
+			}
+		}
+	}
 }
 
 - (void)removeFindContentsResults {
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");
 	
-	ThreadCell *cell = _cells[0];
-	[cell.viewController removeFindContentsResults];
+	for(ThreadCell *cell in _cells) {
+		[cell.viewController removeAllHighlightedOccurrencesOfString];
+	}
+
+	_stringOccurrenceMarked = NO;
+	_stringOccurrenceMarkedCellIndex = 0;
+	_stringOccurrenceMarkedResultIndex = 0;
+	_prevStringToFind = nil;
 }
 
-- (void)keyDown:(NSEvent *)theEvent
-{
+- (void)keyDown:(NSEvent *)theEvent {
 	if([theEvent keyCode] == 53) { // esc
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 		[[appDelegate appController] hideFindContentsPanel];

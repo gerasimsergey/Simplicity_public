@@ -42,7 +42,6 @@
 	uint32_t _uid;
 	NSString *_folder;
 	Boolean _uncollapsed;
-	NSString *_previousStringToFind;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -164,57 +163,43 @@
 
 #pragma mark Finding contents
 
-- (void)findContents:(NSString*)stringToFind matchCase:(Boolean)matchCase forward:(Boolean)forward {
-//	NSLog(@"%s", __func__);
+- (NSUInteger)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase {
+	NSAssert(str != nil, @"str == nil");
 
-	NSAssert(stringToFind != nil, @"stringToFind == nil");
+	[self removeAllHighlightedOccurrencesOfString];
 
-	if(stringToFind.length == 0) {
-		[self removeFindContentsResults];
-	} else {
-		if(_previousStringToFind != nil && [_previousStringToFind isEqualToString:stringToFind]) {
-			[self markNextOccurenceOfFoundString];
-		} else {
-			[self highlightAllOccurencesOfString:stringToFind];
-			
-			_previousStringToFind = stringToFind;
-		}
-	}
-}
-
-- (void)removeFindContentsResults {
-	[self removeAllHighlightedOccurencesOfString];
-
-	_previousStringToFind = nil;
-}
-
-- (NSInteger)highlightAllOccurencesOfString:(NSString*)str {
+	if(str.length == 0)
+		return 0;
+	
 	NSAssert(str.length > 0, @"passing empty string to search is prohibited");
-
+	
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"SearchWebView" ofType:@"js"];
 	NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-
+	
 	WebView *view = (WebView*)[self view];
 	[view stringByEvaluatingJavaScriptFromString:jsCode];
-
-	NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurencesOfString('%@')", str];
-	[view stringByEvaluatingJavaScriptFromString:startSearch];
-
-	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_MarkNextOccurenceOfFoundString()"];
 	
-	NSString *result = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
-	return [result integerValue];
+	NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurrencesOfString('%@')", str];
+	[view stringByEvaluatingJavaScriptFromString:startSearch];
+	
+	NSString *occurrencesCount = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
+	return [occurrencesCount integerValue];
 }
 
-- (void)markNextOccurenceOfFoundString {
+- (void)markOccurrenceOfFoundString:(NSUInteger)index {
 	WebView *view = (WebView*)[self view];
 
-	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_MarkNextOccurenceOfFoundString()"];
+	NSString *doMark = [NSString stringWithFormat:@"Simplicity_MarkOccurrenceOfFoundString('%lu')", index];
+	[view stringByEvaluatingJavaScriptFromString:doMark];
 }
 
-- (void)removeAllHighlightedOccurencesOfString {
+- (void)removeMarkedOccurrenceOfFoundString {
 	WebView *view = (WebView*)[self view];
+	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_RemoveMarkedOccurrenceOfFoundString()"];
+}
 
+- (void)removeAllHighlightedOccurrencesOfString {
+	WebView *view = (WebView*)[self view];
 	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_RemoveAllHighlights()"];
 }
 
