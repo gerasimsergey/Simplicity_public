@@ -8,6 +8,7 @@
 
 #import "SMMessage.h"
 #import "SMMessageThread.h"
+#import "SMMessageThreadCell.h"
 #import "SMMessageThreadCellViewController.h"
 #import "SMMessageThreadViewController.h"
 #import "SMMessageBodyViewController.h"
@@ -15,24 +16,6 @@
 #import "SMFlippedView.h"
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
-
-@interface ThreadCell : NSObject
-@property SMMessageThreadCellViewController *viewController;
-@property SMMessage *message;
-@property NSUInteger stringOccurrencesCount;
-- (id)initWithMessage:(SMMessage*)message viewController:(SMMessageThreadCellViewController*)viewController;
-@end
-
-@implementation ThreadCell
-- (id)initWithMessage:(SMMessage*)message viewController:(SMMessageThreadCellViewController*)viewController {
-	self = [super init];
-	if(self) {
-		_message = message;
-		_viewController = viewController;
-	}
-	return self;
-}
-@end
 
 @interface SMMessageThreadViewController()
 - (void)messageBodyFetched:(NSNotification *)notification;
@@ -120,7 +103,7 @@
 
 			[_contentView addSubview:[viewController view]];
 
-			_cells[i] = [[ThreadCell alloc] initWithMessage:messages[i] viewController:viewController];
+			_cells[i] = [[SMMessageThreadCell alloc] initWithMessage:messages[i] viewController:viewController];
 		}
 
 		[self setViewConstraints];
@@ -148,7 +131,7 @@
 			Boolean equal = YES;
 			
 			for(NSInteger i = 0; i < _cells.count; i++) {
-				if(newMessages[i] != ((ThreadCell*)_cells[i]).message) {
+				if(newMessages[i] != ((SMMessageThreadCell*)_cells[i]).message) {
 					equal = NO;
 					break;
 				}
@@ -156,7 +139,7 @@
 			
 			if(equal) {
 				for(NSInteger i = 0; i < _cells.count; i++) {
-					ThreadCell *cell = _cells[i];
+					SMMessageThreadCell *cell = _cells[i];
 					[cell.viewController updateMessage];
 				}
 
@@ -169,7 +152,7 @@
 		// remove old (vanished) messages
 		for(NSInteger t = _cells.count; t > 0; t--) {
 			NSInteger i = t-1;
-			ThreadCell *cell = _cells[i];
+			SMMessageThreadCell *cell = _cells[i];
 			
 			// TODO: use the sorting info for fast search
 			if(![newMessages containsObject:cell.message]) {
@@ -192,16 +175,16 @@
 		for(NSInteger i = 0, j = 0; i < newMessages.count; i++) {
 			SMMessage *newMessage = newMessages[i];
 			
-			if(j >= _cells.count || ((ThreadCell*)_cells[j]).message != newMessage) {
+			if(j >= _cells.count || ((SMMessageThreadCell*)_cells[j]).message != newMessage) {
 				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage collapsed:YES];
 				
 				[viewController enableCollapse:(newMessages.count > 1)];
 				
 				[_contentView addSubview:[viewController view]];
 				
-				updatedCells[i] = [[ThreadCell alloc] initWithMessage:newMessage viewController:viewController];
+				updatedCells[i] = [[SMMessageThreadCell alloc] initWithMessage:newMessage viewController:viewController];
 			} else {
-				ThreadCell *cell = _cells[j++];
+				SMMessageThreadCell *cell = _cells[j++];
 
 				[cell.viewController updateMessage];
 
@@ -227,7 +210,7 @@
 
 - (void)setViewConstraints {
 	if(_cells.count == 1) {
-		NSView *subview = ((ThreadCell*)_cells[0]).viewController.view;
+		NSView *subview = ((SMMessageThreadCell*)_cells[0]).viewController.view;
 
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 		
@@ -240,7 +223,7 @@
 		NSView *prevSubView = nil;
 		
 		for(NSInteger i = 0; i < _cells.count; i++) {
-			NSView *subview = ((ThreadCell*)_cells[i]).viewController.view;
+			NSView *subview = ((SMMessageThreadCell*)_cells[i]).viewController.view;
 
 			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 
@@ -285,7 +268,7 @@
 
 	// TODO: optimize search?
 	for(NSInteger i = 0; i < _cells.count; i++) {
-		ThreadCell *cell = _cells[i];
+		SMMessageThreadCell *cell = _cells[i];
 		SMMessage *message = cell.message;
 		
 		if(message.uid == uid) {
@@ -322,14 +305,14 @@
 		if(_stringOccurrenceMarked) {
 			NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
 
-			ThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
+			SMMessageThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
 			[cell.viewController removeMarkedOccurrenceOfFoundString];
 			
 			_stringOccurrenceMarked = NO;
 		}
 
 		for(NSUInteger i = 0; i < _cells.count; i++) {
-			ThreadCell *cell = _cells[i];
+			SMMessageThreadCell *cell = _cells[i];
 
 			NSUInteger count = [cell.viewController highlightAllOccurrencesOfString:stringToFind matchCase:matchCase];
 			cell.stringOccurrencesCount = count;
@@ -350,7 +333,7 @@
 		NSAssert(_stringOccurrenceMarked, @"string occurrence not marked");
 		NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
 
-		ThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
+		SMMessageThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
 
 		if(_stringOccurrenceMarkedResultIndex+1 < cell.stringOccurrencesCount) {
 			[cell.viewController markOccurrenceOfFoundString:(++_stringOccurrenceMarkedResultIndex)];
@@ -401,7 +384,7 @@
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");
 	
-	for(ThreadCell *cell in _cells)
+	for(SMMessageThreadCell *cell in _cells)
 		[cell.viewController removeAllHighlightedOccurrencesOfString];
 
 	[self clearStringOccurrenceMarkIndex];
