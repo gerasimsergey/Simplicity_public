@@ -129,6 +129,8 @@
 	// because it is presumably needed only when the user means to search the particular message thread
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[appDelegate appController] hideFindContentsPanel];
+	
+	[self removeFindContentsResults];
 }
 
 #pragma mark Building visual layout of message threads
@@ -217,8 +219,7 @@
 }
 
 - (void)setViewConstraints {
-	if(_cells.count == 1)
-	{
+	if(_cells.count == 1) {
 		NSView *subview = ((ThreadCell*)_cells[0]).viewController.view;
 
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
@@ -228,9 +229,7 @@
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 		
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-	}
-	else
-	{
+	} else {
 		NSView *prevSubView = nil;
 		
 		for(NSInteger i = 0; i < _cells.count; i++) {
@@ -365,7 +364,7 @@
 					}
 				}
 				
-				ThreadCell *cell = _cells[i];
+				cell = _cells[i];
 				
 				if(cell.stringOccurrencesCount > 0) {
 					_stringOccurrenceMarkedCellIndex = i;
@@ -374,6 +373,16 @@
 					
 					break;
 				}
+			}
+		}
+
+		if(_stringOccurrenceMarked) {
+			NSScrollView *messageThreadView = (NSScrollView*)[self view];
+			NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
+			
+			if(cell.viewController.view.frame.origin.y < visibleRect.origin.y || cell.viewController.view.frame.origin.y + cell.viewController.view.frame.size.height >= visibleRect.origin.y + visibleRect.size.height) {
+				NSPoint cellPosition = NSMakePoint(messageThreadView.visibleRect.origin.x, cell.viewController.view.frame.origin.y);
+				[[messageThreadView documentView] scrollPoint:cellPosition];
 			}
 		}
 	}
