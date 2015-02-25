@@ -81,6 +81,15 @@ function Simplicity_RemoveAllHighlightsForElement(element) {
 	return false;
 }
 
+// checks whether the given element is visible within the current viewport
+function isScrolledIntoView(el) {
+	var elemTop = el.getBoundingClientRect().top;
+	var elemBottom = el.getBoundingClientRect().bottom;
+	
+	var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+	return isVisible;
+}
+
 // the main entry point to start the search
 function Simplicity_HighlightAllOccurencesOfString(keyword) {
 	Simplicity_RemoveAllHighlights();
@@ -104,8 +113,9 @@ function Simplicity_MarkNextOccurenceOfFoundString() {
 	
 	span.style.backgroundColor = Simplicity_MarkColorBackground;
 	span.style.color = Simplicity_MarkColorText;
-	
-	span.scrollIntoView();
+
+	if(!isScrolledIntoView(span))
+		span.scrollIntoView();
 }
 
 // the main entry point to remove the previously marked occurrence of the found string
