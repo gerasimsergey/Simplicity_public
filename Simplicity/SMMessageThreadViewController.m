@@ -313,8 +313,15 @@
 	NSAssert(_cells.count > 0, @"no cells");
 	
 	if((_prevStringToFind != nil && ![_prevStringToFind isEqualToString:stringToFind]) || !_stringOccurrenceMarked) {
-		_stringOccurrenceMarked = NO;
-		
+		if(_stringOccurrenceMarked) {
+			NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
+
+			ThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
+			[cell.viewController removeMarkedOccurrenceOfFoundString];
+			
+			_stringOccurrenceMarked = NO;
+		}
+
 		for(NSUInteger i = 0; i < _cells.count; i++) {
 			ThreadCell *cell = _cells[i];
 
