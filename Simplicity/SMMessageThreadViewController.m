@@ -42,6 +42,7 @@
 @implementation SMMessageThreadViewController {
 	NSMutableArray *_cells;
 	NSView *_contentView;
+	Boolean _findContentsActive;
 	NSString *_prevStringToFind;
 	Boolean _stringOccurrenceMarked;
 	NSUInteger _stringOccurrenceMarkedCellIndex;
@@ -129,8 +130,6 @@
 	// because it is presumably needed only when the user means to search the particular message thread
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[appDelegate appController] hideFindContentsPanel];
-	
-	[self removeFindContentsResults];
 }
 
 #pragma mark Building visual layout of message threads
@@ -176,6 +175,14 @@
 			if(![newMessages containsObject:cell.message]) {
 				[cell.viewController.view removeFromSuperview];
 				[_cells removeObjectAtIndex:i];
+
+				if(_stringOccurrenceMarked) {
+					if(_stringOccurrenceMarkedCellIndex == i) {
+						[self clearStringOccurrenceMarkIndex];
+					} else if(i < _stringOccurrenceMarkedCellIndex) {
+						_stringOccurrenceMarkedCellIndex--;
+					}
+				}
 			}
 		}
 		
@@ -386,20 +393,27 @@
 			}
 		}
 	}
+
+	_findContentsActive = YES;
 }
 
 - (void)removeFindContentsResults {
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");
 	
-	for(ThreadCell *cell in _cells) {
+	for(ThreadCell *cell in _cells)
 		[cell.viewController removeAllHighlightedOccurrencesOfString];
-	}
 
+	[self clearStringOccurrenceMarkIndex];
+
+	_prevStringToFind = nil;
+	_findContentsActive = NO;
+}
+
+- (void)clearStringOccurrenceMarkIndex {
 	_stringOccurrenceMarked = NO;
 	_stringOccurrenceMarkedCellIndex = 0;
 	_stringOccurrenceMarkedResultIndex = 0;
-	_prevStringToFind = nil;
 }
 
 - (void)keyDown:(NSEvent *)theEvent {
