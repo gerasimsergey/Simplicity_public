@@ -176,11 +176,11 @@
 	if(_htmlText == nil)
 		return;
 
-	NSAssert(!_mainFrameLoaded, @"main frame already loaded");
-
-	_mainFrameLoaded = YES;
-
 	if(frame == sender.mainFrame) {
+		NSAssert(!_mainFrameLoaded, @"main frame already loaded");
+		
+		_mainFrameLoaded = YES;
+		
 		if(_currentFindString != nil && _uncollapsed) {
 			[self highlightAllOccurrencesOfString:_currentFindString matchCase:_currentFindStringMatchCase];
 		}
