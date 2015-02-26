@@ -26,7 +26,8 @@
 	NSMutableArray *_cells;
 	NSView *_contentView;
 	Boolean _findContentsActive;
-	NSString *_prevStringToFind;
+	NSString *_currentStringToFind;
+	Boolean _currentStringToFindMatchCase;
 	Boolean _stringOccurrenceMarked;
 	NSUInteger _stringOccurrenceMarkedCellIndex;
 	NSUInteger _stringOccurrenceMarkedResultIndex;
@@ -94,12 +95,13 @@
 
 		_cells = [NSMutableArray arrayWithCapacity:messages.count];
 
-		for(NSInteger i = 0; i < messages.count; i++) {
+		for(NSUInteger i = 0; i < messages.count; i++) {
 			SMMessage *message = messages[i];
 			Boolean collapsed = (messages.count == 1? NO : (_currentMessageThread.unseen? !message.unseen : i > 0));
 			SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:messages[i] collapsed:collapsed];
 
 			[viewController enableCollapse:(messages.count > 1)];
+			viewController.cellIndex = i;
 
 			[_contentView addSubview:[viewController view]];
 
@@ -190,6 +192,9 @@
 
 				updatedCells[i] = cell;
 			}
+
+			SMMessageThreadCell *cell = updatedCells[i];
+			cell.viewController.cellIndex = i;
 		}
 		
 		// populate the updated view
@@ -287,6 +292,23 @@
 	NSLog(@"%s: message uid %u doesn't belong to thread id %lld", __func__, uid, threadId);
 }
 
+- (void)setCellCollapsed:(Boolean)collapsed cellIndex:(NSUInteger)cellIndex {
+	NSAssert(cellIndex < _cells.count, @"bad index %lu", cellIndex);
+	
+	if(_findContentsActive) {
+		SMMessageThreadCell *cell = _cells[cellIndex];
+
+		if(collapsed) {
+			[cell.viewController removeAllHighlightedOccurrencesOfString];
+			
+			if(_stringOccurrenceMarked && _stringOccurrenceMarkedCellIndex == cellIndex)
+				[self clearStringOccurrenceMarkIndex];
+		} else {
+			[cell.viewController highlightAllOccurrencesOfString:_currentStringToFind matchCase:_currentStringToFindMatchCase];
+		}
+	}
+}
+
 #pragma mark Processing incoming notifications
 
 - (void)messageBodyFetched:(NSNotification *)notification {
@@ -301,7 +323,7 @@
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");
 	
-	if((_prevStringToFind != nil && ![_prevStringToFind isEqualToString:stringToFind]) || !_stringOccurrenceMarked) {
+	if((_currentStringToFind != nil && ![_currentStringToFind isEqualToString:stringToFind]) || !_stringOccurrenceMarked) {
 		if(_stringOccurrenceMarked) {
 			NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
 
@@ -328,12 +350,14 @@
 			}
 		}
 		
-		_prevStringToFind = stringToFind;
+		_currentStringToFind = stringToFind;
+		_currentStringToFindMatchCase = matchCase;
 	} else {
 		NSAssert(_stringOccurrenceMarked, @"string occurrence not marked");
 		NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
 
 		SMMessageThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
+		NSAssert(!cell.viewController.collapsed, @"cell with marked string is collapsed");
 
 		if(_stringOccurrenceMarkedResultIndex+1 < cell.stringOccurrencesCount) {
 			[cell.viewController markOccurrenceOfFoundString:(++_stringOccurrenceMarkedResultIndex)];
@@ -356,7 +380,7 @@
 				
 				cell = _cells[i];
 				
-				if(cell.stringOccurrencesCount > 0) {
+				if(!cell.viewController.collapsed && cell.stringOccurrencesCount > 0) {
 					_stringOccurrenceMarkedCellIndex = i;
 
 					[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
@@ -389,7 +413,8 @@
 
 	[self clearStringOccurrenceMarkIndex];
 
-	_prevStringToFind = nil;
+	_currentStringToFind = nil;
+	_currentStringToFindMatchCase = NO;
 	_findContentsActive = NO;
 }
 

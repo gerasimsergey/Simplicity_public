@@ -6,11 +6,14 @@
 //  Copyright (c) 2014 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAppDelegate.h"
+#import "SMAppController.h"
 #import "SMMessage.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMAttachmentItem.h"
 #import "SMAttachmentsPanelViewController.h"
+#import "SMMessageThreadViewController.h"
 #import "SMMessageThreadCellViewController.h"
 
 @implementation SMMessageThreadCellViewController {
@@ -18,7 +21,6 @@
 	SMMessageDetailsViewController *_messageDetailsViewController;
 	SMMessageBodyViewController *_messageBodyViewController;
 	SMAttachmentsPanelViewController *_attachmentsPanelViewController;
-
 	NSView *_messageView;
 	NSButton *_headerButton;
 	NSProgressIndicator *_progressIndicator;
@@ -27,10 +29,10 @@
 	NSLayoutConstraint *_messageBodyBottomConstraint;
 	NSMutableArray *_attachmentsPanelViewConstraints;
 	CGFloat _messageViewHeight;
-	Boolean _collapsed;
 	NSString *_htmlText;
 	Boolean _messageTextIsSet;
 	Boolean _attachmentsPanelShown;
+	Boolean _cellInitialized;
 }
 
 - (id)initCollapsed:(Boolean)collapsed {
@@ -96,6 +98,8 @@
 		_collapsed = !collapsed;
 
 		[self toggleCollapse];
+		
+		_cellInitialized = YES;
 	}
 	
 	return self;
@@ -129,98 +133,100 @@
 	[view addConstraint:constraint];
 }
 
-- (void)collapse {
-	if(_collapsed)
-		return;
-	
-	[self hideAttachmentsPanel];
-
-	[_messageDetailsViewController collapse];
-
-	NSBox *view = (NSBox*)[self view];
-	NSAssert(view != nil, @"view is nil");
-	
-	[view setFillColor:[NSColor colorWithCalibratedRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
-
-	if(_heightConstraint == nil) {
-		_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
+- (void)setCollapsed:(Boolean)collapsed {
+	if(collapsed) {
+		if(_collapsed)
+			return;
 		
-		_heightConstraint.priority = NSLayoutPriorityRequired;
-	}
-	
-	[view addConstraint:_heightConstraint];
-	
-	[_progressIndicator setHidden:YES];
-	
-	_collapsed = YES;
-}
-
-- (void)uncollapse {
-	if(!_collapsed)
-		return;
-
-	NSBox *view = (NSBox*)[self view];
-	NSAssert(view != nil, @"view is nil");
-	
-	if(_messageBodyViewController == nil) {
-		[view removeConstraint:_messageDetailsBottomConstraint];
-
-		_messageBodyViewController = [[SMMessageBodyViewController alloc] init];
+		[self hideAttachmentsPanel];
 		
-		NSView *messageBodyView = [_messageBodyViewController view];
-		NSAssert(messageBodyView, @"messageBodyView");
+		[_messageDetailsViewController collapse];
 		
-		[view addSubview:messageBodyView];
+		NSBox *view = (NSBox*)[self view];
+		NSAssert(view != nil, @"view is nil");
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:_messageDetailsViewController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+		[view setFillColor:[NSColor colorWithCalibratedRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
 		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-		
-		[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-
-		[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:300] priority:NSLayoutPriorityDefaultLow];
-		
-		NSAssert(_messageBodyBottomConstraint == nil, @"_messageBodyBottomConstraint already created");
-		_messageBodyBottomConstraint = [NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
-
-		[view addConstraint:_messageBodyBottomConstraint];
-
-		if(_htmlText != nil) {
-			// this means that the message html text was set before,
-			// when there was no body view
-			// so show it now
-			[self showMessageBody];
+		if(_heightConstraint == nil) {
+			_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
+			
+			_heightConstraint.priority = NSLayoutPriorityRequired;
 		}
-	}
-	
-	[view setFillColor:[NSColor whiteColor]];
-	
-	[_messageDetailsViewController uncollapse];
-	[_messageBodyViewController uncollapse];
-
-	if(_heightConstraint != nil) {
-		[[self view] removeConstraint:_heightConstraint];
-	}
-	
-	if(_htmlText == nil) {
-		if(_progressIndicator == nil) {
-			[self initProgressIndicator];
-		} else {
-			[_progressIndicator setHidden:NO];
+		
+		[view addConstraint:_heightConstraint];
+		
+		[_progressIndicator setHidden:YES];
+		
+		_collapsed = YES;
+	} else {
+		if(!_collapsed)
+			return;
+		
+		NSBox *view = (NSBox*)[self view];
+		NSAssert(view != nil, @"view is nil");
+		
+		if(_messageBodyViewController == nil) {
+			[view removeConstraint:_messageDetailsBottomConstraint];
+			
+			_messageBodyViewController = [[SMMessageBodyViewController alloc] init];
+			
+			NSView *messageBodyView = [_messageBodyViewController view];
+			NSAssert(messageBodyView, @"messageBodyView");
+			
+			[view addSubview:messageBodyView];
+			
+			[view addConstraint:[NSLayoutConstraint constraintWithItem:_messageDetailsViewController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+			
+			[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+			
+			[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+			
+			[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:300] priority:NSLayoutPriorityDefaultLow];
+			
+			NSAssert(_messageBodyBottomConstraint == nil, @"_messageBodyBottomConstraint already created");
+			_messageBodyBottomConstraint = [NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+			
+			[view addConstraint:_messageBodyBottomConstraint];
+			
+			if(_htmlText != nil) {
+				// this means that the message html text was set before,
+				// when there was no body view
+				// so show it now
+				[self showMessageBody];
+			}
 		}
+		
+		[view setFillColor:[NSColor whiteColor]];
+		
+		[_messageDetailsViewController uncollapse];
+		[_messageBodyViewController uncollapse];
+		
+		if(_heightConstraint != nil) {
+			[[self view] removeConstraint:_heightConstraint];
+		}
+		
+		if(_htmlText == nil) {
+			if(_progressIndicator == nil) {
+				[self initProgressIndicator];
+			} else {
+				[_progressIndicator setHidden:NO];
+			}
+		}
+		
+		_collapsed = NO;
 	}
 
-	_collapsed = NO;
+	if(_cellInitialized) {
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		[[[appDelegate appController] messageThreadViewController] setCellCollapsed:_collapsed cellIndex:_cellIndex];
+	}
 }
 
 - (void)toggleCollapse {
-	if(!_collapsed)
-	{
-		[self collapse];
-	}
-	else
-	{
-		[self uncollapse];
+	if(!_collapsed) {
+		[self setCollapsed:YES];
+	} else {
+		[self setCollapsed:NO];
 	}
 }
 
@@ -229,12 +235,9 @@
 }
 
 - (void)toggleAttachmentsPanel {
-	if(!_attachmentsPanelShown)
-	{
+	if(!_attachmentsPanelShown) {
 		[self showAttachmentsPanel];
-	}
-	else
-	{
+	} else {
 		[self hideAttachmentsPanel];
 	}
 }

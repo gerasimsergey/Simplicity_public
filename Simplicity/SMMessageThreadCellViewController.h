@@ -12,6 +12,9 @@
 
 @interface SMMessageThreadCellViewController : NSViewController
 
+@property Boolean collapsed;
+@property NSUInteger cellIndex;
+
 - (id)initCollapsed:(Boolean)collapsed;
 
 - (void)setMessage:(SMMessage*)message;
@@ -20,9 +23,6 @@
 - (Boolean)loadMessageBody;
 
 - (void)enableCollapse:(Boolean)enable;
-
-- (void)collapse;
-- (void)uncollapse;
 
 - (void)toggleAttachmentsPanel;
 

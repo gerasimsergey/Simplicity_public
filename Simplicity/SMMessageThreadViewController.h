@@ -20,4 +20,6 @@
 - (void)setMessageThread:(SMMessageThread*)messageThread;
 - (void)updateMessageThread;
 
+- (void)setCellCollapsed:(Boolean)collapsed cellIndex:(NSUInteger)cellIndex;
+
 @end
