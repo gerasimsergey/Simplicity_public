@@ -12,11 +12,12 @@
 
 @property IBOutlet NSSearchField *searchField;
 @property IBOutlet NSButton *matchCaseCheckbox;
+@property IBOutlet NSSegmentedControl *forwardBackwardsButton;
 @property IBOutlet NSButton *doneButton;
 
 - (IBAction)findContentsSearchAction:(id)sender;
 - (IBAction)setMatchCaseAction:(id)sender;
-- (IBAction)findNextAction:(id)sender;
-- (IBAction)findPrevAction:(id)sender;
+- (IBAction)findNextPrevAction:(id)sender;
+- (IBAction)doneAction:(id)sender;
 
 @end
