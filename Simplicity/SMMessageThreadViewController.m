@@ -361,32 +361,49 @@
 		SMMessageThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
 		NSAssert(!cell.viewController.collapsed, @"cell with marked string is collapsed");
 
-		if(_stringOccurrenceMarkedResultIndex+1 < cell.viewController.stringOccurrencesCount) {
+		if(forward && _stringOccurrenceMarkedResultIndex+1 < cell.viewController.stringOccurrencesCount) {
 			[cell.viewController markOccurrenceOfFoundString:(++_stringOccurrenceMarkedResultIndex)];
+		} else if(!forward && _stringOccurrenceMarkedResultIndex > 0) {
+			[cell.viewController markOccurrenceOfFoundString:(--_stringOccurrenceMarkedResultIndex)];
 		} else {
 			[cell.viewController removeMarkedOccurrenceOfFoundString];
 
-			_stringOccurrenceMarkedResultIndex = 0;
-
 			Boolean wrap = NO;
-			for(NSUInteger i = _stringOccurrenceMarkedCellIndex+1;; i++) {
-				if(i == _cells.count) {
-					if(wrap) {
-						_stringOccurrenceMarked = NO;
-						break;
+			for(NSUInteger i = _stringOccurrenceMarkedCellIndex;;) {
+				if(forward) {
+					if(i == _cells.count-1) {
+						if(wrap) {
+							[self clearStringOccurrenceMarkIndex];
+							break;
+						} else {
+							wrap = YES;
+							i = 0;
+						}
 					} else {
-						wrap = YES;
-						i = 0;
+						i++;
+					}
+				} else {
+					if(i == 0) {
+						if(wrap) {
+							[self clearStringOccurrenceMarkIndex];
+							break;
+						} else {
+							wrap = YES;
+							i = _cells.count-1;
+						}
+					} else {
+						i--;
 					}
 				}
 				
 				cell = _cells[i];
 				
 				if(!cell.viewController.collapsed && cell.viewController.stringOccurrencesCount > 0) {
+					_stringOccurrenceMarkedResultIndex = forward? 0 : cell.viewController.stringOccurrencesCount-1;
 					_stringOccurrenceMarkedCellIndex = i;
 
 					[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
-					
+
 					break;
 				}
 			}
