@@ -324,7 +324,14 @@
 	NSAssert(_currentMessageThread != nil, @"_currentMessageThread == nil");
 	NSAssert(_cells.count > 0, @"no cells");
 	
+	SMMessageThreadCell *markedCell = nil;
+
 	if((_currentStringToFind != nil && ![_currentStringToFind isEqualToString:stringToFind]) || !_stringOccurrenceMarked) {
+		// this is the case when there is no marked occurrence or the user has lost it
+		// which can happen if the message cell is collapsed or vanished due to update
+		// so just remove any stale mark and mark the first occurrence in the first cell
+		// that has at least one
+
 		if(_stringOccurrenceMarked) {
 			NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
 
@@ -347,6 +354,8 @@
 						_stringOccurrenceMarkedResultIndex = 0;
 						
 						[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
+						
+						markedCell = cell;
 					}
 				}
 			}
@@ -355,6 +364,10 @@
 		_currentStringToFind = stringToFind;
 		_currentStringToFindMatchCase = matchCase;
 	} else {
+		// this is the case when there is a marked occurrence already
+		// so we just need to move it forward or backwards
+		// just scan the cells in the corresponsing direction and choose the right place
+
 		NSAssert(_stringOccurrenceMarked, @"string occurrence not marked");
 		NSAssert(_stringOccurrenceMarkedCellIndex < _cells.count, @"_stringOccurrenceMarkedCellIndex %lu, cells count %lu", _stringOccurrenceMarkedCellIndex, _cells.count);
 
@@ -409,14 +422,21 @@
 			}
 		}
 
-		if(_stringOccurrenceMarked) {
-			NSScrollView *messageThreadView = (NSScrollView*)[self view];
-			NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
-			
-			if(cell.viewController.view.frame.origin.y < visibleRect.origin.y || cell.viewController.view.frame.origin.y + cell.viewController.view.frame.size.height >= visibleRect.origin.y + visibleRect.size.height) {
-				NSPoint cellPosition = NSMakePoint(messageThreadView.visibleRect.origin.x, cell.viewController.view.frame.origin.y);
-				[[messageThreadView documentView] scrollPoint:cellPosition];
-			}
+		markedCell = cell;
+	}
+
+	// if there is a marked occurrence, make sure it is visible
+	// just scroll the thread view to the right cell
+	// note that the cell itself will scroll the html text to the marked position
+	if(_stringOccurrenceMarked) {
+		NSAssert(markedCell != nil, @"no cell");
+
+		NSScrollView *messageThreadView = (NSScrollView*)[self view];
+		NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
+		
+		if(markedCell.viewController.view.frame.origin.y < visibleRect.origin.y || markedCell.viewController.view.frame.origin.y + markedCell.viewController.view.frame.size.height >= visibleRect.origin.y + visibleRect.size.height) {
+			NSPoint cellPosition = NSMakePoint(messageThreadView.visibleRect.origin.x, markedCell.viewController.view.frame.origin.y);
+			[[messageThreadView documentView] scrollPoint:cellPosition];
 		}
 	}
 
