@@ -1,3 +1,4 @@
+
 //
 //  SMMessageThreadViewController.m
 //  Simplicity
@@ -336,16 +337,17 @@
 		for(NSUInteger i = 0; i < _cells.count; i++) {
 			SMMessageThreadCell *cell = _cells[i];
 
-			NSUInteger count = [cell.viewController highlightAllOccurrencesOfString:stringToFind matchCase:matchCase];
-			cell.stringOccurrencesCount = count;
-
-			if(!_stringOccurrenceMarked) {
-				if(count > 0) {
-					_stringOccurrenceMarked = YES;
-					_stringOccurrenceMarkedCellIndex = i;
-					_stringOccurrenceMarkedResultIndex = 0;
-					
-					[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
+			if(!cell.viewController.collapsed) {
+				[cell.viewController highlightAllOccurrencesOfString:stringToFind matchCase:matchCase];
+				
+				if(!_stringOccurrenceMarked) {
+					if(cell.viewController.stringOccurrencesCount > 0) {
+						_stringOccurrenceMarked = YES;
+						_stringOccurrenceMarkedCellIndex = i;
+						_stringOccurrenceMarkedResultIndex = 0;
+						
+						[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];
+					}
 				}
 			}
 		}
@@ -359,7 +361,7 @@
 		SMMessageThreadCell *cell = _cells[_stringOccurrenceMarkedCellIndex];
 		NSAssert(!cell.viewController.collapsed, @"cell with marked string is collapsed");
 
-		if(_stringOccurrenceMarkedResultIndex+1 < cell.stringOccurrencesCount) {
+		if(_stringOccurrenceMarkedResultIndex+1 < cell.viewController.stringOccurrencesCount) {
 			[cell.viewController markOccurrenceOfFoundString:(++_stringOccurrenceMarkedResultIndex)];
 		} else {
 			[cell.viewController removeMarkedOccurrenceOfFoundString];
@@ -380,7 +382,7 @@
 				
 				cell = _cells[i];
 				
-				if(!cell.viewController.collapsed && cell.stringOccurrencesCount > 0) {
+				if(!cell.viewController.collapsed && cell.viewController.stringOccurrencesCount > 0) {
 					_stringOccurrenceMarkedCellIndex = i;
 
 					[cell.viewController markOccurrenceOfFoundString:_stringOccurrenceMarkedResultIndex];

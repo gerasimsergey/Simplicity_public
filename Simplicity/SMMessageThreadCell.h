@@ -15,7 +15,6 @@
 
 @property SMMessageThreadCellViewController *viewController;
 @property SMMessage *message;
-@property NSUInteger stringOccurrencesCount;
 
 - (id)initWithMessage:(SMMessage*)message viewController:(SMMessageThreadCellViewController*)viewController;
 

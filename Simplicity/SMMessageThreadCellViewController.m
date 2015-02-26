@@ -349,8 +349,12 @@
 
 #pragma mark Finding contents
 
-- (NSUInteger)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase {
-	return [_messageBodyViewController highlightAllOccurrencesOfString:str matchCase:matchCase];
+- (NSUInteger)stringOccurrencesCount {
+	return _messageBodyViewController.stringOccurrencesCount;
+}
+
+- (void)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase {
+	[_messageBodyViewController highlightAllOccurrencesOfString:str matchCase:matchCase];
 }
 
 - (void)markOccurrenceOfFoundString:(NSUInteger)index {

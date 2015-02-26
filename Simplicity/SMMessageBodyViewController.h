@@ -12,11 +12,13 @@
 
 @interface SMMessageBodyViewController : NSViewController
 
+@property (readonly) NSUInteger stringOccurrencesCount;
+
 - (void)uncollapse;
 
 - (void)setMessageViewText:(NSString*)htmlText uid:(uint32_t)uid folder:(NSString*)folder;
 
-- (NSUInteger)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase;
+- (void)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase;
 - (void)markOccurrenceOfFoundString:(NSUInteger)index;
 - (void)removeMarkedOccurrenceOfFoundString;
 - (void)removeAllHighlightedOccurrencesOfString;

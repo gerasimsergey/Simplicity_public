@@ -12,6 +12,7 @@
 #import <WebKit/WebFrame.h>
 #import <WebKit/WebFrameView.h>
 #import <WebKit/WebDataSource.h>
+#import <WebKit/WebFrameLoadDelegate.h>
 #import <WebKit/WebPolicyDelegate.h>
 
 #import "SMMessageBodyViewController.h"
@@ -36,12 +37,21 @@
 
 @end
 
+@interface SMMessageBodyViewController (WebFrameLoadDelegate)
+
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame;
+
+@end
+
 @implementation SMMessageBodyViewController {
 	unsigned long long _nextIdentifier;
+	NSString *_currentFindString;
+	Boolean _currentFindStringMatchCase;
 	NSString *_htmlText;
 	uint32_t _uid;
 	NSString *_folder;
 	Boolean _uncollapsed;
+	Boolean _mainFrameLoaded;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -51,7 +61,8 @@
 		WebView *view = [[WebView alloc] init];
 		
 		view.translatesAutoresizingMaskIntoConstraints = NO;
-		
+
+		[view setFrameLoadDelegate:self];
 		[view setPolicyDelegate:self];
 		[view setResourceLoadDelegate:self];
 		[view setMaintainsBackForwardList:NO];
@@ -161,29 +172,47 @@
 	}
 }
 
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+	if(_htmlText == nil)
+		return;
+
+	NSAssert(!_mainFrameLoaded, @"main frame already loaded");
+
+	_mainFrameLoaded = YES;
+
+	if(frame == sender.mainFrame) {
+		if(_currentFindString != nil && _uncollapsed) {
+			[self highlightAllOccurrencesOfString:_currentFindString matchCase:_currentFindStringMatchCase];
+		}
+	}
+}
+
 #pragma mark Finding contents
 
-- (NSUInteger)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase {
+- (void)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase {
+	_currentFindString = str;
+	_currentFindStringMatchCase = matchCase;
+	
+	if(!_mainFrameLoaded)
+		return;
+	
 	NSAssert(str != nil, @"str == nil");
 
 	[self removeAllHighlightedOccurrencesOfString];
 
-	if(str.length == 0)
-		return 0;
-	
-	NSAssert(str.length > 0, @"passing empty string to search is prohibited");
-	
-	NSString *path = [[NSBundle mainBundle] pathForResource:@"SearchWebView" ofType:@"js"];
-	NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-	
-	WebView *view = (WebView*)[self view];
-	[view stringByEvaluatingJavaScriptFromString:jsCode];
-	
-	NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurrencesOfString('%@')", str];
-	[view stringByEvaluatingJavaScriptFromString:startSearch];
-	
-	NSString *occurrencesCount = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
-	return [occurrencesCount integerValue];
+	if(str.length > 0) {
+		NSString *path = [[NSBundle mainBundle] pathForResource:@"SearchWebView" ofType:@"js"];
+		NSString *jsCode = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+		
+		WebView *view = (WebView*)[self view];
+		[view stringByEvaluatingJavaScriptFromString:jsCode];
+		
+		NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurrencesOfString('%@')", str];
+		[view stringByEvaluatingJavaScriptFromString:startSearch];
+		
+		NSString *occurrencesCount = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];
+		_stringOccurrencesCount = [occurrencesCount integerValue];
+	}
 }
 
 - (void)markOccurrenceOfFoundString:(NSUInteger)index {
@@ -201,6 +230,8 @@
 - (void)removeAllHighlightedOccurrencesOfString {
 	WebView *view = (WebView*)[self view];
 	[view stringByEvaluatingJavaScriptFromString:@"Simplicity_RemoveAllHighlights()"];
+	
+	_currentFindString = nil;
 }
 
 @end

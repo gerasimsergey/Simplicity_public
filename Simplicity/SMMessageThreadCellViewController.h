@@ -15,6 +15,8 @@
 @property Boolean collapsed;
 @property NSUInteger cellIndex;
 
+@property (readonly) NSUInteger stringOccurrencesCount;
+
 - (id)initCollapsed:(Boolean)collapsed;
 
 - (void)setMessage:(SMMessage*)message;
@@ -28,7 +30,7 @@
 
 #pragma mark Finding contents
 
-- (NSUInteger)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase;
+- (void)highlightAllOccurrencesOfString:(NSString*)str matchCase:(Boolean)matchCase;
 - (void)markOccurrenceOfFoundString:(NSUInteger)index;
 - (void)removeMarkedOccurrenceOfFoundString;
 - (void)removeAllHighlightedOccurrencesOfString;
