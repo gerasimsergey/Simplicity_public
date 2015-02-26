@@ -30,6 +30,14 @@
 	[[appController messageThreadViewController] findContents:_searchField.stringValue matchCase:(_matchCaseCheckbox.state == NSOnState) forward:YES];
 }
 
+- (IBAction)setMatchCaseAction:(id)sender {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+	
+	[[appController messageThreadViewController] removeFindContentsResults];
+	[[appController messageThreadViewController] findContents:_searchField.stringValue matchCase:(_matchCaseCheckbox.state == NSOnState) forward:YES];
+}
+
 - (IBAction)findNextAction:(id)sender {
 	
 }

@@ -15,6 +15,7 @@
 @property IBOutlet NSButton *doneButton;
 
 - (IBAction)findContentsSearchAction:(id)sender;
+- (IBAction)setMatchCaseAction:(id)sender;
 - (IBAction)findNextAction:(id)sender;
 - (IBAction)findPrevAction:(id)sender;
 

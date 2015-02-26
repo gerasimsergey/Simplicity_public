@@ -21,12 +21,12 @@ var Simplicity_ElementNode = 1;
 var Simplicity_TextNode = 3;
 
 // helper function, recursively searches in elements and their child nodes
-function Simplicity_HighlightAllOccurrencesOfStringForElement(element,keyword) {
+function Simplicity_HighlightAllOccurrencesOfStringForElement(element, keyword, matchCase) {
 	if (element) {
 		if (element.nodeType == Simplicity_TextNode) {
 			while (true) {
 				var value = element.nodeValue;  // Search for keyword in text node
-				var idx = value.toLowerCase().indexOf(keyword);
+				var idx = matchCase? value.indexOf(keyword) : value.toLowerCase().indexOf(keyword);
 				
 				if (idx < 0)
 					break;
@@ -49,7 +49,7 @@ function Simplicity_HighlightAllOccurrencesOfStringForElement(element,keyword) {
 		} else if (element.nodeType == Simplicity_ElementNode) {
 			if (element.style.display != "none" && element.nodeName.toLowerCase() != 'select') {
 				for (var i=element.childNodes.length-1; i >= 0; i--) {
-					Simplicity_HighlightAllOccurrencesOfStringForElement(element.childNodes[i],keyword);
+					Simplicity_HighlightAllOccurrencesOfStringForElement(element.childNodes[i], keyword, matchCase);
 				}
 			}
 		}
@@ -91,9 +91,9 @@ function isScrolledIntoView(el) {
 }
 
 // the main entry point to start the search
-function Simplicity_HighlightAllOccurrencesOfString(keyword) {
+function Simplicity_HighlightAllOccurrencesOfString(keyword, matchCase) {
 	Simplicity_RemoveAllHighlights();
-	Simplicity_HighlightAllOccurrencesOfStringForElement(document.body, keyword.toLowerCase());
+	Simplicity_HighlightAllOccurrencesOfStringForElement(document.body, matchCase? keyword : keyword.toLowerCase(), matchCase);
 }
 
 // the main entry point to mark (with a different color) the next occurrence of the string found before

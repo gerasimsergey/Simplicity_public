@@ -207,7 +207,7 @@
 		WebView *view = (WebView*)[self view];
 		[view stringByEvaluatingJavaScriptFromString:jsCode];
 		
-		NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurrencesOfString('%@')", str];
+		NSString *startSearch = [NSString stringWithFormat:@"Simplicity_HighlightAllOccurrencesOfString('%@', %u)", str, matchCase? 1 : 0];
 		[view stringByEvaluatingJavaScriptFromString:startSearch];
 		
 		NSString *occurrencesCount = [view stringByEvaluatingJavaScriptFromString:@"Simplicity_SearchResultCount"];

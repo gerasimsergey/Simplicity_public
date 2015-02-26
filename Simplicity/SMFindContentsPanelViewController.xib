@@ -41,6 +41,9 @@
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="setMatchCaseAction:" target="-2" id="64Z-1l-Qwj"/>
+                    </connections>
                 </button>
                 <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QOq-jk-Bxe">
                     <rect key="frame" x="368" y="5" width="47" height="21"/>
