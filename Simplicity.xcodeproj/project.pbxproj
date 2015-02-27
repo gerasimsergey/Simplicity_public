@@ -67,7 +67,6 @@
 		00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A085AE1A72145300CC4E1C /* SMAttachmentsPanelViewController.m */; };
 		00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */; };
 		00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */; };
-		00A25BBC17E3540000D0FCB1 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 00A25BBB17E3540000D0FCB1 /* TODO */; };
 		00A681701A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */; };
 		00A6817A1A7DEDB800DAD2BD /* attachment-document.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A681791A7DEDB800DAD2BD /* attachment-document.png */; };
 		00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 00B968D51A79F48F00C37B97 /* background_repeat.png */; };
@@ -232,7 +231,6 @@
 		00A25BB517DF7ECD00D0FCB1 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = ../../../../../../../usr/lib/libxml2.dylib; sourceTree = "<group>"; };
 		00A25BB817E10D1400D0FCB1 /* SMMessageListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListController.h; sourceTree = "<group>"; };
 		00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageListController.m; sourceTree = "<group>"; };
-		00A25BBB17E3540000D0FCB1 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		00A6816E1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentsPanelView.h; sourceTree = "<group>"; };
 		00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentsPanelView.m; sourceTree = "<group>"; };
 		00A681791A7DEDB800DAD2BD /* attachment-document.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachment-document.png"; sourceTree = "<group>"; };
@@ -331,7 +329,6 @@
 			isa = PBXGroup;
 			children = (
 				00621CF619230D4200BF1C01 /* Forms */,
-				00A25BBB17E3540000D0FCB1 /* TODO */,
 				005B086C17D4F5D000341051 /* Control */,
 				005B086517D4F3BD00341051 /* Model */,
 				005B086D17D4F62600341051 /* View */,
@@ -630,7 +627,6 @@
 				00E9107F17D2F6F50028C679 /* SMMessageListViewController.xib in Resources */,
 				00A6817A1A7DEDB800DAD2BD /* attachment-document.png in Resources */,
 				003859021A4D024500D4FD70 /* SMSearchResultsListViewController.xib in Resources */,
-				00A25BBC17E3540000D0FCB1 /* TODO in Resources */,
 				006A5DD717F6C4DC004D6D78 /* Simplicity.sqlite in Resources */,
 				002057D51A85D2DA00D5FE8A /* inbox-white.png in Resources */,
 				002556FE1A5A5C6600C864D0 /* star-gray-icon.png in Resources */,
