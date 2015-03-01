@@ -190,8 +190,6 @@
 			if(j >= _cells.count || ((SMMessageThreadCell*)_cells[j]).message != newMessage) {
 				SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:newMessage collapsed:YES];
 				
-				[viewController enableCollapse:(newMessages.count > 1)];
-				
 				[_contentView addSubview:[viewController view]];
 				
 				updatedCells[i] = [[SMMessageThreadCell alloc] initWithMessage:newMessage viewController:viewController];
@@ -205,6 +203,11 @@
 
 			SMMessageThreadCell *cell = updatedCells[i];
 			cell.viewController.cellIndex = i;
+
+			[cell.viewController enableCollapse:(newMessages.count > 1)];
+			
+			if(newMessages.count == 1)
+				[cell.viewController setCollapsed:NO];
 		}
 		
 		// populate the updated view
