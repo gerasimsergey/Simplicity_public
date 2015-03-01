@@ -82,10 +82,10 @@
 
 	_currentMessageThread = messageThread;
 
-	if(_messageThreadInfoViewController == nil) {
+	if(_messageThreadInfoViewController == nil)
 		_messageThreadInfoViewController = [[SMMessageThreadInfoViewController alloc] init];
-		[_messageThreadInfoViewController setMessageThread:_currentMessageThread];
-	}
+
+	[_messageThreadInfoViewController setMessageThread:_currentMessageThread];
 
 	[_cells removeAllObjects];
 
