@@ -14,6 +14,8 @@
 @interface SMMessageDetailsViewController : NSViewController
 
 + (NSUInteger)headerHeight;
++ (CGFloat)headerIconHeightRatio;
+
 + (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold;
 
 - (void)setEnclosingThreadCell:(SMMessageThreadCellViewController*)receiver;

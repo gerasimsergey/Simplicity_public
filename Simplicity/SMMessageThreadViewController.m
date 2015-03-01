@@ -12,6 +12,7 @@
 #import "SMMessageThreadCell.h"
 #import "SMMessageThreadCellViewController.h"
 #import "SMMessageThreadViewController.h"
+#import "SMMessageThreadInfoViewController.h"
 #import "SMMessageBodyViewController.h"
 #import "SMMessageListController.h"
 #import "SMFlippedView.h"
@@ -24,6 +25,7 @@
 @end
 
 @implementation SMMessageThreadViewController {
+	SMMessageThreadInfoViewController *_messageThreadInfoViewController;
 	NSMutableArray *_cells;
 	NSView *_contentView;
 	Boolean _findContentsActive;
@@ -46,7 +48,7 @@
 		[messageThreadView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
 		[self setView:messageThreadView];
-		
+
 		_cells = [NSMutableArray new];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageBodyFetched:) name:@"MessageBodyFetched" object:nil];
@@ -80,6 +82,11 @@
 
 	_currentMessageThread = messageThread;
 
+	if(_messageThreadInfoViewController == nil) {
+		_messageThreadInfoViewController = [[SMMessageThreadInfoViewController alloc] init];
+		[_messageThreadInfoViewController setMessageThread:_currentMessageThread];
+	}
+
 	[_cells removeAllObjects];
 
 	NSScrollView *messageThreadView = (NSScrollView*)[self view];
@@ -88,7 +95,9 @@
 	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	[messageThreadView setDocumentView:_contentView];
-	
+
+	[_contentView addSubview:[_messageThreadInfoViewController view]];
+
 	if(_currentMessageThread != nil) {
 		NSAssert(_currentMessageThread.messagesCount > 0, @"no messages in message thread");
 	
@@ -215,6 +224,17 @@
 }
 
 - (void)setViewConstraints {
+	NSView *infoView = [_messageThreadInfoViewController view];
+	NSAssert(infoView != nil, @"no info view");
+
+	[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:infoView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	
+	[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:infoView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+	
+	[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:infoView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+
+	const CGFloat cellSpacing = -1;
+	
 	if(_cells.count == 1) {
 		NSView *subview = ((SMMessageThreadCell*)_cells[0]).viewController.view;
 
@@ -222,9 +242,9 @@
 		
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 
-		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-		
 		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+
+		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:infoView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-cellSpacing]];
 	} else {
 		NSView *prevSubView = nil;
 		
@@ -238,11 +258,9 @@
 			NSLayoutConstraint *topConstraint;
 
 			if(i == 0) {
-				topConstraint = [NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+				topConstraint = [NSLayoutConstraint constraintWithItem:infoView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-cellSpacing];
 			} else {
-				const CGFloat spacing = -1;
-				
-				topConstraint = [NSLayoutConstraint constraintWithItem:prevSubView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-spacing];
+				topConstraint = [NSLayoutConstraint constraintWithItem:prevSubView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-cellSpacing];
 			}
 			
 			[topConstraint setPriority:NSLayoutPriorityDefaultHigh];
@@ -251,7 +269,7 @@
 			prevSubView = subview;
 		}
 		
-		NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevSubView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+		NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevSubView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-1];
 
 		// use low priority here for now because we want to leave blank space
 		// between the message cell at the bottom and the thread view itself

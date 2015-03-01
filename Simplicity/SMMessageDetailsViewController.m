@@ -61,6 +61,10 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	return 36;
 }
 
++ (CGFloat)headerIconHeightRatio {
+	return HEADER_ICON_HEIGHT_RATIO;
+}
+
 + (NSTextField*)createLabel:(NSString*)text bold:(BOOL)bold {
 	NSTextField *label = [[NSTextField alloc] init];
 	
@@ -124,7 +128,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 }
 
 #define V_MARGIN 10
-#define H_MARGIN 5
+#define H_MARGIN 6
 #define FROM_W 5
 #define H_GAP 5
 #define V_GAP 10
@@ -198,8 +202,6 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	[view addSubview:_subject];
 	
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W] priority:NSLayoutPriorityDefaultHigh];
-
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
 	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 

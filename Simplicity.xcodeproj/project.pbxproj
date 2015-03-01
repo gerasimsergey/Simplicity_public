@@ -39,6 +39,7 @@
 		0040B0F9196A5331004E55CC /* SMFolderCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0040B0F8196A5331004E55CC /* SMFolderCellView.m */; };
 		00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00414ED71A16454F00068742 /* SMSearchResultsListCellView.m */; };
 		00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */; };
+		004741651AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 004741641AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m */; };
 		004F7FEA1866A973004DEC3C /* search-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 004F7FE91866A973004DEC3C /* search-icon.png */; };
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
 		005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */; };
@@ -184,6 +185,8 @@
 		00414ED61A16454F00068742 /* SMSearchResultsListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSearchResultsListCellView.h; sourceTree = "<group>"; };
 		00414ED71A16454F00068742 /* SMSearchResultsListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSearchResultsListCellView.m; sourceTree = "<group>"; };
 		00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMSearchResultsListCellView.xib; sourceTree = "<group>"; };
+		004741631AA3AAF0002566E8 /* SMMessageThreadInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadInfoViewController.h; sourceTree = "<group>"; };
+		004741641AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadInfoViewController.m; sourceTree = "<group>"; };
 		004F7FE91866A973004DEC3C /* search-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-icon.png"; path = "Simplicity/search-icon.png"; sourceTree = "<group>"; };
 		005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mailcore2.xcodeproj; path = "../mailcore2/build-mac/mailcore2.xcodeproj"; sourceTree = "<group>"; };
 		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -430,6 +433,8 @@
 				00CB00EA1A9E886700339E6D /* SMMessageThreadCell.m */,
 				00FC3C7619AADD67002DAF9C /* SMMessageThreadCellViewController.h */,
 				00FC3C7D19AADF68002DAF9C /* SMMessageThreadCellViewController.m */,
+				004741631AA3AAF0002566E8 /* SMMessageThreadInfoViewController.h */,
+				004741641AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m */,
 				00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */,
 				00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */,
 				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
@@ -660,6 +665,7 @@
 				0002A0A517D1B1E000EA4AFF /* SMAppDelegate.m in Sources */,
 				00414ED81A16454F00068742 /* SMSearchResultsListCellView.m in Sources */,
 				007A73621A57A95500A4D694 /* SMMessageFullDetailsViewController.m in Sources */,
+				004741651AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m in Sources */,
 				00FE6DF41A4E6C0600D2194F /* SMInstrumentPanelViewController.m in Sources */,
 				009217AF1A930019003A0348 /* SMMessageThreadCollection.m in Sources */,
 				005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */,
