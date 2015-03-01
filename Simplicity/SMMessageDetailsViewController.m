@@ -29,7 +29,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 	// UI elements
 	NSButton *_starButton;
 	NSTextField *_fromAddress;
-	NSTextField *_subject;
+	NSTextField *_toList;
 	NSButton *_attachmentButton;
 	NSTextField *_date;
 	NSButton *_infoButton;
@@ -94,7 +94,6 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		_currentMessage = message;
 		
 		[_fromAddress setStringValue:[_currentMessage from]];
-		[_subject setStringValue:[_currentMessage subject]];
 		[_date setStringValue:[_currentMessage localizedDate]];
 	}
 
@@ -118,11 +117,26 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		[self hideAttachmentButton];
 	}
 
-	NSFont *font = [_subject font];
+	NSString *toListString = @"to";
+	NSUInteger toCount = 0;
+	
+	for(MCOAddress *a in [_currentMessage.header to]) {
+		toListString = [NSString stringWithFormat:(toCount? @"%@, %@" : @"%@ %@"), toListString, [SMMessage parseAddress:a]];
+		toCount++;
+	}
+	
+	for(MCOAddress *a in [_currentMessage.header cc]) {
+		toListString = [NSString stringWithFormat:(toCount? @"%@, %@" : @"%@ %@"), toListString, [SMMessage parseAddress:a]];
+		toCount++;
+	}
+	
+	[_toList setStringValue:(toCount > 0? toListString : @"")];
+
+	NSFont *font = [_toList font];
 	
 	font = _currentMessage.unseen? [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSFontBoldTrait] : [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSFontBoldTrait];
 	
-	[_subject setFont:font];
+	[_toList setFont:font];
 	
 	[_fullDetailsViewController setMessage:_currentMessage];
 }
@@ -193,17 +207,17 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 
 	// init subject
 	
-	_subject = [SMMessageDetailsViewController createLabel:@"" bold:NO];
-	_subject.textColor = [NSColor blackColor];
+	_toList = [SMMessageDetailsViewController createLabel:@"" bold:NO];
+	_toList.textColor = [NSColor blackColor];
 
-	[_subject.cell setLineBreakMode:NSLineBreakByTruncatingTail];
-	[_subject setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow-2 forOrientation:NSLayoutConstraintOrientationHorizontal];
+	[_toList.cell setLineBreakMode:NSLineBreakByTruncatingTail];
+	[_toList setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow-2 forOrientation:NSLayoutConstraintOrientationHorizontal];
 	
-	[view addSubview:_subject];
+	[view addSubview:_toList];
 	
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W] priority:NSLayoutPriorityDefaultHigh];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:_fromAddress attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_toList attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-FROM_W] priority:NSLayoutPriorityDefaultHigh];
 
-	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
+	[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_toList attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN] priority:NSLayoutPriorityRequired];
 
 	// init attachment constraints
 	
@@ -213,7 +227,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 
 	[_doesntHaveAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
 	
-	[_doesntHaveAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+	[_doesntHaveAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_toList attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_date attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
 	
 	[_doesntHaveAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
 	
@@ -221,7 +235,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 
 	// init bottom constraint
 
-	_bottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN];
+	_bottomConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toList attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN];
 	
 	[view addConstraint:_bottomConstraint];
 }
@@ -263,7 +277,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 
 		[_hasAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityRequired];
 
-		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+		[_hasAttachmentsConstraints addObject:[NSLayoutConstraint constraintWithItem:_toList attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_attachmentButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
 
 		[_hasAttachmentsConstraints.lastObject setPriority:NSLayoutPriorityDefaultLow];
 
@@ -333,7 +347,7 @@ static const CGFloat HEADER_ICON_HEIGHT_RATIO = 1.8;
 		
 		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN]];
 		
-		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
+		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:_toList attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_GAP]];
 		
 		[_fullDetailsViewConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:V_MARGIN]];
 	}

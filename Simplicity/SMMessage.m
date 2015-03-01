@@ -84,25 +84,32 @@
 	return [_msgParser header];
 }
 
+static NSString *unquote(NSString *s) {
+	if(s.length > 2 && [s characterAtIndex:0] == '\'' && [s characterAtIndex:s.length-1] == '\'')
+		return [s substringWithRange:NSMakeRange(1, s.length-2)];
+	else
+		return s;
+}
+
 + (NSString*)parseAddress:(MCOAddress*)address {
 	NSString *fromDisplayName = [address displayName];
 	if(fromDisplayName != nil) {
 		NSString *trimmedFromDisplayName = [SMMessage trimTextField:fromDisplayName];
 		NSAssert(trimmedFromDisplayName, @"trimmed name nil");
 		if([trimmedFromDisplayName length] > 0)
-			return trimmedFromDisplayName;
+			return unquote(trimmedFromDisplayName);
 	}
 	
 	NSString *name = [address nonEncodedRFC822String];
 	if(name != nil && [name compare:@"invalid"] != NSOrderedSame)
-		return name;
+		return unquote(name);
 	
 	NSString *mailbox = [address mailbox];
 	NSAssert(mailbox, @"no from mailbox");
 	
 	NSString *mailboxTrimmed = [self trimTextField:mailbox];
 	if(mailboxTrimmed != nil && [mailboxTrimmed length] > 0)
-		return mailboxTrimmed;
+		return unquote(mailboxTrimmed);
 	
 	/*
 	 MCOAddress *sender = [header sender];
