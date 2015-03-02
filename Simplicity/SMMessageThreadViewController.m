@@ -159,7 +159,7 @@
 			}
 		}
 		
-		NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, _cells.count, _currentMessageThread.messagesCount);
+		//NSLog(@"%s: message thread id %llu has been updated (old message count %lu, new %ld)", __func__, _currentMessageThread.threadId, _cells.count, _currentMessageThread.messagesCount);
 		
 		// remove old (vanished) messages
 		for(NSInteger t = _cells.count; t > 0; t--) {
@@ -215,6 +215,8 @@
 		
 		[_contentView removeConstraints:[_contentView constraints]];
 		[self setViewConstraints];
+
+		[_messageThreadInfoViewController updateMessageThread];
 	} else {
 		//NSLog(@"%s: message thread id %llu is empty", __func__, _currentMessageThread.threadId);
 
@@ -223,6 +225,8 @@
 		[_contentView setSubviews:[NSArray array]];
 
 		_currentMessageThread = nil;
+
+		[_messageThreadInfoViewController setMessageThread:nil];
 	}
 }
 

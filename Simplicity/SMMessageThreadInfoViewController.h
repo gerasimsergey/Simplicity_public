@@ -13,5 +13,6 @@
 @interface SMMessageThreadInfoViewController : NSViewController
 
 - (void)setMessageThread:(SMMessageThread*)messageThread;
+- (void)updateMessageThread;
 
 @end

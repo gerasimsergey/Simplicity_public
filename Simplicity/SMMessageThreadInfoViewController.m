@@ -141,6 +141,13 @@
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
 }
 
+- (void)updateMessageThread {
+	if(_messageThread == nil)
+		return;
+
+	[self initColorLabels];
+}
+
 - (void)initColorLabels {
 	NSView *view = [self view];
 
