@@ -16,7 +16,7 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
             <rect key="frame" x="0.0" y="0.0" width="200" height="396"/>
             <subviews>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zKI-Dq-3Sh">
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zKI-Dq-3Sh">
                     <rect key="frame" x="0.0" y="0.0" width="200" height="396"/>
                     <clipView key="contentView" drawsBackground="NO" id="jWX-ka-Zfh">
                         <rect key="frame" x="1" y="0.0" width="238" height="134"/>
@@ -28,7 +28,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="195" minWidth="40" maxWidth="1000" id="BaS-CJ-aY3">
+                                    <tableColumn width="197" minWidth="40" maxWidth="1000" id="BaS-CJ-aY3">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -42,7 +42,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="FolderGroupCellView" id="fEJ-aY-qab" userLabel="Folder Group">
-                                                <rect key="frame" x="1" y="1" width="195" height="17"/>
+                                                <rect key="frame" x="1" y="1" width="197" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="YU0-Jd-HHA">
@@ -56,7 +56,7 @@
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="YU0-Jd-HHA" firstAttribute="leading" secondItem="fEJ-aY-qab" secondAttribute="leading" constant="2" id="GRg-b4-kAP"/>
-                                                    <constraint firstAttribute="trailing" secondItem="YU0-Jd-HHA" secondAttribute="trailing" constant="97" id="YXl-qH-aqn"/>
+                                                    <constraint firstAttribute="trailing" secondItem="YU0-Jd-HHA" secondAttribute="trailing" constant="99" id="YXl-qH-aqn"/>
                                                     <constraint firstItem="YU0-Jd-HHA" firstAttribute="top" secondItem="fEJ-aY-qab" secondAttribute="top" id="lgo-MS-Ut1"/>
                                                     <constraint firstAttribute="bottom" secondItem="YU0-Jd-HHA" secondAttribute="bottom" id="vwz-wj-TDB"/>
                                                 </constraints>
@@ -65,7 +65,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="FolderCellView" id="ad8-Va-2mb" userLabel="Regular Folder">
-                                                <rect key="frame" x="1" y="1" width="195" height="16"/>
+                                                <rect key="frame" x="1" y="20" width="197" height="16"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="bpM-hd-kan" userLabel="Color Mark" customClass="SMColorCircle">
@@ -85,7 +85,7 @@
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="9fg-dU-pW6" secondAttribute="trailing" constant="3" id="IuF-VU-yNP"/>
+                                                    <constraint firstAttribute="trailing" secondItem="9fg-dU-pW6" secondAttribute="trailing" constant="5" id="IuF-VU-yNP"/>
                                                     <constraint firstItem="9fg-dU-pW6" firstAttribute="top" secondItem="ad8-Va-2mb" secondAttribute="top" id="M9H-yF-Hms"/>
                                                     <constraint firstItem="9fg-dU-pW6" firstAttribute="leading" secondItem="bpM-hd-kan" secondAttribute="trailing" id="OdJ-F7-vhP"/>
                                                     <constraint firstAttribute="bottom" secondItem="9fg-dU-pW6" secondAttribute="bottom" id="Ps9-hL-QCW"/>
@@ -98,7 +98,7 @@
                                                 </connections>
                                             </tableCellView>
                                             <tableCellView identifier="MainFolderCellView" id="iXx-Gf-r8K" userLabel="Main Folder">
-                                                <rect key="frame" x="1" y="38" width="195" height="20"/>
+                                                <rect key="frame" x="1" y="38" width="197" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="DV1-dm-EPF" userLabel="Icon" customClass="NSImageView">
@@ -123,7 +123,7 @@
                                                     <constraint firstAttribute="bottom" secondItem="TkI-fd-8gU" secondAttribute="bottom" constant="2" id="T2Y-jb-G17"/>
                                                     <constraint firstAttribute="centerY" secondItem="DV1-dm-EPF" secondAttribute="centerY" id="UGp-XX-aZe"/>
                                                     <constraint firstItem="DV1-dm-EPF" firstAttribute="leading" secondItem="iXx-Gf-r8K" secondAttribute="leading" constant="2" id="Z1w-28-LM9"/>
-                                                    <constraint firstAttribute="trailing" secondItem="TkI-fd-8gU" secondAttribute="trailing" constant="3" id="buJ-6x-62N"/>
+                                                    <constraint firstAttribute="trailing" secondItem="TkI-fd-8gU" secondAttribute="trailing" constant="5" id="buJ-6x-62N"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="imageView" destination="DV1-dm-EPF" id="bAT-xm-qOk"/>

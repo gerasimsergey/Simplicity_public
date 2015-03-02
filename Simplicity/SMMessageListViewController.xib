@@ -31,7 +31,7 @@
                         <action selector="updateMessagesNow:" target="-2" id="dKY-hg-gSQ"/>
                     </connections>
                 </button>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="49" horizontalPageScroll="10" verticalLineScroll="49" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="49" horizontalPageScroll="10" verticalLineScroll="49" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="0.0" y="20" width="235" height="251"/>
                     <clipView key="contentView" drawsBackground="NO" id="HA8-Z9-Dlo">
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
@@ -44,7 +44,7 @@
                                 <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn identifier="MessageCell" editable="NO" width="230" minWidth="40" maxWidth="1000" id="9">
+                                    <tableColumn identifier="MessageCell" editable="NO" width="232" minWidth="40" maxWidth="1000" id="9">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="system" size="14"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -58,7 +58,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="MessageCell" id="32" customClass="SMMessageListCellView">
-                                                <rect key="frame" x="1" y="1" width="230" height="47"/>
+                                                <rect key="frame" x="1" y="1" width="232" height="47"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField autoresizesSubviews="NO" horizontalHuggingPriority="248" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="160">
@@ -124,7 +124,7 @@
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="hsQ-26-pkV" secondAttribute="bottom" id="3aT-87-YxW"/>
-                                                    <constraint firstAttribute="trailing" secondItem="hsQ-26-pkV" secondAttribute="trailing" id="6Ae-4K-scf"/>
+                                                    <constraint firstAttribute="trailing" secondItem="hsQ-26-pkV" secondAttribute="trailing" constant="2" id="6Ae-4K-scf"/>
                                                     <constraint firstItem="BTp-sC-DoL" firstAttribute="leading" secondItem="160" secondAttribute="trailing" constant="8" symbolic="YES" id="7aa-5k-6qD"/>
                                                     <constraint firstItem="WUA-NN-aMr" firstAttribute="top" secondItem="32" secondAttribute="top" constant="29" id="7ns-gL-Nch"/>
                                                     <constraint firstItem="hsQ-26-pkV" firstAttribute="leading" secondItem="oxo-5I-gnK" secondAttribute="trailing" constant="3" id="B7j-aR-abH"/>
