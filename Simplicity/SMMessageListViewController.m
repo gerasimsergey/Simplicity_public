@@ -198,25 +198,8 @@
 		[view hideAttachmentImage];
 	}
 	
-	NSMutableArray *bookmarkColors = [NSMutableArray array];
-
 	SMFolder *currentFolder = [[appController mailboxViewController] currentFolder];
-	NSColor *mainColor = (currentFolder != nil && currentFolder.kind == SMFolderKindRegular)? [[appController folderColorController] colorForFolder:currentFolder.fullName] : nil;
-
-	if(mainColor != nil)
-	   [bookmarkColors addObject:mainColor];
-
-	for(NSString *label in messageThread.labels) {
-		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		SMAppController *appController = [appDelegate appController];
-		
-		if([label characterAtIndex:0] != '\\') {
-			NSColor *color = [[appController folderColorController] colorForFolder:label];
- 
-			if(color != mainColor)
-				[bookmarkColors addObject:color];
-		}
-	}
+	NSArray *bookmarkColors = [[appController folderColorController] colorsForMessageThread:messageThread folder:currentFolder labels:nil];
 	
 	[view.bookmarksView setBookmarkColors:bookmarkColors];
 

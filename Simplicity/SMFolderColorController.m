@@ -6,6 +6,10 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAppDelegate.h"
+#import "SMAppController.h"
+#import "SMFolder.h"
+#import "SMMessageThread.h"
 #import "SMFolderColorController.h"
 
 @implementation SMFolderColorController {
@@ -40,6 +44,39 @@ static NSColor *randomColor() {
 	}
 	
 	return color;
+}
+
+- (NSArray*)colorsForMessageThread:(SMMessageThread*)messageThread folder:(SMFolder*)folder labels:(NSMutableArray*)labels {
+	NSMutableArray *bookmarkColors = [NSMutableArray array];
+	
+	SMAppDelegate *appDelegate =  [[ NSApplication sharedApplication ] delegate];
+	SMAppController *appController = [appDelegate appController];
+	NSColor *mainColor = (folder != nil && folder.kind == SMFolderKindRegular)? [[appController folderColorController] colorForFolder:folder.fullName] : nil;
+	
+	[labels removeAllObjects];
+
+	if(mainColor != nil) {
+		[bookmarkColors addObject:mainColor];
+		
+		if(mainColor != nil)
+			[labels addObject:folder.fullName];
+	}
+	
+	for(NSString *label in messageThread.labels) {
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		SMAppController *appController = [appDelegate appController];
+		
+		if([label characterAtIndex:0] != '\\') {
+			NSColor *color = [[appController folderColorController] colorForFolder:label];
+			
+			if(color != mainColor) {
+				[bookmarkColors addObject:color];
+				[labels addObject:label];
+			}
+		}
+	}
+	
+	return bookmarkColors;
 }
 
 @end

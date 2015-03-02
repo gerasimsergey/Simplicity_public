@@ -7,7 +7,11 @@
 //
 
 #import "SMAppDelegate.h"
+#import "SMAppController.h"
 #import "SMImageRegistry.h"
+#import "SMFolder.h"
+#import "SMFolderColorController.h"
+#import "SMMailboxViewController.h"
 #import "SMMessageThread.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadInfoViewController.h"
@@ -18,6 +22,27 @@
 	NSButton *_starButton;
 */
 	NSTextField *_subject;
+	NSMutableArray *_colorLabels;
+	NSMutableArray *_colorLabelConstraints;
+}
+
++ (NSTextField*)createColorLabel:(NSString*)text color:(NSColor*)color {
+	NSTextField *label = [[NSTextField alloc] init];
+	
+	[label setStringValue:text];
+	[label setBordered:YES];
+	[label setBezeled:NO];
+	[label setBackgroundColor:color];
+	[label setDrawsBackground:YES];
+	[label setEditable:NO];
+	[label setSelectable:NO];
+	[label setFrameSize:[label fittingSize]];
+	[label setTranslatesAutoresizingMaskIntoConstraints:NO];
+	
+	const NSUInteger fontSize = 12;
+	[label setFont:[NSFont systemFontOfSize:fontSize]];
+	
+	return label;
 }
 
 - (id)init {
@@ -41,6 +66,8 @@
 }
 
 - (void)setMessageThread:(SMMessageThread*)messageThread {
+	if(_messageThread == messageThread)
+		return;
 /*
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
@@ -51,7 +78,11 @@
 	}
 */
 
+	_messageThread = messageThread;
+
 	[_subject setStringValue:(messageThread != nil? [[messageThread.messagesSortedByDate firstObject] subject] : @"")];
+	
+	[self initColorLabels];
 }
 
 #define H_MARGIN 6
@@ -105,9 +136,61 @@
 
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_MARGIN]];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:-H_MARGIN]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:-H_MARGIN]];
 
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+}
+
+- (void)initColorLabels {
+	NSView *view = [self view];
+
+	// TODO: reuse labels for speed
+	if(_colorLabels != nil) {
+		NSAssert(_colorLabelConstraints != nil, @"_colorLabelConstraints == nil");
+
+		[view removeConstraints:_colorLabelConstraints];
+		
+		for(NSTextField *label in _colorLabels)
+			[label removeFromSuperview];
+		
+		[_colorLabels removeAllObjects];
+		[_colorLabelConstraints removeAllObjects];
+	} else {
+		NSAssert(_colorLabelConstraints == nil, @"_colorLabelConstraints != nil");
+
+		_colorLabels = [NSMutableArray array];
+		_colorLabelConstraints = [NSMutableArray array];
+	}
+
+	if(_messageThread == nil)
+		return;
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+	SMFolder *currentFolder = [[appController mailboxViewController] currentFolder];
+
+	NSMutableArray *labels = [NSMutableArray array];
+	NSArray *colors = [[appController folderColorController] colorsForMessageThread:_messageThread folder:currentFolder labels:labels];
+
+	NSAssert(labels.count == colors.count, @"labels count %lu != colors count %lu", labels.count, colors.count);
+	
+	for(NSUInteger i = 0; i < labels.count; i++) {
+		NSTextField *labelView = [SMMessageThreadInfoViewController createColorLabel:labels[i] color:colors[i]];
+
+		[view addSubview:labelView];
+
+		if(i == 0) {
+			[_colorLabelConstraints addObject:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:labelView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP]];
+		} else {
+			[_colorLabelConstraints addObject:[NSLayoutConstraint constraintWithItem:_colorLabels.lastObject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:labelView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP/2]];
+		}
+
+		[_colorLabelConstraints addObject:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:labelView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
+		[_colorLabels addObject:labelView];
+	}
+	
+	[view addConstraints:_colorLabelConstraints];
 }
 
 @end

@@ -8,8 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class SMMessageThread;
+@class SMFolder;
+											  
 @interface SMFolderColorController : NSObject
 
 - (NSColor*)colorForFolder:(NSString*)folderName;
+- (NSArray*)colorsForMessageThread:(SMMessageThread*)messageThread folder:(SMFolder*)folder labels:(NSMutableArray*)labels;
 
 @end
