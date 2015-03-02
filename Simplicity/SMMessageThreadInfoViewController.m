@@ -24,6 +24,8 @@
 	NSTextField *_subject;
 	NSMutableArray *_colorLabels;
 	NSMutableArray *_colorLabelConstraints;
+	NSButton *_collapseAllButton;
+	NSButton *_uncollapseAllButton;
 }
 
 + (NSTextField*)createColorLabel:(NSString*)text color:(NSColor*)color {
@@ -139,6 +141,48 @@
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:_subject attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1.0 constant:-H_MARGIN]];
 
 	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_subject attribute:NSLayoutAttributeTop multiplier:1.0 constant:-V_MARGIN]];
+
+	// uncollapse all
+	
+	_uncollapseAllButton = [[NSButton alloc] init];
+	_uncollapseAllButton.translatesAutoresizingMaskIntoConstraints = NO;
+	_uncollapseAllButton.bezelStyle = NSShadowlessSquareBezelStyle;
+	_uncollapseAllButton.target = self;
+	_uncollapseAllButton.image = [NSImage imageNamed:@"uncollapse-all.png"];
+	[_uncollapseAllButton.cell setImageScaling:NSImageScaleProportionallyDown];
+	_uncollapseAllButton.bordered = NO;
+	_uncollapseAllButton.action = @selector(uncollapseAllCells:);
+	
+	[view addSubview:_uncollapseAllButton];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_uncollapseAllButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/2.5]];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_uncollapseAllButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_uncollapseAllButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_uncollapseAllButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_uncollapseAllButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_MARGIN]];
+
+	// collapse all
+
+	_collapseAllButton = [[NSButton alloc] init];
+	_collapseAllButton.translatesAutoresizingMaskIntoConstraints = NO;
+	_collapseAllButton.bezelStyle = NSShadowlessSquareBezelStyle;
+	_collapseAllButton.target = self;
+	_collapseAllButton.image = [NSImage imageNamed:@"collapse-all.png"];
+	[_collapseAllButton.cell setImageScaling:NSImageScaleProportionallyDown];
+	_collapseAllButton.bordered = NO;
+	_collapseAllButton.action = @selector(collapseAllCells:);
+
+	[view addSubview:_collapseAllButton];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_collapseAllButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[SMMessageDetailsViewController headerHeight]/2.5]];
+	
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_collapseAllButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:_collapseAllButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_collapseAllButton attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:_uncollapseAllButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_collapseAllButton attribute:NSLayoutAttributeRight multiplier:1.0 constant:H_GAP]];
 }
 
 - (void)updateMessageThread {
@@ -198,6 +242,14 @@
 	}
 	
 	[view addConstraints:_colorLabelConstraints];
+}
+
+- (void)collapseAllCells:(id)sender {
+	NSLog(@"%s", __func__);
+}
+
+- (void)uncollapseAllCells:(id)sender {
+	NSLog(@"%s", __func__);
 }
 
 @end
