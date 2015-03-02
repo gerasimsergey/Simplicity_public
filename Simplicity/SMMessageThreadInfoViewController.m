@@ -41,6 +41,7 @@
 	[label setSelectable:NO];
 	[label setFrameSize:[label fittingSize]];
 	[label setTranslatesAutoresizingMaskIntoConstraints:NO];
+	[label setLineBreakMode:NSLineBreakByTruncatingTail];
 	
 	const NSUInteger fontSize = 12;
 	[label setFont:[NSFont systemFontOfSize:fontSize]];
@@ -228,6 +229,7 @@
 	
 	for(NSUInteger i = 0; i < labels.count; i++) {
 		NSTextField *labelView = [SMMessageThreadInfoViewController createColorLabel:labels[i] color:colors[i]];
+		[labelView setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow-3 forOrientation:NSLayoutConstraintOrientationHorizontal];
 
 		[view addSubview:labelView];
 
@@ -241,6 +243,12 @@
 
 		[_colorLabels addObject:labelView];
 	}
+	
+	NSLayoutConstraint *gapConstraint = [NSLayoutConstraint constraintWithItem:(_colorLabels.count != 0? _colorLabels.lastObject : _subject) attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationLessThanOrEqual toItem:_collapseAllButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-H_GAP];
+	
+	gapConstraint.priority = NSLayoutPriorityDefaultLow;
+	
+	[_colorLabelConstraints addObject:gapConstraint];
 	
 	[view addConstraints:_colorLabelConstraints];
 }

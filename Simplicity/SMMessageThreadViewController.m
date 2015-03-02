@@ -341,15 +341,14 @@
 	if(_currentMessageThread == nil)
 		return;
 	
-	if(_cells.count == 1) {
+	if(_cells.count > 1) {
+		for(SMMessageThreadCell *cell in _cells) {
+			[cell.viewController setCollapsed:YES];
+		}
+	} else {
 		SMMessageThreadCell *cell = _cells[0];
+
 		NSAssert(!cell.viewController.collapsed, @"single cell is collapsed");
-
-		return;
-	}
-
-	for(SMMessageThreadCell *cell in _cells) {
-		[cell.viewController setCollapsed:YES];
 	}
 }
 
