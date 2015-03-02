@@ -12,6 +12,7 @@
 #import "SMFolder.h"
 #import "SMFolderColorController.h"
 #import "SMMailboxViewController.h"
+#import "SMMessageThreadViewController.h"
 #import "SMMessageThread.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadInfoViewController.h"
@@ -245,11 +246,13 @@
 }
 
 - (void)collapseAllCells:(id)sender {
-	NSLog(@"%s", __func__);
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate appController] messageThreadViewController] collapseAll];
 }
 
 - (void)uncollapseAllCells:(id)sender {
-	NSLog(@"%s", __func__);
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate appController] messageThreadViewController] uncollapseAll];
 }
 
 @end

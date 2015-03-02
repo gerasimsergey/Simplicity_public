@@ -22,4 +22,7 @@
 
 - (void)setCellCollapsed:(Boolean)collapsed cellIndex:(NSUInteger)cellIndex;
 
+- (void)collapseAll;
+- (void)uncollapseAll;
+
 @end

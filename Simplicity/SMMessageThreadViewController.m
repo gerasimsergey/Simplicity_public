@@ -318,6 +318,8 @@
 	NSLog(@"%s: message uid %u doesn't belong to thread id %lld", __func__, uid, threadId);
 }
 
+#pragma mark Cells collapsing / uncollapsing
+
 - (void)setCellCollapsed:(Boolean)collapsed cellIndex:(NSUInteger)cellIndex {
 	NSAssert(cellIndex < _cells.count, @"bad index %lu", cellIndex);
 	
@@ -332,6 +334,31 @@
 		} else {
 			[cell.viewController highlightAllOccurrencesOfString:_currentStringToFind matchCase:_currentStringToFindMatchCase];
 		}
+	}
+}
+
+- (void)collapseAll {
+	if(_currentMessageThread == nil)
+		return;
+	
+	if(_cells.count == 1) {
+		SMMessageThreadCell *cell = _cells[0];
+		NSAssert(!cell.viewController.collapsed, @"single cell is collapsed");
+
+		return;
+	}
+
+	for(SMMessageThreadCell *cell in _cells) {
+		[cell.viewController setCollapsed:YES];
+	}
+}
+
+- (void)uncollapseAll {
+	if(_currentMessageThread == nil)
+		return;
+	
+	for(SMMessageThreadCell *cell in _cells) {
+		[cell.viewController setCollapsed:NO];
 	}
 }
 
