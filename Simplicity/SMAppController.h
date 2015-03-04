@@ -24,7 +24,6 @@
 @property (nonatomic) IBOutlet NSToolbar *toolbar;
 @property (nonatomic) IBOutlet NSButton *trashButton;
 @property (nonatomic) IBOutlet NSTextField *searchField;
-@property (nonatomic) IBOutlet NSWindow *sheetNewLabel;
 
 - (IBAction)trashAction:(id)sender;
 - (IBAction)toggleFindContentsPanelAction:(id)sender;
@@ -41,5 +40,17 @@
 
 - (void)showFindContentsPanel;
 - (void)hideFindContentsPanel;
+
+#pragma mark New label creation
+
+@property (nonatomic) IBOutlet NSWindow *sheetNewLabel;
+@property (nonatomic) IBOutlet NSTextField *labelName;
+@property (nonatomic) IBOutlet NSPopUpButton *nestingLabelName;
+@property (nonatomic) IBOutlet NSButton *labelNestedCheckbox;
+
+- (IBAction)createLabelAction:(id)sender;
+- (IBAction)cancelLabelCreationAction:(id)sender;
+
+- (void)showNewLabelSheet;
 
 @end

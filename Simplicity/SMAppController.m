@@ -416,5 +416,29 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	_findContentsPanelShown = NO;
 }
 
+#pragma mark New label creation
+
+- (void)showNewLabelSheet {
+	NSLog(@"%s", __func__);
+
+	if(_sheetNewLabel == nil)
+		[NSBundle loadNibNamed:@"SMNewLabelWindow" owner:self];
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+
+	[NSApp beginSheet:_sheetNewLabel modalForWindow:appDelegate.window modalDelegate:self didEndSelector:nil contextInfo:nil];
+}
+
+- (IBAction)createLabelAction:(id)sender {
+	NSLog(@"%s", __func__);
+	
+	// TODO
+}
+
+- (IBAction)cancelLabelCreationAction:(id)sender {
+	NSLog(@"%s", __func__);
+
+	[NSApp endSheet:_sheetNewLabel];
+}
 
 @end
