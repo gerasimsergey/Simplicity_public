@@ -24,6 +24,7 @@
 @property (nonatomic) IBOutlet NSToolbar *toolbar;
 @property (nonatomic) IBOutlet NSButton *trashButton;
 @property (nonatomic) IBOutlet NSTextField *searchField;
+@property (nonatomic) IBOutlet NSWindow *sheetNewLabel;
 
 - (IBAction)trashAction:(id)sender;
 - (IBAction)toggleFindContentsPanelAction:(id)sender;
