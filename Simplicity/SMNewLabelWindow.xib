@@ -68,7 +68,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="createLabelAction:" target="-2" id="vhB-2Q-v35"/>
+                            <action selector="createAction:" target="-2" id="e9I-MV-eHc"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rc8-NO-5px">
@@ -78,7 +78,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="cancelLabelCreationAction:" target="-2" id="O7c-VT-d5Q"/>
+                            <action selector="cancelAction:" target="-2" id="0re-3z-npc"/>
                         </connections>
                     </button>
                 </subviews>

@@ -14,7 +14,7 @@
 @property (nonatomic) IBOutlet NSPopUpButton *nestingLabelName;
 @property (nonatomic) IBOutlet NSButton *labelNestedCheckbox;
 
-- (IBAction)createLabelAction:(id)sender;
-- (IBAction)cancelLabelCreationAction:(id)sender;
+- (IBAction)createAction:(id)sender;
+- (IBAction)cancelAction:(id)sender;
 
 @end

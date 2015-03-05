@@ -415,8 +415,6 @@
 			isa = PBXGroup;
 			children = (
 				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
-				00AD52ED1AA81C7900627433 /* SMNewLabelWindowController.h */,
-				00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */,
 				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
 				003DFF161A73681A003C26E2 /* SMAttachmentsPanelItemViewController.h */,
 				003DFF171A73681A003C26E2 /* SMAttachmentsPanelItemViewController.m */,
@@ -450,6 +448,8 @@
 				004741641AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m */,
 				00172FF2198D5C6100DB975E /* SMMessageThreadViewController.h */,
 				00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */,
+				00AD52ED1AA81C7900627433 /* SMNewLabelWindowController.h */,
+				00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */,
 				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
 				0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */,
 				003858FE1A4D024500D4FD70 /* SMSearchResultsListViewController.h */,

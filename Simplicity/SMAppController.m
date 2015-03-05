@@ -202,6 +202,10 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+	
+	//
+	
+	[self hideSearchResultsView];
 }
 
 - (void)updateMailboxFolderListView {
@@ -421,9 +425,22 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	if(_addNewLabelWindowController == nil)
 		_addNewLabelWindowController = [[SMNewLabelWindowController alloc] init];
 
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	NSWindow *newLabelSheet = _addNewLabelWindowController.window;
+	NSAssert(newLabelSheet != nil, @"newLabelSheet is nil");
 
-	[NSApp beginSheet:_addNewLabelWindowController.window modalForWindow:appDelegate.window modalDelegate:self didEndSelector:nil contextInfo:nil];
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[NSApp beginSheet:newLabelSheet modalForWindow:appDelegate.window modalDelegate:self didEndSelector:nil contextInfo:nil];
+}
+
+- (void)hideNewLabelSheet {
+	NSAssert(_addNewLabelWindowController != nil, @"_addNewLabelWindowController is nil");
+
+	NSWindow *newLabelSheet = _addNewLabelWindowController.window;
+	NSAssert(newLabelSheet != nil, @"newLabelSheet is nil");
+	
+	[newLabelSheet orderOut:self];
+
+	[NSApp endSheet:newLabelSheet];
 }
 
 @end

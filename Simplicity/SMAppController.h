@@ -43,8 +43,8 @@
 - (void)hideFindContentsPanel;
 
 @property (nonatomic) SMNewLabelWindowController *addNewLabelWindowController;
-@property (nonatomic) IBOutlet NSWindow *sheetNewLabel;
 
 - (void)showNewLabelSheet;
+- (void)hideNewLabelSheet;
 
 @end

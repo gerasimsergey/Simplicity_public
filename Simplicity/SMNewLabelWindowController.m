@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMAppDelegate.h"
+#import "SMAppController.h"
 #import "SMNewLabelWindowController.h"
 
 @implementation SMNewLabelWindowController
@@ -20,16 +22,17 @@
 	return self;
 }
 
-- (IBAction)createLabelAction:(id)sender {
+- (IBAction)createAction:(id)sender {
 	NSLog(@"%s", __func__);
 	
 	// TODO
 }
 
-- (IBAction)cancelLabelCreationAction:(id)sender {
+- (IBAction)cancelAction:(id)sender {
 	NSLog(@"%s", __func__);
-	
-//	[NSApp endSheet:_sheetNewLabel];
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[appDelegate appController] hideNewLabelSheet];
 }
 
 @end
