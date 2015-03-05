@@ -16,6 +16,7 @@
 @class SMMessageThreadViewController;
 @class SMInstrumentPanelViewController;
 @class SMFolderColorController;
+@class SMNewLabelWindowController;
 
 @interface SMAppController : NSObject <NSToolbarDelegate, NSSplitViewDelegate>
 
@@ -41,15 +42,8 @@
 - (void)showFindContentsPanel;
 - (void)hideFindContentsPanel;
 
-#pragma mark New label creation
-
+@property (nonatomic) SMNewLabelWindowController *addNewLabelWindowController;
 @property (nonatomic) IBOutlet NSWindow *sheetNewLabel;
-@property (nonatomic) IBOutlet NSTextField *labelName;
-@property (nonatomic) IBOutlet NSPopUpButton *nestingLabelName;
-@property (nonatomic) IBOutlet NSButton *labelNestedCheckbox;
-
-- (IBAction)createLabelAction:(id)sender;
-- (IBAction)cancelLabelCreationAction:(id)sender;
 
 - (void)showNewLabelSheet;
 

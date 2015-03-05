@@ -8,6 +8,7 @@
 
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
+#import "SMNewLabelWindowController.h"
 #import "SMMailboxViewController.h"
 #import "SMSearchResultsListController.h"
 #import "SMSearchResultsListViewController.h"
@@ -201,10 +202,6 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 
 	[_view addConstraint:[NSLayoutConstraint constraintWithItem:_view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:splitView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-	
-	//
-	
-	[self toggleSearchResultsView];
 }
 
 - (void)updateMailboxFolderListView {
@@ -421,24 +418,12 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 - (void)showNewLabelSheet {
 	NSLog(@"%s", __func__);
 
-	if(_sheetNewLabel == nil)
-		[NSBundle loadNibNamed:@"SMNewLabelWindow" owner:self];
+	if(_addNewLabelWindowController == nil)
+		_addNewLabelWindowController = [[SMNewLabelWindowController alloc] init];
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
-	[NSApp beginSheet:_sheetNewLabel modalForWindow:appDelegate.window modalDelegate:self didEndSelector:nil contextInfo:nil];
-}
-
-- (IBAction)createLabelAction:(id)sender {
-	NSLog(@"%s", __func__);
-	
-	// TODO
-}
-
-- (IBAction)cancelLabelCreationAction:(id)sender {
-	NSLog(@"%s", __func__);
-
-	[NSApp endSheet:_sheetNewLabel];
+	[NSApp beginSheet:_addNewLabelWindowController.window modalForWindow:appDelegate.window modalDelegate:self didEndSelector:nil contextInfo:nil];
 }
 
 @end

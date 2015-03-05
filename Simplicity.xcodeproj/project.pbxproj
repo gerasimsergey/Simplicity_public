@@ -72,6 +72,8 @@
 		00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A25BB917E10D1400D0FCB1 /* SMMessageListController.m */; };
 		00A681701A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */; };
 		00A6817A1A7DEDB800DAD2BD /* attachment-document.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A681791A7DEDB800DAD2BD /* attachment-document.png */; };
+		00AD52E81AA813FB00627433 /* add-label.png in Resources */ = {isa = PBXBuildFile; fileRef = 00AD52E71AA813FB00627433 /* add-label.png */; };
+		00AD52EF1AA81C7900627433 /* SMNewLabelWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */; };
 		00B4C19A1AA6CB1F00C14BF4 /* SMNewLabelWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindow.xib */; };
 		00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 00B968D51A79F48F00C37B97 /* background_repeat.png */; };
 		00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */; };
@@ -242,6 +244,9 @@
 		00A6816E1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMAttachmentsPanelView.h; sourceTree = "<group>"; };
 		00A6816F1A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMAttachmentsPanelView.m; sourceTree = "<group>"; };
 		00A681791A7DEDB800DAD2BD /* attachment-document.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachment-document.png"; sourceTree = "<group>"; };
+		00AD52E71AA813FB00627433 /* add-label.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add-label.png"; sourceTree = "<group>"; };
+		00AD52ED1AA81C7900627433 /* SMNewLabelWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMNewLabelWindowController.h; sourceTree = "<group>"; };
+		00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMNewLabelWindowController.m; sourceTree = "<group>"; };
 		00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMNewLabelWindow.xib; sourceTree = "<group>"; };
 		00B968D51A79F48F00C37B97 /* background_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_repeat.png; sourceTree = "<group>"; };
 		00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageDetailsViewController.h; sourceTree = "<group>"; };
@@ -410,6 +415,8 @@
 			isa = PBXGroup;
 			children = (
 				0002A0B317D1BB0100EA4AFF /* SMAppController.h */,
+				00AD52ED1AA81C7900627433 /* SMNewLabelWindowController.h */,
+				00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */,
 				0002A0B417D1BB0100EA4AFF /* SMAppController.m */,
 				003DFF161A73681A003C26E2 /* SMAttachmentsPanelItemViewController.h */,
 				003DFF171A73681A003C26E2 /* SMAttachmentsPanelItemViewController.m */,
@@ -499,6 +506,7 @@
 			isa = PBXGroup;
 			children = (
 				00909E741A9ACDE300636C90 /* SearchWebView.js */,
+				00AD52E71AA813FB00627433 /* add-label.png */,
 				00A681791A7DEDB800DAD2BD /* attachment-document.png */,
 				0099CE851A623B2A00AEA789 /* attachment-icon.png */,
 				00B968D51A79F48F00C37B97 /* background_repeat.png */,
@@ -652,6 +660,7 @@
 				003DFF1A1A73681A003C26E2 /* SMAttachmentsPanelItemViewController.xib in Resources */,
 				006709351A99A77600C0C9CC /* SMFindContentsPanelViewController.xib in Resources */,
 				00A085B11A72145300CC4E1C /* SMAttachmentsPanelViewController.xib in Resources */,
+				00AD52E81AA813FB00627433 /* add-label.png in Resources */,
 				00FE6DF51A4E6C0600D2194F /* SMInstrumentPanelViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -685,6 +694,7 @@
 				00172FF0198B3BB700DB975E /* SMMessageBodyViewController.m in Sources */,
 				006709341A99A77600C0C9CC /* SMFindContentsPanelViewController.m in Sources */,
 				0002A0B817D224C600EA4AFF /* SMMessageListCellView.m in Sources */,
+				00AD52EF1AA81C7900627433 /* SMNewLabelWindowController.m in Sources */,
 				00CB00EB1A9E886700339E6D /* SMMessageThreadCell.m in Sources */,
 				00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */,
 				00A085A01A7206FC00CC4E1C /* SMAttachmentItem.m in Sources */,

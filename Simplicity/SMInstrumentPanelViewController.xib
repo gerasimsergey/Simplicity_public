@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
@@ -41,21 +41,37 @@
                                     <constraint firstAttribute="width" constant="31" id="Y2K-L6-5k1"/>
                                 </constraints>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSSmartBadgeTemplate" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LnZ-ts-Awl">
-                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vgA-OF-Vi6">
+                                <rect key="frame" x="140" y="2" width="31" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="31" id="3fj-3i-G2B"/>
+                                </constraints>
+                                <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="add-label" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0o7-9Y-X9L">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="addNewLabel:" target="-2" id="4N1-Zu-VMg"/>
+                                </connections>
                             </button>
                         </subviews>
                     </view>
                     <constraints>
                         <constraint firstAttribute="height" constant="20" id="9cq-WR-Py4"/>
                         <constraint firstAttribute="trailing" secondItem="arQ-NF-dVx" secondAttribute="trailing" id="FEp-F2-I2b"/>
+                        <constraint firstItem="arQ-NF-dVx" firstAttribute="leading" secondItem="vgA-OF-Vi6" secondAttribute="trailing" id="H9Z-Nj-rrg"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="M5w-g1-HrS"/>
                         <constraint firstItem="arQ-NF-dVx" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="-1" id="O9Z-1e-XEG"/>
                         <constraint firstItem="Gll-3h-Kly" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="-1" id="e5X-A0-G2z"/>
                         <constraint firstAttribute="bottom" secondItem="Gll-3h-Kly" secondAttribute="bottom" id="m4S-nP-jUp"/>
                         <constraint firstItem="Gll-3h-Kly" firstAttribute="leading" secondItem="nfi-FJ-ILo" secondAttribute="leading" id="md8-Bb-31q" userLabel="IHorizontal Space - Square - Box"/>
                         <constraint firstAttribute="bottom" secondItem="arQ-NF-dVx" secondAttribute="bottom" id="ogI-6W-Qu1"/>
+                        <constraint firstAttribute="bottom" secondItem="vgA-OF-Vi6" secondAttribute="bottom" id="s7K-ew-lEm"/>
+                        <constraint firstItem="vgA-OF-Vi6" firstAttribute="top" secondItem="nfi-FJ-ILo" secondAttribute="top" constant="-1" id="ygW-gf-4kU"/>
                     </constraints>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -78,6 +94,7 @@
     </objects>
     <resources>
         <image name="NSSmartBadgeTemplate" width="14" height="14"/>
+        <image name="add-label" width="128" height="128"/>
         <image name="search-icon" width="100" height="100"/>
     </resources>
 </document>
