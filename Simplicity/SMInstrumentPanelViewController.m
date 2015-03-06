@@ -20,8 +20,6 @@
 }
 
 - (IBAction)addNewLabel:(id)sender {
-	NSLog(@"%s", __func__);
-
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMAppController *appController = [appDelegate appController];
 

@@ -29,8 +29,11 @@
 }
 
 - (IBAction)cancelAction:(id)sender {
-	NSLog(@"%s", __func__);
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[appDelegate appController] hideNewLabelSheet];
+}
 
+- (void)windowWillClose:(NSNotification *)notification {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	[[appDelegate appController] hideNewLabelSheet];
 }

@@ -420,16 +420,13 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 #pragma mark New label creation
 
 - (void)showNewLabelSheet {
-	NSLog(@"%s", __func__);
-
 	if(_addNewLabelWindowController == nil)
 		_addNewLabelWindowController = [[SMNewLabelWindowController alloc] init];
 
 	NSWindow *newLabelSheet = _addNewLabelWindowController.window;
 	NSAssert(newLabelSheet != nil, @"newLabelSheet is nil");
 
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[NSApp beginSheet:newLabelSheet modalForWindow:appDelegate.window modalDelegate:self didEndSelector:nil contextInfo:nil];
+	[NSApp runModalForWindow:newLabelSheet];
 }
 
 - (void)hideNewLabelSheet {

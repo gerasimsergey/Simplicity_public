@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SMNewLabelWindowController : NSWindowController
+@interface SMNewLabelWindowController : NSWindowController<NSWindowDelegate>
 
 @property (nonatomic) IBOutlet NSTextField *labelName;
 @property (nonatomic) IBOutlet NSPopUpButton *nestingLabelName;
