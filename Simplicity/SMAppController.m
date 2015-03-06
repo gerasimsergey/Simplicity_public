@@ -423,6 +423,8 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	if(_addNewLabelWindowController == nil)
 		_addNewLabelWindowController = [[SMNewLabelWindowController alloc] init];
 
+	[_addNewLabelWindowController updateExistingLabelsList];
+
 	NSWindow *newLabelSheet = _addNewLabelWindowController.window;
 	NSAssert(newLabelSheet != nil, @"newLabelSheet is nil");
 

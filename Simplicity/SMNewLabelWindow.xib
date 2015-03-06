@@ -46,6 +46,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="toggleNestedLabelAction:" target="-2" id="Q5H-SW-8mT"/>
+                        </connections>
                     </button>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7RD-4l-MNn">
                         <rect key="frame" x="18" y="58" width="340" height="26"/>

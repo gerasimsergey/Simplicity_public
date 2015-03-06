@@ -16,5 +16,8 @@
 
 - (IBAction)createAction:(id)sender;
 - (IBAction)cancelAction:(id)sender;
+- (IBAction)toggleNestedLabelAction:(id)sender;
+
+- (void)updateExistingLabelsList;
 
 @end
