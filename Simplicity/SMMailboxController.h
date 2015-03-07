@@ -13,6 +13,6 @@
 - (id)initWithModel:(SMSimplicityContainer*)model;
 - (void)scheduleFolderListUpdate;
 - (void)updateFolders;
-- (void)createFolder:(NSString*)folderName parentFolder:(NSString*)parentFolderName;
+- (NSString*)createFolder:(NSString*)folderName parentFolder:(NSString*)parentFolderName;
 
 @end

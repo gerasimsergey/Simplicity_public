@@ -73,7 +73,7 @@
 	}];
 }
 
-- (void)createFolder:(NSString*)folderName parentFolder:(NSString*)parentFolderName {
+- (NSString*)createFolder:(NSString*)folderName parentFolder:(NSString*)parentFolderName {
 	SMMailbox *mailbox = [ _model mailbox ];
 	NSAssert(mailbox != nil, @"mailbox is nil");
 
@@ -94,6 +94,8 @@
 			NSLog(@"Folder %@ created", fullFolderName);
 		}
 	}];
+	
+	return fullFolderName;
 }
 
 @end

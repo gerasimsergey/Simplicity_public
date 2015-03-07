@@ -12,6 +12,7 @@
 #import "SMMailbox.h"
 #import "SMMailboxController.h"
 #import "SMFolder.h"
+#import "SMFolderColorController.h"
 #import "SMNewLabelWindowController.h"
 
 @implementation SMNewLabelWindowController
@@ -33,7 +34,13 @@
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMailboxController *mailboxController = [[appDelegate model] mailboxController];
 
-	[mailboxController createFolder:folderName parentFolder:parentFolderName];
+	NSString *fullFolderName = [mailboxController createFolder:folderName parentFolder:parentFolderName];
+	NSAssert(fullFolderName != nil, @"fullFolderName is nil");
+	
+	// TODO: sophisticated error handling
+	
+	SMFolderColorController *folderColorController = [[appDelegate appController] folderColorController];
+	[folderColorController setFolderColor:fullFolderName color:_labelColorWell.color];
 
 	[self closeNewLabelWindow];
 }
