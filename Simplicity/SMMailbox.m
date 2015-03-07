@@ -23,12 +23,12 @@
 	self = [ super init ];
 	
 	if(self) {
-		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" flags:MCOIMAPFolderFlagNone];
+		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" delimiter:'/' flags:MCOIMAPFolderFlagNone];
 		_mainFolders = [NSMutableArray array];
 		_favoriteFolders = [NSMutableArray array];
 		_folders = [NSMutableArray array];
 	}
-	
+
 	return self;
 }
 
@@ -104,10 +104,10 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 				break;
 			}
 		}
-		
+
 		if(!found) {
 			for(; i < [tokens count]; i++)
-				curFolder = [curFolder addSubfolder:token fullName:currentFullName flags:flags];
+				curFolder = [curFolder addSubfolder:token fullName:currentFullName delimiter:delimiter flags:flags];
 			
 			break;
 		}
@@ -187,6 +187,19 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	}
 	
 	return nil;
+}
+
+- (NSString*)constructFolderName:(NSString*)folderName parent:(NSString*)parentFolderName {
+	NSAssert(folderName != nil && folderName.length > 0, @"bad folder name");
+
+	if(parentFolderName != nil) {
+		SMFolder *parentFolder = [self getFolderByName:parentFolderName];
+		NSAssert(parentFolder != nil, @"parentFolder (name %@) is nil", parentFolderName);
+
+		return [parentFolderName stringByAppendingFormat:@"%c%@", parentFolder.delimiter, folderName];
+	} else {
+		return folderName;
+	}
 }
 
 @end

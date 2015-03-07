@@ -39,8 +39,8 @@ static NSColor *randomColor() {
 
 	if(color == nil) {
 		color = randomColor();
-		
-		[_folderColors setObject:color forKey:folderName];
+
+		[self setFolderColor:folderName color:color];
 	}
 	
 	return color;
@@ -77,6 +77,10 @@ static NSColor *randomColor() {
 	}
 	
 	return bookmarkColors;
+}
+
+- (void)setFolderColor:(NSString*)folderName color:(NSColor*)color {
+	[_folderColors setObject:color forKey:folderName];
 }
 
 @end

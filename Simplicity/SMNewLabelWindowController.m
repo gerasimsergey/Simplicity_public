@@ -10,6 +10,7 @@
 #import "SMAppController.h"
 #import "SMSimplicityContainer.h"
 #import "SMMailbox.h"
+#import "SMMailboxController.h"
 #import "SMFolder.h"
 #import "SMNewLabelWindowController.h"
 
@@ -26,9 +27,15 @@
 }
 
 - (IBAction)createAction:(id)sender {
-	NSLog(@"%s", __func__);
+	NSString *folderName = _labelName.stringValue;
+	NSString *parentFolderName = _labelNestedCheckbox.state == NSOnState? _nestingLabelName.titleOfSelectedItem : nil;
 	
-	// TODO
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMailboxController *mailboxController = [[appDelegate model] mailboxController];
+
+	[mailboxController createFolder:folderName parentFolder:parentFolderName];
+
+	[self closeNewLabelWindow];
 }
 
 - (IBAction)cancelAction:(id)sender {

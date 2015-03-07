@@ -22,5 +22,6 @@
 - (void)updateIMAPFolders:(NSArray *)folders;
 
 - (SMFolder*)getFolderByName:(NSString*)folderName;
+- (NSString*)constructFolderName:(NSString*)folderName parent:(NSString*)parentFolderName;
 
 @end

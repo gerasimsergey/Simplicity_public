@@ -13,6 +13,7 @@
 											  
 @interface SMFolderColorController : NSObject
 
+- (void)setFolderColor:(NSString*)folderName color:(NSColor*)color;
 - (NSColor*)colorForFolder:(NSString*)folderName;
 - (NSArray*)colorsForMessageThread:(SMMessageThread*)messageThread folder:(SMFolder*)folder labels:(NSMutableArray*)labels;
 

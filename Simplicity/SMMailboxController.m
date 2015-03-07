@@ -19,6 +19,7 @@
 @implementation SMMailboxController {
 	__weak SMSimplicityContainer *_model;
 	MCOIMAPFetchFoldersOperation *_fetchFoldersOp;
+	MCOIMAPOperation *_createFolderOp;
 }
 
 - (id)initWithModel:(SMSimplicityContainer*)model {
@@ -56,7 +57,7 @@
 		[self scheduleFolderListUpdate];
 		
 		if (error != nil && [error code] != MCOErrorNone) {
-			NSLog(@"Error downloading folders structure");
+			NSLog(@"Error downloading folders structure: %@", error);
 			return;
 		}
 		
@@ -70,7 +71,29 @@
 
 		[appController performSelectorOnMainThread:@selector(updateMailboxFolderListView) withObject:nil waitUntilDone:NO];
 	}];
+}
+
+- (void)createFolder:(NSString*)folderName parentFolder:(NSString*)parentFolderName {
+	SMMailbox *mailbox = [ _model mailbox ];
+	NSAssert(mailbox != nil, @"mailbox is nil");
+
+	MCOIMAPSession *session = [ _model session ];
+	NSAssert(session != nil, @"session is nil");
+
+	NSString *fullFolderName = [mailbox constructFolderName:folderName parent:parentFolderName];
 	
+	NSAssert(_createFolderOp == nil, @"another create folder op exists");
+	_createFolderOp = [session createFolderOperation:fullFolderName];
+
+	[_createFolderOp start:^(NSError * error) {
+		_createFolderOp = nil;
+		
+		if (error != nil && [error code] != MCOErrorNone) {
+			NSLog(@"Error creating folder %@: %@", fullFolderName, error);
+		} else {
+			NSLog(@"Folder %@ created", fullFolderName);
+		}
+	}];
 }
 
 @end

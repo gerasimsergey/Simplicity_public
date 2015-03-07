@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, SMFolderKind) {
 
 @interface SMFolder : NSObject
 
+@property (readonly) char delimiter;
 @property (readonly) NSString *shortName;
 @property (readonly) NSString *fullName;
 @property (readonly) NSArray *subfolders;
@@ -33,7 +34,7 @@ typedef NS_ENUM(NSInteger, SMFolderKind) {
 @property NSString *displayName;
 @property SMFolderKind kind;
 
-- (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags;
-- (SMFolder*)addSubfolder:(NSString*)shortName fullName:(NSString*)fullName flags:(MCOIMAPFolderFlag)flags;
+- (id)initWithName:(NSString*)shortName fullName:(NSString*)fullName delimiter:(char)delimiter flags:(MCOIMAPFolderFlag)flags;
+- (SMFolder*)addSubfolder:(NSString*)shortName fullName:(NSString*)fullName delimiter:(char)delimiter flags:(MCOIMAPFolderFlag)flags;
 
 @end
