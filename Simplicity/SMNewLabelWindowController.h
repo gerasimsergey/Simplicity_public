@@ -13,6 +13,7 @@
 @property (nonatomic) IBOutlet NSTextField *labelName;
 @property (nonatomic) IBOutlet NSPopUpButton *nestingLabelName;
 @property (nonatomic) IBOutlet NSButton *labelNestedCheckbox;
+@property (nonatomic) IBOutlet NSColorWell *labelColorWell;
 
 - (IBAction)createAction:(id)sender;
 - (IBAction)cancelAction:(id)sender;

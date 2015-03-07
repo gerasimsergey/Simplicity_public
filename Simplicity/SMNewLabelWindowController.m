@@ -32,19 +32,25 @@
 }
 
 - (IBAction)cancelAction:(id)sender {
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[[appDelegate appController] hideNewLabelSheet];
+	[self closeNewLabelWindow];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	[[appDelegate appController] hideNewLabelSheet];
+	[self closeNewLabelWindow];
 }
 
 - (IBAction)toggleNestedLabelAction:(id)sender {
 	const Boolean nestLabel = (_labelNestedCheckbox.state == NSOnState);
 
 	[_nestingLabelName setEnabled:nestLabel];
+}
+
+- (void)closeNewLabelWindow {
+	[_labelColorWell deactivate];
+	[[NSColorPanel sharedColorPanel] orderOut:nil];
+	
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[appDelegate appController] hideNewLabelSheet];
 }
 
 - (void)updateExistingLabelsList {
