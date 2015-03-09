@@ -63,7 +63,7 @@
 		
 		SMMailbox *mailbox = [ _model mailbox ];
 		NSAssert(mailbox != nil, @"mailbox is nil");
-		
+
 		[mailbox updateIMAPFolders:folders];
 
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];

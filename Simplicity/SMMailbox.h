@@ -24,4 +24,7 @@
 - (SMFolder*)getFolderByName:(NSString*)folderName;
 - (NSString*)constructFolderName:(NSString*)folderName parent:(NSString*)parentFolderName;
 
+- (void)addFavoriteFolderWithName:(NSString*)name;
+- (void)removeFavoriteFolderWithName:(NSString*)name;
+
 @end

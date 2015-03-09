@@ -67,7 +67,7 @@
 }
 
 - (void)startSession {
-	[_mailboxController updateFolders];
+	[_mailboxController scheduleFolderListUpdate:YES];
 	[_messageListController changeFolder:@"INBOX"];
 }
 

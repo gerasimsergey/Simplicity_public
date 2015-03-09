@@ -64,7 +64,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 			
 			[self addFolderToMailbox:pathUtf8 delimiter:folder.delimiter flags:folder.flags];
 		}
-		
+
 		[self updateMainFolders];
 		[self updateFavoriteFolders];
 	} else {
@@ -114,7 +114,9 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	}
 	
 	// build flat structure
-	// TODO: optimize?
+
+	// TODO: currently the flat structure is rebuilt on each folder addition
+	//       instead, it should be constructed iteratively
 	[_folders removeAllObjects];
 	
 	NSAssert(_rootFolder.subfolders.count > 0, @"root folder is empty");
@@ -156,19 +158,47 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 }
 
 - (void)updateFavoriteFolders {
+	static Boolean firstTime = YES;
+	if(firstTime) {
+		// TODO: remove
+		[self addFavoriteFolderWithName:@"Work/CVC/DVBS"];
+		[self addFavoriteFolderWithName:@"Work/Charter"];
+		[self addFavoriteFolderWithName:@"Private/Misc"];
+		firstTime = NO;
+	}
+
 	[_favoriteFolders removeAllObjects];
 	
-	[self addFavoriteFolderWithName:@"Work/CVC/DVBS"];
-	[self addFavoriteFolderWithName:@"Work/Charter"];
-	[self addFavoriteFolderWithName:@"Private/Misc"];
+	for(SMFolder *folder in _folders) {
+		if(folder.favorite)
+			[_favoriteFolders addObject:folder];
+	}
 }
 
 - (void)addFavoriteFolderWithName:(NSString*)name {
 	for(NSUInteger i = 0; i < _folders.count; i++) {
 		SMFolder *folder = _folders[i];
 
-		if([folder.fullName compare:name] == NSOrderedSame) {
+		if(!folder.favorite && [folder.fullName compare:name] == NSOrderedSame) {
+			folder.favorite = YES;
+
 			[_favoriteFolders addObject:folder];
+
+			break;
+		}
+	}
+}
+
+- (void)removeFavoriteFolderWithName:(NSString*)name {
+	for(NSUInteger i = 0; i < _folders.count; i++) {
+		SMFolder *folder = _folders[i];
+
+		if([folder.fullName compare:name] == NSOrderedSame) {
+			NSAssert(folder.favorite, @"folder %@ is not favorite", name);
+
+			folder.favorite = NO;
+
+			[_favoriteFolders removeObject:folder];
 			
 			break;
 		}

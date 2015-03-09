@@ -8,7 +8,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SMMailboxViewController">
             <connections>
                 <outlet property="folderListView" destination="idQ-VD-a7f" id="orU-y7-1Zl"/>
-                <outlet property="mailboxMenu" destination="TZ7-Yw-fEl" id="R5e-qa-ddU"/>
                 <outlet property="view" destination="c22-O7-iKe" id="zx8-nl-l2u"/>
             </connections>
         </customObject>

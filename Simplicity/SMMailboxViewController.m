@@ -16,6 +16,7 @@
 #import "SMMessageListViewController.h"
 #import "SMSearchResultsListViewController.h"
 #import "SMColorCircle.h"
+#import "SMMailboxController.h"
 #import "SMMailboxViewController.h"
 #import "SMFolderColorController.h"
 
@@ -293,7 +294,9 @@ typedef enum {
 - (NSMenu*)menuForRow:(NSInteger)row {
 	if(row < 0 || row >= _folderListView.numberOfRows)
 		return nil;
-	
+
+	// TODO: highlight the clicked row
+
 	_rowWithMenu = row;
 
 	NSMenu *menu = nil;
@@ -336,7 +339,7 @@ typedef enum {
 
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
 	SMAppController *appController = [appDelegate appController];
-	
+
 	SMFolder *folder = [self selectedFolder:_rowWithMenu];
 	NSAssert(folder != nil, @"bad selected folder");
 
@@ -351,14 +354,26 @@ typedef enum {
 
 - (void)makeLabelFavorite {
 	NSAssert(_rowWithMenu >= 0 && _rowWithMenu < _folderListView.numberOfRows, @"bad _rowWithMenu %ld", _rowWithMenu);
-	
-	NSLog(@"%s", __func__);
+
+	SMFolder *folder = [self selectedFolder:_rowWithMenu];
+	NSAssert(folder != nil, @"bad selected folder");
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+
+	[[[appDelegate model] mailbox] addFavoriteFolderWithName:folder.fullName];
+	[[[appDelegate appController] mailboxViewController] updateFolderListView];
 }
 
 - (void)removeLabelFromFavorites {
 	NSAssert(_rowWithMenu >= 0 && _rowWithMenu < _folderListView.numberOfRows, @"bad _rowWithMenu %ld", _rowWithMenu);
-	
-	NSLog(@"%s", __func__);
+
+	SMFolder *folder = [self selectedFolder:_rowWithMenu];
+	NSAssert(folder != nil, @"bad selected folder");
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+
+	[[[appDelegate model] mailbox] removeFavoriteFolderWithName:folder.fullName];
+	[[[appDelegate appController] mailboxViewController] updateFolderListView];
 }
 
 @end
