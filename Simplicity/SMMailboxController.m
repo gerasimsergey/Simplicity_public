@@ -32,12 +32,12 @@
 	return self;
 }
 
-- (void)scheduleFolderListUpdate {
+- (void)scheduleFolderListUpdate:(Boolean)now {
 	//NSLog(@"%s: scheduling folder update after %u sec", __func__, FOLDER_LIST_UPDATE_INTERVAL_SEC);
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
 
-	[self performSelector:@selector(updateFolders) withObject:nil afterDelay:FOLDER_LIST_UPDATE_INTERVAL_SEC];
+	[self performSelector:@selector(updateFolders) withObject:nil afterDelay:now? 0 : FOLDER_LIST_UPDATE_INTERVAL_SEC];
 }
 
 - (void)updateFolders {
@@ -54,7 +54,7 @@
 		
 		// schedule now to keep the folder list updated
 		// regardless of any connectivity or server errors
-		[self scheduleFolderListUpdate];
+		[self scheduleFolderListUpdate:NO];
 		
 		if (error != nil && [error code] != MCOErrorNone) {
 			NSLog(@"Error downloading folders structure: %@", error);
@@ -92,6 +92,9 @@
 			NSLog(@"Error creating folder %@: %@", fullFolderName, error);
 		} else {
 			NSLog(@"Folder %@ created", fullFolderName);
+
+			SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+			[[[appDelegate model] mailboxController] scheduleFolderListUpdate:YES];
 		}
 	}];
 	
