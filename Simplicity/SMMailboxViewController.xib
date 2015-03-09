@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SMMailboxViewController">
             <connections>
                 <outlet property="folderListView" destination="idQ-VD-a7f" id="orU-y7-1Zl"/>
+                <outlet property="mailboxMenu" destination="TZ7-Yw-fEl" id="R5e-qa-ddU"/>
                 <outlet property="view" destination="c22-O7-iKe" id="zx8-nl-l2u"/>
             </connections>
         </customObject>
@@ -22,7 +23,7 @@
                         <rect key="frame" x="1" y="0.0" width="238" height="134"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView horizontalHuggingPriority="251" verticalHuggingPriority="251" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="idQ-VD-a7f">
+                            <tableView horizontalHuggingPriority="251" verticalHuggingPriority="251" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="idQ-VD-a7f" customClass="SMMailboxTableView">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -161,5 +162,19 @@
                 <constraint firstItem="zKI-Dq-3Sh" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="wZO-pf-rkI"/>
             </constraints>
         </customView>
+        <menu id="TZ7-Yw-fEl">
+            <items>
+                <menuItem title="Item 1" id="3dh-OJ-0SX">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 2" id="WBL-CW-wzc">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 3" id="RuJ-pg-E7r">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="620" y="139.5"/>
+        </menu>
     </objects>
 </document>

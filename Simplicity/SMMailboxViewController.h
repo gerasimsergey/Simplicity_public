@@ -20,4 +20,6 @@
 - (void)updateFolderListView;
 - (void)clearSelection;
 
+- (NSMenu*)menuForRow:(NSInteger)row;
+
 @end

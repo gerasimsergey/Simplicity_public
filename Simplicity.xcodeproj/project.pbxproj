@@ -45,6 +45,7 @@
 		004F7FEA1866A973004DEC3C /* search-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 004F7FE91866A973004DEC3C /* search-icon.png */; };
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
 		005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */; };
+		005F9A3B1AAD46500022EDEF /* SMMailboxTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F9A3A1AAD46500022EDEF /* SMMailboxTableView.m */; };
 		006709261A9997D600C0C9CC /* libMailCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B085517D4EF3E00341051 /* libMailCore.a */; };
 		006709341A99A77600C0C9CC /* SMFindContentsPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 006709321A99A77600C0C9CC /* SMFindContentsPanelViewController.m */; };
 		006709351A99A77600C0C9CC /* SMFindContentsPanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 006709331A99A77600C0C9CC /* SMFindContentsPanelViewController.xib */; };
@@ -199,6 +200,8 @@
 		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		005F0D371A86BC980093E96D /* SMMessageBookmarksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageBookmarksView.h; sourceTree = "<group>"; };
 		005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageBookmarksView.m; sourceTree = "<group>"; };
+		005F9A391AAD46500022EDEF /* SMMailboxTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxTableView.h; sourceTree = "<group>"; };
+		005F9A3A1AAD46500022EDEF /* SMMailboxTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxTableView.m; sourceTree = "<group>"; };
 		006709271A99980D00C0C9CC /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		0067092E1A99989900C0C9CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		006709311A99A77600C0C9CC /* SMFindContentsPanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMFindContentsPanelViewController.h; sourceTree = "<group>"; };
@@ -471,6 +474,8 @@
 				0040B0F8196A5331004E55CC /* SMFolderCellView.m */,
 				0099CE821A62332400AEA789 /* SMImageRegistry.h */,
 				0099CE831A62332400AEA789 /* SMImageRegistry.m */,
+				005F9A391AAD46500022EDEF /* SMMailboxTableView.h */,
+				005F9A3A1AAD46500022EDEF /* SMMailboxTableView.m */,
 				005F0D371A86BC980093E96D /* SMMessageBookmarksView.h */,
 				005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */,
 				00F96C0B19343D8000CA5836 /* SMMessageFullDetailsView.h */,
@@ -710,6 +715,7 @@
 				00ED318017F88DA700B04F5B /* SMMessage.m in Sources */,
 				00ED318117F88DA700B04F5B /* SMAttachmentStorage.m in Sources */,
 				00ED318317F88DA700B04F5B /* SMMessageStorage.m in Sources */,
+				005F9A3B1AAD46500022EDEF /* SMMailboxTableView.m in Sources */,
 				009742721957C78E00620145 /* SMMailbox.m in Sources */,
 				00A681701A7D6B6E00DAD2BD /* SMAttachmentsPanelView.m in Sources */,
 				003859011A4D024500D4FD70 /* SMSearchResultsListViewController.m in Sources */,

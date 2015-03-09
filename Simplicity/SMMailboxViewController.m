@@ -148,6 +148,38 @@
 	}
 }
 
+typedef enum {
+	kMainFoldersGroupHeader,
+	kFavoriteFoldersGroupHeader,
+	kAllFoldersGroupHeader,
+	kMainFoldersGroupItem,
+	kFavoriteFoldersGroupItem,
+	kAllFoldersGroupItem
+} FolderListItemKind;
+
+- (FolderListItemKind)getRowKind:(NSInteger)row {
+	NSInteger totalRowCount = [self totalFolderRowsCount];
+	NSAssert(row >= 0 && row < totalRowCount, @"row %ld is beyond folders array size %lu", row, totalRowCount);
+	
+	const NSInteger mainFoldersGroupOffset = [self mainFoldersGroupOffset];
+	const NSInteger favoriteFoldersGroupOffset = [self favoriteFoldersGroupOffset];
+	const NSInteger allFoldersGroupOffset = [self allFoldersGroupOffset];
+
+	if(row == mainFoldersGroupOffset) {
+		return kMainFoldersGroupHeader;
+	} else if(row == favoriteFoldersGroupOffset) {
+		return kFavoriteFoldersGroupHeader;
+	} else if(row == allFoldersGroupOffset) {
+		return kAllFoldersGroupHeader;
+	} else if(row < favoriteFoldersGroupOffset) {
+		return kMainFoldersGroupItem;
+	} else if(row < allFoldersGroupOffset) {
+		return kFavoriteFoldersGroupItem;
+	} else {
+		return kAllFoldersGroupItem;
+	}
+}
+
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 	NSInteger totalRowCount = [self totalFolderRowsCount];
 	NSAssert(row >= 0 && row < totalRowCount, @"row %ld is beyond folders array size %lu", row, totalRowCount);
@@ -158,42 +190,54 @@
 
 	NSTableCellView *result = nil;
 
-	if(row > mainFoldersGroupOffset && row < favoriteFoldersGroupOffset) {
-		result = [tableView makeViewWithIdentifier:@"MainFolderCellView" owner:self];
-		
-		SMFolder *folder = [self selectedFolder:row];
-		NSAssert(folder != nil, @"bad selected folder");
-		
-		[result.textField setStringValue:folder.displayName];
-		[result.imageView setImage:[self mainFolderImage:folder]];
-	} else if(row != mainFoldersGroupOffset && row != favoriteFoldersGroupOffset && row != allFoldersGroupOffset) {
-		result = [tableView makeViewWithIdentifier:@"FolderCellView" owner:self];
-		
-		SMFolder *folder = [self selectedFolder:row];
-		NSAssert(folder != nil, @"bad selected folder");
-		
-		[result.textField setStringValue:folder.displayName];
-		
-		NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
-
-		SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
-
-		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		SMAppController *appController = [appDelegate appController];
-		
-		colorMark.color = [[appController folderColorController] colorForFolder:folder.fullName];
-	} else {
-		result = [tableView makeViewWithIdentifier:@"FolderGroupCellView" owner:self];
-
-		const NSUInteger fontSize = 12;
-		[result.textField setFont:[NSFont boldSystemFontOfSize:fontSize]];
-
-		if(row == mainFoldersGroupOffset) {
-			[result.textField setStringValue:@"Main Folders"];
-		} else if(row == favoriteFoldersGroupOffset) {
-			[result.textField setStringValue:@"Favorite Folders"];
-		} else if(row == allFoldersGroupOffset) {
-			[result.textField setStringValue:@"All Folders"];
+	FolderListItemKind itemKind = [self getRowKind:row];
+	switch(itemKind) {
+		case kMainFoldersGroupItem: {
+			result = [tableView makeViewWithIdentifier:@"MainFolderCellView" owner:self];
+			
+			SMFolder *folder = [self selectedFolder:row];
+			NSAssert(folder != nil, @"bad selected folder");
+			
+			[result.textField setStringValue:folder.displayName];
+			[result.imageView setImage:[self mainFolderImage:folder]];
+			
+			break;
+		}
+			
+		case kFavoriteFoldersGroupItem:
+		case kAllFoldersGroupItem: {
+			result = [tableView makeViewWithIdentifier:@"FolderCellView" owner:self];
+			
+			SMFolder *folder = [self selectedFolder:row];
+			NSAssert(folder != nil, @"bad selected folder");
+			
+			[result.textField setStringValue:folder.displayName];
+			
+			NSAssert([result.imageView isKindOfClass:[SMColorCircle class]], @"bad type of folder cell image");;
+			
+			SMColorCircle *colorMark = (SMColorCircle *)result.imageView;
+			
+			SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+			SMAppController *appController = [appDelegate appController];
+			
+			colorMark.color = [[appController folderColorController] colorForFolder:folder.fullName];
+			
+			break;
+		}
+			
+		default: {
+			result = [tableView makeViewWithIdentifier:@"FolderGroupCellView" owner:self];
+			
+			const NSUInteger fontSize = 12;
+			[result.textField setFont:[NSFont boldSystemFontOfSize:fontSize]];
+			
+			if(row == mainFoldersGroupOffset) {
+				[result.textField setStringValue:@"Main Folders"];
+			} else if(row == favoriteFoldersGroupOffset) {
+				[result.textField setStringValue:@"Favorite Folders"];
+			} else if(row == allFoldersGroupOffset) {
+				[result.textField setStringValue:@"All Folders"];
+			}
 		}
 	}
 	
@@ -240,6 +284,37 @@
 	[[[appDelegate appController] messageListViewController] moveSelectedMessageThreadsToFolder:targetFolder.fullName];
 
 	return YES;
+}
+
+#pragma mark Context menu creation
+
+- (NSMenu*)menuForRow:(NSInteger)row {
+	if(row < 0 || row >= _folderListView.numberOfRows)
+		return nil;
+	
+	FolderListItemKind itemKind = [self getRowKind:row];
+	NSLog(@"%s: row %ld, item kind %u", __func__, row, itemKind);
+
+	NSMenu *menu = nil;
+	switch(itemKind) {
+		case kMainFoldersGroupItem: {
+			break;
+		}
+	
+		case kFavoriteFoldersGroupItem: {
+			break;
+		}
+
+		case kAllFoldersGroupItem: {
+			break;
+		}
+			
+		default: {
+			break;
+		}
+	}
+	
+	return menu;
 }
 
 @end
