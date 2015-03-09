@@ -16,7 +16,7 @@
 @property (readonly) SMFolder *allMailFolder;
 @property (readonly) SMFolder *trashFolder;
 @property (readonly) NSArray *mainFolders;
-@property (readonly) NSArray *favoriteFolders;
+@property (readonly) NSOrderedSet *favoriteFolders;
 @property (readonly) NSArray *folders;
 
 - (void)updateIMAPFolders:(NSArray *)folders;

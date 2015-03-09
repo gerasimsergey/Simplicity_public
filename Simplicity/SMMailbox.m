@@ -15,7 +15,7 @@
 
 @implementation SMMailbox {
 	NSMutableArray *_mainFolders;
-	NSMutableArray *_favoriteFolders;
+	NSMutableOrderedSet *_favoriteFolders;
 	NSMutableArray *_folders;
 }
 
@@ -25,7 +25,7 @@
 	if(self) {
 		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" delimiter:'/' flags:MCOIMAPFolderFlagNone];
 		_mainFolders = [NSMutableArray array];
-		_favoriteFolders = [NSMutableArray array];
+		_favoriteFolders = [[NSMutableOrderedSet alloc] init];
 		_folders = [NSMutableArray array];
 	}
 
@@ -162,17 +162,23 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	if(firstTime) {
 		// TODO: remove
 		[self addFavoriteFolderWithName:@"Work/CVC/DVBS"];
-		[self addFavoriteFolderWithName:@"Work/Charter"];
 		[self addFavoriteFolderWithName:@"Private/Misc"];
+		[self addFavoriteFolderWithName:@"Work/Charter"];
 		firstTime = NO;
 	}
 
-	[_favoriteFolders removeAllObjects];
-	
 	for(SMFolder *folder in _folders) {
-		if(folder.favorite)
+		if(folder.favorite) {
 			[_favoriteFolders addObject:folder];
+		} else {
+			[_favoriteFolders removeObject:folder];
+		}
 	}
+
+	// TODO: add objects with auto-sorting?
+	[_favoriteFolders sortUsingComparator:^NSComparisonResult(SMFolder *f1, SMFolder *f2) {
+		return [f1.fullName compare:f2.fullName];
+	}];
 }
 
 - (void)addFavoriteFolderWithName:(NSString*)name {
