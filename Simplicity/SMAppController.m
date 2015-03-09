@@ -419,11 +419,12 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 
 #pragma mark New label creation
 
-- (void)showNewLabelSheet {
+- (void)showNewLabelSheet:(NSString*)suggestedParentFolder {
 	if(_addNewLabelWindowController == nil)
 		_addNewLabelWindowController = [[SMNewLabelWindowController alloc] init];
 
-	[_addNewLabelWindowController updateExistingLabelsList];
+	[_addNewLabelWindowController updateExistingLabelsList];	
+	[_addNewLabelWindowController setSuggestedNestingLabel:suggestedParentFolder];
 
 	NSWindow *newLabelSheet = _addNewLabelWindowController.window;
 	NSAssert(newLabelSheet != nil, @"newLabelSheet is nil");

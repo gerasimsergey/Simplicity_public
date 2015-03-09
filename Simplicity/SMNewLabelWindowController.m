@@ -79,4 +79,15 @@
 	[_nestingLabelName addItemsWithTitles:labelsList];
 }
 
+- (void)setSuggestedNestingLabel:(NSString*)nestingLabel {
+	if(nestingLabel != nil) {
+		[_nestingLabelName selectItemWithTitle:nestingLabel];
+		[_nestingLabelName setEnabled:YES];
+		[_labelNestedCheckbox setState:NSOnState];
+	} else {
+		[_nestingLabelName setEnabled:NO];
+		[_labelNestedCheckbox setState:NSOffState];
+	}
+}
+
 @end

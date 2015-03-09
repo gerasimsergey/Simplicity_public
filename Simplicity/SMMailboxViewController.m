@@ -19,7 +19,9 @@
 #import "SMMailboxViewController.h"
 #import "SMFolderColorController.h"
 
-@implementation SMMailboxViewController
+@implementation SMMailboxViewController {
+	NSInteger _rowWithMenu;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -292,29 +294,71 @@ typedef enum {
 	if(row < 0 || row >= _folderListView.numberOfRows)
 		return nil;
 	
-	FolderListItemKind itemKind = [self getRowKind:row];
-	NSLog(@"%s: row %ld, item kind %u", __func__, row, itemKind);
+	_rowWithMenu = row;
 
 	NSMenu *menu = nil;
+
+	FolderListItemKind itemKind = [self getRowKind:row];
 	switch(itemKind) {
 		case kMainFoldersGroupItem: {
 			break;
 		}
 	
 		case kFavoriteFoldersGroupItem: {
+			menu = [[NSMenu alloc] init];
+			
+			[menu insertItemWithTitle:@"Delete label" action:@selector(deleteLabel) keyEquivalent:@"" atIndex:0];
+			[menu insertItemWithTitle:@"Remove label from favorites" action:@selector(removeLabelFromFavorites) keyEquivalent:@"" atIndex:1];
+
 			break;
 		}
 
 		case kAllFoldersGroupItem: {
+			menu = [[NSMenu alloc] init];
+
+			[menu insertItemWithTitle:@"New label" action:@selector(newLabel) keyEquivalent:@"" atIndex:0];
+			[menu insertItemWithTitle:@"Delete label" action:@selector(deleteLabel) keyEquivalent:@"" atIndex:1];
+			[menu insertItemWithTitle:@"Make label favorite" action:@selector(makeLabelFavorite) keyEquivalent:@"" atIndex:2];
+
 			break;
 		}
-			
+
 		default: {
 			break;
 		}
 	}
 	
 	return menu;
+}
+
+- (void)newLabel {
+	NSAssert(_rowWithMenu >= 0 && _rowWithMenu < _folderListView.numberOfRows, @"bad _rowWithMenu %ld", _rowWithMenu);
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	SMAppController *appController = [appDelegate appController];
+	
+	SMFolder *folder = [self selectedFolder:_rowWithMenu];
+	NSAssert(folder != nil, @"bad selected folder");
+
+	[appController showNewLabelSheet:folder.fullName];
+}
+
+- (void)deleteLabel {
+	NSAssert(_rowWithMenu >= 0 && _rowWithMenu < _folderListView.numberOfRows, @"bad _rowWithMenu %ld", _rowWithMenu);
+	
+	NSLog(@"%s", __func__);
+}
+
+- (void)makeLabelFavorite {
+	NSAssert(_rowWithMenu >= 0 && _rowWithMenu < _folderListView.numberOfRows, @"bad _rowWithMenu %ld", _rowWithMenu);
+	
+	NSLog(@"%s", __func__);
+}
+
+- (void)removeLabelFromFavorites {
+	NSAssert(_rowWithMenu >= 0 && _rowWithMenu < _folderListView.numberOfRows, @"bad _rowWithMenu %ld", _rowWithMenu);
+	
+	NSLog(@"%s", __func__);
 }
 
 @end

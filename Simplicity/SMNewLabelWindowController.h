@@ -20,5 +20,6 @@
 - (IBAction)toggleNestedLabelAction:(id)sender;
 
 - (void)updateExistingLabelsList;
+- (void)setSuggestedNestingLabel:(NSString*)nestingLabel;
 
 @end

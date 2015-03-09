@@ -44,7 +44,7 @@
 
 @property (nonatomic) SMNewLabelWindowController *addNewLabelWindowController;
 
-- (void)showNewLabelSheet;
+- (void)showNewLabelSheet:(NSString*)suggestedParentFolder;
 - (void)hideNewLabelSheet;
 
 @end
