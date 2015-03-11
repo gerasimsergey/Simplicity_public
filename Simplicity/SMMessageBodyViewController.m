@@ -176,9 +176,9 @@
 	if(_htmlText == nil)
 		return;
 
-	if(frame == sender.mainFrame) {
+	if(sender != nil && frame == sender.mainFrame) {
 		NSAssert(!_mainFrameLoaded, @"main frame already loaded");
-		
+
 		_mainFrameLoaded = YES;
 		
 		if(_currentFindString != nil && _uncollapsed) {

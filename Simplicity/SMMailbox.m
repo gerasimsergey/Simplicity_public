@@ -157,6 +157,12 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 	return nil;
 }
 
+- (void)sortFavorites {
+	[_favoriteFolders sortUsingComparator:^NSComparisonResult(SMFolder *f1, SMFolder *f2) {
+		return [f1.fullName compare:f2.fullName];
+	}];
+}
+
 - (void)updateFavoriteFolders {
 	static Boolean firstTime = YES;
 	if(firstTime) {
@@ -175,10 +181,7 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 		}
 	}
 
-	// TODO: add objects with auto-sorting?
-	[_favoriteFolders sortUsingComparator:^NSComparisonResult(SMFolder *f1, SMFolder *f2) {
-		return [f1.fullName compare:f2.fullName];
-	}];
+	[self sortFavorites];
 }
 
 - (void)addFavoriteFolderWithName:(NSString*)name {
@@ -189,6 +192,8 @@ MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
 			folder.favorite = YES;
 
 			[_favoriteFolders addObject:folder];
+
+			[self sortFavorites];
 
 			break;
 		}
