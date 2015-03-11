@@ -20,6 +20,7 @@
 	__weak SMSimplicityContainer *_model;
 	MCOIMAPFetchFoldersOperation *_fetchFoldersOp;
 	MCOIMAPOperation *_createFolderOp;
+	MCOIMAPOperation *_renameFolderOp;
 }
 
 - (id)initWithModel:(SMSimplicityContainer*)model {
@@ -35,9 +36,16 @@
 - (void)scheduleFolderListUpdate:(Boolean)now {
 	//NSLog(@"%s: scheduling folder update after %u sec", __func__, FOLDER_LIST_UPDATE_INTERVAL_SEC);
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel scheduled message list update
+	[self stopFolderListUpdate];
 
 	[self performSelector:@selector(updateFolders) withObject:nil afterDelay:now? 0 : FOLDER_LIST_UPDATE_INTERVAL_SEC];
+}
+
+- (void)stopFolderListUpdate {
+	[_fetchFoldersOp cancel];
+	_fetchFoldersOp = nil;
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateFolders) object:nil];
 }
 
 - (void)updateFolders {
@@ -99,6 +107,30 @@
 	}];
 	
 	return fullFolderName;
+}
+
+- (void)renameFolder:(NSString*)oldFolderName newFolderName:(NSString*)newFolderName {
+	SMMailbox *mailbox = [ _model mailbox ];
+	NSAssert(mailbox != nil, @"mailbox is nil");
+	
+	MCOIMAPSession *session = [ _model session ];
+	NSAssert(session != nil, @"session is nil");
+	
+	NSAssert(_renameFolderOp == nil, @"another create folder op exists");
+	_renameFolderOp = [session renameFolderOperation:oldFolderName otherName:newFolderName];
+	
+	[_renameFolderOp start:^(NSError * error) {
+		_renameFolderOp = nil;
+
+		if (error != nil && [error code] != MCOErrorNone) {
+			NSLog(@"Error renaming folder %@ to %@: %@", oldFolderName, newFolderName, error);
+		} else {
+			NSLog(@"Folder %@ renamed to %@", oldFolderName, newFolderName);
+
+			SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+			[[[appDelegate model] mailboxController] scheduleFolderListUpdate:YES];
+		}
+	}];
 }
 
 @end

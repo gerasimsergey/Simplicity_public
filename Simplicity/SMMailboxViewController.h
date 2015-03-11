@@ -11,7 +11,7 @@
 @class SMMailbox;
 @class SMFolder;
 
-@interface SMMailboxViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate>
+@interface SMMailboxViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate>
 
 @property (weak) IBOutlet NSTableView *folderListView;
 

@@ -376,4 +376,38 @@ typedef enum {
 	[[[appDelegate appController] mailboxViewController] updateFolderListView];
 }
 
+#pragma mark Editing cells (renaming labels)
+
+- (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)fieldEditor {
+	NSLog(@"%s", __func__);
+
+	return YES;
+}
+
+- (void)controlTextDidChange:(NSNotification *)obj {
+	NSTextField *textField = [obj object];
+	
+	NSLog(@"%s: current text %@", __func__, textField.stringValue);
+}
+
+- (void)controlTextDidBeginEditing:(NSNotification *)obj {
+	NSTextField *textField = [obj object];
+	
+	NSLog(@"%s: old text %@", __func__, textField.stringValue);
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	[[[appDelegate model] mailboxController] stopFolderListUpdate];
+}
+
+- (void)controlTextDidEndEditing:(NSNotification *)obj {
+	NSTextField *textField = [obj object];
+
+	NSLog(@"%s: new text %@", __func__, textField.stringValue);
+
+//	- (void)renameFolder:(NSString*)oldFolderName newFolderName:(NSString*)newFolderName {
+
+	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
+	[[[appDelegate model] mailboxController] scheduleFolderListUpdate:YES];
+}
+
 @end
