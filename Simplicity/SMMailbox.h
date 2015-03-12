@@ -19,7 +19,7 @@
 @property (readonly) NSOrderedSet *favoriteFolders;
 @property (readonly) NSArray *folders;
 
-- (void)updateIMAPFolders:(NSArray *)folders;
+- (Boolean)updateIMAPFolders:(NSArray *)folders;
 
 - (SMFolder*)getFolderByName:(NSString*)folderName;
 - (NSString*)constructFolderName:(NSString*)folderName parent:(NSString*)parentFolderName;

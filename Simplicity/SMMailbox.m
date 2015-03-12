@@ -13,10 +13,34 @@
 #import "SMMailbox.h"
 #import "SMFolder.h"
 
+@interface SMFolderDesc : NSObject
+@property NSString *folderName;
+@property char delimiter;
+@property MCOIMAPFolderFlag flags;
+- (id)initWithFolderName:(NSString*)folderName delimiter:(char)delimiter flags:(MCOIMAPFolderFlag)flags;
+@end
+
+@implementation  SMFolderDesc
+
+- (id)initWithFolderName:(NSString*)folderName delimiter:(char)delimiter flags:(MCOIMAPFolderFlag)flags {
+	self = [super init];
+	
+	if(self) {
+		_folderName = folderName;
+		_delimiter = delimiter;
+		_flags = flags;
+	}
+	
+	return self;
+}
+
+@end
+
 @implementation SMMailbox {
 	NSMutableArray *_mainFolders;
 	NSMutableOrderedSet *_favoriteFolders;
 	NSMutableArray *_folders;
+	NSMutableArray *_sortedFlatFolders;
 }
 
 - (id)init {
@@ -27,51 +51,57 @@
 		_mainFolders = [NSMutableArray array];
 		_favoriteFolders = [[NSMutableOrderedSet alloc] init];
 		_folders = [NSMutableArray array];
+		_sortedFlatFolders = [NSMutableArray array];
 	}
 
 	return self;
 }
 
-- (void)updateIMAPFolders:(NSArray *)folders {
-	
-	if([folders count] > 0) {
-/*
- NSMutableArray *sortedFolders = [NSMutableArray new];
-MCOIMAPFolder *firstFolder = (MCOIMAPFolder*)[folders firstObject];
-		
-		for(MCOIMAPFolder *folder in folders) {
-			NSString *path = folder.path;
-			NSData *pathData = [path dataUsingEncoding:NSUTF8StringEncoding];
-			NSString *pathUtf8 = (__bridge NSString *)CFStringCreateWithBytes(NULL, [pathData bytes], [pathData length], kCFStringEncodingUTF7_IMAP, YES);
-			
-			NSLog(@"Folder '%@', delimiter '%c', flags %u", pathUtf8, folder.delimiter, folder.flags);
-			
-			NSAssert(folder.delimiter == firstFolder.delimiter, @"Different delimiters");
-			
-			[sortedFolders addObject:pathUtf8];
-		}
-		
-		[sortedFolders sortUsingComparator:^(NSString *f1, NSString *f2){
-			return [f1 compare:f2];
-		}];
-*/
-		for(MCOIMAPFolder *folder in folders) {
-			NSString *path = folder.path;
-			NSData *pathData = [path dataUsingEncoding:NSUTF8StringEncoding];
-			NSString *pathUtf8 = (__bridge NSString *)CFStringCreateWithBytes(NULL, [pathData bytes], [pathData length], kCFStringEncodingUTF7_IMAP, YES);
-			
-//			NSLog(@"Folder '%@', delimiter '%c', flags %ld", pathUtf8, folder.delimiter, folder.flags);
-			
-			[self addFolderToMailbox:pathUtf8 delimiter:folder.delimiter flags:folder.flags];
-		}
+- (Boolean)updateIMAPFolders:(NSArray *)folders {
+	NSAssert(folders.count > 0, @"No folders in mailbox");
 
-		[self updateMainFolders];
-		[self updateFavoriteFolders];
-	} else {
-		NSAssert(nil, @"No folders in mailbox");
+	NSMutableArray *newSortedFlatFolders = [NSMutableArray arrayWithCapacity:folders.count];
+	for(NSUInteger i = 0; i < folders.count; i++) {
+		MCOIMAPFolder *folder = folders[i];
+		NSString *path = folder.path;
+		NSData *pathData = [path dataUsingEncoding:NSUTF8StringEncoding];
+		NSString *pathUtf8 = (__bridge NSString *)CFStringCreateWithBytes(NULL, [pathData bytes], [pathData length], kCFStringEncodingUTF7_IMAP, YES);
+
+		[newSortedFlatFolders addObject:[[SMFolderDesc alloc] initWithFolderName:pathUtf8 delimiter:folder.delimiter flags:folder.flags]];
 	}
 
+	[newSortedFlatFolders sortUsingComparator:^NSComparisonResult(SMFolderDesc *fd1, SMFolderDesc *fd2) {
+		return [fd1.folderName compare:fd2.folderName];
+	}];
+
+	if(newSortedFlatFolders.count == _sortedFlatFolders.count) {
+		NSUInteger i = 0;
+		for(; i < folders.count; i++) {
+			SMFolderDesc *fd1 = newSortedFlatFolders[i];
+			SMFolderDesc *fd2 = _sortedFlatFolders[i];
+
+			if(![fd1.folderName isEqualToString:fd2.folderName] || fd1.delimiter != fd2.delimiter || fd1.flags != fd2.flags)
+				break;
+		}
+
+		if(i == folders.count) {
+			NSLog(@"folders didn't change");
+			return NO;
+		}
+	}
+
+	_sortedFlatFolders = newSortedFlatFolders;
+
+	for(SMFolderDesc *fd in _sortedFlatFolders) {
+		[self addFolderToMailbox:fd.folderName delimiter:fd.delimiter flags:fd.flags];
+	}
+
+	[self updateMainFolders];
+	[self updateFavoriteFolders];
+
 //	NSLog(@"number of folders %lu", _folders.count);
+	
+	return YES;
 }
 
 - (void)dfs:(SMFolder *)folder {

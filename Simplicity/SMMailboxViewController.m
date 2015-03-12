@@ -22,6 +22,7 @@
 
 @implementation SMMailboxViewController {
 	NSInteger _rowWithMenu;
+	NSString *_labelToRename;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -44,6 +45,18 @@
 }
 
 - (void)updateFolderListView {
+/*TODO
+	
+ 
+ if(_currentFolder != nil) {
+		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+		[[[appDelegate model] mailbox] getFolderByName:_currentFolder.fullName];
+
+		SMFolder *folder = [self getFolderByName:_currentFolder.fullName];
+		
+	}
+*/	
+	
 	NSInteger selectedRow = [ _folderListView selectedRow ];
 
 	[ _folderListView reloadData ];
@@ -64,11 +77,9 @@
 	//NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	SMSimplicityContainer *model = [appDelegate model];
 
 	[[[appDelegate appController] messageListViewController] stopProgressIndicators];
-
-	[[model messageListController] changeFolder:folder.fullName];
+	[[[appDelegate model] messageListController] changeFolder:folder.fullName];
 
 	_currentFolder = folder;
 	
@@ -378,36 +389,24 @@ typedef enum {
 
 #pragma mark Editing cells (renaming labels)
 
-- (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)fieldEditor {
-	NSLog(@"%s", __func__);
-
-	return YES;
-}
-
-- (void)controlTextDidChange:(NSNotification *)obj {
-	NSTextField *textField = [obj object];
-	
-	NSLog(@"%s: current text %@", __func__, textField.stringValue);
-}
-
 - (void)controlTextDidBeginEditing:(NSNotification *)obj {
 	NSTextField *textField = [obj object];
 	
-	NSLog(@"%s: old text %@", __func__, textField.stringValue);
-
-	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	[[[appDelegate model] mailboxController] stopFolderListUpdate];
+	_labelToRename = textField.stringValue;
 }
 
 - (void)controlTextDidEndEditing:(NSNotification *)obj {
+	NSAssert(_labelToRename != nil, @"_labelToRename is nil");
+
 	NSTextField *textField = [obj object];
-
-	NSLog(@"%s: new text %@", __func__, textField.stringValue);
-
-//	- (void)renameFolder:(NSString*)oldFolderName newFolderName:(NSString*)newFolderName {
+	NSString *newLabelName = textField.stringValue;
+	
+	if([newLabelName isEqualToString:_labelToRename])
+		return;
 
 	SMAppDelegate *appDelegate = [[ NSApplication sharedApplication ] delegate];
-	[[[appDelegate model] mailboxController] scheduleFolderListUpdate:YES];
+	
+	[[[appDelegate model] mailboxController] renameFolder:_labelToRename newFolderName:newLabelName];
 }
 
 @end
