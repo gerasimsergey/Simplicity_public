@@ -396,7 +396,8 @@ typedef enum {
 }
 
 - (void)controlTextDidEndEditing:(NSNotification *)obj {
-	NSAssert(_labelToRename != nil, @"_labelToRename is nil");
+	if(_labelToRename == nil)
+		return;
 
 	NSTextField *textField = [obj object];
 	NSString *newLabelName = textField.stringValue;
