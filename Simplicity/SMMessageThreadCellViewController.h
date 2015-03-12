@@ -12,10 +12,10 @@
 
 @interface SMMessageThreadCellViewController : NSViewController
 
-@property Boolean collapsed;
-@property NSUInteger cellIndex;
+@property (nonatomic) Boolean collapsed;
+@property (nonatomic) NSUInteger cellIndex;
 
-@property (readonly) NSUInteger stringOccurrencesCount;
+@property (readonly, nonatomic) NSUInteger stringOccurrencesCount;
 
 - (id)initCollapsed:(Boolean)collapsed;
 

@@ -222,6 +222,10 @@
 	}
 }
 
+- (Boolean)isCollapsed {
+	return _collapsed;
+}
+
 - (void)toggleCollapse {
 	if(!_collapsed) {
 		[self setCollapsed:YES];
