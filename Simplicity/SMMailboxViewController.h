@@ -17,6 +17,7 @@
 
 @property (weak, readonly) SMFolder *currentFolder;
 
+- (void)changeFolder:(NSString*)folderName;
 - (void)updateFolderListView;
 - (void)clearSelection;
 

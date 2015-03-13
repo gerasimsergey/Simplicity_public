@@ -66,11 +66,6 @@
 	return self;
 }
 
-- (void)startSession {
-	[_mailboxController scheduleFolderListUpdate:YES];
-	[_messageListController changeFolder:@"INBOX"];
-}
-
 - (MCOIndexSet*)imapServerCapabilities {
 	MCOIndexSet *capabilities = _imapServerCapabilities;
 

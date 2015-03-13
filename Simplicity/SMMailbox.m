@@ -47,14 +47,19 @@
 	self = [ super init ];
 	
 	if(self) {
-		_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" delimiter:'/' flags:MCOIMAPFolderFlagNone];
-		_mainFolders = [NSMutableArray array];
+		[self cleanFolders];
+
 		_favoriteFolders = [[NSMutableOrderedSet alloc] init];
-		_folders = [NSMutableArray array];
 		_sortedFlatFolders = [NSMutableArray array];
 	}
 
 	return self;
+}
+
+- (void)cleanFolders {
+	_rootFolder = [[SMFolder alloc] initWithName:@"ROOT" fullName:@"ROOT" delimiter:'/' flags:MCOIMAPFolderFlagNone];
+	_mainFolders = [NSMutableArray array];
+	_folders = [NSMutableArray array];
 }
 
 - (Boolean)updateIMAPFolders:(NSArray *)folders {
@@ -91,6 +96,8 @@
 	}
 
 	_sortedFlatFolders = newSortedFlatFolders;
+	
+	[self cleanFolders];
 
 	for(SMFolderDesc *fd in _sortedFlatFolders) {
 		[self addFolderToMailbox:fd.folderName delimiter:fd.delimiter flags:fd.flags];

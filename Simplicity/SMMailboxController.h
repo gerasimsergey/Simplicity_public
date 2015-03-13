@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class SMSimplicityContainer;
+
 @interface SMMailboxController : NSObject
 
 - (id)initWithModel:(SMSimplicityContainer*)model;

@@ -23,6 +23,7 @@
 @implementation SMMailboxViewController {
 	NSInteger _rowWithMenu;
 	NSString *_labelToRename;
+	Boolean _favoriteFolderSelected;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -45,23 +46,25 @@
 }
 
 - (void)updateFolderListView {
-/*TODO
-	
- 
- if(_currentFolder != nil) {
+	NSInteger selectedRow = -1;
+
+	if(_currentFolder != nil) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		[[[appDelegate model] mailbox] getFolderByName:_currentFolder.fullName];
+		SMFolder *currentFolder = [[[appDelegate model] mailbox] getFolderByName:_currentFolder.fullName];
 
-		SMFolder *folder = [self getFolderByName:_currentFolder.fullName];
-		
+		[self doChangeFolder:currentFolder];
+
+		if(currentFolder != nil)
+			selectedRow = [self getFolderRow:currentFolder];
 	}
-*/	
 	
-	NSInteger selectedRow = [ _folderListView selectedRow ];
-
 	[ _folderListView reloadData ];
 
-	[ _folderListView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO ];
+	if(selectedRow >= 0) {
+		[ _folderListView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO ];
+	} else {
+		[ _folderListView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO ];
+	}
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
@@ -69,18 +72,29 @@
 	if(selectedRow < 0 || selectedRow >= [self totalFolderRowsCount])
 		return;
 
-	SMFolder *folder = [self selectedFolder:selectedRow];
+	SMFolder *folder = [self selectedFolder:selectedRow favoriteFolderSelected:&_favoriteFolderSelected];
 	
 	if(folder == nil || folder == _currentFolder)
 		return;
 	
 	//NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
-	
+
+	[self doChangeFolder:folder];
+}
+
+- (void)changeFolder:(NSString*)folderName {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMFolder *folder = [[[appDelegate model] mailbox] getFolderByName:folderName];
+	
+	[self doChangeFolder:folder];
+}
 
+- (void)doChangeFolder:(SMFolder*)folder {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	
 	[[[appDelegate appController] messageListViewController] stopProgressIndicators];
-	[[[appDelegate model] messageListController] changeFolder:folder.fullName];
-
+	[[[appDelegate model] messageListController] changeFolder:(folder != nil? folder.fullName : nil)];
+	
 	_currentFolder = folder;
 	
 	[[[appDelegate appController] searchResultsListViewController] clearSelection];
@@ -122,6 +136,10 @@
 }
 
 - (SMFolder*)selectedFolder:(NSInteger)row {
+	return [self selectedFolder:row favoriteFolderSelected:nil];
+}
+
+- (SMFolder*)selectedFolder:(NSInteger)row favoriteFolderSelected:(Boolean*)favoriteFolderSelected {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	
@@ -129,14 +147,49 @@
 	const NSInteger favoriteFoldersGroupOffset = [self favoriteFoldersGroupOffset];
 	const NSInteger allFoldersGroupOffset = [self allFoldersGroupOffset];
 	
-	if(row > mainFoldersGroupOffset && row < favoriteFoldersGroupOffset)
+	if(row > mainFoldersGroupOffset && row < favoriteFoldersGroupOffset) {
+		if(favoriteFolderSelected != nil)
+			*favoriteFolderSelected = NO;
 		return mailbox.mainFolders[row - mainFoldersGroupOffset - 1];
-	else if(row > favoriteFoldersGroupOffset && row < allFoldersGroupOffset)
+	} else if(row > favoriteFoldersGroupOffset && row < allFoldersGroupOffset) {
+		if(favoriteFolderSelected != nil)
+			*favoriteFolderSelected = YES;
 		return mailbox.favoriteFolders[row - favoriteFoldersGroupOffset - 1];
-	else if(row > allFoldersGroupOffset)
+	} else if(row > allFoldersGroupOffset) {
+		if(favoriteFolderSelected != nil)
+			*favoriteFolderSelected = NO;
 		return mailbox.folders[row - allFoldersGroupOffset - 1];
-	else
+	} else {
 		return nil;
+	}
+}
+
+- (NSInteger)getFolderRow:(SMFolder*)folder {
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMMailbox *mailbox = [[appDelegate model] mailbox];
+	
+	const NSInteger mainFoldersGroupOffset = [self mainFoldersGroupOffset];
+	const NSInteger favoriteFoldersGroupOffset = [self favoriteFoldersGroupOffset];
+	const NSInteger allFoldersGroupOffset = [self allFoldersGroupOffset];
+	
+	if(_favoriteFolderSelected) {
+		for(NSUInteger i = 0; i < mailbox.favoriteFolders.count; i++) {
+			if(mailbox.favoriteFolders[i] == folder)
+				return i + favoriteFoldersGroupOffset + 1;
+		}
+	} else {
+		for(NSUInteger i = 0; i < mailbox.mainFolders.count; i++) {
+			if(mailbox.mainFolders[i] == folder)
+				return i + mainFoldersGroupOffset + 1;
+		}
+
+		for(NSUInteger i = 0; i < mailbox.folders.count; i++) {
+			if(mailbox.folders[i] == folder)
+				return i + allFoldersGroupOffset + 1;
+		}
+	}
+	
+	return -1;
 }
 
 - (NSImage*)mainFolderImage:(SMFolder*)folder {

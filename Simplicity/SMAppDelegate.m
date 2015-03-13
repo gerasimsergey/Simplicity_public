@@ -6,7 +6,11 @@
 //  Copyright (c) 2013 Evgeny Baskakov. All rights reserved.
 //
 
+#import "SMMailboxController.h"
+#import "SMMailboxViewController.h"
+#import "SMMessageListController.h"
 #import "SMImageRegistry.h"
+#import "SMAppController.h"
 #import "SMAppDelegate.h"
 
 @implementation SMAppDelegate
@@ -23,11 +27,12 @@
 	return self;
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
+- (void)applicationDidFinishLaunching:(NSNotification *)notification {
 	_window.titleVisibility = NSWindowTitleHidden;
-	
-	[ _model startSession ];
+
+	[[_model mailboxController] scheduleFolderListUpdate:YES];
+	[[_model messageListController] changeFolder:@"INBOX"];
+	[[_appController mailboxViewController] changeFolder:@"INBOX"];
 }
 
 + (NSURL*)appDataDir {

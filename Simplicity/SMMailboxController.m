@@ -75,7 +75,7 @@
 		if([mailbox updateIMAPFolders:folders]) {
 			SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 			SMAppController *appController = [appDelegate appController];
-			
+
 			[appController performSelectorOnMainThread:@selector(updateMailboxFolderListView) withObject:nil waitUntilDone:NO];
 		}
 	}];

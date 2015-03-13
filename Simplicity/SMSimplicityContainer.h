@@ -35,6 +35,4 @@
 @property (readonly) SMMailbox *mailbox;
 @property (readonly) SMMessageComparators *messageComparators;
 
-- (void)startSession;
-
 @end
