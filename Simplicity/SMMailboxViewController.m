@@ -48,9 +48,9 @@
 - (void)updateFolderListView {
 	NSInteger selectedRow = -1;
 
-	if(_currentFolder != nil) {
+	if(_currentFolderName != nil) {
 		SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-		SMFolder *currentFolder = [[[appDelegate model] mailbox] getFolderByName:_currentFolder.fullName];
+		SMFolder *currentFolder = [[[appDelegate model] mailbox] getFolderByName:_currentFolderName];
 
 		[self doChangeFolder:currentFolder];
 
@@ -74,7 +74,7 @@
 
 	SMFolder *folder = [self selectedFolder:selectedRow favoriteFolderSelected:&_favoriteFolderSelected];
 	
-	if(folder == nil || folder == _currentFolder)
+	if(folder == nil || [folder.fullName isEqualToString:_currentFolderName])
 		return;
 	
 	//NSLog(@"%s: selected row %lu, folder short name '%@', full name '%@'", __func__, selectedRow, folder.shortName, folder.fullName);
@@ -95,7 +95,7 @@
 	[[[appDelegate appController] messageListViewController] stopProgressIndicators];
 	[[[appDelegate model] messageListController] changeFolder:(folder != nil? folder.fullName : nil)];
 	
-	_currentFolder = folder;
+	_currentFolderName = folder.fullName;
 	
 	[[[appDelegate appController] searchResultsListViewController] clearSelection];
 }
@@ -103,7 +103,7 @@
 - (void)clearSelection {
 	[_folderListView deselectAll:self];
 
-	_currentFolder = nil;
+	_currentFolderName = nil;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -333,7 +333,7 @@ typedef enum {
 
 		// TODO: set the current mailbox folder at the app startup
 
-		if(folder != nil && folder != _currentFolder)
+		if(folder != nil && ![folder.fullName isEqualToString:_currentFolderName])
 			return NSDragOperationMove;
 	}
 	

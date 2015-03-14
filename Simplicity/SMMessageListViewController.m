@@ -15,6 +15,7 @@
 #import "SMMessageListCellView.h"
 #import "SMMessageDetailsViewController.h"
 #import "SMMessageThreadViewController.h"
+#import "SMMailbox.h"
 #import "SMMailboxViewController.h"
 #import "SMFolderColorController.h"
 #import "SMMessageBookmarksView.h"
@@ -198,7 +199,12 @@
 		[view hideAttachmentImage];
 	}
 	
-	SMFolder *currentFolder = [[appController mailboxViewController] currentFolder];
+	NSString *currentFolderName = [[appController mailboxViewController] currentFolderName];
+	NSAssert(currentFolderName != nil, @"currentFolderName == nil");
+
+	SMFolder *currentFolder = [[[appDelegate model] mailbox] getFolderByName:currentFolderName];
+	NSAssert(currentFolder != nil, @"currentFolder == nil");
+
 	NSArray *bookmarkColors = [[appController folderColorController] colorsForMessageThread:messageThread folder:currentFolder labels:nil];
 	
 	[view.bookmarksView setBookmarkColors:bookmarkColors];
