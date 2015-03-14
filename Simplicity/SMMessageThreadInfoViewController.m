@@ -11,6 +11,7 @@
 #import "SMImageRegistry.h"
 #import "SMFolder.h"
 #import "SMFolderColorController.h"
+#import "SMMailbox.h"
 #import "SMMailboxViewController.h"
 #import "SMMessageThreadViewController.h"
 #import "SMMessageThread.h"
@@ -220,7 +221,11 @@
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
-	SMFolder *currentFolder = [[appController mailboxViewController] currentFolder];
+	NSString *currentFolderName = [[appController mailboxViewController] currentFolderName];
+	NSAssert(currentFolderName != nil, @"currentFolderName == nil");
+	
+	SMFolder *currentFolder = [[[appDelegate model] mailbox] getFolderByName:currentFolderName];
+	NSAssert(currentFolder != nil, @"currentFolder == nil");
 
 	NSMutableArray *labels = [NSMutableArray array];
 	NSArray *colors = [[appController folderColorController] colorsForMessageThread:_messageThread folder:currentFolder labels:labels];

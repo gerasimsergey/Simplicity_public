@@ -298,7 +298,7 @@ typedef enum {
 						
 						_hightlightBox.translatesAutoresizingMaskIntoConstraints = NO;
 						[_hightlightBox setBoxType:NSBoxCustom];
-						[_hightlightBox setBorderColor:[NSColor blueColor]];
+						[_hightlightBox setBorderColor:[NSColor lightGrayColor]];
 						[_hightlightBox setBorderWidth:2];
 						[_hightlightBox setBorderType:NSLineBorder];
 						[_hightlightBox setCornerRadius:6];
@@ -307,13 +307,13 @@ typedef enum {
 
 					[result addSubview:_hightlightBox];
 					
-					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.imageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
 					
-					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.textField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 					
-					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.textField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
 					
-					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.textField attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeBottom multiplier:1.0 constant:2]];
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeBottom multiplier:1.0 constant:2]];
 				} else {
 					[_hightlightBox removeFromSuperview];
 				}
