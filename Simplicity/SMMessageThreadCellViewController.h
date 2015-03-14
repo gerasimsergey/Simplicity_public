@@ -17,6 +17,8 @@
 
 @property (readonly, nonatomic) NSUInteger stringOccurrencesCount;
 
++ (NSUInteger)collapsedCellHeight;
+
 - (id)initCollapsed:(Boolean)collapsed;
 
 - (void)setMessage:(SMMessage*)message;

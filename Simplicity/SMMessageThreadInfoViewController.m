@@ -96,10 +96,14 @@
 #define H_GAP 5
 #define V_GAP 10
 
++ (NSUInteger)infoHeaderHeight {
+	return [SMMessageDetailsViewController headerHeight];
+}
+
 - (void)initSubviews {
 	NSView *view = [self view];
 
-	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]]];
+	[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageThreadInfoViewController infoHeaderHeight]]];
 	
 	// star
 /*

@@ -92,8 +92,9 @@
 	NSScrollView *messageThreadView = (NSScrollView*)[self view];
 
 	_contentView = [[SMFlippedView alloc] initWithFrame:[messageThreadView frame]];
-	_contentView.translatesAutoresizingMaskIntoConstraints = NO;
-	
+	_contentView.translatesAutoresizingMaskIntoConstraints = YES;
+	_contentView.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+
 	[messageThreadView setDocumentView:_contentView];
 
 	[_contentView addSubview:[_messageThreadInfoViewController view]];
@@ -231,66 +232,38 @@
 }
 
 - (void)setViewConstraints {
+	const CGFloat cellSpacing = -1;
+	
+	CGFloat fullHeight = [SMMessageThreadInfoViewController infoHeaderHeight];
+
+	for(NSInteger i = 0; i < _cells.count; i++) {
+		SMMessageThreadCell *cell = _cells[i];
+		CGFloat cellHeight = cell.viewController.collapsed? [SMMessageThreadCellViewController collapsedCellHeight] : 400;
+
+		fullHeight += cellHeight + cellSpacing;
+	}
+
+	_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
+
 	NSView *infoView = [_messageThreadInfoViewController view];
 	NSAssert(infoView != nil, @"no info view");
 
-	[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:infoView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	infoView.translatesAutoresizingMaskIntoConstraints = YES;
+	infoView.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+	infoView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, [SMMessageThreadInfoViewController infoHeaderHeight]);
+
+	CGFloat ypos = infoView.bounds.size.height + cellSpacing;
 	
-	[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:infoView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-	
-	[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:infoView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-
-	const CGFloat cellSpacing = -1;
-	
-	if(_cells.count == 1) {
-		NSView *subview = ((SMMessageThreadCell*)_cells[0]).viewController.view;
-
-		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+	for(NSInteger i = 0; i < _cells.count; i++) {
+		SMMessageThreadCell *cell = _cells[i];
+		NSView *subview = cell.viewController.view;
+		CGFloat cellHeight = cell.viewController.collapsed? [SMMessageThreadCellViewController collapsedCellHeight] : 400;
 		
-		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-
-		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-
-		[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:infoView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-cellSpacing]];
-	} else {
-		NSView *prevSubView = nil;
-		
-		for(NSInteger i = 0; i < _cells.count; i++) {
-			NSView *subview = ((SMMessageThreadCell*)_cells[i]).viewController.view;
-
-			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-
-			[_contentView addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-
-			NSLayoutConstraint *topConstraint;
-
-			if(i == 0) {
-				topConstraint = [NSLayoutConstraint constraintWithItem:infoView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-cellSpacing];
-			} else {
-				topConstraint = [NSLayoutConstraint constraintWithItem:prevSubView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:subview attribute:NSLayoutAttributeTop multiplier:1.0 constant:-cellSpacing];
-			}
-			
-			[topConstraint setPriority:NSLayoutPriorityDefaultHigh];
-			[_contentView addConstraint:topConstraint];
-			
-			prevSubView = subview;
-		}
-		
-		NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:prevSubView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
-
-		// use low priority here for now because we want to leave blank space
-		// between the message cell at the bottom and the thread view itself
-		// otherwise it will cause the thread view to shrink height
-		[bottomConstraint setPriority:NSLayoutPriorityDefaultLow];
-
-		[_contentView addConstraint:bottomConstraint];
+		subview.translatesAutoresizingMaskIntoConstraints = YES;
+		subview.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+		subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cellHeight);
+		ypos += cellHeight + cellSpacing;
 	}
-
-	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:_contentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:[_contentView superview] attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
-	
-	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:[_contentView superview] attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-	
-	[[_contentView superview] addConstraint:[NSLayoutConstraint constraintWithItem:[_contentView superview] attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 }
 
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId {

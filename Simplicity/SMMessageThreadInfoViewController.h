@@ -12,6 +12,8 @@
 
 @interface SMMessageThreadInfoViewController : NSViewController
 
++ (NSUInteger)infoHeaderHeight;
+
 - (void)setMessageThread:(SMMessageThread*)messageThread;
 - (void)updateMessageThread;
 
