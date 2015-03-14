@@ -10,7 +10,7 @@
 
 @class SMMailbox;
 
-@interface SMMailboxViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate>
+@interface SMMailboxViewController : NSViewController <NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSMenuDelegate>
 
 @property (weak) IBOutlet NSTableView *folderListView;
 @property (readonly) NSString *currentFolderName;

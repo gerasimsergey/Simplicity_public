@@ -89,6 +89,8 @@
 	NSAssert(session != nil, @"session is nil");
 
 	NSString *fullFolderName = [mailbox constructFolderName:folderName parent:parentFolderName];
+	if(fullFolderName == nil)
+		return nil;
 	
 	NSAssert(_createFolderOp == nil, @"another create folder op exists");
 	_createFolderOp = [session createFolderOperation:fullFolderName];

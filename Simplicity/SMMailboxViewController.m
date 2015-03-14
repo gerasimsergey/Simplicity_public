@@ -24,13 +24,15 @@
 	NSInteger _rowWithMenu;
 	NSString *_labelToRename;
 	Boolean _favoriteFolderSelected;
+	NSBox *_hightlightBox;
+	Boolean _doHightlightRow;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	
 	if(self) {
-		;
+		_rowWithMenu = -1;
 	}
 	
 	return self;
@@ -288,7 +290,35 @@ typedef enum {
 			SMAppController *appController = [appDelegate appController];
 			
 			colorMark.color = [[appController folderColorController] colorForFolder:folder.fullName];
-			
+
+			if(row == _rowWithMenu) {
+				if(_doHightlightRow) {
+					if(_hightlightBox == nil) {
+						_hightlightBox = [[NSBox alloc] initWithFrame:result.frame];
+						
+						_hightlightBox.translatesAutoresizingMaskIntoConstraints = NO;
+						[_hightlightBox setBoxType:NSBoxCustom];
+						[_hightlightBox setBorderColor:[NSColor blueColor]];
+						[_hightlightBox setBorderWidth:2];
+						[_hightlightBox setBorderType:NSLineBorder];
+						[_hightlightBox setCornerRadius:6];
+						[_hightlightBox setTitlePosition:NSNoTitle];
+					}
+
+					[result addSubview:_hightlightBox];
+					
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.imageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+					
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.textField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+					
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.textField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+					
+					[result addConstraint:[NSLayoutConstraint constraintWithItem:result.textField attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_hightlightBox attribute:NSLayoutAttributeBottom multiplier:1.0 constant:2]];
+				} else {
+					[_hightlightBox removeFromSuperview];
+				}
+			}
+
 			break;
 		}
 			
@@ -309,7 +339,7 @@ typedef enum {
 	}
 	
 	NSAssert(result != nil, @"cannot make folder cell view");
-
+	
 	return result;
 }
 
@@ -359,9 +389,10 @@ typedef enum {
 	if(row < 0 || row >= _folderListView.numberOfRows)
 		return nil;
 
-	// TODO: highlight the clicked row
-
 	_rowWithMenu = row;
+	_doHightlightRow = YES;
+
+	[_folderListView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 
 	NSMenu *menu = nil;
 
@@ -376,6 +407,8 @@ typedef enum {
 			
 			[menu insertItemWithTitle:@"Delete label" action:@selector(deleteLabel) keyEquivalent:@"" atIndex:0];
 			[menu insertItemWithTitle:@"Remove label from favorites" action:@selector(removeLabelFromFavorites) keyEquivalent:@"" atIndex:1];
+			
+			[menu setDelegate:self];
 
 			break;
 		}
@@ -386,6 +419,8 @@ typedef enum {
 			[menu insertItemWithTitle:@"New label" action:@selector(newLabel) keyEquivalent:@"" atIndex:0];
 			[menu insertItemWithTitle:@"Delete label" action:@selector(deleteLabel) keyEquivalent:@"" atIndex:1];
 			[menu insertItemWithTitle:@"Make label favorite" action:@selector(makeLabelFavorite) keyEquivalent:@"" atIndex:2];
+			
+			[menu setDelegate:self];
 
 			break;
 		}
@@ -396,6 +431,14 @@ typedef enum {
 	}
 	
 	return menu;
+}
+
+- (void)menuDidClose:(NSMenu *)menu {
+	NSLog(@"%s", __func__);
+
+	_doHightlightRow = NO;
+	
+	[_folderListView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_rowWithMenu] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)newLabel {

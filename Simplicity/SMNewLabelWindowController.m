@@ -35,12 +35,13 @@
 	SMMailboxController *mailboxController = [[appDelegate model] mailboxController];
 
 	NSString *fullFolderName = [mailboxController createFolder:folderName parentFolder:parentFolderName];
-	NSAssert(fullFolderName != nil, @"fullFolderName is nil");
-	
-	// TODO: sophisticated error handling
-	
-	SMFolderColorController *folderColorController = [[appDelegate appController] folderColorController];
-	[folderColorController setFolderColor:fullFolderName color:_labelColorWell.color];
+	if(fullFolderName != nil) {
+		
+		// TODO: sophisticated error handling
+		
+		SMFolderColorController *folderColorController = [[appDelegate appController] folderColorController];
+		[folderColorController setFolderColor:fullFolderName color:_labelColorWell.color];
+	}
 
 	[self closeNewLabelWindow];
 }

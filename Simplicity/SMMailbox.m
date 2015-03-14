@@ -268,7 +268,10 @@
 }
 
 - (NSString*)constructFolderName:(NSString*)folderName parent:(NSString*)parentFolderName {
-	NSAssert(folderName != nil && folderName.length > 0, @"bad folder name");
+	if(folderName == nil || folderName.length == 0) {
+		NSLog(@"%s: no label name specified", __func__);
+		return nil;
+	}
 
 	if(parentFolderName != nil) {
 		SMFolder *parentFolder = [self getFolderByName:parentFolderName];
