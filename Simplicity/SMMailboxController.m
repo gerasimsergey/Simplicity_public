@@ -110,8 +110,13 @@
 }
 
 - (void)renameFolder:(NSString*)oldFolderName newFolderName:(NSString*)newFolderName {
+	if([oldFolderName isEqualToString:newFolderName])
+		return;
+
 	SMMailbox *mailbox = [ _model mailbox ];
 	NSAssert(mailbox != nil, @"mailbox is nil");
+	
+	[mailbox removeFavoriteFolderWithName:oldFolderName];
 	
 	MCOIMAPSession *session = [ _model session ];
 	NSAssert(session != nil, @"session is nil");

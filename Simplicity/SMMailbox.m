@@ -242,12 +242,12 @@
 		SMFolder *folder = _folders[i];
 
 		if([folder.fullName compare:name] == NSOrderedSame) {
-			NSAssert(folder.favorite, @"folder %@ is not favorite", name);
+			if(folder.favorite) {
+				folder.favorite = NO;
+				
+				[_favoriteFolders removeObject:folder];
+			}
 
-			folder.favorite = NO;
-
-			[_favoriteFolders removeObject:folder];
-			
 			break;
 		}
 	}
