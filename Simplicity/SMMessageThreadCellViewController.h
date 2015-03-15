@@ -15,6 +15,7 @@
 @property (nonatomic) Boolean collapsed;
 @property (nonatomic) NSUInteger cellIndex;
 
+@property (readonly, nonatomic) NSUInteger height;
 @property (readonly, nonatomic) NSUInteger stringOccurrencesCount;
 
 + (NSUInteger)collapsedCellHeight;

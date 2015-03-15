@@ -25,4 +25,6 @@
 - (void)collapseAll;
 - (void)uncollapseAll;
 
+- (void)updateCellFrames;
+
 @end

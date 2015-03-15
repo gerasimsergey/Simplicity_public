@@ -119,7 +119,7 @@
 			_cells[i] = [[SMMessageThreadCell alloc] initWithMessage:messages[i] viewController:viewController];
 		}
 
-		[self setViewConstraints];
+		[self updateCellFrames];
 	}
 	
 	// on every message thread switch, we hide the find contents panel
@@ -215,7 +215,7 @@
 		_cells = updatedCells;
 		
 		[_contentView removeConstraints:[_contentView constraints]];
-		[self setViewConstraints];
+		[self updateCellFrames];
 
 		[_messageThreadInfoViewController updateMessageThread];
 	} else {
@@ -231,16 +231,14 @@
 	}
 }
 
-- (void)setViewConstraints {
+- (void)updateCellFrames {
 	const CGFloat cellSpacing = -1;
 	
 	CGFloat fullHeight = [SMMessageThreadInfoViewController infoHeaderHeight];
 
 	for(NSInteger i = 0; i < _cells.count; i++) {
 		SMMessageThreadCell *cell = _cells[i];
-		CGFloat cellHeight = cell.viewController.collapsed? [SMMessageThreadCellViewController collapsedCellHeight] : 400;
-
-		fullHeight += cellHeight + cellSpacing;
+		fullHeight += (CGFloat)cell.viewController.height + cellSpacing;
 	}
 
 	_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
@@ -257,12 +255,12 @@
 	for(NSInteger i = 0; i < _cells.count; i++) {
 		SMMessageThreadCell *cell = _cells[i];
 		NSView *subview = cell.viewController.view;
-		CGFloat cellHeight = cell.viewController.collapsed? [SMMessageThreadCellViewController collapsedCellHeight] : 400;
 		
 		subview.translatesAutoresizingMaskIntoConstraints = YES;
 		subview.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
-		subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cellHeight);
-		ypos += cellHeight + cellSpacing;
+		subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cell.viewController.height);
+
+		ypos += cell.viewController.height + cellSpacing;
 	}
 }
 
@@ -323,6 +321,8 @@
 
 		NSAssert(!cell.viewController.collapsed, @"single cell is collapsed");
 	}
+
+	[self updateCellFrames];
 }
 
 - (void)uncollapseAll {
@@ -332,6 +332,8 @@
 	for(SMMessageThreadCell *cell in _cells) {
 		[cell.viewController setCollapsed:NO];
 	}
+
+	[self updateCellFrames];
 }
 
 #pragma mark Processing incoming notifications

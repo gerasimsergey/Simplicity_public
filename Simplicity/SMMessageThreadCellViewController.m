@@ -33,12 +33,17 @@
 	Boolean _messageTextIsSet;
 	Boolean _attachmentsPanelShown;
 	Boolean _cellInitialized;
+	NSUInteger _uncollapsedHeight;
 }
 
 - (id)initCollapsed:(Boolean)collapsed {
 	self = [super init];
 	
 	if(self) {
+		// TODO
+
+		_uncollapsedHeight = 300;
+
 		// init main view
 		
 		NSBox *view = [[NSBox alloc] init];
@@ -185,7 +190,7 @@
 			
 			[view addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:messageBodyView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 			
-			[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:300] priority:NSLayoutPriorityDefaultLow];
+			[self addConstraint:view constraint:[NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:_uncollapsedHeight] priority:NSLayoutPriorityDefaultLow];
 			
 			NSAssert(_messageBodyBottomConstraint == nil, @"_messageBodyBottomConstraint already created");
 			_messageBodyBottomConstraint = [NSLayoutConstraint constraintWithItem:messageBodyView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
@@ -238,8 +243,15 @@
 	}
 }
 
+- (NSUInteger)height {
+	return _collapsed? [SMMessageDetailsViewController headerHeight] : _uncollapsedHeight;
+}
+
 - (void)buttonClicked:(id)sender {
 	[self toggleCollapse];
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	[[[appDelegate appController] messageThreadViewController] updateCellFrames];
 }
 
 - (void)toggleAttachmentsPanel {
