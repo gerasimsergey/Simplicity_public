@@ -24,7 +24,6 @@
 	NSView *_messageView;
 	NSButton *_headerButton;
 	NSProgressIndicator *_progressIndicator;
-	NSLayoutConstraint *_heightConstraint;
 	NSLayoutConstraint *_messageDetailsBottomConstraint;
 	NSLayoutConstraint *_messageBodyBottomConstraint;
 	NSMutableArray *_attachmentsPanelViewConstraints;
@@ -156,14 +155,6 @@
 		
 		[view setFillColor:[NSColor colorWithCalibratedRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
 		
-		if(_heightConstraint == nil) {
-			_heightConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:0 constant:[SMMessageDetailsViewController headerHeight]];
-			
-			_heightConstraint.priority = NSLayoutPriorityRequired;
-		}
-		
-		[view addConstraint:_heightConstraint];
-		
 		[_progressIndicator setHidden:YES];
 		
 		_collapsed = YES;
@@ -209,10 +200,6 @@
 		
 		[_messageDetailsViewController uncollapse];
 		[_messageBodyViewController uncollapse];
-		
-		if(_heightConstraint != nil) {
-			[[self view] removeConstraint:_heightConstraint];
-		}
 		
 		if(_htmlText == nil) {
 			if(_progressIndicator == nil) {
