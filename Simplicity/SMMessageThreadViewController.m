@@ -82,8 +82,14 @@
 
 	_currentMessageThread = messageThread;
 
-	if(_messageThreadInfoViewController == nil)
+	if(_messageThreadInfoViewController == nil) {
 		_messageThreadInfoViewController = [[SMMessageThreadInfoViewController alloc] init];
+
+		NSView *infoView = [_messageThreadInfoViewController view];
+		NSAssert(infoView != nil, @"no info view");
+		
+		infoView.translatesAutoresizingMaskIntoConstraints = YES;
+	}
 
 	[_messageThreadInfoViewController setMessageThread:_currentMessageThread];
 
@@ -93,7 +99,6 @@
 
 	_contentView = [[SMFlippedView alloc] initWithFrame:[messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = YES;
-	_contentView.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
 
 	[messageThreadView setDocumentView:_contentView];
 
@@ -232,21 +237,30 @@
 - (void)updateCellFrames {
 	const CGFloat cellSpacing = -1;
 	
-	CGFloat fullHeight = [SMMessageThreadInfoViewController infoHeaderHeight];
+	NSAssert(_cells.count > 0, @"no cells");
 
-	for(NSInteger i = 0; i < _cells.count; i++) {
-		SMMessageThreadCell *cell = _cells[i];
-		fullHeight += (CGFloat)cell.viewController.height + cellSpacing;
+	if(_cells.count > 1) {
+		CGFloat fullHeight = [SMMessageThreadInfoViewController infoHeaderHeight];
+
+		for(NSInteger i = 0; i < _cells.count; i++) {
+			SMMessageThreadCell *cell = _cells[i];
+			fullHeight += (CGFloat)cell.viewController.height + cellSpacing;
+		}
+
+		_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
+		_contentView.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+	} else {
+//		_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
+		_contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 	}
 
-	_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
-
+	NSLog(@"%s: _contentView.frame %g, %g, %g, %g", __func__, _contentView.frame.origin.x, _contentView.frame.origin.y, _contentView.frame.size.width, _contentView.frame.size.height);
+	
 	NSView *infoView = [_messageThreadInfoViewController view];
 	NSAssert(infoView != nil, @"no info view");
 
-	infoView.translatesAutoresizingMaskIntoConstraints = YES;
-	infoView.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
 	infoView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, [SMMessageThreadInfoViewController infoHeaderHeight]);
+	infoView.autoresizingMask = NSViewWidthSizable;
 
 	CGFloat ypos = infoView.bounds.size.height + cellSpacing;
 	
@@ -255,8 +269,14 @@
 		NSView *subview = cell.viewController.view;
 		
 		subview.translatesAutoresizingMaskIntoConstraints = YES;
-		subview.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
-		subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cell.viewController.height);
+
+		if(_cells.count == 1) {
+			subview.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, _contentView.frame.size.height);
+		} else {
+			subview.autoresizingMask = NSViewWidthSizable | NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cell.viewController.height);
+		}
 
 		ypos += cell.viewController.height + cellSpacing;
 	}
