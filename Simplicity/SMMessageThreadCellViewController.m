@@ -41,7 +41,7 @@
 	if(self) {
 		// TODO
 
-		_uncollapsedHeight = 300;
+		_uncollapsedHeight = 600;
 
 		// init main view
 		
