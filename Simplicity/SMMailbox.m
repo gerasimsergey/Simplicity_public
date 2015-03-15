@@ -90,7 +90,7 @@
 		}
 
 		if(i == folders.count) {
-			NSLog(@"folders didn't change");
+			//NSLog(@"folders didn't change");
 			return NO;
 		}
 	}

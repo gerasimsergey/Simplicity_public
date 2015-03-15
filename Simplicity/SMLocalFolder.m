@@ -245,7 +245,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)syncFetchMessageThreadsHeaders {
-	NSLog(@"%s: searching for %lu threads", __func__, _fetchedMessageHeaders.count);
+//	NSLog(@"%s: searching for %lu threads", __func__, _fetchedMessageHeaders.count);
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	MCOIMAPSession *session = [[appDelegate model] session];
