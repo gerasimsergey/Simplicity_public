@@ -254,7 +254,7 @@
 		_contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 	}
 
-	NSLog(@"%s: _contentView.frame %g, %g, %g, %g", __func__, _contentView.frame.origin.x, _contentView.frame.origin.y, _contentView.frame.size.width, _contentView.frame.size.height);
+//	NSLog(@"%s: _contentView.frame %g, %g, %g, %g", __func__, _contentView.frame.origin.x, _contentView.frame.origin.y, _contentView.frame.size.width, _contentView.frame.size.height);
 	
 	NSView *infoView = [_messageThreadInfoViewController view];
 	NSAssert(infoView != nil, @"no info view");

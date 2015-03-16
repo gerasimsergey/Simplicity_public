@@ -159,7 +159,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 }
 
 - (void)fetchMessageBodies {
-	NSLog(@"%s: fetching message bodies for folder '%@' (%lu messages in this folder, %lu messages in all mail)", __FUNCTION__, _remoteFolderName, _fetchedMessageHeaders.count, _fetchedMessageHeadersFromAllMail.count);
+//	NSLog(@"%s: fetching message bodies for folder '%@' (%lu messages in this folder, %lu messages in all mail)", __FUNCTION__, _remoteFolderName, _fetchedMessageHeaders.count, _fetchedMessageHeadersFromAllMail.count);
 
 	[self recalculateTotalMemorySize];
 	
@@ -185,7 +185,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 			fetchCount++;
 	}
 
-	NSLog(@"%s: fetching %lu message bodies", __func__, fetchCount);
+//	NSLog(@"%s: fetching %lu message bodies", __func__, fetchCount);
 
 	[_fetchedMessageHeaders removeAllObjects];
 	[_fetchedMessageHeadersFromAllMail removeAllObjects];
