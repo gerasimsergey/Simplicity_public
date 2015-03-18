@@ -367,12 +367,6 @@ static const CGFloat CELL_SPACING = -1;
 	if(_cells.count == 0)
 		return;
 
-	NSAssert(_firstVisibleCell <= _lastVisibleCell, @"bad _firstVisibleCell %lu, _lastVisibleCell %lu", _firstVisibleCell, _lastVisibleCell);
-	NSAssert(_lastVisibleCell < _cells.count, @"bad _lastVisibleCell %lu, _cells.count %lu", _lastVisibleCell, _cells.count);
-	
-	NSScrollView *messageThreadView = (NSScrollView*)[self view];
-	NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
-
 	if(!_cellsArranged) {
 		_firstVisibleCell = 0;
 		_lastVisibleCell = 0;
@@ -385,27 +379,37 @@ static const CGFloat CELL_SPACING = -1;
 		[_contentView addSubview:subview];
 	}
 
+	NSAssert(_firstVisibleCell <= _lastVisibleCell, @"bad _firstVisibleCell %lu, _lastVisibleCell %lu", _firstVisibleCell, _lastVisibleCell);
+	NSAssert(_lastVisibleCell < _cells.count, @"bad _lastVisibleCell %lu, _cells.count %lu", _lastVisibleCell, _cells.count);
+	
+	NSScrollView *messageThreadView = (NSScrollView*)[self view];
+	NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
+	
 	SMMessageThreadCell *firstCell = _cells[_firstVisibleCell];
-	if(firstCell.viewController.view.frame.origin.y > visibleRect.origin.y) {
-		CGFloat ypos = firstCell.viewController.view.frame.origin.y;
-
-		while(_firstVisibleCell > 0) {
+	CGFloat firstCellYPos = firstCell.viewController.view.frame.origin.y;
+	if(firstCellYPos > visibleRect.origin.y) {
+		while(_firstVisibleCell > 0 && firstCellYPos > visibleRect.origin.y) {
 			SMMessageThreadCell *cell = _cells[_firstVisibleCell - 1];
 			NSView *subview = cell.viewController.view;
 			
-			ypos -= cell.viewController.height;
-			ypos -= CELL_SPACING;
+			firstCellYPos -= cell.viewController.height;
+			firstCellYPos -= CELL_SPACING;
 
-			subview.frame = NSMakeRect(0, ypos, _contentView.frame.size.width, cell.viewController.height);
+//			if(!_cellsArranged) {
+				subview.frame = NSMakeRect(0, firstCellYPos, _contentView.frame.size.width, cell.viewController.height);
+//			}
 			
 			[_contentView addSubview:subview];
-			
+
 			--_firstVisibleCell;
 		}
 	} else if(firstCell.viewController.view.frame.origin.y + firstCell.viewController.height <= visibleRect.origin.y) {
 		while(_firstVisibleCell + 1 < _cells.count) {
 			SMMessageThreadCell *cell = _cells[_firstVisibleCell + 1];
 			NSView *subview = cell.viewController.view;
+			
+			if(subview.superview == nil)
+				break;
 
 			[subview removeFromSuperview];
 			
@@ -414,19 +418,21 @@ static const CGFloat CELL_SPACING = -1;
 	}
 
 	SMMessageThreadCell *lastCell = _cells[_lastVisibleCell];
-	if(lastCell.viewController.view.frame.origin.y + lastCell.viewController.height < visibleRect.origin.y + visibleRect.size.height) {
-		CGFloat ypos = lastCell.viewController.view.frame.origin.y + lastCell.viewController.height + CELL_SPACING;
-		
-		while(_lastVisibleCell + 1 < _cells.count) {
+	CGFloat lastCellYPos = lastCell.viewController.view.frame.origin.y + lastCell.viewController.height + CELL_SPACING;
+
+	if(lastCellYPos < visibleRect.origin.y + visibleRect.size.height) {
+		while(_lastVisibleCell + 1 < _cells.count && lastCellYPos < visibleRect.origin.y + visibleRect.size.height) {
 			SMMessageThreadCell *cell = _cells[_lastVisibleCell + 1];
 			NSView *subview = cell.viewController.view;
 			
-			subview.frame = NSMakeRect(0, ypos, _contentView.frame.size.width, cell.viewController.height);
-			
+//			if(!_cellsArranged) {
+				subview.frame = NSMakeRect(0, lastCellYPos, _contentView.frame.size.width, cell.viewController.height);
+//			}
+
 			[_contentView addSubview:subview];
 
-			ypos += cell.viewController.height;
-			ypos += CELL_SPACING;
+			lastCellYPos += cell.viewController.height;
+			lastCellYPos += CELL_SPACING;
 			
 			++_lastVisibleCell;
 		}
@@ -435,6 +441,9 @@ static const CGFloat CELL_SPACING = -1;
 			SMMessageThreadCell *cell = _cells[_lastVisibleCell - 1];
 			NSView *subview = cell.viewController.view;
 			
+			if(subview.superview == nil)
+				break;
+
 			[subview removeFromSuperview];
 			
 			--_lastVisibleCell;
