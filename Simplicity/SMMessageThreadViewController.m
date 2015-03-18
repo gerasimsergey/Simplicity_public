@@ -19,6 +19,8 @@
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
 
+static const CGFloat CELL_SPACING = -1;
+
 @interface SMMessageThreadViewController()
 - (void)messageBodyFetched:(NSNotification *)notification;
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId;
@@ -34,6 +36,8 @@
 	Boolean _stringOccurrenceMarked;
 	NSUInteger _stringOccurrenceMarkedCellIndex;
 	NSUInteger _stringOccurrenceMarkedResultIndex;
+	NSUInteger _firstVisibleCell, _lastVisibleCell;
+	Boolean _cellsArranged;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -99,8 +103,15 @@
 
 	_contentView = [[SMFlippedView alloc] initWithFrame:[messageThreadView frame]];
 	_contentView.translatesAutoresizingMaskIntoConstraints = YES;
-
+	
 	[messageThreadView setDocumentView:_contentView];
+	
+	[[messageThreadView contentView] setPostsBoundsChangedNotifications:YES];
+	[[messageThreadView contentView] setPostsFrameChangedNotifications:YES];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[messageThreadView contentView]];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewFrameDidChange:) name:NSViewFrameDidChangeNotification object:[messageThreadView contentView]];
 
 	[_contentView addSubview:[_messageThreadInfoViewController view]];
 
@@ -235,8 +246,6 @@
 }
 
 - (void)updateCellFrames {
-	const CGFloat cellSpacing = -1;
-	
 	NSAssert(_cells.count > 0, @"no cells");
 
 	if(_cells.count > 1) {
@@ -244,7 +253,7 @@
 
 		for(NSInteger i = 0; i < _cells.count; i++) {
 			SMMessageThreadCell *cell = _cells[i];
-			fullHeight += (CGFloat)cell.viewController.height + cellSpacing;
+			fullHeight += (CGFloat)cell.viewController.height + CELL_SPACING;
 		}
 
 		_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
@@ -262,24 +271,22 @@
 	infoView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, [SMMessageThreadInfoViewController infoHeaderHeight]);
 	infoView.autoresizingMask = NSViewWidthSizable;
 
-	CGFloat ypos = infoView.bounds.size.height + cellSpacing;
-	
 	for(NSInteger i = 0; i < _cells.count; i++) {
 		SMMessageThreadCell *cell = _cells[i];
 		NSView *subview = cell.viewController.view;
 		
 		subview.translatesAutoresizingMaskIntoConstraints = YES;
-
+		
 		if(_cells.count == 1) {
 			subview.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, _contentView.frame.size.height);
 		} else {
 			subview.autoresizingMask = NSViewWidthSizable | NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
-			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cell.viewController.height);
 		}
-
-		ypos += cell.viewController.height + cellSpacing;
 	}
+
+	_cellsArranged = NO;
+	
+	[self arrangeVisibleCells];
 }
 
 - (void)updateMessageView:(uint32_t)uid threadId:(uint64_t)threadId {
@@ -352,6 +359,105 @@
 	}
 
 	[self updateCellFrames];
+}
+
+#pragma mark Scrolling notifications
+
+- (void)arrangeVisibleCells {
+	if(_cells.count == 0)
+		return;
+
+	NSAssert(_firstVisibleCell <= _lastVisibleCell, @"bad _firstVisibleCell %lu, _lastVisibleCell %lu", _firstVisibleCell, _lastVisibleCell);
+	NSAssert(_lastVisibleCell < _cells.count, @"bad _lastVisibleCell %lu, _cells.count %lu", _lastVisibleCell, _cells.count);
+	
+	NSScrollView *messageThreadView = (NSScrollView*)[self view];
+	NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
+
+	if(!_cellsArranged) {
+		_firstVisibleCell = 0;
+		_lastVisibleCell = 0;
+		
+		SMMessageThreadCell *firstCell = _cells[0];
+		NSView *subview = firstCell.viewController.view;
+
+		subview.frame = NSMakeRect(0, _messageThreadInfoViewController.view.frame.size.height + CELL_SPACING, _contentView.frame.size.width, firstCell.viewController.height);
+		
+		[_contentView addSubview:subview];
+	}
+
+	SMMessageThreadCell *firstCell = _cells[_firstVisibleCell];
+	if(firstCell.viewController.view.frame.origin.y > visibleRect.origin.y) {
+		CGFloat ypos = firstCell.viewController.view.frame.origin.y;
+
+		while(_firstVisibleCell > 0) {
+			SMMessageThreadCell *cell = _cells[_firstVisibleCell - 1];
+			NSView *subview = cell.viewController.view;
+			
+			ypos -= cell.viewController.height;
+			ypos -= CELL_SPACING;
+
+			subview.frame = NSMakeRect(0, ypos, _contentView.frame.size.width, cell.viewController.height);
+			
+			[_contentView addSubview:subview];
+			
+			--_firstVisibleCell;
+		}
+	} else if(firstCell.viewController.view.frame.origin.y + firstCell.viewController.height <= visibleRect.origin.y) {
+		while(_firstVisibleCell + 1 < _cells.count) {
+			SMMessageThreadCell *cell = _cells[_firstVisibleCell + 1];
+			NSView *subview = cell.viewController.view;
+
+			[subview removeFromSuperview];
+			
+			++_firstVisibleCell;
+		}
+	}
+
+	SMMessageThreadCell *lastCell = _cells[_lastVisibleCell];
+	if(lastCell.viewController.view.frame.origin.y + lastCell.viewController.height < visibleRect.origin.y + visibleRect.size.height) {
+		CGFloat ypos = lastCell.viewController.view.frame.origin.y + lastCell.viewController.height + CELL_SPACING;
+		
+		while(_lastVisibleCell + 1 < _cells.count) {
+			SMMessageThreadCell *cell = _cells[_lastVisibleCell + 1];
+			NSView *subview = cell.viewController.view;
+			
+			subview.frame = NSMakeRect(0, ypos, _contentView.frame.size.width, cell.viewController.height);
+			
+			[_contentView addSubview:subview];
+
+			ypos += cell.viewController.height;
+			ypos += CELL_SPACING;
+			
+			++_lastVisibleCell;
+		}
+	} else if(lastCell.viewController.view.frame.origin.y > visibleRect.origin.y + visibleRect.size.height) {
+		while(_lastVisibleCell > 0) {
+			SMMessageThreadCell *cell = _cells[_lastVisibleCell - 1];
+			NSView *subview = cell.viewController.view;
+			
+			[subview removeFromSuperview];
+			
+			--_lastVisibleCell;
+		}
+	}
+	
+	_cellsArranged = YES;
+}
+
+- (void)viewBoundsDidChange:(NSNotification *)notification {
+	NSClipView *changedContentView = [notification object];
+
+	NSLog(@"%s: %@", __func__, changedContentView);
+
+	[self arrangeVisibleCells];
+}
+
+- (void)viewFrameDidChange:(NSNotification *)notification {
+	NSClipView *changedContentView = [notification object];
+	
+	NSLog(@"%s: %@", __func__, changedContentView);
+
+	[self arrangeVisibleCells];
 }
 
 #pragma mark Processing incoming notifications
