@@ -248,22 +248,27 @@ static const CGFloat CELL_SPACING = -1;
 - (void)updateCellFrames {
 	NSAssert(_cells.count > 0, @"no cells");
 
-	if(_cells.count > 1) {
-		CGFloat fullHeight = [SMMessageThreadInfoViewController infoHeaderHeight];
+	CGFloat fullHeight = 0;
 
+	if(_cells.count > 1) {
+		fullHeight += [SMMessageThreadInfoViewController infoHeaderHeight];
+		
 		for(NSInteger i = 0; i < _cells.count; i++) {
 			SMMessageThreadCell *cell = _cells[i];
-			fullHeight += (CGFloat)cell.viewController.height + CELL_SPACING;
+			fullHeight += (CGFloat)cell.viewController.height;
+			
+			if(i + 1 < _cells.count)
+				fullHeight += CELL_SPACING;
 		}
-
-		_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
-		_contentView.autoresizingMask = NSViewMinXMargin | NSViewWidthSizable | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
 	} else {
-//		_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
-		_contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+		fullHeight = _contentView.frame.size.height;
 	}
 
-//	NSLog(@"%s: _contentView.frame %g, %g, %g, %g", __func__, _contentView.frame.origin.x, _contentView.frame.origin.y, _contentView.frame.size.width, _contentView.frame.size.height);
+	_contentView.frame = NSMakeRect(0, 0, _contentView.frame.size.width, fullHeight);
+	_contentView.autoresizingMask = NSViewWidthSizable | NSViewMaxXMargin;
+
+	if(_cells.count == 1)
+		_contentView.autoresizingMask |= NSViewHeightSizable;
 	
 	NSView *infoView = [_messageThreadInfoViewController view];
 	NSAssert(infoView != nil, @"no info view");
@@ -374,7 +379,9 @@ static const CGFloat CELL_SPACING = -1;
 		return;
 
 	if(!_cellsArranged) {
-		// todo: remove all subviews?
+		for(SMMessageThreadCell *cell in _cells) {
+			[cell.viewController.view removeFromSuperview];
+		}
 
 		_firstVisibleCell = 0;
 		_lastVisibleCell = 0;
