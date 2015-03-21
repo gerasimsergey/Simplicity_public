@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SMMessageListViewController">
@@ -32,7 +32,7 @@
                     </connections>
                 </button>
                 <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="49" horizontalPageScroll="10" verticalLineScroll="49" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
-                    <rect key="frame" x="0.0" y="20" width="235" height="250"/>
+                    <rect key="frame" x="0.0" y="21" width="235" height="249"/>
                     <clipView key="contentView" drawsBackground="NO" id="HA8-Z9-Dlo">
                         <rect key="frame" x="1" y="1" width="213" height="470"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -206,7 +206,7 @@
                 <constraint firstAttribute="bottom" secondItem="8Od-aj-dKF" secondAttribute="bottom" constant="2" id="LJj-Np-hrQ"/>
                 <constraint firstItem="9e7-R3-3CM" firstAttribute="top" secondItem="1" secondAttribute="top" constant="3" id="Tb1-Rw-3z8"/>
                 <constraint firstItem="Crp-Ot-AgV" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="biX-qf-b0i"/>
-                <constraint firstItem="L8V-cN-uTh" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-1" id="dXx-vu-McS"/>
+                <constraint firstItem="L8V-cN-uTh" firstAttribute="top" secondItem="3" secondAttribute="bottom" id="dXx-vu-McS"/>
                 <constraint firstItem="3" firstAttribute="top" secondItem="Crp-Ot-AgV" secondAttribute="bottom" id="euv-RI-fnt"/>
                 <constraint firstAttribute="trailing" secondItem="9e7-R3-3CM" secondAttribute="trailing" id="mqp-SH-tP9"/>
                 <constraint firstItem="3" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="xMY-F2-sSP"/>
