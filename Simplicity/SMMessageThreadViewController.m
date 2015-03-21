@@ -411,7 +411,9 @@ static const CGFloat CELL_SPACING = -1;
 	}
 
 	while(_firstVisibleCell + 1 < _cells.count && firstCell.viewController.view.frame.origin.y + firstCell.viewController.height <= visibleRect.origin.y) {
-		[firstCell.viewController.view removeFromSuperview];
+//TODO: should we?
+//		if(!firstCell.viewController.collapsed)
+			[firstCell.viewController.view removeFromSuperview];
 
 		firstCell = _cells[++_firstVisibleCell];
 	}
@@ -426,7 +428,9 @@ static const CGFloat CELL_SPACING = -1;
 	}
 
 	while(_lastVisibleCell > 0 && lastCell.viewController.view.frame.origin.y > visibleRect.origin.y + visibleRect.size.height) {
-		[lastCell.viewController.view removeFromSuperview];
+//TODO: should we?
+//		if(!lastCell.viewController.collapsed)
+			[lastCell.viewController.view removeFromSuperview];
 
 		lastCell = _cells[--_lastVisibleCell];
 	}
