@@ -122,9 +122,20 @@ static const CGFloat CELL_SPACING = -1;
 
 		_cells = [NSMutableArray arrayWithCapacity:messages.count];
 
+		NSUInteger lastUnseenMessageIdx = 0;
+		if(_currentMessageThread.unseen) {
+			for(NSUInteger i = messages.count; i > 0;) {
+				SMMessage *message = messages[--i];
+				
+				if(message.unseen) {
+					lastUnseenMessageIdx = i;
+					break;
+				}
+			}
+		}
+
 		for(NSUInteger i = 0; i < messages.count; i++) {
-			SMMessage *message = messages[i];
-			Boolean collapsed = (messages.count == 1? NO : (_currentMessageThread.unseen? !message.unseen : i > 0));
+			Boolean collapsed = (messages.count == 1? NO : (_currentMessageThread.unseen? i != lastUnseenMessageIdx : i > 0));
 			SMMessageThreadCellViewController *viewController = [self createMessageThreadCell:messages[i] collapsed:collapsed];
 
 			[viewController enableCollapse:(messages.count > 1)];
