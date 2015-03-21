@@ -424,6 +424,11 @@ static const CGFloat CELL_SPACING = -1;
 
 	for(NSUInteger i = _firstVisibleCell; i <= _lastVisibleCell; ++ i) {
 		SMMessageThreadCell *cell = _cells[i];
+
+		if(_cells.count > 1) {
+			[cell.viewController.view setFrameSize:NSMakeSize(_contentView.frame.size.width, cell.viewController.height)];
+		}
+
 		[_contentView addSubview:cell.viewController.view];
 	}
 
