@@ -38,6 +38,7 @@ static const CGFloat CELL_SPACING = -1;
 	NSUInteger _stringOccurrenceMarkedResultIndex;
 	NSUInteger _firstVisibleCell, _lastVisibleCell;
 	Boolean _cellsArranged;
+	Boolean _cellsUpdateStarted;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -257,6 +258,8 @@ static const CGFloat CELL_SPACING = -1;
 }
 
 - (void)updateCellFrames {
+	_cellsUpdateStarted = YES;
+
 	NSAssert(_cells.count > 0, @"no cells");
 
 	CGFloat fullHeight = 0;
@@ -297,7 +300,7 @@ static const CGFloat CELL_SPACING = -1;
 
 		if(_cells.count == 1) {
 			subview.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, _contentView.frame.size.height);
+			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, fullHeight);
 		} else {
 			subview.autoresizingMask = NSViewWidthSizable | NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
 			subview.frame = NSMakeRect(0, ypos, infoView.frame.size.width, cell.viewController.height);
@@ -306,6 +309,7 @@ static const CGFloat CELL_SPACING = -1;
 		ypos += cell.viewController.height + CELL_SPACING;
 	}
 
+	_cellsUpdateStarted = NO;
 	_cellsArranged = NO;
 	
 	[self arrangeVisibleCells];
@@ -386,6 +390,9 @@ static const CGFloat CELL_SPACING = -1;
 #pragma mark Scrolling notifications
 
 - (void)arrangeVisibleCells {
+	if(_cellsUpdateStarted)
+		return;
+
 	if(_cells.count == 0)
 		return;
 
