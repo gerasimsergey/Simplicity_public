@@ -396,6 +396,9 @@ static const CGFloat CELL_SPACING = -1;
 
 		_firstVisibleCell = 0;
 		_lastVisibleCell = 0;
+
+		SMMessageThreadCell *cell = _cells[0];
+		[_contentView addSubview:cell.viewController.view];
 	}
 
 	NSAssert(_firstVisibleCell <= _lastVisibleCell, @"bad _firstVisibleCell %lu, _lastVisibleCell %lu", _firstVisibleCell, _lastVisibleCell);
@@ -403,6 +406,9 @@ static const CGFloat CELL_SPACING = -1;
 	
 	NSScrollView *messageThreadView = (NSScrollView*)[self view];
 	NSRect visibleRect = [[messageThreadView contentView] documentVisibleRect];
+	
+	const NSUInteger oldFirstVisibleCell = _firstVisibleCell;
+	const NSUInteger oldLastVisibleCell = _lastVisibleCell;
 	
 	SMMessageThreadCell *firstCell = _cells[_firstVisibleCell];
 
@@ -437,17 +443,35 @@ static const CGFloat CELL_SPACING = -1;
 
 	NSAssert(_firstVisibleCell <= _lastVisibleCell, @"bad _firstVisibleCell %lu, _lastVisibleCell %lu", _firstVisibleCell, _lastVisibleCell);
 
-	for(NSUInteger i = _firstVisibleCell; i <= _lastVisibleCell; ++ i) {
-		SMMessageThreadCell *cell = _cells[i];
+	if(_firstVisibleCell < oldFirstVisibleCell) {
+		if(oldFirstVisibleCell <= _lastVisibleCell)
+			[self showCellsRegion:_firstVisibleCell toInclusive:oldFirstVisibleCell - 1];
+		else
+			[self showCellsRegion:_firstVisibleCell toInclusive:_lastVisibleCell];
+	}
 
-		if(_cells.count > 1) {
-			[cell.viewController.view setFrameSize:NSMakeSize(_contentView.frame.size.width, cell.viewController.height)];
-		}
-
-		[_contentView addSubview:cell.viewController.view];
+	if(_lastVisibleCell > oldLastVisibleCell) {
+		if(_firstVisibleCell <= oldLastVisibleCell)
+			[self showCellsRegion:oldLastVisibleCell + 1 toInclusive:_lastVisibleCell];
+		else
+			[self showCellsRegion:_firstVisibleCell toInclusive:_lastVisibleCell];
 	}
 
 	_cellsArranged = YES;
+}
+
+- (void)showCellsRegion:(NSUInteger)from toInclusive:(NSUInteger)to {
+	for(NSUInteger i = from; i <= to; i++) {
+		SMMessageThreadCell *cell = _cells[i];
+
+		if(cell.viewController.view.superview == nil) {
+			if(_cells.count > 1) {
+				[cell.viewController.view setFrameSize:NSMakeSize(_contentView.frame.size.width, cell.viewController.height)];
+			}
+			
+			[_contentView addSubview:cell.viewController.view];
+		}
+	}
 }
 
 - (void)viewBoundsDidChange:(NSNotification *)notification {
