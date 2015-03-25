@@ -81,6 +81,7 @@
 		00C75609195921AA006ED86B /* SMFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C75608195921AA006ED86B /* SMFolder.m */; };
 		00CB00EB1A9E886700339E6D /* SMMessageThreadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 00CB00EA1A9E886700339E6D /* SMMessageThreadCell.m */; };
 		00DBA6D81AC25FD500DFE03D /* SMMessageEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindow.xib */; };
+		00DBA6DE1AC2705F00DFE03D /* new-message.png in Resources */ = {isa = PBXBuildFile; fileRef = 00DBA6DD1AC2705F00DFE03D /* new-message.png */; };
 		00DC84961967A70E00577667 /* SMMailboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00DC84951967A70E00577667 /* SMMailboxController.m */; };
 		00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */; };
 		00E9107F17D2F6F50028C679 /* SMMessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */; };
@@ -260,6 +261,7 @@
 		00CB00E91A9E886700339E6D /* SMMessageThreadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadCell.h; sourceTree = "<group>"; };
 		00CB00EA1A9E886700339E6D /* SMMessageThreadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadCell.m; sourceTree = "<group>"; };
 		00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMessageEditorWindow.xib; sourceTree = "<group>"; };
+		00DBA6DD1AC2705F00DFE03D /* new-message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-message.png"; sourceTree = "<group>"; };
 		00DC84941967A70E00577667 /* SMMailboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxController.h; sourceTree = "<group>"; };
 		00DC84951967A70E00577667 /* SMMailboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxController.m; sourceTree = "<group>"; };
 		00E9107B17D2F6F50028C679 /* SMMessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageListViewController.h; sourceTree = "<group>"; };
@@ -524,6 +526,7 @@
 				002057C81A85D2DA00D5FE8A /* important-white.png */,
 				002057CE1A85D2DA00D5FE8A /* inbox-white.png */,
 				002556F91A5A3BF900C864D0 /* info-icon.png */,
+				00DBA6DD1AC2705F00DFE03D /* new-message.png */,
 				002057CC1A85D2DA00D5FE8A /* outbox-white.png */,
 				004F7FE91866A973004DEC3C /* search-icon.png */,
 				002057CB1A85D2DA00D5FE8A /* sent-white.png */,
@@ -650,6 +653,7 @@
 				00909E751A9ACDE300636C90 /* SearchWebView.js in Resources */,
 				00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */,
 				0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */,
+				00DBA6DE1AC2705F00DFE03D /* new-message.png in Resources */,
 				002057D31A85D2DA00D5FE8A /* outbox-white.png in Resources */,
 				0099CE861A623B2A00AEA789 /* attachment-icon.png in Resources */,
 				002057CF1A85D2DA00D5FE8A /* important-white.png in Resources */,

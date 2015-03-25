@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -674,6 +674,7 @@
         <customObject id="420" customClass="NSFontManager"/>
         <customObject id="544" customClass="SMAppController">
             <connections>
+                <outlet property="composeMessageButton" destination="PxP-a3-Jxq" id="tJ3-Xf-cTx"/>
                 <outlet property="searchField" destination="w9B-OG-la5" id="Lof-qa-D7m"/>
                 <outlet property="toolbar" destination="Set-cj-RY4" id="Yot-05-tWm"/>
                 <outlet property="trashButton" destination="Q0Q-AH-U6l" id="LXG-FO-qVB"/>
@@ -702,11 +703,22 @@
                         <action selector="trashAction:" target="544" id="lht-aR-UES"/>
                     </connections>
                 </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PxP-a3-Jxq">
+                    <rect key="frame" x="176" y="39" width="36" height="20"/>
+                    <buttonCell key="cell" type="squareTextured" bezelStyle="texturedSquare" image="new-message" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="0kP-o2-ebZ">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="composeMessageAction:" target="544" id="9r3-6e-J49"/>
+                    </connections>
+                </button>
             </subviews>
             <point key="canvasLocation" x="180" y="0.0"/>
         </customView>
     </objects>
     <resources>
         <image name="NSTrashFull" width="32" height="32"/>
+        <image name="new-message" width="128" height="128"/>
     </resources>
 </document>

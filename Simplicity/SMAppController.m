@@ -23,6 +23,7 @@
 #import "SMFolder.h"
 
 static NSString *SearchDocToolbarItemIdentifier = @"Search Item Identifier";
+static NSString *ComposeMessageToolbarItemIdentifier = @"Compose Message Item Identifier";
 static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 
 @implementation SMAppController {
@@ -228,10 +229,24 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 		[toolbarItem setView:_searchField];
 		[toolbarItem setMinSize:NSMakeSize(30, NSHeight([_searchField frame]))];
 		[toolbarItem setMaxSize:NSMakeSize(400,NSHeight([_searchField frame]))];
+	} else if([itemIdent isEqual:ComposeMessageToolbarItemIdentifier]) {
+		toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
+		
+		[toolbarItem setPaletteLabel:@"New message"];
+		[toolbarItem setToolTip: @"Compose new message"];
+		
+		_composeMessageButton = [[NSButton alloc] initWithFrame:[_composeMessageButton frame]];
+		[_composeMessageButton setImage:[NSImage imageNamed:@"new-message.png"]];
+		[_composeMessageButton.cell setImageScaling:NSImageScaleProportionallyDown];
+		_composeMessageButton.bezelStyle = NSTexturedSquareBezelStyle;
+		_composeMessageButton.target = self;
+		_composeMessageButton.action = @selector(composeMessageAction:);
+		
+		[toolbarItem setView:_composeMessageButton];
 	} else if([itemIdent isEqual:TrashToolbarItemIdentifier]) {
 		toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
 		
-		[toolbarItem setPaletteLabel: @"Trash"];
+		[toolbarItem setPaletteLabel:@"Trash"];
 		[toolbarItem setToolTip: @"Put selected messages to trash"];
 
 		_trashButton = [[NSButton alloc] initWithFrame:[_trashButton frame]];
@@ -255,14 +270,14 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	// Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default
 	// If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
 	// user chooses to revert to the default items this set will be used
-	return [NSArray arrayWithObjects:TrashToolbarItemIdentifier, SearchDocToolbarItemIdentifier, nil];
+	return [NSArray arrayWithObjects:ComposeMessageToolbarItemIdentifier, TrashToolbarItemIdentifier, SearchDocToolbarItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
 	// Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar
 	// does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed
 	// The set of allowed items is used to construct the customization palette
-	return [NSArray arrayWithObjects:TrashToolbarItemIdentifier, SearchDocToolbarItemIdentifier, nil];
+	return [NSArray arrayWithObjects:ComposeMessageToolbarItemIdentifier, TrashToolbarItemIdentifier, SearchDocToolbarItemIdentifier, nil];
 }
 
 - (void) toolbarWillAddItem: (NSNotification *) notif {
@@ -278,6 +293,7 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 		[addedItem setAction: @selector(searchUsingToolbarSearchField:)];
 		
 		_activeSearchItem = addedItem;
+	} else if([[addedItem itemIdentifier] isEqual:ComposeMessageToolbarItemIdentifier]) {
 	} else if([[addedItem itemIdentifier] isEqual:TrashToolbarItemIdentifier]) {
 //      TODO
 //
@@ -351,6 +367,10 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	NSAssert(trashFolder != nil, @"no trash folder");
 	
 	[[[appDelegate appController] messageListViewController] moveSelectedMessageThreadsToFolder:trashFolder.fullName];
+}
+
+- (IBAction)composeMessageAction:(id)sender {
+	NSLog(@"%s", __func__);
 }
 
 #pragma mark Find Contents panel management

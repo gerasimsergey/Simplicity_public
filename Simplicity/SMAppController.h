@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet NSView *view;
 
 @property (nonatomic) IBOutlet NSToolbar *toolbar;
+@property (nonatomic) IBOutlet NSButton *composeMessageButton;
 @property (nonatomic) IBOutlet NSButton *trashButton;
 @property (nonatomic) IBOutlet NSTextField *searchField;
 
