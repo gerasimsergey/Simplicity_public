@@ -10,7 +10,7 @@
 
 @class WebView;
 
-@interface SMMessageEditorWindowController : NSWindowController
+@interface SMMessageEditorWindowController : NSWindowController<NSWindowDelegate>
 
 @property IBOutlet WebView *messageTextEditor;
 

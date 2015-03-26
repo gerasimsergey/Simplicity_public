@@ -259,6 +259,9 @@
                     <constraint firstItem="7ns-3j-bKb" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="-1" id="wid-59-9Ga"/>
                 </constraints>
             </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="4P1-Yk-pJA"/>
+            </connections>
             <point key="canvasLocation" x="460" y="385.5"/>
         </window>
     </objects>

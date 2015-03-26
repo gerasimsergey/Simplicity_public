@@ -37,6 +37,7 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	Boolean _findContentsPanelShown;
 	NSView *_messageThreadAndFindContentsPanelView;
 	NSLayoutConstraint *_messageThreadViewTopContraint;
+	NSMutableArray *_messageEditorWindowControllers;
 }
 
 - (void)awakeFromNib {
@@ -208,6 +209,10 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	//
 	
 	[self hideSearchResultsView];
+	
+	//
+	
+	_messageEditorWindowControllers = [NSMutableArray array];
 }
 
 - (void)updateMailboxFolderListView {
@@ -370,16 +375,6 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	[[[appDelegate appController] messageListViewController] moveSelectedMessageThreadsToFolder:trashFolder.fullName];
 }
 
-- (IBAction)composeMessageAction:(id)sender {
-	NSLog(@"%s", __func__);
-
-	if(_messageEditorWindowController == nil) {
-		_messageEditorWindowController = [[SMMessageEditorWindowController alloc] initWithWindowNibName:@"SMMessageEditorWindow"];
-	}
-
-	[_messageEditorWindowController showWindow:self];
-}
-
 #pragma mark Find Contents panel management
 
 - (IBAction)toggleFindContentsPanelAction:(id)sender {
@@ -468,6 +463,22 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 	[newLabelSheet orderOut:self];
 
 	[NSApp endSheet:newLabelSheet];
+}
+
+#pragma mark Message editor window management
+
+- (IBAction)composeMessageAction:(id)sender {
+	NSLog(@"%s", __func__);
+	
+	SMMessageEditorWindowController *messageEditorWindowController = [[SMMessageEditorWindowController alloc] initWithWindowNibName:@"SMMessageEditorWindow"];
+	
+	[messageEditorWindowController showWindow:self];
+	
+	[_messageEditorWindowControllers addObject:messageEditorWindowController];
+}
+
+- (void)closeMessageEditorWindow:(SMMessageEditorWindowController*)messageEditorWindowController {
+	[_messageEditorWindowControllers removeObject:messageEditorWindowController];
 }
 
 @end

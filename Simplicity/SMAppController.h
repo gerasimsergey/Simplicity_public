@@ -37,7 +37,6 @@
 @property SMMessageThreadViewController *messageThreadViewController;
 @property SMInstrumentPanelViewController *instrumentPanelViewController;
 @property SMFolderColorController *folderColorController;
-@property SMMessageEditorWindowController *messageEditorWindowController;
 
 - (void)updateMailboxFolderListView;
 - (void)toggleSearchResultsView;
@@ -49,5 +48,7 @@
 
 - (void)showNewLabelSheet:(NSString*)suggestedParentFolder;
 - (void)hideNewLabelSheet;
+
+- (void)closeMessageEditorWindow:(SMMessageEditorWindowController*)messageEditorWindowController;
 
 @end

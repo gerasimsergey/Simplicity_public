@@ -8,6 +8,8 @@
 
 #import <WebKit/WebView.h>
 
+#import "SMAppDelegate.h"
+#import "SMAppController.h"
 #import "SMMessageEditorWindowController.h"
 
 @implementation SMMessageEditorWindowController
@@ -20,6 +22,15 @@
 	[_messageTextEditor setResourceLoadDelegate:self];
 	[_messageTextEditor setCanDrawConcurrently:YES];
 	[_messageTextEditor setEditable:YES];
+}
+
+- (void)windowWillClose:(NSNotification *)notification {
+	NSLog(@"%s", __func__);
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+	
+	[appController closeMessageEditorWindow:self];
 }
 
 @end
