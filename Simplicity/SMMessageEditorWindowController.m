@@ -6,18 +6,20 @@
 //  Copyright (c) 2015 Evgeny Baskakov. All rights reserved.
 //
 
+#import <WebKit/WebView.h>
+
 #import "SMMessageEditorWindowController.h"
-
-@interface SMMessageEditorWindowController ()
-
-@end
 
 @implementation SMMessageEditorWindowController
 
 - (void)windowDidLoad {
     [super windowDidLoad];
     
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+	[_messageTextEditor setFrameLoadDelegate:self];
+	[_messageTextEditor setPolicyDelegate:self];
+	[_messageTextEditor setResourceLoadDelegate:self];
+	[_messageTextEditor setCanDrawConcurrently:YES];
+	[_messageTextEditor setEditable:YES];
 }
 
 @end

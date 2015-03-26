@@ -8,6 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class WebView;
+
 @interface SMMessageEditorWindowController : NSWindowController
+
+@property IBOutlet WebView *messageTextEditor;
 
 @end
