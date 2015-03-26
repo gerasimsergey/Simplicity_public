@@ -8,6 +8,7 @@
 
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
+#import "SMMessageEditorWindowController.h"
 #import "SMNewLabelWindowController.h"
 #import "SMMailboxViewController.h"
 #import "SMSearchResultsListController.h"
@@ -371,6 +372,12 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 
 - (IBAction)composeMessageAction:(id)sender {
 	NSLog(@"%s", __func__);
+
+	if(_messageEditorWindowController == nil) {
+		_messageEditorWindowController = [[SMMessageEditorWindowController alloc] initWithWindowNibName:@"SMMessageEditorWindow"];
+	}
+
+	[_messageEditorWindowController showWindow:self];
 }
 
 #pragma mark Find Contents panel management

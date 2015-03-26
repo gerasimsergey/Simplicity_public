@@ -17,6 +17,7 @@
 @class SMInstrumentPanelViewController;
 @class SMFolderColorController;
 @class SMNewLabelWindowController;
+@class SMMessageEditorWindowController;
 
 @interface SMAppController : NSObject <NSToolbarDelegate, NSSplitViewDelegate>
 
@@ -36,6 +37,7 @@
 @property SMMessageThreadViewController *messageThreadViewController;
 @property SMInstrumentPanelViewController *instrumentPanelViewController;
 @property SMFolderColorController *folderColorController;
+@property SMMessageEditorWindowController *messageEditorWindowController;
 
 - (void)updateMailboxFolderListView;
 - (void)toggleSearchResultsView;
