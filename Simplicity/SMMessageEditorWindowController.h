@@ -10,7 +10,7 @@
 
 @class WebView;
 
-@interface SMMessageEditorWindowController : NSWindowController<NSWindowDelegate>
+@interface SMMessageEditorWindowController : NSWindowController<NSWindowDelegate, NSTokenFieldDelegate>
 
 @property IBOutlet NSButton *sendButton;
 @property IBOutlet NSButton *saveButton;
