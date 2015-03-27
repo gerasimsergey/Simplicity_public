@@ -470,7 +470,7 @@ static NSString *TrashToolbarItemIdentifier = @"Trash Item Identifier";
 - (IBAction)composeMessageAction:(id)sender {
 	NSLog(@"%s", __func__);
 	
-	SMMessageEditorWindowController *messageEditorWindowController = [[SMMessageEditorWindowController alloc] initWithWindowNibName:@"SMMessageEditorWindow"];
+	SMMessageEditorWindowController *messageEditorWindowController = [[SMMessageEditorWindowController alloc] initWithWindowNibName:@"SMMessageEditorWindowController"];
 	
 	[messageEditorWindowController showWindow:self];
 	

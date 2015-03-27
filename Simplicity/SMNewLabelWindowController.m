@@ -21,7 +21,7 @@
 	self = [super init];
 	
 	if(self) {
-		[NSBundle loadNibNamed:@"SMNewLabelWindow" owner:self];
+		[NSBundle loadNibNamed:@"SMNewLabelWindowController" owner:self];
 	}
 	
 	return self;

@@ -75,13 +75,13 @@
 		00A6817A1A7DEDB800DAD2BD /* attachment-document.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A681791A7DEDB800DAD2BD /* attachment-document.png */; };
 		00AD52E81AA813FB00627433 /* add-label.png in Resources */ = {isa = PBXBuildFile; fileRef = 00AD52E71AA813FB00627433 /* add-label.png */; };
 		00AD52EF1AA81C7900627433 /* SMNewLabelWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */; };
-		00B4C19A1AA6CB1F00C14BF4 /* SMNewLabelWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindow.xib */; };
+		00B4C19A1AA6CB1F00C14BF4 /* SMNewLabelWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindowController.xib */; };
 		00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = 00B968D51A79F48F00C37B97 /* background_repeat.png */; };
 		00BAE7F719207540001243F5 /* SMMessageDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */; };
 		00C75609195921AA006ED86B /* SMFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C75608195921AA006ED86B /* SMFolder.m */; };
 		00CAFBF31AC3A116005363CD /* SMMessageEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00CAFBF21AC3A116005363CD /* SMMessageEditorWindowController.m */; };
 		00CB00EB1A9E886700339E6D /* SMMessageThreadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 00CB00EA1A9E886700339E6D /* SMMessageThreadCell.m */; };
-		00DBA6D81AC25FD500DFE03D /* SMMessageEditorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindow.xib */; };
+		00DBA6D81AC25FD500DFE03D /* SMMessageEditorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindowController.xib */; };
 		00DBA6DE1AC2705F00DFE03D /* new-message.png in Resources */ = {isa = PBXBuildFile; fileRef = 00DBA6DD1AC2705F00DFE03D /* new-message.png */; };
 		00DC84961967A70E00577667 /* SMMailboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00DC84951967A70E00577667 /* SMMailboxController.m */; };
 		00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E9107C17D2F6F50028C679 /* SMMessageListViewController.m */; };
@@ -253,7 +253,7 @@
 		00AD52E71AA813FB00627433 /* add-label.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add-label.png"; sourceTree = "<group>"; };
 		00AD52ED1AA81C7900627433 /* SMNewLabelWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMNewLabelWindowController.h; sourceTree = "<group>"; };
 		00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMNewLabelWindowController.m; sourceTree = "<group>"; };
-		00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMNewLabelWindow.xib; sourceTree = "<group>"; };
+		00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMNewLabelWindowController.xib; sourceTree = "<group>"; };
 		00B968D51A79F48F00C37B97 /* background_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_repeat.png; sourceTree = "<group>"; };
 		00BAE7F419207540001243F5 /* SMMessageDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageDetailsViewController.h; sourceTree = "<group>"; };
 		00BAE7F519207540001243F5 /* SMMessageDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageDetailsViewController.m; sourceTree = "<group>"; };
@@ -263,7 +263,7 @@
 		00CAFBF21AC3A116005363CD /* SMMessageEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageEditorWindowController.m; sourceTree = "<group>"; };
 		00CB00E91A9E886700339E6D /* SMMessageThreadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadCell.h; sourceTree = "<group>"; };
 		00CB00EA1A9E886700339E6D /* SMMessageThreadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadCell.m; sourceTree = "<group>"; };
-		00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMessageEditorWindow.xib; sourceTree = "<group>"; };
+		00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMMessageEditorWindowController.xib; sourceTree = "<group>"; };
 		00DBA6DD1AC2705F00DFE03D /* new-message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-message.png"; sourceTree = "<group>"; };
 		00DC84941967A70E00577667 /* SMMailboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMailboxController.h; sourceTree = "<group>"; };
 		00DC84951967A70E00577667 /* SMMailboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMailboxController.m; sourceTree = "<group>"; };
@@ -509,8 +509,8 @@
 				00FE6DF31A4E6C0600D2194F /* SMInstrumentPanelViewController.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
-				00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindow.xib */,
-				00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindow.xib */,
+				00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindowController.xib */,
+				00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindowController.xib */,
 				003859001A4D024500D4FD70 /* SMSearchResultsListViewController.xib */,
 				00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */,
 			);
@@ -651,7 +651,7 @@
 				002057D21A85D2DA00D5FE8A /* sent-white.png in Resources */,
 				009217A51A92F007003A0348 /* trash-black.png in Resources */,
 				002057D01A85D2DA00D5FE8A /* star-white.png in Resources */,
-				00B4C19A1AA6CB1F00C14BF4 /* SMNewLabelWindow.xib in Resources */,
+				00B4C19A1AA6CB1F00C14BF4 /* SMNewLabelWindowController.xib in Resources */,
 				0002A09C17D1B1E000EA4AFF /* InfoPlist.strings in Resources */,
 				00B968D61A79F48F00C37B97 /* background_repeat.png in Resources */,
 				00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */,
@@ -665,7 +665,7 @@
 				002057D11A85D2DA00D5FE8A /* trash-white.png in Resources */,
 				002556F11A5A2EC700C864D0 /* star-yellow-icon.png in Resources */,
 				0002A0A817D1B1E000EA4AFF /* MainMenu.xib in Resources */,
-				00DBA6D81AC25FD500DFE03D /* SMMessageEditorWindow.xib in Resources */,
+				00DBA6D81AC25FD500DFE03D /* SMMessageEditorWindowController.xib in Resources */,
 				004F7FEA1866A973004DEC3C /* search-icon.png in Resources */,
 				00E9107F17D2F6F50028C679 /* SMMessageListViewController.xib in Resources */,
 				00A6817A1A7DEDB800DAD2BD /* attachment-document.png in Resources */,
