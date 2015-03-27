@@ -16,6 +16,7 @@
                 <outlet property="sendButton" destination="e7V-Vc-k0q" id="Wtp-oE-AeT"/>
                 <outlet property="subjectField" destination="Qrx-X9-Ruh" id="dDt-TS-DA6"/>
                 <outlet property="toField" destination="WKc-oQ-Zi5" id="SIF-Zl-rzB"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="u0l-k6-RWg"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
