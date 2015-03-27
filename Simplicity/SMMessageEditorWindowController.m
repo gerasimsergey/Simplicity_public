@@ -15,6 +15,8 @@
 #import "SMOutboxController.h"
 #import "SMMessageEditorWindowController.h"
 
+#import "SMMailLogin.h"
+
 @implementation SMMessageEditorWindowController
 
 - (void)windowDidLoad {
@@ -80,7 +82,8 @@
 - (MCOMessageBuilder*)createMessageData {
 	MCOMessageBuilder *builder = [[MCOMessageBuilder alloc] init];
 
-	//TODO (custom from): [[builder header] setFrom:[MCOAddress addressWithDisplayName:@"Hoa V. DINH" mailbox:@"hoa@etpan.org"]];
+	//TODO: custom from
+	[[builder header] setFrom:[MCOAddress addressWithDisplayName:@"Evgeny Baskakov" mailbox:SMTP_USERNAME]];
 
 	// TODO: form an array of addresses and names based on _toField contents
 	NSArray *toAddresses = [NSArray arrayWithObject:[MCOAddress addressWithDisplayName:@"TODO" mailbox:_toField.stringValue]];
