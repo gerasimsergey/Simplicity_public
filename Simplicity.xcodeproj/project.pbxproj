@@ -58,6 +58,7 @@
 		0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0082F5FD1A0FFAAC0050578A /* SMLocalFolder.m */; };
 		0089D35F1A88084F00C189BB /* SMFolderColorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0089D35E1A88084F00C189BB /* SMFolderColorController.m */; };
 		008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */; };
+		008F936A1AC4F8E600C21D62 /* SMOutboxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 008F93691AC4F8E600C21D62 /* SMOutboxController.m */; };
 		00909E751A9ACDE300636C90 /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 00909E741A9ACDE300636C90 /* SearchWebView.js */; };
 		009217A51A92F007003A0348 /* trash-black.png in Resources */ = {isa = PBXBuildFile; fileRef = 009217A41A92F007003A0348 /* trash-black.png */; };
 		009217AF1A930019003A0348 /* SMMessageThreadCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 009217AE1A930019003A0348 /* SMMessageThreadCollection.m */; };
@@ -226,6 +227,8 @@
 		0089D35E1A88084F00C189BB /* SMFolderColorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMFolderColorController.m; sourceTree = "<group>"; };
 		008AB9DE1A4A80CC00F91D86 /* SMColorCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMColorCircle.h; sourceTree = "<group>"; };
 		008AB9DF1A4A80CC00F91D86 /* SMColorCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMColorCircle.m; sourceTree = "<group>"; };
+		008F93681AC4F8E600C21D62 /* SMOutboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMOutboxController.h; sourceTree = "<group>"; };
+		008F93691AC4F8E600C21D62 /* SMOutboxController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMOutboxController.m; sourceTree = "<group>"; };
 		00909E741A9ACDE300636C90 /* SearchWebView.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = SearchWebView.js; sourceTree = "<group>"; };
 		009217A41A92F007003A0348 /* trash-black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash-black.png"; sourceTree = "<group>"; };
 		009217AD1A930019003A0348 /* SMMessageThreadCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMMessageThreadCollection.h; sourceTree = "<group>"; };
@@ -462,6 +465,8 @@
 				00172FF3198D5C6100DB975E /* SMMessageThreadViewController.m */,
 				00AD52ED1AA81C7900627433 /* SMNewLabelWindowController.h */,
 				00AD52EE1AA81C7900627433 /* SMNewLabelWindowController.m */,
+				008F93681AC4F8E600C21D62 /* SMOutboxController.h */,
+				008F93691AC4F8E600C21D62 /* SMOutboxController.m */,
 				0082F5F61A0DD39B0050578A /* SMSearchResultsListController.h */,
 				0082F5F71A0DD39B0050578A /* SMSearchResultsListController.m */,
 				003858FE1A4D024500D4FD70 /* SMSearchResultsListViewController.h */,
@@ -694,6 +699,7 @@
 				00EB7E87199C70FA00CA2B1B /* SMMessageThread.m in Sources */,
 				00FC3C7E19AADF68002DAF9C /* SMMessageThreadCellViewController.m in Sources */,
 				0039B8521A67948500C03C3C /* SMFlippedView.m in Sources */,
+				008F936A1AC4F8E600C21D62 /* SMOutboxController.m in Sources */,
 				0002A09E17D1B1E000EA4AFF /* main.m in Sources */,
 				0099CE841A62332400AEA789 /* SMImageRegistry.m in Sources */,
 				001A41CE199EFB5300AA3AE6 /* SMMessageComparators.m in Sources */,

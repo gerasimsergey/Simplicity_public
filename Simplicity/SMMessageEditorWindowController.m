@@ -12,6 +12,7 @@
 
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
+#import "SMOutboxController.h"
 #import "SMMessageEditorWindowController.h"
 
 @implementation SMMessageEditorWindowController
@@ -42,9 +43,14 @@
 #pragma mark Actions
 
 - (IBAction)sendAction:(id)sender {
-	NSData *messageData = [self createMessageData];
+	MCOMessageBuilder *message = [self createMessageData];
 
-	NSLog(@"%s: '%@'", __func__, messageData);
+	NSLog(@"%s: '%@'", __func__, message);
+
+	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
+	SMAppController *appController = [appDelegate appController];
+	
+	[[appController outboxController] sendMessage:message];
 }
 
 - (IBAction)saveAction:(id)sender {
@@ -71,8 +77,8 @@
 
 #pragma mark Message creation
 
-- (NSData*)createMessageData {
-	MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
+- (MCOMessageBuilder*)createMessageData {
+	MCOMessageBuilder *builder = [[MCOMessageBuilder alloc] init];
 
 	//TODO (custom from): [[builder header] setFrom:[MCOAddress addressWithDisplayName:@"Hoa V. DINH" mailbox:@"hoa@etpan.org"]];
 
@@ -92,14 +98,13 @@
 	[[builder header] setSubject:_subjectField.stringValue];
 
 	NSString *messageText = [(DOMHTMLElement *)[[[_messageTextEditor mainFrame] DOMDocument] documentElement] outerHTML];
-	//TODO (send plain text): 	[(DOMHTMLElement *)[[[webView mainFrame] DOMDocument] documentElement] outerText];
+	//TODO (send plain text): [(DOMHTMLElement *)[[[webView mainFrame] DOMDocument] documentElement] outerText];
 
 	[builder setHTMLBody:messageText];
 
 	//TODO (local attachments): [builder addAttachment:[MCOAttachment attachmentWithContentsOfFile:@"/Users/foo/Pictures/image.jpg"]];
 
-	NSData *rfc822Data = [builder data];
-	return rfc822Data;
+	return builder;
 }
 
 @end
