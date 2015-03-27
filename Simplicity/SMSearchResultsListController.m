@@ -40,7 +40,7 @@
 	NSLog(@"%s: searching for string '%@'", __func__, searchString);
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	
 	NSAssert(session, @"session is nil");
 	

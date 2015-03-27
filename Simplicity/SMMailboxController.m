@@ -51,7 +51,7 @@
 - (void)updateFolders {
 	//NSLog(@"%s: updating folders", __func__);
 
-	MCOIMAPSession *session = [ _model session ];
+	MCOIMAPSession *session = [ _model imapSession ];
 	NSAssert(session != nil, @"session is nil");
 
 	if(_fetchFoldersOp == nil)
@@ -85,7 +85,7 @@
 	SMMailbox *mailbox = [ _model mailbox ];
 	NSAssert(mailbox != nil, @"mailbox is nil");
 
-	MCOIMAPSession *session = [ _model session ];
+	MCOIMAPSession *session = [ _model imapSession ];
 	NSAssert(session != nil, @"session is nil");
 
 	NSString *fullFolderName = [mailbox constructFolderName:folderName parent:parentFolderName];
@@ -120,7 +120,7 @@
 	
 	[mailbox removeFavoriteFolderWithName:oldFolderName];
 	
-	MCOIMAPSession *session = [ _model session ];
+	MCOIMAPSession *session = [ _model imapSession ];
 	NSAssert(session != nil, @"session is nil");
 	
 	NSAssert(_renameFolderOp == nil, @"another create folder op exists");

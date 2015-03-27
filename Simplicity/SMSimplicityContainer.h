@@ -20,10 +20,12 @@
 @class SMMessageComparators;
 
 @class MCOIMAPSession;
+@class MCOSMTPSession;
 
 @interface SMSimplicityContainer : NSObject
 
-@property MCOIMAPSession *session;
+@property MCOIMAPSession *imapSession;
+@property MCOSMTPSession *smtpSession;
 
 @property (readonly) SMMessageStorage *messageStorage;
 @property (readonly) SMLocalFolderRegistry *localFolderRegistry;

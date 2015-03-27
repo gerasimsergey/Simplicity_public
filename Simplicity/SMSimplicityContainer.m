@@ -17,14 +17,7 @@
 #import "SMSearchResultsListController.h"
 #import "SMMailboxController.h"
 #import "SMMessageComparators.h"
-
 #import "SMMailLogin.h"
-
-@interface SMSimplicityContainer()
-
-- (void)getIMAPServerCapabilities;
-
-@end
 
 @implementation SMSimplicityContainer {
 	MCOIMAPCapabilityOperation *_capabilitiesOp;
@@ -37,17 +30,25 @@
 	
 	if(self) {
 //		MCLogEnabled = 1;
+
+		_imapSession = [[MCOIMAPSession alloc] init];
 		
-		_session = [[MCOIMAPSession alloc] init];
+		[_imapSession setPort:IMAP_SERVER_PORT];
+		[_imapSession setHostname:IMAP_SERVER_HOSTNAME];
+		[_imapSession setConnectionType:IMAP_SERVER_CONNECTION_TYPE];
+		[_imapSession setUsername:IMAP_USERNAME];
+		[_imapSession setPassword:IMAP_PASSWORD];
+
+		_smtpSession = [[MCOSMTPSession alloc] init];
 		
-		[_session setPort:993];
-		
-		[_session setHostname:MAIL_SERVER_HOSTNAME];
-		[_session setUsername:MAIL_USERNAME];
-		[_session setPassword:MAIL_PASSWORD];
-		
-		[_session setConnectionType:MCOConnectionTypeTLS];
-		
+		[_smtpSession setAuthType:SMTP_SERVER_AUTH_TYPE];
+		[_smtpSession setHostname:SMTP_SERVER_HOSTNAME];
+		[_smtpSession setPort:SMTP_SERVER_PORT];
+		[_smtpSession setCheckCertificateEnabled:SMTP_SERVER_CHECK_CERTIFICATE];
+		[_smtpSession setConnectionType:SMTP_SERVER_CONNECTION_TYPE];
+		[_smtpSession setUsername:SMTP_USERNAME];
+		[_smtpSession setPassword:SMTP_PASSWORD];
+
 		_mailbox = [ SMMailbox new ];
 		_messageStorage = [ SMMessageStorage new ];
 		_localFolderRegistry = [ SMLocalFolderRegistry new ];
@@ -77,7 +78,7 @@
 - (void)getIMAPServerCapabilities {
 	NSAssert(_capabilitiesOp == nil, @"_capabilitiesOp is not nil");
 		
-	_capabilitiesOp = [_session capabilityOperation];
+	_capabilitiesOp = [_imapSession capabilityOperation];
 	
 	void (^opBlock)(NSError*, MCOIndexSet*) = nil;
 	

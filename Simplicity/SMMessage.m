@@ -328,7 +328,7 @@ static NSString *unquote(NSString *s) {
 			
 			//NSLog(@"%s: part %@, id %@, contentID %@", __FUNCTION__, part, partId, [imapPart contentID]);
 
-			MCOIMAPSession *session = [[appDelegate model] session];
+			MCOIMAPSession *session = [[appDelegate model] imapSession];
 			
 			// TODO: for older sessions, terminate attachment fetching
 			NSAssert(session, @"bad session");

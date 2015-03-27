@@ -121,7 +121,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	[[[appDelegate model] messageStorage] startUpdate:_localName];
 	
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	
 	NSAssert(session, @"session lost");
 
@@ -199,7 +199,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	if([[[appDelegate model] messageStorage] messageHasData:uid localFolder:_localName threadId:threadId])
 		return NO;
 	
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	
 	NSAssert(session, @"session is nil");
 	
@@ -248,7 +248,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 //	NSLog(@"%s: searching for %lu threads", __func__, _fetchedMessageHeaders.count);
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	NSString *allMailFolder = [mailbox.allMailFolder fullName];
 	
@@ -318,7 +318,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)updateMessages:(NSArray*)imapMessages remoteFolder:(NSString*)remoteFolderName {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	SMMessageStorage *storage = [[appDelegate model] messageStorage];
 	
 	SMMessageStorageUpdateResult updateResult = [storage updateIMAPMessages:imapMessages localFolder:_localName remoteFolder:remoteFolderName session:session];
@@ -331,7 +331,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	//NSLog(@"%s: total %u messages to load", __func__, _selectedMessageUIDsToLoad.count);
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	SMMailbox *mailbox = [[appDelegate model] mailbox];
 	NSString *allMailFolder = [mailbox.allMailFolder fullName];
 
@@ -411,7 +411,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	const uint64_t fetchMessagesFromIndex = restOfMessages - numberOfMessagesToFetch;
 	
 	MCOIndexSet *regionToFetch = [MCOIndexSet indexSetWithRange:MCORangeMake(fetchMessagesFromIndex, numberOfMessagesToFetch)];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	
 	// TODO: handle session reopening/uids validation
 	
@@ -465,7 +465,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	}
 	
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	
 	NSAssert(session, @"session lost");
 
@@ -619,7 +619,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 	
 	NSAssert(messagesToMoveUids.count > 0, @"no message uids to move from %@ to %@", _remoteFolderName, destRemoteFolderName);
 
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	NSAssert(session, @"session lost");
 
 	MCOIMAPCopyMessagesOperation *op = [session copyMessagesOperationWithFolder:_remoteFolderName uids:messagesToMoveUids destFolder:destRemoteFolderName];
@@ -653,7 +653,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 - (void)addLabel:(NSString*)label toMessages:(MCOIndexSet*)uids forRemoteFolder:(NSString*)remoteFolderName {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	NSAssert(session, @"session lost");
 
 	MCOIMAPOperation *op = [session storeLabelsOperationWithFolder:remoteFolderName uids:uids kind:MCOIMAPStoreFlagsRequestKindAdd labels:[NSArray arrayWithObject:label]];
@@ -671,7 +671,7 @@ static const MCOIMAPMessagesRequestKind messageHeadersRequestKind = (MCOIMAPMess
 
 - (void)deleteMessages:(MCOIndexSet*)uids {
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
-	MCOIMAPSession *session = [[appDelegate model] session];
+	MCOIMAPSession *session = [[appDelegate model] imapSession];
 	NSAssert(session, @"session lost");
 
 	MCOIMAPOperation *op = [session storeFlagsOperationWithFolder:_localName uids:uids kind:MCOIMAPStoreFlagsRequestKindSet flags:MCOMessageFlagDeleted];
