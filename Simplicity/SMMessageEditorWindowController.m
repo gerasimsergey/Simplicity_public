@@ -33,4 +33,16 @@
 	[appController closeMessageEditorWindow:self];
 }
 
+- (IBAction)sendAction:(id)sender {
+	NSLog(@"%s", __func__);
+}
+
+- (IBAction)saveAction:(id)sender {
+	NSLog(@"%s", __func__);
+}
+
+- (IBAction)attachAction:(id)sender {
+	NSLog(@"%s", __func__);
+}
+
 @end

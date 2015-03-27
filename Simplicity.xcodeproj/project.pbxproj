@@ -409,10 +409,10 @@
 				001A41CD199EFB5300AA3AE6 /* SMMessageComparators.m */,
 				00ED317E17F88DA700B04F5B /* SMMessageStorage.h */,
 				00ED317F17F88DA700B04F5B /* SMMessageStorage.m */,
-				009217AD1A930019003A0348 /* SMMessageThreadCollection.h */,
-				009217AE1A930019003A0348 /* SMMessageThreadCollection.m */,
 				00EB7E85199C70FA00CA2B1B /* SMMessageThread.h */,
 				00EB7E86199C70FA00CA2B1B /* SMMessageThread.m */,
+				009217AD1A930019003A0348 /* SMMessageThreadCollection.h */,
+				009217AE1A930019003A0348 /* SMMessageThreadCollection.m */,
 				006C34601A181DEC00337A49 /* SMSearchDescriptor.h */,
 				006C34611A181DEC00337A49 /* SMSearchDescriptor.m */,
 				00ED318417F88E3000B04F5B /* SMSimplicityContainer.h */,
@@ -508,11 +508,11 @@
 				006709331A99A77600C0C9CC /* SMFindContentsPanelViewController.xib */,
 				00FE6DF31A4E6C0600D2194F /* SMInstrumentPanelViewController.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
+				00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindowController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
 				00B4C1991AA6CB1F00C14BF4 /* SMNewLabelWindowController.xib */,
-				00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindowController.xib */,
-				003859001A4D024500D4FD70 /* SMSearchResultsListViewController.xib */,
 				00414EDD1A1649AF00068742 /* SMSearchResultsListCellView.xib */,
+				003859001A4D024500D4FD70 /* SMSearchResultsListViewController.xib */,
 			);
 			name = Forms;
 			sourceTree = "<group>";

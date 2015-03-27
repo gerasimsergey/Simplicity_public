@@ -12,6 +12,17 @@
 
 @interface SMMessageEditorWindowController : NSWindowController<NSWindowDelegate>
 
+@property IBOutlet NSButton *sendButton;
+@property IBOutlet NSButton *saveButton;
+@property IBOutlet NSButton *attachButton;
+@property IBOutlet NSTokenField *toField;
+@property IBOutlet NSTokenField *ccField;
+@property IBOutlet NSTokenField *bccField;
+@property IBOutlet NSTextField *subjectField;
 @property IBOutlet WebView *messageTextEditor;
+
+- (IBAction)sendAction:(id)sender;
+- (IBAction)saveAction:(id)sender;
+- (IBAction)attachAction:(id)sender;
 
 @end
