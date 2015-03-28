@@ -53,6 +53,8 @@
 	SMAppController *appController = [appDelegate appController];
 	
 	[[appController outboxController] sendMessage:message];
+	
+	[self close];
 }
 
 - (IBAction)saveAction:(id)sender {
