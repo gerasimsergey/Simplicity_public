@@ -34,7 +34,7 @@
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-	NSLog(@"%s", __func__);
+	[_toField setDelegate:nil];
 
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
