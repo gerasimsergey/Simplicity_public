@@ -7,6 +7,7 @@
 //
 
 #import "SMTokenField.h"
+#import "SMLabeledTokenFieldBoxView.h"
 #import "SMLabeledTokenFieldBoxViewController.h"
 
 @implementation SMLabeledTokenFieldBoxViewController {
@@ -15,7 +16,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do view setup here.
+
+	NSView *view = [self view];
+
+	NSAssert([view isKindOfClass:[SMLabeledTokenFieldBoxView class]], @"bad view class");
+	
+	[(SMLabeledTokenFieldBoxView*)view setViewController:self];
 }
 
 - (void)viewDidAppear {

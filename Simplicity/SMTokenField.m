@@ -47,12 +47,16 @@ static BOOL floats_equal(CGFloat a, CGFloat b) {
 
 - (void)textDidChange:(NSNotification *)notification
 {
+	NSLog(@"%s", __func__);
+
 	[super textDidChange:notification];
 	[self invalidateIntrinsicContentSize];
 }
 
 - (void)viewDidEndLiveResize
 {
+	NSLog(@"%s", __func__);
+
 	[super viewDidEndLiveResize];
 	[self invalidateIntrinsicContentSize];
 }

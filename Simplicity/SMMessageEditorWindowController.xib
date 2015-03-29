@@ -15,7 +15,7 @@
                 <outlet property="saveButton" destination="g6K-Xs-dwd" id="LuB-gC-b9L"/>
                 <outlet property="sendButton" destination="e7V-Vc-k0q" id="Wtp-oE-AeT"/>
                 <outlet property="subjectField" destination="Qrx-X9-Ruh" id="dDt-TS-DA6"/>
-                <outlet property="toBox" destination="CyJ-Re-fR4" id="zty-Xi-Up2"/>
+                <outlet property="toBoxView" destination="CyJ-Re-fR4" id="YKz-o1-hjH"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="u0l-k6-RWg"/>
             </connections>
         </customObject>
@@ -87,7 +87,7 @@
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" red="0.34868213383838387" green="0.34868213383838387" blue="0.34868213383838387" alpha="1" colorSpace="calibratedRGB"/>
                     </box>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="CyJ-Re-fR4" customClass="SMLabeledTokenFieldBoxView">
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="CyJ-Re-fR4">
                         <rect key="frame" x="-1" y="366" width="526" height="30"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="30" placeholder="YES" id="3fs-3Q-wPw"/>

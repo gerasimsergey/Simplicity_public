@@ -12,12 +12,30 @@
 
 #import "SMAppDelegate.h"
 #import "SMAppController.h"
+#import "SMTokenField.h"
 #import "SMOutboxController.h"
+#import "SMLabeledTokenFieldBoxViewController.h"
 #import "SMMessageEditorWindowController.h"
 
 #import "SMMailLogin.h"
 
 @implementation SMMessageEditorWindowController
+
+- (void)awakeFromNib {
+	NSLog(@"%s", __func__);
+
+	_toBoxViewController = [[SMLabeledTokenFieldBoxViewController alloc] initWithNibName:@"SMLabeledTokenFieldBoxViewController" bundle:nil];
+
+	[_toBoxView addSubview:_toBoxViewController.view];
+
+	[_toBoxView addConstraint:[NSLayoutConstraint constraintWithItem:_toBoxView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_toBoxViewController.view attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+	
+	[_toBoxView addConstraint:[NSLayoutConstraint constraintWithItem:_toBoxView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_toBoxViewController.view attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+
+	[_toBoxView addConstraint:[NSLayoutConstraint constraintWithItem:_toBoxView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_toBoxViewController.view attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+
+	[_toBoxView addConstraint:[NSLayoutConstraint constraintWithItem:_toBoxView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_toBoxViewController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+}
 
 - (void)windowDidLoad {
     [super windowDidLoad];
@@ -28,14 +46,10 @@
 	[_messageTextEditor setCanDrawConcurrently:YES];
 	[_messageTextEditor setEditable:YES];
 	
-	[_toField setDelegate:self];
-	
 	[_sendButton setEnabled:NO];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-	[_toField setDelegate:nil];
-
 	SMAppDelegate *appDelegate = [[NSApplication sharedApplication] delegate];
 	SMAppController *appController = [appDelegate appController];
 	
@@ -67,8 +81,9 @@
 
 #pragma mark UI controls collaboration
 
-- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor {
-	if(control == _toField) {
+/*TODO
+ - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor {
+	if(control == _toBoxViewController.label) {
 		NSString *toValue = [[_toField stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \t"]];
 
 		NSLog(@"%s: to field ends editing, string value '%@'", __func__, toValue);
@@ -78,6 +93,7 @@
 	
 	return YES;
 }
+*/
 
 #pragma mark Message creation
 
@@ -88,7 +104,7 @@
 	[[builder header] setFrom:[MCOAddress addressWithDisplayName:@"Evgeny Baskakov" mailbox:SMTP_USERNAME]];
 
 	// TODO: form an array of addresses and names based on _toField contents
-	NSArray *toAddresses = [NSArray arrayWithObject:[MCOAddress addressWithDisplayName:@"TODO" mailbox:_toField.stringValue]];
+	NSArray *toAddresses = [NSArray arrayWithObject:[MCOAddress addressWithDisplayName:@"TODO" mailbox:_toBoxViewController.tokenField.stringValue]];
 	[[builder header] setTo:toAddresses];
 
 	// TODO: form an array of addresses and names based on _ccField contents
