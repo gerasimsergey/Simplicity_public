@@ -42,6 +42,9 @@
 		004741651AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 004741641AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m */; };
 		0047416C1AA42115002566E8 /* collapse-all.png in Resources */ = {isa = PBXBuildFile; fileRef = 0047416A1AA42115002566E8 /* collapse-all.png */; };
 		0047416D1AA42115002566E8 /* uncollapse-all.png in Resources */ = {isa = PBXBuildFile; fileRef = 0047416B1AA42115002566E8 /* uncollapse-all.png */; };
+		004A64221AC7A3000079A0C1 /* SMLabeledTokenFieldBoxViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 004A64201AC7A3000079A0C1 /* SMLabeledTokenFieldBoxViewController.xib */; };
+		004A64291AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 004A64281AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.m */; };
+		004A642C1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 004A642B1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.m */; };
 		004F7FEA1866A973004DEC3C /* search-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 004F7FE91866A973004DEC3C /* search-icon.png */; };
 		005B086217D4F00200341051 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005B086117D4F00200341051 /* Security.framework */; };
 		005F0D391A86BC980093E96D /* SMMessageBookmarksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F0D381A86BC980093E96D /* SMMessageBookmarksView.m */; };
@@ -199,6 +202,11 @@
 		004741641AA3AAF0002566E8 /* SMMessageThreadInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMMessageThreadInfoViewController.m; sourceTree = "<group>"; };
 		0047416A1AA42115002566E8 /* collapse-all.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collapse-all.png"; sourceTree = "<group>"; };
 		0047416B1AA42115002566E8 /* uncollapse-all.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uncollapse-all.png"; sourceTree = "<group>"; };
+		004A64201AC7A3000079A0C1 /* SMLabeledTokenFieldBoxViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SMLabeledTokenFieldBoxViewController.xib; sourceTree = "<group>"; };
+		004A64271AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLabeledTokenFieldBoxViewController.h; sourceTree = "<group>"; };
+		004A64281AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLabeledTokenFieldBoxViewController.m; sourceTree = "<group>"; };
+		004A642A1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMLabeledTokenFieldBoxView.h; sourceTree = "<group>"; };
+		004A642B1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMLabeledTokenFieldBoxView.m; sourceTree = "<group>"; };
 		004F7FE91866A973004DEC3C /* search-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-icon.png"; path = "Simplicity/search-icon.png"; sourceTree = "<group>"; };
 		005B084C17D4EF3D00341051 /* mailcore2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mailcore2.xcodeproj; path = "../mailcore2/build-mac/mailcore2.xcodeproj"; sourceTree = "<group>"; };
 		005B086117D4F00200341051 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -439,6 +447,8 @@
 				0089D35E1A88084F00C189BB /* SMFolderColorController.m */,
 				00FE6DF11A4E6C0600D2194F /* SMInstrumentPanelViewController.h */,
 				00FE6DF21A4E6C0600D2194F /* SMInstrumentPanelViewController.m */,
+				004A64271AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.h */,
+				004A64281AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.m */,
 				00DC84941967A70E00577667 /* SMMailboxController.h */,
 				00DC84951967A70E00577667 /* SMMailboxController.m */,
 				0097426C195686F900620145 /* SMMailboxViewController.h */,
@@ -488,6 +498,8 @@
 				0040B0F8196A5331004E55CC /* SMFolderCellView.m */,
 				0099CE821A62332400AEA789 /* SMImageRegistry.h */,
 				0099CE831A62332400AEA789 /* SMImageRegistry.m */,
+				004A642A1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.h */,
+				004A642B1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.m */,
 				005F9A391AAD46500022EDEF /* SMMailboxTableView.h */,
 				005F9A3A1AAD46500022EDEF /* SMMailboxTableView.m */,
 				005F0D371A86BC980093E96D /* SMMessageBookmarksView.h */,
@@ -512,6 +524,7 @@
 				00A085AF1A72145300CC4E1C /* SMAttachmentsPanelViewController.xib */,
 				006709331A99A77600C0C9CC /* SMFindContentsPanelViewController.xib */,
 				00FE6DF31A4E6C0600D2194F /* SMInstrumentPanelViewController.xib */,
+				004A64201AC7A3000079A0C1 /* SMLabeledTokenFieldBoxViewController.xib */,
 				00974266195684DD00620145 /* SMMailboxViewController.xib */,
 				00DBA6D71AC25FD500DFE03D /* SMMessageEditorWindowController.xib */,
 				00E9107D17D2F6F50028C679 /* SMMessageListViewController.xib */,
@@ -662,6 +675,7 @@
 				00414EDE1A1649AF00068742 /* SMSearchResultsListCellView.xib in Resources */,
 				00909E751A9ACDE300636C90 /* SearchWebView.js in Resources */,
 				00974267195684DD00620145 /* SMMailboxViewController.xib in Resources */,
+				004A64221AC7A3000079A0C1 /* SMLabeledTokenFieldBoxViewController.xib in Resources */,
 				0002A0A217D1B1E000EA4AFF /* Credits.rtf in Resources */,
 				00DBA6DE1AC2705F00DFE03D /* new-message.png in Resources */,
 				002057D31A85D2DA00D5FE8A /* outbox-white.png in Resources */,
@@ -724,6 +738,7 @@
 				00E9107E17D2F6F50028C679 /* SMMessageListViewController.m in Sources */,
 				00A085A01A7206FC00CC4E1C /* SMAttachmentItem.m in Sources */,
 				006C34621A181DEC00337A49 /* SMSearchDescriptor.m in Sources */,
+				004A64291AC7A40B0079A0C1 /* SMLabeledTokenFieldBoxViewController.m in Sources */,
 				00F96C0D19343D8000CA5836 /* SMMessageFullDetailsView.m in Sources */,
 				00A25BBA17E10D1400D0FCB1 /* SMMessageListController.m in Sources */,
 				0082F5FE1A0FFAAC0050578A /* SMLocalFolder.m in Sources */,
@@ -741,6 +756,7 @@
 				003859011A4D024500D4FD70 /* SMSearchResultsListViewController.m in Sources */,
 				0034EBC119EA3A3200CDF656 /* SMTokenField.m in Sources */,
 				00A085B01A72145300CC4E1C /* SMAttachmentsPanelViewController.m in Sources */,
+				004A642C1AC7A4360079A0C1 /* SMLabeledTokenFieldBoxView.m in Sources */,
 				00ED318617F88E3000B04F5B /* SMSimplicityContainer.m in Sources */,
 				008AB9E01A4A80CC00F91D86 /* SMColorCircle.m in Sources */,
 			);

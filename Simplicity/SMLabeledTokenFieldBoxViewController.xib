@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SMLabeledTokenFieldBoxViewController">
+            <connections>
+                <outlet property="label" destination="h52-Zf-ZXT" id="L01-9K-ZOu"/>
+                <outlet property="tokenField" destination="wRf-O4-aIN" id="yw4-IA-OfA"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY" customClass="SMLabeledTokenFieldBoxView">
+            <rect key="frame" x="0.0" y="0.0" width="403" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h52-Zf-ZXT">
+                    <rect key="frame" x="5" y="8" width="80" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="76" id="way-cz-stY"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Label" id="vLZ-dE-AEY">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <tokenField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wRf-O4-aIN" customClass="SMTokenField">
+                    <rect key="frame" x="91" y="5" width="304" height="22"/>
+                    <tokenFieldCell key="cell" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" drawsBackground="YES" allowsEditingTextAttributes="YES" id="gYi-FM-fzn">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </tokenFieldCell>
+                </tokenField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="h52-Zf-ZXT" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="7" id="3Bj-xb-fDs"/>
+                <constraint firstAttribute="bottom" secondItem="wRf-O4-aIN" secondAttribute="bottom" constant="5" id="4hD-IO-ikB"/>
+                <constraint firstAttribute="trailing" secondItem="wRf-O4-aIN" secondAttribute="trailing" constant="8" id="BrG-7b-ON8"/>
+                <constraint firstItem="wRf-O4-aIN" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="5" id="GY2-YQ-2ex"/>
+                <constraint firstItem="wRf-O4-aIN" firstAttribute="leading" secondItem="h52-Zf-ZXT" secondAttribute="trailing" constant="8" id="WXV-fl-3qW"/>
+                <constraint firstItem="h52-Zf-ZXT" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="7" id="ybA-oQ-HUH"/>
+            </constraints>
+            <point key="canvasLocation" x="267.5" y="193"/>
+        </customView>
+    </objects>
+</document>

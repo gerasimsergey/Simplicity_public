@@ -10,12 +10,14 @@
 
 @class WebView;
 
+@class SMLabeledTokenFieldBoxView;
+
 @interface SMMessageEditorWindowController : NSWindowController<NSWindowDelegate, NSTokenFieldDelegate>
 
 @property IBOutlet NSButton *sendButton;
 @property IBOutlet NSButton *saveButton;
 @property IBOutlet NSButton *attachButton;
-@property IBOutlet NSTokenField *toField;
+@property IBOutlet SMLabeledTokenFieldBoxView *toBox;
 @property IBOutlet NSTokenField *ccField;
 @property IBOutlet NSTokenField *bccField;
 @property IBOutlet NSTextField *subjectField;
