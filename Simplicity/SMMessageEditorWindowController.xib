@@ -104,7 +104,7 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WKc-oQ-Zi5" userLabel="To Text Field" customClass="NSTokenField">
+                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WKc-oQ-Zi5" userLabel="To Text Field" customClass="SMTokenField">
                                     <rect key="frame" x="62" y="5" width="458" height="17"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" id="Vjt-8G-41u">
                                         <font key="font" metaFont="system"/>
@@ -143,7 +143,7 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dm8-7W-R0Q" userLabel="Cc Text Field" customClass="NSTokenField">
+                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dm8-7W-R0Q" userLabel="Cc Text Field" customClass="SMTokenField">
                                     <rect key="frame" x="62" y="5" width="458" height="17"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" id="bHs-zX-25O">
                                         <font key="font" metaFont="system"/>
@@ -182,7 +182,7 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="P4E-6g-Uth" userLabel="Bcc Text Field" customClass="NSTokenField">
+                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="P4E-6g-Uth" userLabel="Bcc Text Field" customClass="SMTokenField">
                                     <rect key="frame" x="62" y="5" width="458" height="17"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" id="ZQg-Te-GRP">
                                         <font key="font" metaFont="system"/>
