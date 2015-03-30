@@ -112,9 +112,9 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CBO-c7-oXR">
-                                    <rect key="frame" x="-3" y="5" width="60" height="18"/>
+                                    <rect key="frame" x="-1" y="5" width="59" height="17"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="56" id="uX1-vS-aPU"/>
+                                        <constraint firstAttribute="width" constant="55" id="uX1-vS-aPU"/>
                                     </constraints>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Subject:" id="3n3-Iu-KfR">
                                         <font key="font" metaFont="system"/>
@@ -123,7 +123,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qrx-X9-Ruh" userLabel="Subject Text Field">
-                                    <rect key="frame" x="62" y="5" width="458" height="17"/>
+                                    <rect key="frame" x="59" y="5" width="463" height="17"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" id="kHR-bT-w7S">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -133,13 +133,13 @@
                             </subviews>
                         </view>
                         <constraints>
-                            <constraint firstItem="CBO-c7-oXR" firstAttribute="leading" secondItem="QmY-mt-AuV" secondAttribute="leading" id="0b2-ph-N0r"/>
+                            <constraint firstItem="CBO-c7-oXR" firstAttribute="leading" secondItem="QmY-mt-AuV" secondAttribute="leading" constant="2" id="0b2-ph-N0r"/>
                             <constraint firstAttribute="bottom" secondItem="CBO-c7-oXR" secondAttribute="bottom" constant="6" id="0n2-ek-19X"/>
+                            <constraint firstItem="Qrx-X9-Ruh" firstAttribute="top" secondItem="QmY-mt-AuV" secondAttribute="top" constant="7" id="9wv-U0-BaP"/>
                             <constraint firstAttribute="height" constant="30" id="Fl2-Kd-rDY"/>
-                            <constraint firstItem="CBO-c7-oXR" firstAttribute="top" secondItem="QmY-mt-AuV" secondAttribute="top" constant="6" id="XC4-o0-PFa"/>
-                            <constraint firstItem="Qrx-X9-Ruh" firstAttribute="baseline" secondItem="CBO-c7-oXR" secondAttribute="baseline" id="YMb-v3-wET"/>
-                            <constraint firstAttribute="trailing" secondItem="Qrx-X9-Ruh" secondAttribute="trailing" constant="7" id="bQh-mJ-8rY"/>
-                            <constraint firstItem="Qrx-X9-Ruh" firstAttribute="leading" secondItem="CBO-c7-oXR" secondAttribute="trailing" constant="9" id="pqP-Zf-pHk"/>
+                            <constraint firstItem="CBO-c7-oXR" firstAttribute="top" secondItem="QmY-mt-AuV" secondAttribute="top" constant="7" id="XC4-o0-PFa"/>
+                            <constraint firstAttribute="trailing" secondItem="Qrx-X9-Ruh" secondAttribute="trailing" constant="5" id="bQh-mJ-8rY"/>
+                            <constraint firstItem="Qrx-X9-Ruh" firstAttribute="leading" secondItem="CBO-c7-oXR" secondAttribute="trailing" constant="5" id="pqP-Zf-pHk"/>
                         </constraints>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
