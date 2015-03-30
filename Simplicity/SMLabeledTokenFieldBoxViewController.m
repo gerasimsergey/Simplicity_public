@@ -24,6 +24,14 @@
 	[(SMLabeledTokenFieldBoxView*)view setViewController:self];
 }
 
+- (void)viewWillAppear {
+	[_tokenField setDelegate:self];
+}
+
+- (void)viewWillDisappear {
+	[_tokenField setDelegate:nil];
+}
+
 - (void)viewDidAppear {
 	if(!_tokenFieldFramesValid) {
 		// this is critical because the frame height for each SMTokenField must be
