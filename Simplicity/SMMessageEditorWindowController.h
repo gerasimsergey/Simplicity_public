@@ -19,12 +19,14 @@
 @property IBOutlet NSButton *saveButton;
 @property IBOutlet NSButton *attachButton;
 @property IBOutlet NSView *toBoxView;
-@property IBOutlet NSTokenField *ccField;
-@property IBOutlet NSTokenField *bccField;
+@property IBOutlet NSView *ccBoxView;
+@property IBOutlet NSView *bccBoxView;
 @property IBOutlet NSTextField *subjectField;
 @property IBOutlet WebView *messageTextEditor;
 
 @property SMLabeledTokenFieldBoxViewController *toBoxViewController;
+@property SMLabeledTokenFieldBoxViewController *ccBoxViewController;
+@property SMLabeledTokenFieldBoxViewController *bccBoxViewController;
 
 - (IBAction)sendAction:(id)sender;
 - (IBAction)saveAction:(id)sender;
