@@ -39,7 +39,9 @@
 
 - (void)windowDidLoad {
     [super windowDidLoad];
-    
+	
+	[_toBoxViewController.label setStringValue:@"To:"];
+	
 	[_messageTextEditor setFrameLoadDelegate:self];
 	[_messageTextEditor setPolicyDelegate:self];
 	[_messageTextEditor setResourceLoadDelegate:self];

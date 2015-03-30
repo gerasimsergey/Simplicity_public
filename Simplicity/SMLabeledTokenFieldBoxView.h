@@ -10,7 +10,7 @@
 
 @class SMLabeledTokenFieldBoxViewController;
 
-@interface SMLabeledTokenFieldBoxView : NSView
+@interface SMLabeledTokenFieldBoxView : NSBox
 
 - (void)setViewController:(SMLabeledTokenFieldBoxViewController*)controller;
 

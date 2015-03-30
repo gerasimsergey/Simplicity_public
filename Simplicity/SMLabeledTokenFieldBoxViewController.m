@@ -19,17 +19,14 @@
 
 	NSView *view = [self view];
 
-	NSAssert([view isKindOfClass:[SMLabeledTokenFieldBoxView class]], @"bad view class");
+	NSAssert([view isKindOfClass:[NSBox class]], @"view not NSBox");
+	NSAssert([view isKindOfClass:[SMLabeledTokenFieldBoxView class]], @"view not SMLabeledTokenFieldBoxView");
 	
 	[(SMLabeledTokenFieldBoxView*)view setViewController:self];
-}
-
-- (void)viewWillAppear {
-	[_tokenField setDelegate:self];
-}
-
-- (void)viewWillDisappear {
-	[_tokenField setDelegate:nil];
+	
+	[(NSBox*)view setBoxType:NSBoxCustom];
+	[(NSBox*)view setTitlePosition:NSNoTitle];
+	[(NSBox*)view setFillColor:[NSColor whiteColor]];
 }
 
 - (void)viewDidAppear {
@@ -39,7 +36,7 @@
 		// for the first time
 
 		[_tokenField invalidateIntrinsicContentSize];
-		
+
 		_tokenFieldFramesValid = YES;
 	}
 }
