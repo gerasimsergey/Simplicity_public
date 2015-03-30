@@ -65,6 +65,10 @@
 	[_bccBoxView addConstraint:[NSLayoutConstraint constraintWithItem:_bccBoxView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_bccBoxViewController.view attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
 	
 	[_bccBoxView addConstraint:[NSLayoutConstraint constraintWithItem:_bccBoxView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_bccBoxViewController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+	
+	// register events
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processAddressFieldEditingEnd:) name:@"LabeledTokenFieldEndedEditing" object:nil];
 }
 
 - (void)windowDidLoad {
@@ -113,22 +117,6 @@
 	NSLog(@"%s", __func__);
 }
 
-#pragma mark UI controls collaboration
-
-/*TODO
- - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor {
-	if(control == _toBoxViewController.label) {
-		NSString *toValue = [[_toField stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \t"]];
-
-		NSLog(@"%s: to field ends editing, string value '%@'", __func__, toValue);
-		
-		[_sendButton setEnabled:(toValue.length != 0)];
-	}
-	
-	return YES;
-}
-*/
-
 #pragma mark Message creation
 
 - (MCOMessageBuilder*)createMessageData {
@@ -160,6 +148,20 @@
 	//TODO (local attachments): [builder addAttachment:[MCOAttachment attachmentWithContentsOfFile:@"/Users/foo/Pictures/image.jpg"]];
 
 	return builder;
+}
+
+#pragma mark UI elements collaboration
+
+- (void)processAddressFieldEditingEnd:(NSNotification*)notification {
+	id object = [notification object];
+	
+	if(object == _toBoxViewController) {
+		NSString *toValue = [[_toBoxViewController.tokenField stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \t"]];
+		
+		// TODO: verify the destination email address / recepient name more carefully
+
+		[_sendButton setEnabled:(toValue.length != 0)];
+	}
 }
 
 @end

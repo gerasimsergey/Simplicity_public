@@ -88,4 +88,9 @@
 	return nil;
 }
 
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LabeledTokenFieldEndedEditing" object:self userInfo:nil];
+	return YES;
+}
+
 @end
