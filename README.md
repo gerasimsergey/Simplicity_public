@@ -22,3 +22,7 @@ Features
 - Configurable color schemes;
 - Multiple email accounts;
 - Account migration tool.
+
+----------------------------------
+
+As the project is getting mature, it went closed source. This is the stale code.
