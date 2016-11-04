@@ -26,3 +26,7 @@ Features
 ----------------------------------
 
 As the project is getting mature, it went closed source. This is the stale code.
+
+A screenshot of the current alpha version is below. Still has drafty icons, fonts, etc.
+
+![alt tag](https://github.com/evgenybaskakov/Simplicity_public/blob/master/screenshot.png)
